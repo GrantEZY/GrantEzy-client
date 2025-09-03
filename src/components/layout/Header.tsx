@@ -2,10 +2,17 @@ import Image from 'next/image';
 
 export default function Header() {
   return (
-    <header className="bg-[#fefeff] border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
+    <header 
+      className="bg-white border-b px-6 py-4 w-full"
+      style={{
+        height: '98px',
+        borderColor: '#C8C8C8',
+        borderWidth: '1px'
+      }}
+    >
+      <div className="flex items-center justify-between h-full max-w-full">
         {/* Left side - Logo and College Name */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 flex-shrink-0">
           <Image
             src="/assets/College_Logo.png"
             alt="College Logo"
@@ -25,14 +32,15 @@ export default function Header() {
         </div>
 
         {/* Center - Search Bar */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center px-4">
           <div className="relative">
             <input
               type="text"
               placeholder="Search"
               className="bg-[#F8F6FF] rounded-[30px] px-6 py-4 pr-12 focus:outline-none border-0"
               style={{ 
-                width: '548px', 
+                width: '400px', 
+                maxWidth: '400px',
                 height: '55px',
                 fontFamily: 'Inter', 
                 fontSize: '16px',
@@ -51,7 +59,7 @@ export default function Header() {
         </div>
 
         {/* Right side - Notification and User Info */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-4 flex-shrink-0">
           {/* Notification Bell */}
           <button className="relative p-2 text-gray-600 hover:text-gray-800">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -8,17 +8,19 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F8F6FF' }}>
+    <div className="h-screen overflow-hidden" style={{ backgroundColor: '#F8F6FF' }}>
       {/* Header */}
       <Header />
       
-      <div className="flex">
+      <div className="flex h-[calc(100vh-98px)]">
         {/* Sidebar */}
         <Sidebar />
         
         {/* Main content */}
-        <main className="flex-1 p-6">
-          {children}
+        <main className="flex-1 overflow-auto">
+          <div className="h-full flex items-center justify-center p-6">
+            {children}
+          </div>
         </main>
       </div>
     </div>
