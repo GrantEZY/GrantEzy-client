@@ -1,117 +1,79 @@
+"use client";
+
+interface RoleCardProps {
+  title: string;
+  icon: React.ReactNode;
+  onClick?: () => void;
+}
+
+function RoleCard({ title, icon, onClick }: RoleCardProps) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-[300px] h-[200px] bg-white border border-gray-200 rounded-[30px] 
+                 flex flex-col items-center justify-center space-y-4
+                 hover:shadow-lg transition-shadow duration-200 cursor-pointer
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      style={{ boxShadow: '0px 0px 13.9px 0px rgba(0,0,0,0.1)' }}
+    >
+      <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+        {icon}
+      </div>
+      <h3 className="text-gray-800 text-[22px] font-normal font-inter">
+        {title}
+      </h3>
+    </button>
+  );
+}
+
 export default function RoleSelectionMenu() {
+  const handleRoleSelect = (role: string) => {
+    console.log(`Selected role: ${role}`);
+    // TODO: Implement navigation or state management
+  };
+
   return (
     <div className="w-full h-full">
-      {/* Title - positioned in top left */}
-      <div className="mb-24 ml-12 mt-12">
-        <h1 
-          className="text-gray-800"
-          style={{ 
-            fontFamily: 'Inter', 
-            fontWeight: 300, 
-            fontSize: '32px', 
-            lineHeight: '100%',
-            letterSpacing: '0%'
-          }}
-        >
+      {/* Page Title */}
+      <header className="mb-24 ml-12 mt-12">
+        <h1 className="text-gray-800 text-[32px] font-light font-inter">
           Role Selection Menu
         </h1>
-      </div>
+      </header>
       
-      {/* Content area with subtitle and cards */}
-      <div className="flex justify-center">
+      {/* Main Content */}
+      <section className="flex justify-center">
         <div className="flex flex-col items-start">
-          {/* Subtitle positioned above the startup box */}
-          <div className="mb-8">
-            <p 
-              className="text-gray-600"
-              style={{ 
-                fontFamily: 'Inter', 
-                fontWeight: 300, 
-                fontSize: '24px', 
-                lineHeight: '100%',
-                letterSpacing: '0%'
-              }}
-            >
+          {/* Section Subtitle */}
+          <div className="mb-4">
+            <h2 className="text-gray-600 text-[24px] font-light font-inter">
               Choose Role to Manage:
-            </p>
+            </h2>
           </div>
           
-          {/* Role Cards */}
-          <div className="flex items-start space-x-8">
-            {/* Startups Card */}
-            <div 
-              className="bg-white border border-gray-200 text-center hover:shadow-lg transition-shadow cursor-pointer"
-              style={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '30px',
-                boxShadow: '0px 0px 13.9px 0px rgba(0,0,0,0.1)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <div className="mb-4">
-                <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                </div>
-              </div>
-              <h3 
-                className="text-gray-800"
-                style={{ 
-                  fontFamily: 'Inter', 
-                  fontWeight: 400, 
-                  fontSize: '22px', 
-                  lineHeight: '100%',
-                  letterSpacing: '0%',
-                  textAlign: 'center'
-                }}
-              >
-                Startups
-              </h3>
-            </div>
-            
-            {/* EIRs Card */}
-            <div 
-              className="bg-white border border-gray-200 text-center hover:shadow-lg transition-shadow cursor-pointer"
-              style={{
-                width: '300px',
-                height: '200px',
-                borderRadius: '30px',
-                boxShadow: '0px 0px 13.9px 0px rgba(0,0,0,0.1)',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <div className="mb-4">
-                <div className="w-12 h-12 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                </div>
-              </div>
-              <h3 
-                className="text-gray-800"
-                style={{ 
-                  fontFamily: 'Inter', 
-                  fontWeight: 400, 
-                  fontSize: '22px', 
-                  lineHeight: '100%',
-                  letterSpacing: '0%',
-                  textAlign: 'center'
-                }}
-              >
-                EIRs
-              </h3>
-            </div>
+          {/* Role Selection Cards */}
+          <div className="flex items-start space-x-8" role="group" aria-label="Role selection">
+            <RoleCard
+              title="Startups"
+              onClick={() => handleRoleSelect('startups')}
+              icon={
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              }
+            />
+            <RoleCard
+              title="EIRs"
+              onClick={() => handleRoleSelect('eirs')}
+              icon={
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              }
+            />
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
