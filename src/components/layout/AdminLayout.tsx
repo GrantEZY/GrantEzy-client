@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         
         {/* Main content */}
         <main className="flex-1 overflow-auto">
-          <div className="h-full flex items-center justify-center p-6">
+          <div className="h-full p-6">
             {children}
           </div>
         </main>
