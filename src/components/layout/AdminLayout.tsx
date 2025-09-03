@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#f8f6ff]">
+    <div className="min-h-screen" style={{ backgroundColor: '#F8F6FF' }}>
       {/* Header */}
       <Header />
       
