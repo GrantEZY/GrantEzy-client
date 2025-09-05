@@ -17,28 +17,26 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
   ];
 
   return (
-    <header className="bg-[var(--color-white)] border-b border-[var(--color-border-gray)] px-6 py-4 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo and Institution Name */}
-        <div className="flex items-center space-x-4">
+    <header className="bg-[var(--color-white)] border-b border-[var(--color-gray-200)] px-6 py-4 sticky top-0 z-50">
+      <div className="flex items-center">
+        <div className="flex-1 flex items-center space-x-4">
           <Image
             src="/assets/College_Logo.png"
             alt="College Logo"
-            width={60}
-            height={60}
+            width={70}
+            height={70}
             className="rounded-full"
             priority
           />
           <div className="flex flex-col">
             <h1 className="text-base font-semibold text-[var(--color-gray-800)] leading-tight">
-              Indian Institute of Information Technology Sri City
+              Indian Institute of Information <br /> Technology Sri City
             </h1>
-            <p className="text-xs text-[var(--color-gray-600)]">भारतीय सूचना प्रौद्योगिकी संस्थान श्री सिटी</p>
+            <p className="pt-1 text-xs text-[var(--color-gray-600)]">भारतीय सूचना प्रौद्योगिकी संस्थान श्री सिटी</p>
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden lg:flex items-center space-x-8">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -50,10 +48,14 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
           ))}
         </nav>
 
-        {/* Login Button */}
-        <button className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-700)] transition-colors duration-200">
-          Login
-        </button>
+        <div className="flex-1 flex justify-end items-center space-x-3">
+          <button className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200">
+            Sign In
+          </button>
+          <button className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-700)] transition-colors duration-200">
+            Login
+          </button>
+        </div>
       </div>
     </header>
   );
@@ -80,7 +82,7 @@ function PublicFooter() {
               </div>
             </div>
             <p className="text-[var(--color-gray-500)] text-sm leading-relaxed">
-              Fostering innovation and entrepreneurship through comprehensive support for startups, 
+              Fostering innovation and entrepreneurship through comprehensive support for startups,
               mentorship programs, and research initiatives.
             </p>
           </div>

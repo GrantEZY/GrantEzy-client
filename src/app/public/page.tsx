@@ -10,7 +10,6 @@ export default function PublicPage() {
 
   const handleNavigate = (section: string) => {
     setActiveSection(section);
-    // Scroll to section if needed
     const element = document.getElementById(section);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });

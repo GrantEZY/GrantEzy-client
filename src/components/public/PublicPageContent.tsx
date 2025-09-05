@@ -17,7 +17,6 @@ import {
 } from 'react-icons/fa';
 import { IoMdTime } from 'react-icons/io';
 
-// Hero Section Component
 function HeroSection() {
   return (
     <section className="bg-gradient-to-r from-[var(--color-gray-50)] via-[var(--color-white)] to-[var(--color-blue-50)] py-20">
@@ -30,10 +29,10 @@ function HeroSection() {
           mentorship, and funding opportunities at IIIT Sri City.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-[var(--color-gray-900)] text-[var(--color-white)] px-8 py-3 rounded-lg font-semibold hover:bg-[var(--color-gray-800)] transition-colors duration-200 shadow-lg">
+          <button className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-8 py-3 rounded-lg font-semibold hover:bg-[var(--color-blue-700)] transition-colors duration-200 shadow-lg">
             View Open Calls
           </button>
-          <button className="border-2 border-[var(--color-gray-900)] text-[var(--color-gray-900)] px-8 py-3 rounded-lg font-semibold hover:bg-[var(--color-gray-900)] hover:text-[var(--color-white)] transition-colors duration-200">
+          <button className="border-2 border-[var(--color-blue-600)] text-[var(--color-blue-600)] px-8 py-3 rounded-lg font-semibold hover:bg-[var(--color-blue-600)] hover:text-[var(--color-white)] transition-colors duration-200">
             Learn More
           </button>
         </div>
@@ -42,7 +41,6 @@ function HeroSection() {
   );
 }
 
-// Stats Section Component
 function StatsSection() {
   const stats = [
     { label: 'Total Funding Disbursed', value: '₹2.5 Crores', icon: <FaRupeeSign className="text-2xl" />, color: 'green' },
@@ -117,7 +115,7 @@ function StatsSection() {
           {stats.map((stat, index) => {
             const colors = getStatColors(stat.color);
             return (
-              <div key={index} className={`text-center p-6 rounded-lg bg-gradient-to-br ${colors.bg} border ${colors.border} hover:shadow-lg transition-all duration-200`}>
+              <div key={index} className={`text-center p-6 rounded-xl ${colors.bg} border ${colors.border} hover:shadow-lg transition-all duration-200`}>
                 <div className={`${colors.icon} mb-4 flex justify-center`}>{stat.icon}</div>
                 <div className={`text-3xl font-bold ${colors.value} mb-2`}>{stat.value}</div>
                 <div className="text-[var(--color-gray-700)] font-medium">{stat.label}</div>
@@ -130,7 +128,6 @@ function StatsSection() {
   );
 }
 
-// Mission & Vision Section
 function MissionVisionSection() {
   return (
     <section className="py-16 bg-[var(--color-gray-50)]">
@@ -171,7 +168,6 @@ function MissionVisionSection() {
   );
 }
 
-// Featured Projects Section
 function FeaturedProjectsSection() {
   const projects = [
     {
@@ -219,6 +215,8 @@ function FeaturedProjectsSection() {
                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                   project.status === 'Completed' 
                     ? 'bg-green-100 text-green-700' 
+                    : project.status === 'Ongoing'
+                    ? 'bg-yellow-100 text-yellow-700'
                     : 'bg-blue-100 text-blue-700'
                 }`}>
                   {project.status}
@@ -257,7 +255,6 @@ function FeaturedProjectsSection() {
   );
 }
 
-// Team Section
 function TeamSection() {
   const directors = [
     {
@@ -321,7 +318,6 @@ function TeamSection() {
   );
 }
 
-// Open Calls Section
 function OpenCallsSection() {
   const openCalls = [
     {
