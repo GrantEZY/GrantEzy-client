@@ -1,36 +1,36 @@
+"use client";
+
+import { useState } from 'react';
+
 interface MenuItem {
   icon: React.ReactNode;
   label: string;
-  active: boolean;
+  active?: boolean;
   isSubItem?: boolean;
   href?: string;
 }
 
 interface SidebarItemProps extends MenuItem {
   index: number;
+  onClick?: (e: React.MouseEvent) => void;
 }
 
-function SidebarItem({ icon, label, active, isSubItem, href = '#', index }: SidebarItemProps) {
+
+function SidebarItem({ icon, label, active = false, isSubItem, href = '#', index, onClick }: SidebarItemProps) {
   return (
     <li className="relative">
-      {/* Timeline styling for sub-items */}
-      {isSubItem && (
-        <>
-          <div className="absolute left-[21px] -top-2 bottom-0 w-0.5 bg-gray-700" />
-          <div className="absolute left-[21px] top-1/2 w-4 h-0.5 bg-gray-700" />
-          <div className="absolute left-[19px] top-1/2 w-1 h-1 bg-gray-800 rounded-full transform -translate-y-1/2" />
-        </>
-      )}
       <a
         href={href}
+        onClick={(e) => {
+          if (onClick) {
+            e.preventDefault();
+            onClick(e);
+          }
+        }}
         className={`flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium 
                    transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 
-                   focus:ring-blue-500 focus:ring-offset-2 ${
-          isSubItem ? 'ml-6' : ''
-        } ${
-          active
-            ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-700 shadow-sm'
-            : 'text-gray-700 hover:text-gray-900'
+                   focus:ring-blue-500 focus:ring-offset-2 ${isSubItem ? 'ml-6' : ''} ${
+          active ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-700 shadow-sm' : 'text-gray-700 hover:text-gray-900'
         }`}
       >
         <span className={active ? 'text-blue-700' : 'text-gray-600'}>
@@ -42,7 +42,7 @@ function SidebarItem({ icon, label, active, isSubItem, href = '#', index }: Side
   );
 }
 
-// Icon components for better organization
+
 const icons = {
   home: (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,51 +98,95 @@ const icons = {
 };
 
 export default function Sidebar() {
+  const [peopleOpen, setPeopleOpen] = useState(false);
+  const [selectedSub, setSelectedSub] = useState<string | null>(null);
+
   const menuItems: MenuItem[] = [
     { icon: icons.home, label: 'Home', active: false },
-    { icon: icons.academics, label: 'Grant Opt1', active: false },
-    { icon: icons.honors, label: 'Grant Opt2', active: false },
-    { icon: icons.btp, label: 'Grant Opt3', active: false },
-    { icon: icons.feedback, label: 'Grant Opt4', active: false },
-    { icon: icons.people, label: 'People', active: true },
+    { icon: icons.academics, label: 'Academics', active: false },
+    { icon: icons.honors, label: 'Honors', active: false },
+    { icon: icons.btp, label: 'BTP', active: false },
+    { icon: icons.feedback, label: 'Feedback Form', active: false },
+    { icon: icons.people, label: 'People', active: false },
+  ];
+
+  const subItems: MenuItem[] = [
     { icon: icons.startups, label: 'Startups', active: false, isSubItem: true },
     { icon: icons.mentors, label: 'Mentors', active: false, isSubItem: true },
     { icon: icons.eirs, label: 'EIRs', active: false, isSubItem: true },
   ];
 
-  const loremItems = ['Lorem 1', 'Lorem 2', 'Lorem 3', 'Lorem 4', 'Lorem 5'];
-
   return (
     <aside className="w-[280px] min-h-[calc(100vh-98px)] bg-white border-r border-[#DEDEDE] relative flex-shrink-0">
-      {/* Main Navigation */}
       <nav className="p-4">
         <ul className="space-y-1">
-          {menuItems.map((item, index) => (
-            <SidebarItem key={index} {...item} index={index} />
+          {menuItems.map((item, idx) => (
+            <li key={idx}>
+              <SidebarItem
+                {...item}
+                index={idx}
+                onClick={() => {
+                  if (item.label === 'People') {
+                    setPeopleOpen((v) => !v);
+                  }
+                }}
+              />
+
+              {item.label === 'People' && (
+                <div
+                  className={`relative mt-2 mb-4 ${peopleOpen ? 'block' : 'hidden'}`}
+                  style={{ zIndex: 1 }}
+                >
+                  <div
+                    className="absolute"
+                    style={{ left: 24, top: 8, bottom: 8, width: 3, background: 'var(--color-black)', borderRadius: 2 }}
+                    aria-hidden
+                  />
+
+                  <ul className="flex flex-col space-y-6">
+                    {subItems.map((sub, sidx) => {
+                      const isSelected = selectedSub === sub.label;
+                      return (
+                        <li key={sidx} className="relative">
+                          <span
+                            aria-hidden
+                            className="absolute top-1/2 -translate-y-1/2"
+                            style={{
+                              left: '19.5px',
+                              width: 12,
+                              height: 12,
+                              borderRadius: '50%',
+                              background: isSelected ? 'var(--color-yellow)' : 'var(--color-black)',
+                              border: '3px solid var(--color-black)',
+                              boxSizing: 'border-box',
+                              zIndex: 1,
+                            }}
+                          />
+
+                          <a
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setSelectedSub(sub.label);
+                            }}
+                            className={`flex items-center space-x-3 px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] pl-12 ${
+                              isSelected ? 'text-[var(--color-gray-900)] font-semibold' : 'text-[var(--color-gray-700)]'
+                            }`}
+                          >
+                            <span className="text-[var(--color-gray-700)]">{sub.icon}</span>
+                            <span>{sub.label}</span>
+                          </a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </li>
           ))}
         </ul>
       </nav>
 
-      {/* Lorem Section */}
-      <section className="mt-8 p-4">
-        <ul className="space-y-1">
-          {loremItems.map((item, index) => (
-            <li key={index}>
-              <a
-                href="#"
-                className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium 
-                         text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200
-                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                <span className="w-2 h-2 bg-gray-800 rounded-full" />
-                <span>{item}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {/* Settings */}
       <div className="absolute bottom-4 left-4 right-4">
         <a
           href="#"
