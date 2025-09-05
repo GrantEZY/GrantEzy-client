@@ -1,7 +1,6 @@
 "use client";
 
 import Image from 'next/image';
-import { FaSearch, FaBell } from 'react-icons/fa';
 
 interface PublicHeaderProps {
   onNavigate?: (section: string) => void;
