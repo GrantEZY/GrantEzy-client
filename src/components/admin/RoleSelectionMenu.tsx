@@ -14,11 +14,11 @@ function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
 
   const selectedStyle: React.CSSProperties | undefined = selected
     ? {
-        background: '#5F92FF',
-        boxShadow: '0px 0px 13.9px 0px #0000001A, 2px 6px 10px 0px #FFFFFFCC inset',
+        background: 'var(--color-blue-custom)',
+        boxShadow: '0px 0px 13.9px 0px var(--shadow-black-10), 2px 6px 10px 0px var(--shadow-white-80) inset',
         border: 'none',
       }
-    : { boxShadow: '0px 0px 13.9px 0px rgba(0,0,0,0.1)', background: '#FFFFFF' };
+    : { boxShadow: '0px 0px 13.9px 0px var(--shadow-light)', background: 'var(--color-white)' };
 
   return (
     <button
@@ -27,11 +27,11 @@ function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
       style={selectedStyle}
       aria-pressed={selected}
     >
-      <div className={`w-12 h-12 ${selected ? 'bg-white/20' : 'bg-gray-100'} rounded-full flex items-center justify-center`}>
+      <div className={`w-12 h-12 ${selected ? 'bg-white/20' : 'bg-[var(--color-gray-100)]'} rounded-full flex items-center justify-center`}>
         {/* icon should inherit currentColor, so we toggle text color */}
-        <span className={selected ? 'text-white' : 'text-gray-600'}>{icon}</span>
+        <span className={selected ? 'text-[var(--color-white)]' : 'text-[var(--color-gray-600)]'}>{icon}</span>
       </div>
-      <h3 className={`${selected ? 'text-white' : 'text-gray-800'} text-[22px] font-normal font-inter`}>
+      <h3 className={`${selected ? 'text-[var(--color-white)]' : 'text-[var(--color-gray-800)]'} text-[22px] font-normal font-inter`}>
         {title}
       </h3>
     </button>
@@ -51,7 +51,7 @@ export default function RoleSelectionMenu() {
     <div className="w-full h-full">
       {/* Page Title */}
       <header className="mb-24 ml-12 mt-12">
-        <h1 className="text-gray-800 text-[32px] font-light font-inter">
+        <h1 className="text-[var(--color-gray-800)] text-[32px] font-light font-inter">
           Role Selection Menu
         </h1>
       </header>
@@ -61,7 +61,7 @@ export default function RoleSelectionMenu() {
         <div className="flex flex-col items-start">
           {/* Section Subtitle */}
           <div className="mb-4">
-            <h2 className="text-gray-600 text-[24px] font-light font-inter">
+            <h2 className="text-[var(--color-gray-600)] text-[24px] font-light font-inter">
               Choose Role to Manage:
             </h2>
           </div>

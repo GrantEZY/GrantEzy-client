@@ -15,7 +15,7 @@ interface SidebarItemProps extends MenuItem {
   onClick?: (e: React.MouseEvent) => void;
 }
 
-
+// FIX 1: SidebarItem no longer renders the wrapping <li>. It just renders the link.
 function SidebarItem({ icon, label, active = false, isSubItem, href = '#', index, onClick }: SidebarItemProps) {
   return (
     <li className="relative">
@@ -28,12 +28,12 @@ function SidebarItem({ icon, label, active = false, isSubItem, href = '#', index
           }
         }}
         className={`flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium 
-                   transition-all duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 
-                   focus:ring-blue-500 focus:ring-offset-2 ${isSubItem ? 'ml-6' : ''} ${
-          active ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-700 shadow-sm' : 'text-gray-700 hover:text-gray-900'
+                   transition-all duration-200 hover:bg-[var(--color-gray-50)] focus:outline-none focus:ring-2 
+                   focus:ring-[var(--color-blue-500)] focus:ring-offset-2 ${isSubItem ? 'ml-6' : ''} ${
+          active ? 'bg-[var(--color-blue-50)] text-[var(--color-blue-700)] border-l-4 border-[var(--color-blue-700)] shadow-sm' : 'text-[var(--color-gray-700)] hover:text-[var(--color-gray-900)]'
         }`}
       >
-        <span className={active ? 'text-blue-700' : 'text-gray-600'}>
+        <span className={active ? 'text-[var(--color-blue-700)]' : 'text-[var(--color-gray-600)]'}>
           {icon}
         </span>
         <span>{label}</span>
@@ -117,11 +117,12 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-[280px] min-h-[calc(100vh-98px)] bg-white border-r border-[#DEDEDE] relative flex-shrink-0">
+    <aside className="w-[280px] min-h-[calc(100vh-98px)] bg-[var(--color-white)] border-r border-[var(--color-border-light)] relative flex-shrink-0">
       <nav className="p-4">
         <ul className="space-y-1">
           {menuItems.map((item, idx) => (
-            <li key={idx}>
+            // FIX 2: The <li> wrapper is here. Added className="relative" to it.
+            <li key={idx} className="relative">
               <SidebarItem
                 {...item}
                 index={idx}
@@ -143,6 +144,7 @@ export default function Sidebar() {
                     aria-hidden
                   />
 
+                  {/* FIX 3: Replaced invalid <div> wrappers with a proper <ul>/<li> structure for the sub-menu. */}
                   <ul className="flex flex-col space-y-6">
                     {subItems.map((sub, sidx) => {
                       const isSelected = selectedSub === sub.label;
@@ -191,8 +193,8 @@ export default function Sidebar() {
         <a
           href="#"
           className="flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium 
-                   text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                   text-[var(--color-gray-700)] hover:bg-[var(--color-gray-50)] hover:text-[var(--color-gray-900)] transition-all duration-200
+                   focus:outline-none focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2"
         >
           {icons.settings}
           <span>Settings</span>

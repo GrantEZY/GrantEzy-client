@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   return (
-    <div className="h-screen overflow-hidden bg-[#F8F6FF]">
+    <div className="h-screen overflow-hidden bg-[var(--color-background-light)]">
       <Header />
       
       <div className="flex h-[calc(100vh-98px)]">
