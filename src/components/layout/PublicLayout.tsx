@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { navItems, footerLinks, contactInfo, copyrightText } from '@/constants';
+import DarkModeToggle from '@/components/ui/DarkModeToggle';
 
 interface PublicHeaderProps {
   onNavigate?: (section: string) => void;
@@ -48,6 +49,7 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
 
         {/* Desktop Action Buttons */}
         <div className="hidden md:flex items-center space-x-3 flex-shrink-0">
+          <DarkModeToggle />
           <button className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-4 lg:px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200 text-sm lg:text-base">
             Sign In
           </button>
@@ -84,6 +86,9 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
               </button>
             ))}
             <div className="flex flex-col space-y-3 pt-4 border-t border-[var(--color-gray-200)]">
+              <div className="flex justify-center pb-2">
+                <DarkModeToggle />
+              </div>
               <button className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200 text-center">
                 Sign In
               </button>
