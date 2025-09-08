@@ -32,21 +32,21 @@ function HeroSection() {
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[var(--color-gray-50)] via-[var(--color-white)] to-[var(--color-blue-50)] overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-72 h-72 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-[var(--color-pink-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+        <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-48 sm:w-72 h-48 sm:h-72 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute top-20 sm:top-40 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute bottom-10 sm:bottom-20 left-1/2 w-48 sm:w-72 h-48 sm:h-72 bg-[var(--color-pink-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
       </div>
       
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
-        <div className="space-y-8">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="space-y-6 sm:space-y-8">
           {/* Badge */}
-          <div className="inline-flex items-center px-4 py-2 bg-[var(--color-blue-100)] text-[var(--color-blue-700)] rounded-full text-sm font-medium">
+          <div className="inline-flex items-center px-3 sm:px-4 py-2 bg-[var(--color-blue-100)] text-[var(--color-blue-700)] rounded-full text-xs sm:text-sm font-medium">
             <span className="w-2 h-2 bg-[var(--color-blue-600)] rounded-full mr-2 animate-pulse"></span>
             Innovation & Entrepreneurship Hub
           </div>
           
           {/* Main Heading */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-[var(--color-gray-900)] leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-[var(--color-gray-900)] leading-tight">
             Empowering
             <span className="block bg-gradient-to-r from-[var(--color-blue-600)] to-[var(--color-blue-700)] bg-clip-text text-transparent">
               Tomorrow&apos;s
@@ -55,43 +55,43 @@ function HeroSection() {
           </h1>
           
           {/* Subtitle */}
-          <p className="text-xl md:text-2xl text-[var(--color-gray-600)] max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-[var(--color-gray-600)] max-w-4xl mx-auto leading-relaxed px-4">
             Transforming groundbreaking ideas into impactful ventures through comprehensive support, 
             mentorship, and funding opportunities at IIIT Sri City.
           </p>
           
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-            <button className="group bg-[var(--color-blue-600)] text-[var(--color-white)] px-8 py-4 rounded-xl font-semibold text-lg hover:bg-[var(--color-blue-700)] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center pt-6 sm:pt-8">
+            <button className="group bg-[var(--color-blue-600)] text-[var(--color-white)] px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-[var(--color-blue-700)] transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
               <span className="flex items-center justify-center">
                 Explore Open Calls
-                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </span>
             </button>
-            <button className="group border-2 border-[var(--color-blue-600)] text-[var(--color-blue-600)] px-8 py-4 rounded-xl font-semibold text-lg hover:bg-[var(--color-blue-600)] hover:text-[var(--color-white)] transition-all duration-300">
+            <button className="group border-2 border-[var(--color-blue-600)] text-[var(--color-blue-600)] px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-[var(--color-blue-600)] hover:text-[var(--color-white)] transition-all duration-300">
               Learn Our Story
             </button>
           </div>
           
           {/* Stats Preview */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-16 border-t border-[var(--color-gray-200)] mt-16">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 pt-12 sm:pt-16 border-t border-[var(--color-gray-200)] mt-12 sm:mt-16">
             <div className="text-center">
-              <div className="text-3xl font-bold text-[var(--color-gray-900)]">₹2.5Cr+</div>
-              <div className="text-[var(--color-gray-600)] text-sm">Funding Disbursed</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--color-gray-900)]">₹2.5Cr+</div>
+              <div className="text-[var(--color-gray-600)] text-xs sm:text-sm">Funding Disbursed</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[var(--color-gray-900)]">89+</div>
-              <div className="text-[var(--color-gray-600)] text-sm">Projects Funded</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--color-gray-900)]">89+</div>
+              <div className="text-[var(--color-gray-600)] text-xs sm:text-sm">Projects Funded</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[var(--color-gray-900)]">24</div>
-              <div className="text-[var(--color-gray-600)] text-sm">Active Startups</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--color-gray-900)]">24</div>
+              <div className="text-[var(--color-gray-600)] text-xs sm:text-sm">Active Startups</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-[var(--color-gray-900)]">100%</div>
-              <div className="text-[var(--color-gray-600)] text-sm">Success Rate</div>
+              <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--color-gray-900)]">100%</div>
+              <div className="text-[var(--color-gray-600)] text-xs sm:text-sm">Success Rate</div>
             </div>
           </div>
         </div>
@@ -102,55 +102,55 @@ function HeroSection() {
 
 function MissionVisionSection() {
   return (
-    <section className="py-24 bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] relative overflow-hidden">
+    <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
+        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--color-gray-900)] mb-4 sm:mb-6">
             Our Purpose & Vision
           </h2>
-          <p className="text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto px-4">
             Guided by a clear mission and ambitious vision, we are shaping the future of innovation and entrepreneurship.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12">
           {/* Mission */}
           <div className="group relative h-full">
             <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            <div className="relative bg-[var(--color-white)] p-10 rounded-2xl shadow-lg border border-[var(--color-gray-200)] hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
-              <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
-                  <FaBullseye className="text-[var(--color-white)] text-2xl" />
+            <div className="relative bg-[var(--color-white)] p-6 sm:p-8 lg:p-10 rounded-2xl shadow-lg border border-[var(--color-gray-200)] hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 sm:mb-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 sm:mb-0 sm:mr-6 group-hover:scale-110 transition-transform duration-300">
+                  <FaBullseye className="text-[var(--color-white)] text-xl sm:text-2xl" />
                 </div>
-                <h3 className="text-3xl font-bold text-[var(--color-gray-900)]">Our Mission</h3>
+                <h3 className="text-2xl sm:text-3xl font-bold text-[var(--color-gray-900)]">Our Mission</h3>
               </div>
               <div className="flex-grow">
-                <p className="text-[var(--color-gray-700)] leading-relaxed text-lg mb-8">
+                <p className="text-[var(--color-gray-700)] leading-relaxed text-base sm:text-lg mb-6 sm:mb-8">
                   To create a thriving ecosystem that nurtures innovative ideas, provides comprehensive support 
                   to aspiring entrepreneurs, and bridges the gap between academic research and real-world 
                   applications through strategic partnerships and funding opportunities.
                 </p>
                 
                 {/* Mission Points */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center text-[var(--color-gray-600)]">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
-                    <span>Foster innovation culture</span>
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-sm sm:text-base">Foster innovation culture</span>
                   </div>
                   <div className="flex items-center text-[var(--color-gray-600)]">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
-                    <span>Bridge academia & industry</span>
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-sm sm:text-base">Bridge academia & industry</span>
                   </div>
                   <div className="flex items-center text-[var(--color-gray-600)]">
-                    <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3"></div>
-                    <span>Enable sustainable growth</span>
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-sm sm:text-base">Enable sustainable growth</span>
                   </div>
                 </div>
               </div>
@@ -160,33 +160,33 @@ function MissionVisionSection() {
           {/* Vision */}
           <div className="group relative h-full">
             <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-            <div className="relative bg-[var(--color-white)] p-10 rounded-2xl shadow-lg border border-[var(--color-gray-200)] hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
-              <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mr-6 group-hover:scale-110 transition-transform duration-300">
-                  <FaEye className="text-[var(--color-white)] text-2xl" />
+            <div className="relative bg-[var(--color-white)] p-6 sm:p-8 lg:p-10 rounded-2xl shadow-lg border border-[var(--color-gray-200)] hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 h-full flex flex-col">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center mb-6 sm:mb-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center mb-4 sm:mb-0 sm:mr-6 group-hover:scale-110 transition-transform duration-300">
+                  <FaEye className="text-[var(--color-white)] text-xl sm:text-2xl" />
                 </div>
-                <h3 className="text-3xl font-bold text-[var(--color-gray-900)]">Our Vision</h3>
+                <h3 className="text-2xl sm:text-3xl font-bold text-[var(--color-gray-900)]">Our Vision</h3>
               </div>
               <div className="flex-grow">
-                <p className="text-[var(--color-gray-700)] leading-relaxed text-lg mb-8">
+                <p className="text-[var(--color-gray-700)] leading-relaxed text-base sm:text-lg mb-6 sm:mb-8">
                   To be recognized as a leading innovation hub in India, producing world-class entrepreneurs 
                   and startups that create significant societal impact while contributing to the nation&apos;s 
                   economic growth and technological advancement.
                 </p>
                 
                 {/* Vision Points */}
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-center text-[var(--color-gray-600)]">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div>
-                    <span>Leading innovation hub</span>
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-sm sm:text-base">Leading innovation hub</span>
                   </div>
                   <div className="flex items-center text-[var(--color-gray-600)]">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div>
-                    <span>World-class entrepreneurs</span>
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-sm sm:text-base">World-class entrepreneurs</span>
                   </div>
                   <div className="flex items-center text-[var(--color-gray-600)]">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3"></div>
-                    <span>Societal impact</span>
+                    <div className="w-2 h-2 bg-emerald-500 rounded-full mr-3 flex-shrink-0"></div>
+                    <span className="text-sm sm:text-base">Societal impact</span>
                   </div>
                 </div>
               </div>
@@ -240,27 +240,27 @@ function FeaturedProjectsSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-br from-[var(--color-white)] to-[var(--color-gray-50)] relative">
+    <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[var(--color-white)] to-[var(--color-gray-50)] relative">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 right-10 w-64 h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
-        <div className="absolute bottom-10 left-10 w-64 h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
+        <div className="absolute top-5 sm:top-10 right-5 sm:right-10 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
+        <div className="absolute bottom-5 sm:bottom-10 left-5 sm:left-10 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
+        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--color-gray-900)] mb-4 sm:mb-6">
             Featured Success Stories
           </h2>
-          <p className="text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto px-4">
             Hear from our innovators who transformed ideas into impactful ventures through our comprehensive support ecosystem.
           </p>
         </div>
 
         {/* Marquee */}
         <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-          <Marquee pauseOnHover className="[--duration:25s] mb-8">
+          <Marquee pauseOnHover className="[--duration:25s] mb-6 sm:mb-8">
             {firstRow.map((story) => (
               <ReviewCard key={story.username} {...story} />
             ))}
@@ -270,8 +270,8 @@ function FeaturedProjectsSection() {
               <ReviewCard key={story.username} {...story} />
             ))}
           </Marquee>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[var(--color-white)] to-transparent"></div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[var(--color-white)] to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-8 sm:w-16 bg-gradient-to-r from-[var(--color-white)] to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-8 sm:w-16 bg-gradient-to-l from-[var(--color-white)] to-transparent"></div>
         </div>
       </div>
     </section>
@@ -280,20 +280,20 @@ function FeaturedProjectsSection() {
 
 function TeamSection() {
   return (
-    <section className="py-24 bg-gradient-to-br from-[var(--color-white)] via-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
+    <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[var(--color-white)] via-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-64 h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
+        <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse animation-delay-2000"></div>
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
+        <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--color-gray-900)] mb-4 sm:mb-6">
             Meet Our Team
           </h2>
-          <p className="text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto px-4">
             A dedicated team of visionaries, researchers, and industry experts committed to fostering innovation and entrepreneurship.
           </p>
         </div>
