@@ -1,20 +1,13 @@
 "use client";
 
 import Image from 'next/image';
+import { navItems, footerLinks, contactInfo, copyrightText } from '@/constants';
 
 interface PublicHeaderProps {
   onNavigate?: (section: string) => void;
 }
 
 function PublicHeader({ onNavigate }: PublicHeaderProps) {
-  const navItems = [
-    { label: 'Home', id: 'home' },
-    { label: 'About', id: 'about' },
-    { label: 'Projects', id: 'projects' },
-    { label: 'Open Calls', id: 'open-calls' },
-    { label: 'Contact', id: 'contact' },
-  ];
-
   return (
     <header className="bg-[var(--color-white)] border-b border-[var(--color-gray-200)] px-6 py-4 sticky top-0 z-50">
       <div className="flex items-center">
@@ -90,10 +83,13 @@ function PublicFooter() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#" className="text-[var(--color-gray-500)] hover:text-[var(--color-white)] transition-colors">About Us</a></li>
-              <li><a href="#" className="text-[var(--color-gray-500)] hover:text-[var(--color-white)] transition-colors">Projects</a></li>
-              <li><a href="#" className="text-[var(--color-gray-500)] hover:text-[var(--color-white)] transition-colors">Open Calls</a></li>
-              <li><a href="#" className="text-[var(--color-gray-500)] hover:text-[var(--color-white)] transition-colors">Contact</a></li>
+              {footerLinks.map((link, index) => (
+                <li key={index}>
+                  <a href={link.href} className="text-[var(--color-gray-500)] hover:text-[var(--color-white)] transition-colors">
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -101,17 +97,17 @@ function PublicFooter() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Contact</h4>
             <div className="space-y-2 text-sm text-[var(--color-gray-500)]">
-              <p>IIIT Sri City, Chittoor</p>
-              <p>Andhra Pradesh, India</p>
-              <p>Email: innovation@iiits.in</p>
-              <p>Phone: +91-XXXX-XXXXXX</p>
+              <p>{contactInfo.address.line1}</p>
+              <p>{contactInfo.address.line2}</p>
+              <p>Email: {contactInfo.email}</p>
+              <p>Phone: {contactInfo.phone}</p>
             </div>
           </div>
         </div>
 
         <div className="border-t border-[var(--color-gray-700)] mt-8 pt-8 text-center">
           <p className="text-[var(--color-gray-500)] text-sm">
-            © 2025 Indian Institute of Information Technology Sri City. All rights reserved.
+            {copyrightText}
           </p>
         </div>
       </div>

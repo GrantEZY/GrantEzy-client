@@ -15,18 +15,29 @@ import {
 } from 'react-icons/fa';
 import { cn } from "@/lib/utils";
 import { Marquee } from "@/components/magicui/marquee";
+import { successStories, openCalls, leadership, team } from "@/constants";
+
+// Icon mapping function
+const getIcon = (iconName: string) => {
+  const icons: { [key: string]: React.ReactElement } = {
+    FaRocket: <FaRocket className="text-2xl" />,
+    FaBolt: <FaBolt className="text-2xl" />,
+    FaHeartbeat: <FaHeartbeat className="text-2xl" />
+  };
+  return icons[iconName] || <FaRocket className="text-2xl" />;
+};
 
 function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[var(--color-gray-50)] via-[var(--color-white)] to-[var(--color-blue-50)] overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
+        <div className="absolute top-20 left-20 w-72 h-72 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+        <div className="absolute top-40 right-20 w-72 h-72 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-[var(--color-pink-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
       </div>
       
-      <div className="relative max-w-7xl mx-auto px-6 text-center">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center">
         <div className="space-y-8">
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-2 bg-[var(--color-blue-100)] text-[var(--color-blue-700)] rounded-full text-sm font-medium">
@@ -98,7 +109,7 @@ function MissionVisionSection() {
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
@@ -188,57 +199,6 @@ function MissionVisionSection() {
 }
 
 function FeaturedProjectsSection() {
-  const successStories = [
-    {
-      name: "Dr. Priya Sharma",
-      username: "@drpriya",
-      body: "Our EduTech platform reached 10,000+ rural students. The ₹25L grant transformed education accessibility across 5 states.",
-      img: "https://avatar.vercel.sh/priya",
-      project: "EduTech Platform",
-      impact: "10,000+ Students"
-    },
-    {
-      name: "Rajesh Kumar",
-      username: "@rajeshk",
-      body: "AgriBot revolutionized farming for 500+ farmers. IoT sensors increased crop yields by 40% with ₹35L funding support.",
-      img: "https://avatar.vercel.sh/rajesh", 
-      project: "AgriBot Solutions",
-      impact: "500+ Farmers"
-    },
-    {
-      name: "Dr. Meera Patel",
-      username: "@drmeera",
-      body: "HealthCare Connect enabled 5,000+ rural consultations. Telemedicine broke geographical barriers with our ₹40L grant.",
-      img: "https://avatar.vercel.sh/meera",
-      project: "HealthCare Connect", 
-      impact: "5,000+ Consultations"
-    },
-    {
-      name: "Vikram Singh",
-      username: "@vikrams",
-      body: "CleanEnergy startup now powers 200+ villages. Solar innovation project scaled with comprehensive incubation support.",
-      img: "https://avatar.vercel.sh/vikram",
-      project: "CleanEnergy Solutions",
-      impact: "200+ Villages"
-    },
-    {
-      name: "Anita Reddy",
-      username: "@anitar",
-      body: "FinTech platform digitized 1000+ rural businesses. Micro-finance solutions reached underserved communities effectively.",
-      img: "https://avatar.vercel.sh/anita",
-      project: "Rural FinTech",
-      impact: "1000+ Businesses"
-    },
-    {
-      name: "Suresh Gupta", 
-      username: "@sureshg",
-      body: "Water purification tech deployed in 50+ villages. Our innovation saves 10,000+ lives annually with sustainable solutions.",
-      img: "https://avatar.vercel.sh/suresh",
-      project: "AquaPure Systems",
-      impact: "50+ Villages"
-    }
-  ];
-
   const firstRow = successStories.slice(0, successStories.length / 2);
   const secondRow = successStories.slice(successStories.length / 2);
 
@@ -260,31 +220,21 @@ function FeaturedProjectsSection() {
     return (
       <figure
         className={cn(
-          "relative h-full w-80 cursor-pointer overflow-hidden rounded-xl border-2 p-4 bg-white shadow-lg",
+          "relative h-full w-80 cursor-pointer overflow-hidden rounded-xl p-6",
           // light styles
-          "border-gray-200 hover:border-blue-300 hover:shadow-xl",
-          // dark styles
-          "dark:border-gray-600 dark:bg-gray-800 dark:hover:border-blue-500",
-          // transition
-          "transition-all duration-300 hover:scale-105"
+          "border-[var(--color-gray-200)] bg-[var(--color-white)] hover:bg-[var(--color-gray-50)]",
         )}
       >
-        <div className="flex flex-row items-center gap-2 mb-3">
-          <img className="rounded-full border-2 border-gray-100" width="40" height="40" alt="" src={img} />
+        <div className="flex flex-row items-center gap-3">
+          <img className="rounded-full" width="40" height="40" alt="" src={img} />
           <div className="flex flex-col">
-            <figcaption className="text-sm font-medium text-gray-900 dark:text-white">
+            <figcaption className="text-base font-bold text-[var(--color-black)]">
               {name}
             </figcaption>
-            <p className="text-xs font-medium text-gray-500 dark:text-white/40">{username}</p>
+            <p className="text-sm font-medium text-[var(--color-gray-600)]">{username}</p>
           </div>
         </div>
-        
-        <div className="mb-3 p-2 bg-blue-50 rounded-lg border border-blue-100">
-          <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide">{project}</div>
-          <div className="text-xs text-blue-500 font-medium">{impact}</div>
-        </div>
-        
-        <blockquote className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">{body}</blockquote>
+        <blockquote className="mt-4 text-base leading-relaxed">{body}</blockquote>
       </figure>
     );
   };
@@ -293,11 +243,11 @@ function FeaturedProjectsSection() {
     <section className="py-24 bg-gradient-to-br from-[var(--color-white)] to-[var(--color-gray-50)] relative">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 right-10 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl"></div>
-        <div className="absolute bottom-10 left-10 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl"></div>
+        <div className="absolute top-10 right-10 w-64 h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
+        <div className="absolute bottom-10 left-10 w-64 h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
@@ -310,18 +260,18 @@ function FeaturedProjectsSection() {
 
         {/* Marquee */}
         <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
-          <Marquee pauseOnHover className="[--duration:20s]">
+          <Marquee pauseOnHover className="[--duration:25s] mb-8">
             {firstRow.map((story) => (
               <ReviewCard key={story.username} {...story} />
             ))}
           </Marquee>
-          <Marquee reverse pauseOnHover className="[--duration:20s]">
+          <Marquee reverse pauseOnHover className="[--duration:25s]">
             {secondRow.map((story) => (
               <ReviewCard key={story.username} {...story} />
             ))}
           </Marquee>
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white via-white/80 to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[var(--color-white)] to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-[var(--color-white)] to-transparent"></div>
         </div>
       </div>
     </section>
@@ -329,45 +279,15 @@ function FeaturedProjectsSection() {
 }
 
 function TeamSection() {
-  const leadership = [
-    {
-      name: 'Dr. Rajesh Kumar',
-      position: 'Director, Innovation & Entrepreneurship',
-      image: '/assets/placeholder-avatar.png',
-      bio: 'Leading innovation initiatives with 15+ years of experience in technology entrepreneurship and academic research.',
-      expertise: ['Strategic Planning', 'Technology Transfer', 'Entrepreneurship'],
-      linkedin: '#',
-      email: 'rajesh.kumar@iiits.in'
-    },
-    {
-      name: 'Prof. Anita Sharma',
-      position: 'Associate Director, Incubation',
-      image: '/assets/placeholder-avatar.png',
-      bio: 'Expert in startup incubation and technology transfer with extensive industry connections and mentorship experience.',
-      expertise: ['Startup Incubation', 'Industry Relations', 'Mentorship'],
-      linkedin: '#',
-      email: 'anita.sharma@iiits.in'
-    }
-  ];
-
-  const team = [
-    { name: 'Dr. Suresh Reddy', position: 'Program Manager', department: 'Operations' },
-    { name: 'Ms. Priya Patel', position: 'Startup Coordinator', department: 'Incubation' },
-    { name: 'Mr. Vikram Singh', position: 'Industry Liaison', department: 'Partnerships' },
-    { name: 'Dr. Meera Gupta', position: 'Research Coordinator', department: 'Research' },
-    { name: 'Ms. Kavya Nair', position: 'Program Officer', department: 'Programs' },
-    { name: 'Mr. Arjun Mehta', position: 'Technical Lead', department: 'Technology' }
-  ];
-
   return (
     <section className="py-24 bg-gradient-to-br from-[var(--color-white)] via-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-64 h-64 bg-blue-300 rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-20 w-64 h-64 bg-purple-300 rounded-full mix-blend-multiply filter blur-2xl animate-pulse animation-delay-2000"></div>
+        <div className="absolute top-20 left-20 w-64 h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-20 w-64 h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse animation-delay-2000"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
@@ -385,14 +305,14 @@ function TeamSection() {
             {leadership.map((leader, index) => (
               <div 
                 key={index} 
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-1 h-full flex flex-col"
+                className="group bg-[var(--color-white)] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-1 h-full flex flex-col"
               >
                 {/* Header with Gradient */}
                 <div className="h-32 bg-gradient-to-r from-[var(--color-blue-500)] to-[var(--color-blue-600)] relative">
                   <div className="absolute inset-0 bg-black/10"></div>
                   {/* Avatar */}
                   <div className="absolute -bottom-12 left-8">
-                    <div className="w-24 h-24 bg-white rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                    <div className="w-24 h-24 bg-[var(--color-white)] rounded-full border-4 border-[var(--color-white)] shadow-lg flex items-center justify-center">
                       <div className="w-20 h-20 bg-gradient-to-br from-[var(--color-blue-100)] to-[var(--color-blue-200)] rounded-full flex items-center justify-center text-[var(--color-blue-600)] text-2xl font-bold">
                         {leader.name.split(' ').map(n => n[0]).join('')}
                       </div>
@@ -456,7 +376,7 @@ function TeamSection() {
             {team.map((member, index) => (
               <div 
                 key={index} 
-                className="group bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center transform hover:-translate-y-1"
+                className="group bg-[var(--color-white)] rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 text-center transform hover:-translate-y-1"
               >
                 {/* Avatar */}
                 <div className="relative mb-6">
@@ -485,86 +405,35 @@ function TeamSection() {
 }
 
 function OpenCallsSection() {
-  const openCalls = [
-    {
-      title: 'Student Innovation Grant',
-      deadline: 'March 15, 2025',
-      funding: '₹15 Lakhs',
-      description: 'Empowering student innovators to develop cutting-edge solutions for real-world problems through comprehensive funding and mentorship support.',
-      status: 'Open',
-      category: 'Student Innovation',
-      eligibility: 'All Students',
-      duration: '12 months',
-      applications: '200+',
-      icon: <FaRocket className="text-2xl" />,
-      color: 'blue',
-      impact: 'Early Stage Funding',
-      timeline: '12 months',
-      tags: ['Innovation', 'Student', 'Technology']
-    },
-    {
-      title: 'Technology Transfer Program',
-      deadline: 'April 10, 2025',
-      funding: '₹50 Lakhs',
-      description: 'Accelerating the commercialization of research outcomes through strategic partnerships and industry collaboration.',
-      status: 'Open',
-      category: 'Research Transfer',
-      eligibility: 'Faculty & Students',
-      duration: '18 months',
-      applications: '150+',
-      icon: <FaBolt className="text-2xl" />,
-      color: 'green',
-      impact: 'Research to Market',
-      timeline: '18 months',
-      tags: ['Technology', 'Research', 'Commercialization']
-    },
-    {
-      title: 'Social Impact Challenge',
-      deadline: 'May 20, 2025',
-      funding: '₹30 Lakhs',
-      description: 'Supporting startups focused on solving social and environmental challenges with sustainable solutions.',
-      status: 'Coming Soon',
-      category: 'Social Impact',
-      eligibility: 'Social entrepreneurs',
-      duration: '15 months',
-      applications: 'Opening Soon',
-      icon: <FaHeartbeat className="text-2xl" />,
-      color: 'red',
-      impact: 'Social Change',
-      timeline: '15 months',
-      tags: ['Social Impact', 'Environment', 'Sustainability']
-    }
-  ];
-
   const getProjectColors = (color: string) => {
     switch (color) {
       case 'blue':
         return {
-          bg: 'from-blue-50 to-blue-100',
-          border: 'border-blue-200',
-          icon: 'text-blue-600',
-          accent: 'bg-blue-500'
+          bg: 'from-[var(--color-blue-50)] to-[var(--color-blue-100)]',
+          border: 'border-[var(--color-blue-200)]',
+          icon: 'text-[var(--color-blue-600)]',
+          accent: 'bg-[var(--color-blue-500)]'
         };
       case 'green':
         return {
-          bg: 'from-green-50 to-green-100',
-          border: 'border-green-200',
-          icon: 'text-green-600',
-          accent: 'bg-green-500'
+          bg: 'from-[var(--color-green-50)] to-[var(--color-green-100)]',
+          border: 'border-[var(--color-green-200)]',
+          icon: 'text-[var(--color-green-600)]',
+          accent: 'bg-[var(--color-green-500)]'
         };
       case 'red':
         return {
-          bg: 'from-red-50 to-red-100',
-          border: 'border-red-200',
-          icon: 'text-red-600',
-          accent: 'bg-red-500'
+          bg: 'from-[var(--color-red-50)] to-[var(--color-red-100)]',
+          border: 'border-[var(--color-red-200)]',
+          icon: 'text-[var(--color-red-600)]',
+          accent: 'bg-[var(--color-red-500)]'
         };
       default:
         return {
-          bg: 'from-gray-50 to-gray-100',
-          border: 'border-gray-200',
-          icon: 'text-gray-600',
-          accent: 'bg-gray-500'
+          bg: 'from-[var(--color-gray-50)] to-[var(--color-gray-100)]',
+          border: 'border-[var(--color-gray-200)]',
+          icon: 'text-[var(--color-gray-600)]',
+          accent: 'bg-[var(--color-gray-500)]'
         };
     }
   };
@@ -573,11 +442,11 @@ function OpenCallsSection() {
     <section className="py-24 bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
       {/* Background Elements */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-green-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[var(--color-green-400)] rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--color-blue-400)] rounded-full mix-blend-multiply filter blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-[var(--color-gray-900)] mb-6">
@@ -608,7 +477,7 @@ function OpenCallsSection() {
                   {/* Header */}
                   <div className="flex items-center justify-between mb-6">
                     <div className={`${colors.icon} group-hover:scale-110 transition-transform duration-300`}>
-                      {call.icon}
+                      {getIcon(call.icon)}
                     </div>
                     <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
                       call.status === 'Open' 
