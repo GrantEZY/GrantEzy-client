@@ -13,6 +13,8 @@ import {
   FaCalendarAlt,
   FaRocket
 } from 'react-icons/fa';
+import { cn } from "@/lib/utils";
+import { Marquee } from "@/components/magicui/marquee";
 
 function HeroSection() {
   return (
@@ -186,76 +188,105 @@ function MissionVisionSection() {
 }
 
 function FeaturedProjectsSection() {
-  const projects = [
+  const successStories = [
     {
-      title: 'EduTech Platform',
-      description: 'AI-powered personalized learning platform that revolutionizes rural education through adaptive learning algorithms and personalized curriculum delivery.',
-      status: 'Completed',
-      funding: '₹25 Lakhs',
-      link: 'https://example.com/edutech',
-      tags: ['Education', 'AI', 'Rural Development'],
-      icon: <FaGraduationCap className="text-2xl" />,
-      color: 'blue',
-      impact: '10,000+ Students Reached',
-      timeline: '18 months'
+      name: "Dr. Priya Sharma",
+      username: "@drpriya",
+      body: "Our EduTech platform reached 10,000+ rural students. The ₹25L grant transformed education accessibility across 5 states.",
+      img: "https://avatar.vercel.sh/priya",
+      project: "EduTech Platform",
+      impact: "10,000+ Students"
     },
     {
-      title: 'AgriBot Solutions',
-      description: 'IoT-based automated farming solutions that help small-scale farmers optimize crop yields through smart monitoring and precision agriculture.',
-      status: 'Ongoing',
-      funding: '₹35 Lakhs',
-      link: 'https://example.com/agribot',
-      tags: ['Agriculture', 'IoT', 'Automation'],
-      icon: <FaSeedling className="text-2xl" />,
-      color: 'green',
-      impact: '500+ Farmers Benefited',
-      timeline: '24 months'
+      name: "Rajesh Kumar",
+      username: "@rajeshk",
+      body: "AgriBot revolutionized farming for 500+ farmers. IoT sensors increased crop yields by 40% with ₹35L funding support.",
+      img: "https://avatar.vercel.sh/rajesh", 
+      project: "AgriBot Solutions",
+      impact: "500+ Farmers"
     },
     {
-      title: 'HealthCare Connect',
-      description: 'Comprehensive telemedicine platform connecting rural patients with specialist doctors, enabling remote consultations and health monitoring.',
-      status: 'Completed',
-      funding: '₹40 Lakhs',
-      link: 'https://example.com/healthcare',
-      tags: ['Healthcare', 'Telemedicine', 'Rural'],
-      icon: <FaHeartbeat className="text-2xl" />,
-      color: 'red',
-      impact: '5,000+ Consultations',
-      timeline: '15 months'
+      name: "Dr. Meera Patel",
+      username: "@drmeera",
+      body: "HealthCare Connect enabled 5,000+ rural consultations. Telemedicine broke geographical barriers with our ₹40L grant.",
+      img: "https://avatar.vercel.sh/meera",
+      project: "HealthCare Connect", 
+      impact: "5,000+ Consultations"
+    },
+    {
+      name: "Vikram Singh",
+      username: "@vikrams",
+      body: "CleanEnergy startup now powers 200+ villages. Solar innovation project scaled with comprehensive incubation support.",
+      img: "https://avatar.vercel.sh/vikram",
+      project: "CleanEnergy Solutions",
+      impact: "200+ Villages"
+    },
+    {
+      name: "Anita Reddy",
+      username: "@anitar",
+      body: "FinTech platform digitized 1000+ rural businesses. Micro-finance solutions reached underserved communities effectively.",
+      img: "https://avatar.vercel.sh/anita",
+      project: "Rural FinTech",
+      impact: "1000+ Businesses"
+    },
+    {
+      name: "Suresh Gupta", 
+      username: "@sureshg",
+      body: "Water purification tech deployed in 50+ villages. Our innovation saves 10,000+ lives annually with sustainable solutions.",
+      img: "https://avatar.vercel.sh/suresh",
+      project: "AquaPure Systems",
+      impact: "50+ Villages"
     }
   ];
 
-  const getProjectColors = (color: string) => {
-    switch (color) {
-      case 'blue':
-        return {
-          bg: 'from-blue-50 to-blue-100',
-          border: 'border-blue-200',
-          icon: 'text-blue-600',
-          accent: 'bg-blue-500'
-        };
-      case 'green':
-        return {
-          bg: 'from-green-50 to-green-100',
-          border: 'border-green-200',
-          icon: 'text-green-600',
-          accent: 'bg-green-500'
-        };
-      case 'red':
-        return {
-          bg: 'from-red-50 to-red-100',
-          border: 'border-red-200',
-          icon: 'text-red-600',
-          accent: 'bg-red-500'
-        };
-      default:
-        return {
-          bg: 'from-gray-50 to-gray-100',
-          border: 'border-gray-200',
-          icon: 'text-gray-600',
-          accent: 'bg-gray-500'
-        };
-    }
+  const firstRow = successStories.slice(0, successStories.length / 2);
+  const secondRow = successStories.slice(successStories.length / 2);
+
+  const ReviewCard = ({
+    img,
+    name,
+    username,
+    body,
+    project,
+    impact,
+  }: {
+    img: string;
+    name: string;
+    username: string;
+    body: string;
+    project: string;
+    impact: string;
+  }) => {
+    return (
+      <figure
+        className={cn(
+          "relative h-full w-80 cursor-pointer overflow-hidden rounded-xl border-2 p-4 bg-white shadow-lg",
+          // light styles
+          "border-gray-200 hover:border-blue-300 hover:shadow-xl",
+          // dark styles
+          "dark:border-gray-600 dark:bg-gray-800 dark:hover:border-blue-500",
+          // transition
+          "transition-all duration-300 hover:scale-105"
+        )}
+      >
+        <div className="flex flex-row items-center gap-2 mb-3">
+          <img className="rounded-full border-2 border-gray-100" width="40" height="40" alt="" src={img} />
+          <div className="flex flex-col">
+            <figcaption className="text-sm font-medium text-gray-900 dark:text-white">
+              {name}
+            </figcaption>
+            <p className="text-xs font-medium text-gray-500 dark:text-white/40">{username}</p>
+          </div>
+        </div>
+        
+        <div className="mb-3 p-2 bg-blue-50 rounded-lg border border-blue-100">
+          <div className="text-xs font-semibold text-blue-600 uppercase tracking-wide">{project}</div>
+          <div className="text-xs text-blue-500 font-medium">{impact}</div>
+        </div>
+        
+        <blockquote className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">{body}</blockquote>
+      </figure>
+    );
   };
 
   return (
@@ -273,97 +304,24 @@ function FeaturedProjectsSection() {
             Featured Success Stories
           </h2>
           <p className="text-xl text-[var(--color-gray-600)] max-w-3xl mx-auto">
-            Discover how our innovative projects are creating real-world impact and transforming communities across India.
+            Hear from our innovators who transformed ideas into impactful ventures through our comprehensive support ecosystem.
           </p>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => {
-            const colors = getProjectColors(project.color);
-            return (
-              <div 
-                key={index} 
-                className="group relative overflow-hidden bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
-              >
-                {/* Gradient Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${colors.bg} opacity-50 group-hover:opacity-70 transition-opacity duration-300`}></div>
-                
-                {/* Accent Line */}
-                <div className={`absolute top-0 left-0 right-0 h-1 ${colors.accent}`}></div>
-                
-                {/* Content */}
-                <div className="relative p-8">
-                  {/* Header */}
-                  <div className="flex items-center justify-between mb-6">
-                    <div className={`${colors.icon} group-hover:scale-110 transition-transform duration-300`}>
-                      {project.icon}
-                    </div>
-                    <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                      project.status === 'Completed' 
-                        ? 'bg-green-100 text-green-700 border border-green-200' 
-                        : project.status === 'Ongoing'
-                        ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                        : 'bg-blue-100 text-blue-700 border border-blue-200'
-                    }`}>
-                      {project.status}
-                    </span>
-                  </div>
-                  
-                  {/* Title & Description */}
-                  <h3 className="text-2xl font-bold text-[var(--color-gray-900)] mb-4 group-hover:text-[var(--color-blue-700)] transition-colors duration-300">
-                    {project.title}
-                  </h3>
-                  <p className="text-[var(--color-gray-600)] leading-relaxed mb-6">
-                    {project.description}
-                  </p>
-                  
-                  {/* Impact Metrics */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="text-center p-3 bg-white/50 rounded-lg">
-                      <div className="text-lg font-bold text-[var(--color-gray-900)]">{project.funding}</div>
-                      <div className="text-xs text-[var(--color-gray-600)]">Funding</div>
-                    </div>
-                    <div className="text-center p-3 bg-white/50 rounded-lg">
-                      <div className="text-lg font-bold text-[var(--color-gray-900)]">{project.timeline}</div>
-                      <div className="text-xs text-[var(--color-gray-600)]">Duration</div>
-                    </div>
-                  </div>
-                  
-                  {/* Impact Badge */}
-                  <div className="mb-6">
-                    <div className="inline-flex items-center px-3 py-2 bg-[var(--color-blue-50)] border border-[var(--color-blue-200)] rounded-full">
-                      <div className="w-2 h-2 bg-[var(--color-blue-500)] rounded-full mr-2"></div>
-                      <span className="text-sm font-medium text-[var(--color-blue-700)]">{project.impact}</span>
-                    </div>
-                  </div>
-                  
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map((tag, tagIndex) => (
-                      <span 
-                        key={tagIndex} 
-                        className="px-3 py-1 bg-white/70 text-[var(--color-gray-700)] text-xs font-medium rounded-full border border-[var(--color-gray-200)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  {/* CTA Button */}
-                  <a 
-                    href={project.link} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="group/btn inline-flex items-center justify-center w-full px-6 py-3 bg-[var(--color-gray-900)] text-[var(--color-white)] rounded-xl font-semibold hover:bg-[var(--color-blue-600)] transition-all duration-300 transform hover:scale-105"
-                  >
-                    <span>Explore Project</span>
-                    <FaExternalLinkAlt className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                  </a>
-                </div>
-              </div>
-            );
-          })}
+        {/* Marquee */}
+        <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
+          <Marquee pauseOnHover className="[--duration:20s]">
+            {firstRow.map((story) => (
+              <ReviewCard key={story.username} {...story} />
+            ))}
+          </Marquee>
+          <Marquee reverse pauseOnHover className="[--duration:20s]">
+            {secondRow.map((story) => (
+              <ReviewCard key={story.username} {...story} />
+            ))}
+          </Marquee>
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-white via-white/80 to-transparent"></div>
         </div>
       </div>
     </section>
@@ -529,42 +487,87 @@ function TeamSection() {
 function OpenCallsSection() {
   const openCalls = [
     {
-      title: 'Startup Incubation Program 2025',
+      title: 'Student Innovation Grant',
       deadline: 'March 15, 2025',
-      funding: 'Up to ₹50 Lakhs',
-      description: 'Comprehensive 12-month incubation program for early-stage startups with mentorship, funding, and market access.',
+      funding: '₹15 Lakhs',
+      description: 'Empowering student innovators to develop cutting-edge solutions for real-world problems through comprehensive funding and mentorship support.',
       status: 'Open',
-      category: 'Incubation',
-      eligibility: 'Early-stage startups',
+      category: 'Student Innovation',
+      eligibility: 'All Students',
       duration: '12 months',
-      applications: '250+',
-      icon: <FaRocket className="text-2xl" />
+      applications: '200+',
+      icon: <FaRocket className="text-2xl" />,
+      color: 'blue',
+      impact: 'Early Stage Funding',
+      timeline: '12 months',
+      tags: ['Innovation', 'Student', 'Technology']
     },
     {
-      title: 'Research Innovation Grant',
-      deadline: 'April 30, 2025',
-      funding: 'Up to ₹25 Lakhs',
-      description: 'Funding for innovative research projects with commercial potential and societal impact.',
+      title: 'Technology Transfer Program',
+      deadline: 'April 10, 2025',
+      funding: '₹50 Lakhs',
+      description: 'Accelerating the commercialization of research outcomes through strategic partnerships and industry collaboration.',
       status: 'Open',
-      category: 'Research',
+      category: 'Research Transfer',
       eligibility: 'Faculty & Students',
       duration: '18 months',
       applications: '150+',
-      icon: <FaBolt className="text-2xl" />
+      icon: <FaBolt className="text-2xl" />,
+      color: 'green',
+      impact: 'Research to Market',
+      timeline: '18 months',
+      tags: ['Technology', 'Research', 'Commercialization']
     },
     {
       title: 'Social Impact Challenge',
       deadline: 'May 20, 2025',
-      funding: 'Up to ₹30 Lakhs',
+      funding: '₹30 Lakhs',
       description: 'Supporting startups focused on solving social and environmental challenges with sustainable solutions.',
       status: 'Coming Soon',
       category: 'Social Impact',
       eligibility: 'Social entrepreneurs',
       duration: '15 months',
       applications: 'Opening Soon',
-      icon: <FaHeartbeat className="text-2xl" />
+      icon: <FaHeartbeat className="text-2xl" />,
+      color: 'red',
+      impact: 'Social Change',
+      timeline: '15 months',
+      tags: ['Social Impact', 'Environment', 'Sustainability']
     }
   ];
+
+  const getProjectColors = (color: string) => {
+    switch (color) {
+      case 'blue':
+        return {
+          bg: 'from-blue-50 to-blue-100',
+          border: 'border-blue-200',
+          icon: 'text-blue-600',
+          accent: 'bg-blue-500'
+        };
+      case 'green':
+        return {
+          bg: 'from-green-50 to-green-100',
+          border: 'border-green-200',
+          icon: 'text-green-600',
+          accent: 'bg-green-500'
+        };
+      case 'red':
+        return {
+          bg: 'from-red-50 to-red-100',
+          border: 'border-red-200',
+          icon: 'text-red-600',
+          accent: 'bg-red-500'
+        };
+      default:
+        return {
+          bg: 'from-gray-50 to-gray-100',
+          border: 'border-gray-200',
+          icon: 'text-gray-600',
+          accent: 'bg-gray-500'
+        };
+    }
+  };
 
   return (
     <section className="py-24 bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
@@ -587,96 +590,97 @@ function OpenCallsSection() {
 
         {/* Calls Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-          {openCalls.map((call, index) => (
-            <div 
-              key={index} 
-              className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 h-full flex flex-col"
-            >
-              {/* Status Badge */}
-              <div className="absolute top-6 right-6 z-10">
-                <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${
-                  call.status === 'Open' 
-                    ? 'bg-green-100 text-green-700 border border-green-200' 
-                    : 'bg-yellow-100 text-yellow-700 border border-yellow-200'
-                }`}>
-                  <div className={`w-2 h-2 ${call.status === 'Open' ? 'bg-green-500' : 'bg-yellow-500'} rounded-full mr-2 animate-pulse`}></div>
-                  {call.status}
-                </span>
-              </div>
-
-              {/* Card Content */}
-              <div className="p-8 h-full flex flex-col">
-                {/* Icon & Category */}
-                <div className="flex items-center mb-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-[var(--color-blue-500)] to-[var(--color-blue-600)] rounded-xl flex items-center justify-center text-white mr-4 group-hover:scale-110 transition-transform duration-300">
-                    {call.icon}
-                  </div>
-                  <div>
-                    <div className="text-sm font-semibold text-[var(--color-blue-600)] uppercase tracking-wide">{call.category}</div>
-                    <div className="text-2xl font-bold text-[var(--color-gray-900)] group-hover:text-[var(--color-blue-700)] transition-colors duration-300">
-                      {call.funding}
+          {openCalls.map((call, index) => {
+            const colors = getProjectColors(call.color);
+            return (
+              <div 
+                key={index} 
+                className="group relative overflow-hidden bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 h-full flex flex-col"
+              >
+                {/* Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${colors.bg} opacity-50 group-hover:opacity-70 transition-opacity duration-300`}></div>
+                
+                {/* Accent Line */}
+                <div className={`absolute top-0 left-0 right-0 h-1 ${colors.accent}`}></div>
+                
+                {/* Content */}
+                <div className="relative p-8 flex flex-col h-full">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className={`${colors.icon} group-hover:scale-110 transition-transform duration-300`}>
+                      {call.icon}
                     </div>
+                    <span className={`px-4 py-2 rounded-full text-sm font-semibold ${
+                      call.status === 'Open' 
+                        ? 'bg-green-100 text-green-700 border border-green-200' 
+                        : call.status === 'Coming Soon'
+                        ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                        : 'bg-blue-100 text-blue-700 border border-blue-200'
+                    }`}>
+                      {call.status}
+                    </span>
                   </div>
-                </div>
-
-                {/* Title & Description */}
-                <div className="flex-grow">
-                  <h3 className="text-2xl font-bold text-[var(--color-gray-900)] mb-4 leading-tight">
-                    {call.title}
-                  </h3>
-                  <p className="text-[var(--color-gray-600)] leading-relaxed mb-6">
-                    {call.description}
-                  </p>
-
-                  {/* Details Grid */}
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="text-center p-3 bg-[var(--color-gray-50)] rounded-lg">
-                      <div className="text-sm font-semibold text-[var(--color-gray-900)]">{call.duration}</div>
-                      <div className="text-xs text-[var(--color-gray-600)]">Duration</div>
-                    </div>
-                    <div className="text-center p-3 bg-[var(--color-gray-50)] rounded-lg">
-                      <div className="text-sm font-semibold text-[var(--color-gray-900)]">{call.applications}</div>
-                      <div className="text-xs text-[var(--color-gray-600)]">Applications</div>
-                    </div>
-                  </div>
-
-                  {/* Eligibility */}
-                  <div className="mb-6">
-                    <div className="text-sm font-semibold text-[var(--color-gray-700)] mb-2">Eligibility</div>
-                    <div className="inline-flex items-center px-3 py-1 bg-[var(--color-blue-50)] text-[var(--color-blue-700)] text-sm rounded-full border border-[var(--color-blue-200)]">
-                      {call.eligibility}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Bottom section - Deadline and Button */}
-                <div className="mt-auto">
-                  {/* Deadline */}
-                  <div className="mb-6 p-4 bg-gradient-to-r from-[var(--color-blue-50)] to-[var(--color-blue-100)] rounded-lg border border-[var(--color-blue-200)]">
-                    <div className="flex items-center">
-                      <FaCalendarAlt className="text-[var(--color-blue-600)] mr-3" />
-                      <div>
-                        <div className="text-sm font-semibold text-[var(--color-gray-700)]">Application Deadline</div>
-                        <div className="text-lg font-bold text-[var(--color-blue-700)]">{call.deadline}</div>
+                  
+                  {/* Title & Description */}
+                  <div className="flex-grow">
+                    <h3 className="text-2xl font-bold text-[var(--color-gray-900)] mb-4 group-hover:text-[var(--color-blue-700)] transition-colors duration-300">
+                      {call.title}
+                    </h3>
+                    <p className="text-[var(--color-gray-600)] leading-relaxed mb-6">
+                      {call.description}
+                    </p>
+                    
+                    {/* Impact Metrics */}
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="text-center p-3 bg-white/50 rounded-lg">
+                        <div className="text-lg font-bold text-[var(--color-gray-900)]">{call.funding}</div>
+                        <div className="text-xs text-[var(--color-gray-600)]">Funding</div>
+                      </div>
+                      <div className="text-center p-3 bg-white/50 rounded-lg">
+                        <div className="text-lg font-bold text-[var(--color-gray-900)]">{call.timeline}</div>
+                        <div className="text-xs text-[var(--color-gray-600)]">Duration</div>
                       </div>
                     </div>
+                    
+                    {/* Impact Badge */}
+                    <div className="mb-6">
+                      <div className="inline-flex items-center px-3 py-2 bg-[var(--color-blue-50)] border border-[var(--color-blue-200)] rounded-full">
+                        <div className="w-2 h-2 bg-[var(--color-blue-500)] rounded-full mr-2"></div>
+                        <span className="text-sm font-medium text-[var(--color-blue-700)]">{call.impact}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {call.tags.map((tag, tagIndex) => (
+                        <span 
+                          key={tagIndex} 
+                          className="px-3 py-1 bg-white/70 text-[var(--color-gray-700)] text-xs font-medium rounded-full border border-[var(--color-gray-200)]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-
-                  {/* CTA Button */}
-                  <button 
-                    className={`w-full px-6 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
-                      call.status === 'Open'
-                        ? 'bg-[var(--color-blue-600)] text-white hover:bg-[var(--color-blue-700)] shadow-lg hover:shadow-xl'
-                        : 'bg-[var(--color-gray-200)] text-[var(--color-gray-600)] cursor-not-allowed'
-                    }`}
-                    disabled={call.status !== 'Open'}
-                  >
-                    {call.status === 'Open' ? 'Apply Now' : 'Opening Soon'}
-                  </button>
+                  
+                  {/* CTA Button - Always at bottom */}
+                  <div className="mt-auto">
+                    <button 
+                      className={`group/btn inline-flex items-center justify-center w-full px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                        call.status === 'Open'
+                          ? 'bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]'
+                          : 'bg-[var(--color-gray-400)] text-[var(--color-white)] cursor-not-allowed'
+                      }`}
+                      disabled={call.status !== 'Open'}
+                    >
+                      <span>{call.status === 'Open' ? 'Apply Now' : 'Opening Soon'}</span>
+                      <FaExternalLinkAlt className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Call to Action */}
