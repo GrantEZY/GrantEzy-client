@@ -30,13 +30,6 @@ const getIcon = (iconName: string) => {
 function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[var(--color-gray-50)] via-[var(--color-white)] to-[var(--color-blue-50)] overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-48 sm:w-72 h-48 sm:h-72 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-        <div className="absolute top-20 sm:top-40 right-10 sm:right-20 w-48 sm:w-72 h-48 sm:h-72 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
-        <div className="absolute bottom-10 sm:bottom-20 left-1/2 w-48 sm:w-72 h-48 sm:h-72 bg-[var(--color-pink-300)] rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-4000"></div>
-      </div>
-      
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="space-y-6 sm:space-y-8">
           {/* Badge */}
@@ -103,12 +96,6 @@ function HeroSection() {
 function MissionVisionSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-64 sm:w-96 h-64 sm:h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-64 sm:w-96 h-64 sm:h-96 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl"></div>
-      </div>
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16 lg:mb-20">
@@ -241,12 +228,6 @@ function FeaturedProjectsSection() {
 
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[var(--color-white)] to-[var(--color-gray-50)] relative">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-5 sm:top-10 right-5 sm:right-10 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
-        <div className="absolute bottom-5 sm:bottom-10 left-5 sm:left-10 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl"></div>
-      </div>
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16 lg:mb-20">
@@ -281,12 +262,6 @@ function FeaturedProjectsSection() {
 function TeamSection() {
   return (
     <section className="py-12 sm:py-16 lg:py-24 bg-gradient-to-br from-[var(--color-white)] via-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-blue-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse"></div>
-        <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-32 sm:w-64 h-32 sm:h-64 bg-[var(--color-purple-300)] rounded-full mix-blend-multiply filter blur-2xl animate-pulse animation-delay-2000"></div>
-      </div>
-
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12 sm:mb-16 lg:mb-20">
@@ -440,12 +415,6 @@ function OpenCallsSection() {
 
   return (
     <section className="py-24 bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] relative">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[var(--color-green-400)] rounded-full mix-blend-multiply filter blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--color-blue-400)] rounded-full mix-blend-multiply filter blur-3xl"></div>
-      </div>
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Header */}
         <div className="text-center mb-20">
