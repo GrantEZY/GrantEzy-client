@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 
+import { useAuth } from "@/hooks/useAuth";
+
 interface UserInfoProps {
   name: string;
   greeting: string;
@@ -86,6 +88,27 @@ function NotificationBell() {
 }
 
 export default function Header() {
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  // Get user initials
+  const getUserInitials = () => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+    }
+    return "U";
+  };
+
+  // Get user display name
+  const getUserName = () => {
+    if (user?.firstName && user?.lastName) {
+      return `${user.firstName} ${user.lastName}`;
+    }
+    return "User";
+  };
   return (
     <header className="h-[98px] w-full border-b border-[var(--color-border-gray)] bg-[var(--color-white)] px-6 py-4">
       <div className="flex h-full max-w-full items-center justify-between">
@@ -124,11 +147,27 @@ export default function Header() {
         <div className="flex flex-shrink-0 items-center space-x-4">
           <NotificationBell />
 
-          <UserInfo
-            greeting="Have a great day!"
-            initials="ST"
-            name="New User"
-          />
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-3">
+              <UserInfo
+                greeting="Have a great day!"
+                initials={getUserInitials()}
+                name={getUserName()}
+              />
+              <button
+                onClick={handleLogout}
+                className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <UserInfo
+              greeting="Please log in"
+              initials="?"
+              name="Guest"
+            />
+          )}
         </div>
       </div>
     </header>

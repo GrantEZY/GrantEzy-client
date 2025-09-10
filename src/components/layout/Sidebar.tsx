@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 interface MenuItem {
@@ -25,34 +27,49 @@ function SidebarItem({
   index: _index,
   onClick,
 }: SidebarItemProps) {
+  const content = (
+    <>
+      <span
+        className={
+          active
+            ? "text-[var(--color-blue-700)]"
+            : "text-[var(--color-gray-600)]"
+        }
+      >
+        {icon}
+      </span>
+      <span>{label}</span>
+    </>
+  );
+
+  const className = `flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none ${isSubItem ? "ml-6" : ""} ${
+    active
+      ? "border-l-4 border-[var(--color-blue-700)] bg-[var(--color-blue-50)] text-[var(--color-blue-700)] shadow-sm"
+      : "text-[var(--color-gray-700)] hover:text-[var(--color-gray-900)]"
+  }`;
+
   return (
     <li className="relative">
-      <a
-        className={`flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none ${isSubItem ? "ml-6" : ""} ${
-          active
-            ? "border-l-4 border-[var(--color-blue-700)] bg-[var(--color-blue-50)] text-[var(--color-blue-700)] shadow-sm"
-            : "text-[var(--color-gray-700)] hover:text-[var(--color-gray-900)]"
-        }`}
-        href={href}
-        onClick={(e) => {
-          if (onClick) {
-            e.preventDefault();
-            onClick(e);
-          }
-        }}
-      >
-        <span
-          className={
-            active
-              ? "text-[var(--color-blue-700)]"
-              : "text-[var(--color-gray-600)]"
-          }
+      {href !== "#" ? (
+        <Link
+          className={className}
+          href={href}
         >
-          {icon}
-        </span>
-
-        <span>{label}</span>
-      </a>
+          {content}
+        </Link>
+      ) : (
+        <button
+          className={className + " w-full"}
+          onClick={(e) => {
+            if (onClick) {
+              e.preventDefault();
+              onClick(e);
+            }
+          }}
+        >
+          {content}
+        </button>
+      )}
     </li>
   );
 }
@@ -218,22 +235,41 @@ const icons = {
 };
 
 export default function Sidebar() {
-  const [peopleOpen, setPeopleOpen] = useState(false);
+  const [peopleOpen, setPeopleOpen] = useState(true); // Keep people menu open by default for admin
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
+  const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
-    { icon: icons.home, label: "Home", active: false },
+    { icon: icons.home, label: "Home", active: pathname === "/admin", href: "/admin" },
     { icon: icons.academics, label: "Academics", active: false },
     { icon: icons.honors, label: "Honors", active: false },
     { icon: icons.btp, label: "BTP", active: false },
     { icon: icons.feedback, label: "Feedback Form", active: false },
-    { icon: icons.people, label: "People", active: false },
+    { icon: icons.people, label: "People", active: pathname.includes("/admin/") },
   ];
 
   const subItems: MenuItem[] = [
-    { icon: icons.startups, label: "Startups", active: false, isSubItem: true },
-    { icon: icons.mentors, label: "Mentors", active: false, isSubItem: true },
-    { icon: icons.eirs, label: "EIRs", active: false, isSubItem: true },
+    { 
+      icon: icons.startups, 
+      label: "Startups", 
+      active: pathname === "/admin/startups", 
+      isSubItem: true,
+      href: "/admin/startups"
+    },
+    { 
+      icon: icons.mentors, 
+      label: "All Users", 
+      active: pathname === "/admin/users", 
+      isSubItem: true,
+      href: "/admin/users"
+    },
+    { 
+      icon: icons.eirs, 
+      label: "EIRs", 
+      active: pathname === "/admin/eirs", 
+      isSubItem: true,
+      href: "/admin/eirs"
+    },
   ];
 
   return (
@@ -274,7 +310,7 @@ export default function Sidebar() {
                   {/* FIX 3: Replaced invalid <div> wrappers with a proper <ul>/<li> structure for the sub-menu. */}
                   <ul className="flex flex-col space-y-6">
                     {subItems.map((sub, sidx) => {
-                      const isSelected = selectedSub === sub.label;
+                      const isSelected = sub.active;
                       return (
                         <li className="relative" key={sidx}>
                           <span
@@ -294,24 +330,20 @@ export default function Sidebar() {
                             }}
                           />
 
-                          <a
+                          <Link
                             className={`flex items-center space-x-3 rounded-lg px-3 py-1 pl-12 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] ${
                               isSelected
                                 ? "font-semibold text-[var(--color-gray-900)]"
                                 : "text-[var(--color-gray-700)]"
                             }`}
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setSelectedSub(sub.label);
-                            }}
+                            href={sub.href || "#"}
                           >
                             <span className="text-[var(--color-gray-700)]">
                               {sub.icon}
                             </span>
 
                             <span>{sub.label}</span>
-                          </a>
+                          </Link>
                         </li>
                       );
                     })}

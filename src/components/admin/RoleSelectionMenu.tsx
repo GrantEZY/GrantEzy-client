@@ -1,6 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+import { useAuth } from "@/hooks/useAuth";
+import { UserRoles } from "@/types/auth.types";
 
 interface RoleCardProps {
   title: string;
@@ -57,11 +61,33 @@ function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
 
 export default function RoleSelectionMenu() {
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole((prev) => (prev === role ? null : role));
-    // TODO: Implement navigation or state management
+    
+    // Navigate to the appropriate admin page
+    if (role === "startups") {
+      router.push("/admin/startups");
+    } else if (role === "eirs") {
+      router.push("/admin/eirs");
+    } else if (role === "users") {
+      router.push("/admin/users");
+    }
   };
+
+  // Check if user has admin access
+  if (!isAuthenticated || user?.role !== UserRoles.ADMIN) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600">You need admin privileges to access this page.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-full w-full">
@@ -128,6 +154,27 @@ export default function RoleSelectionMenu() {
               onClick={() => handleRoleSelect("eirs")}
               selected={selectedRole === "eirs"}
               title="EIRs"
+            />
+
+            <RoleCard
+              icon={
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                  />
+                </svg>
+              }
+              onClick={() => handleRoleSelect("users")}
+              selected={selectedRole === "users"}
+              title="All Users"
             />
           </div>
         </div>
