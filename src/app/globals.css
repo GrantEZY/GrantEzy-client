@@ -1,1 +1,139 @@
 @import "tailwindcss";
+
+:root {
+  /* Basic colors */
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  
+  /* Gray colors */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  
+  /* Blue colors */
+  --color-blue-50: #EBF8FF;
+  --color-blue-100: #DBEAFE;
+  --color-blue-200: #BFDBFE;
+  --color-blue-300: #93C5FD;
+  --color-blue-400: #60A5FA;
+  --color-blue-500: #3B82F6;
+  --color-blue-600: #2563EB;
+  --color-blue-700: #1D4ED8;
+  
+  /* Green colors */
+  --color-green-50: #F0FDF4;
+  --color-green-100: #DCFCE7;
+  --color-green-200: #BBF7D0;
+  --color-green-400: #4ADE80;
+  --color-green-500: #22C55E;
+  --color-green-600: #16A34A;
+  --color-green-700: #15803D;
+  
+  /* Red colors */
+  --color-red-50: #FEF2F2;
+  --color-red-100: #FEE2E2;
+  --color-red-200: #FECACA;
+  --color-red-500: #EF4444;
+  --color-red-600: #DC2626;
+  --color-red-700: #B91C1C;
+  
+  /* Yellow colors */
+  --color-yellow-100: #FEF3C7;
+  --color-yellow-200: #FDE68A;
+  --color-yellow-700: #B45309;
+  
+  /* Purple colors */
+  --color-purple-300: #D8B4FE;
+  
+  /* Pink colors */
+  --color-pink-300: #F9A8D4;
+}
+
+/* Dark theme */
+.dark {
+  /* Basic colors - inverted for dark mode */
+  --color-black: #FFFFFF;
+  --color-white: #1F2937;
+  
+  /* Gray colors - inverted */
+  --color-gray-50: #1F2937;
+  --color-gray-100: #374151;
+  --color-gray-200: #4B5563;
+  --color-gray-300: #6B7280;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #D1D5DB;
+  --color-gray-600: #E5E7EB;
+  --color-gray-700: #F3F4F6;
+  --color-gray-800: #F9FAFB;
+  --color-gray-900: #FFFFFF;
+  
+  /* Blue colors remain similar for consistency */
+  --color-blue-50: #1E3A8A;
+  --color-blue-100: #1E40AF;
+  --color-blue-200: #2563EB;
+  --color-blue-300: #3B82F6;
+  --color-blue-400: #60A5FA;
+  --color-blue-500: #93C5FD;
+  --color-blue-600: #BFDBFE;
+  --color-blue-700: #DBEAFE;
+  
+  /* Adjust other colors for dark theme */
+  --color-green-50: #14532D;
+  --color-green-100: #15803D;
+  --color-green-200: #16A34A;
+  --color-green-400: #22C55E;
+  --color-green-500: #4ADE80;
+  --color-green-600: #BBF7D0;
+  --color-green-700: #DCFCE7;
+  
+  --color-red-50: #7F1D1D;
+  --color-red-100: #991B1B;
+  --color-red-200: #B91C1C;
+  --color-red-500: #EF4444;
+  --color-red-600: #F87171;
+  --color-red-700: #FCA5A5;
+  
+  --color-yellow-100: #A16207;
+  --color-yellow-200: #CA8A04;
+  --color-yellow-700: #FDE047;
+}
+
+/* Ensure body background adapts to theme */
+body {
+  background-color: var(--color-white);
+  color: var(--color-gray-900);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) infinite linear;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
+}
