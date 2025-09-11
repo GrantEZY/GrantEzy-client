@@ -8,6 +8,9 @@ import {
   AdminUser,
   GetAllUsersRequest,
   PaginationMeta,
+  AddUserRequest,
+  UpdateUserRoleRequest,
+  DeleteUserRequest,
 } from "../types/admin.types";
 
 interface AdminState {
@@ -19,6 +22,9 @@ interface AdminState {
 
 interface AdminActions {
   getAllUsers: (params: GetAllUsersRequest) => Promise<void>;
+  addUser: (data: AddUserRequest) => Promise<boolean>;
+  updateUserRole: (data: UpdateUserRoleRequest) => Promise<boolean>;
+  deleteUser: (data: DeleteUserRequest) => Promise<boolean>;
   clearUsers: () => void;
   setError: (error: string | null) => void;
 }
@@ -53,6 +59,69 @@ export const useAdminStore = create<AdminStore>((set) => ({
         isLoading: false,
       });
       throw error;
+    }
+  },
+
+  addUser: async (data: AddUserRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.addUser(data);
+      
+      if (response.status === 201) {
+        set({ isLoading: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add user";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      return false;
+    }
+  },
+
+  updateUserRole: async (data: UpdateUserRoleRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.updateUserRole(data);
+      
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update user role";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      return false;
+    }
+  },
+
+  deleteUser: async (data: DeleteUserRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.deleteUser(data);
+      
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to delete user";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      return false;
     }
   },
 

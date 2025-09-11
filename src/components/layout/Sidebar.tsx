@@ -236,7 +236,6 @@ const icons = {
 
 export default function Sidebar() {
   const [peopleOpen, setPeopleOpen] = useState(true); // Keep people menu open by default for admin
-  const [selectedSub, setSelectedSub] = useState<string | null>(null);
   const pathname = usePathname();
 
   const menuItems: MenuItem[] = [

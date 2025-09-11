@@ -4,7 +4,12 @@
 import { useCallback } from "react";
 
 import { useAdminStore } from "../store/admin.store";
-import { GetAllUsersRequest } from "../types/admin.types";
+import { 
+  GetAllUsersRequest,
+  AddUserRequest,
+  UpdateUserRoleRequest,
+  DeleteUserRequest 
+} from "../types/admin.types";
 import { UserRoles } from "../types/auth.types";
 
 export const useAdmin = () => {
@@ -14,6 +19,9 @@ export const useAdmin = () => {
     isLoading,
     error,
     getAllUsers,
+    addUser,
+    updateUserRole,
+    deleteUser,
     clearUsers,
     setError,
   } = useAdminStore();
@@ -66,6 +74,48 @@ export const useAdmin = () => {
     return fetchUsersWithDefaults();
   }, [fetchUsers, fetchUsersWithDefaults, pagination]);
 
+  const createUser = useCallback(
+    async (userData: AddUserRequest) => {
+      try {
+        const success = await addUser(userData);
+        return { success };
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to create user";
+        return { success: false, error: message };
+      }
+    },
+    [addUser],
+  );
+
+  const updateUser = useCallback(
+    async (userData: UpdateUserRoleRequest) => {
+      try {
+        const success = await updateUserRole(userData);
+        return { success };
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to update user";
+        return { success: false, error: message };
+      }
+    },
+    [updateUserRole],
+  );
+
+  const removeUser = useCallback(
+    async (userData: DeleteUserRequest) => {
+      try {
+        const success = await deleteUser(userData);
+        return { success };
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Failed to delete user";
+        return { success: false, error: message };
+      }
+    },
+    [deleteUser],
+  );
+
   return {
     // State
     users,
@@ -78,6 +128,9 @@ export const useAdmin = () => {
     fetchUsersWithDefaults,
     fetchUsersByRole,
     refreshUsers,
+    createUser,
+    updateUser,
+    removeUser,
     clearUsers,
     setError,
   };

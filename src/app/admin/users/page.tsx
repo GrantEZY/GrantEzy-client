@@ -1,18 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 import AdminLayout from "@/components/layout/AdminLayout";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRoles } from "@/types/auth.types";
+import { AdminUser, AddUserRequest, UpdateUserRoleRequest, DeleteUserRequest } from "@/types/admin.types";
+import { AddUserModal } from "@/components/admin/AddUserModal";
+import { EditUserModal } from "@/components/admin/EditUserModal";
+import { DeleteUserModal } from "@/components/admin/DeleteUserModal";
+import { ToastProvider, useToast } from "@/components/ui/Toast";
 
 interface UserTableProps {
-  users: any[];
+  users: AdminUser[];
   isLoading: boolean;
+  onEditUser: (user: AdminUser) => void;
+  onDeleteUser: (user: AdminUser) => void;
 }
 
-function UserTable({ users, isLoading }: UserTableProps) {
+function UserTable({ users, isLoading, onEditUser, onDeleteUser }: UserTableProps) {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -70,11 +77,17 @@ function UserTable({ users, isLoading }: UserTableProps) {
                   {new Date(user.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button className="text-blue-600 hover:text-blue-900 mr-3">
-                    View
-                  </button>
-                  <button className="text-gray-600 hover:text-gray-900">
+                  <button 
+                    className="text-blue-600 hover:text-blue-900 mr-3"
+                    onClick={() => onEditUser(user)}
+                  >
                     Edit
+                  </button>
+                  <button 
+                    className="text-red-600 hover:text-red-900"
+                    onClick={() => onDeleteUser(user)}
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>
@@ -170,20 +183,32 @@ function Pagination({ pagination, onPageChange }: PaginationProps) {
   );
 }
 
-export default function AdminUsersPage() {
-  const { user, isAuthenticated } = useAuth();
-  const { users, pagination, isLoading, error, fetchUsersWithDefaults, fetchUsersByRole } = useAdmin();
-  const [selectedRole, setSelectedRole] = useState<string>("ALL");
+function AdminUsersPageContent() {
+  const { isAuthenticated, user } = useAuth();
+  const { 
+    users, 
+    pagination, 
+    isLoading, 
+    error, 
+    fetchUsersWithDefaults, 
+    fetchUsersByRole,
+    createUser,
+    updateUser,
+    removeUser,
+  } = useAdmin();
+  const { showToast } = useToast();
+  
+  const [selectedRole, setSelectedRole] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  
+  // Modal states
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
-  useEffect(() => {
-    if (isAuthenticated && user?.role === UserRoles.ADMIN) {
-      loadUsers();
-    }
-  }, [isAuthenticated, user, currentPage, pageSize, selectedRole]);
-
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     if (selectedRole === "ALL") {
       await fetchUsersWithDefaults({
         page: currentPage,
@@ -192,7 +217,13 @@ export default function AdminUsersPage() {
     } else {
       await fetchUsersByRole(selectedRole as UserRoles, currentPage, pageSize);
     }
-  };
+  }, [selectedRole, currentPage, pageSize, fetchUsersWithDefaults, fetchUsersByRole]);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.role === UserRoles.ADMIN) {
+      loadUsers();
+    }
+  }, [isAuthenticated, user, loadUsers]);
 
   const handleRoleFilter = (role: string) => {
     setSelectedRole(role);
@@ -206,6 +237,77 @@ export default function AdminUsersPage() {
   const handlePageSizeChange = (size: number) => {
     setPageSize(size);
     setCurrentPage(1); // Reset to first page when changing page size
+  };
+
+  // Modal handlers
+  const handleAddUser = async (userData: any) => {
+    const result = await createUser(userData);
+    if (result.success) {
+      await loadUsers(); // Refresh the user list
+      showToast({
+        type: 'success',
+        message: 'User role added successfully!'
+      });
+    } else {
+      showToast({
+        type: 'error',
+        message: result.error || 'Failed to add user role'
+      });
+    }
+    return result;
+  };
+
+  const handleEditUser = (user: any) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateUser = async (userData: any) => {
+    const result = await updateUser(userData);
+    if (result.success) {
+      await loadUsers(); // Refresh the user list
+      setSelectedUser(null);
+      showToast({
+        type: 'success',
+        message: 'User role updated successfully!'
+      });
+    } else {
+      showToast({
+        type: 'error',
+        message: result.error || 'Failed to update user role'
+      });
+    }
+    return result;
+  };
+
+  const handleDeleteUser = (user: any) => {
+    setSelectedUser(user);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async (userData: any) => {
+    const result = await removeUser(userData);
+    if (result.success) {
+      await loadUsers(); // Refresh the user list
+      setSelectedUser(null);
+      showToast({
+        type: 'success',
+        message: 'User deleted successfully!'
+      });
+    } else {
+      showToast({
+        type: 'error',
+        message: result.error || 'Failed to delete user'
+      });
+    }
+    return result;
+  };
+
+  const handleCloseModals = () => {
+    setIsAddModalOpen(false);
+    setIsEditModalOpen(false);
+    setIsDeleteModalOpen(false);
+    setSelectedUser(null);
   };
 
   if (!isAuthenticated) {
@@ -239,8 +341,11 @@ export default function AdminUsersPage() {
               Manage all users in the system
             </p>
           </div>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-            Add New User
+          <button 
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            Add User Role
           </button>
         </div>
 
@@ -286,6 +391,21 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
+        {/* Debug Information */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <h3 className="text-sm font-medium text-green-800">Debug Information</h3>
+          <div className="mt-2 text-sm text-green-700">
+            <p>Users loaded: {users.length}</p>
+            <p>Loading: {isLoading ? "Yes" : "No"}</p>
+            <p>Error: {error || "None"}</p>
+            <p>Authenticated: {isAuthenticated ? "Yes" : "No"}</p>
+            <p>User role: {user?.role || "None"}</p>
+            <p>Selected role filter: {selectedRole}</p>
+            <p>Current page: {currentPage}</p>
+            <p>Page size: {pageSize}</p>
+          </div>
+        </div>
+
         {/* Error Message */}
         {error && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -304,11 +424,48 @@ export default function AdminUsersPage() {
         )}
 
         {/* User Table */}
-        <UserTable users={users} isLoading={isLoading} />
+        <UserTable 
+          users={users} 
+          isLoading={isLoading} 
+          onEditUser={handleEditUser}
+          onDeleteUser={handleDeleteUser}
+        />
 
         {/* Pagination */}
         <Pagination pagination={pagination} onPageChange={handlePageChange} />
+
+        {/* Modals */}
+        <AddUserModal
+          isOpen={isAddModalOpen}
+          onClose={handleCloseModals}
+          onSubmit={handleAddUser}
+          isLoading={isLoading}
+        />
+
+        <EditUserModal
+          isOpen={isEditModalOpen}
+          onClose={handleCloseModals}
+          onSubmit={handleUpdateUser}
+          isLoading={isLoading}
+          user={selectedUser}
+        />
+
+        <DeleteUserModal
+          isOpen={isDeleteModalOpen}
+          onClose={handleCloseModals}
+          onConfirm={handleConfirmDelete}
+          isLoading={isLoading}
+          user={selectedUser}
+        />
       </div>
     </AdminLayout>
+  );
+}
+
+export default function AdminUsersPage() {
+  return (
+    <ToastProvider>
+      <AdminUsersPageContent />
+    </ToastProvider>
   );
 }

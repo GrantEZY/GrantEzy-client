@@ -7,6 +7,7 @@ import {
   AuthResponse,
   AuthTokens,
   LoginRequest,
+  LoginResponse,
   RegisterRequest,
 } from "../types/auth.types";
 
@@ -18,8 +19,8 @@ export class AuthService {
     );
   }
 
-  async login(data: LoginRequest): Promise<AuthResponse> {
-    return httpClient.post<AuthResponse>(API_CONFIG.ENDPOINTS.AUTH.LOGIN, data);
+  async login(data: LoginRequest): Promise<LoginResponse> {
+    return httpClient.post<LoginResponse>(API_CONFIG.ENDPOINTS.AUTH.LOGIN, data);
   }
 
   async logout(): Promise<void> {

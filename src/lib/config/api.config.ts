@@ -14,6 +14,9 @@ export const API_CONFIG = {
     },
     ADMIN: {
       GET_USERS: "/admin/get-users",
+      ADD_USER: "/admin/add-user",
+      UPDATE_ROLE: "/admin/update-role",
+      DELETE_USER: "/admin/delete-user",
     },
     HEALTH: "/health",
   },

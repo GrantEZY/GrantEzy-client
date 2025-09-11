@@ -9,14 +9,15 @@ import { UserRoles } from "@/types/auth.types";
 
 export default function StartupsPage() {
   const { user, isAuthenticated } = useAuth();
-  const { users, isLoading, error, fetchUsersByRole } = useAdmin();
+  const { users, isLoading, error, fetchUsersWithDefaults } = useAdmin();
 
   useEffect(() => {
     if (isAuthenticated && user?.role === UserRoles.ADMIN) {
-      // Fetch users with startup-related roles
-      fetchUsersByRole(UserRoles.APPLICANT);
+      // For now, fetch all users to see what data we have
+      // Later we can filter by specific startup roles
+      fetchUsersWithDefaults();
     }
-  }, [isAuthenticated, user, fetchUsersByRole]);
+  }, [isAuthenticated, user, fetchUsersWithDefaults]);
 
   if (!isAuthenticated) {
     return (
@@ -119,6 +120,18 @@ export default function StartupsPage() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Debug Information */}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 className="text-sm font-medium text-blue-800">Debug Information</h3>
+          <div className="mt-2 text-sm text-blue-700">
+            <p>Users loaded: {users.length}</p>
+            <p>Loading: {isLoading ? "Yes" : "No"}</p>
+            <p>Error: {error || "None"}</p>
+            <p>Authenticated: {isAuthenticated ? "Yes" : "No"}</p>
+            <p>User role: {user?.role || "None"}</p>
           </div>
         </div>
 

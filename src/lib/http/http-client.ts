@@ -71,11 +71,23 @@ export class HttpClient {
     return this.handleResponse<T>(response);
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
+  async patch<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(getApiUrl(endpoint), {
+      method: "PATCH",
+      headers: this.getAuthHeaders(),
+      credentials: "include",
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    return this.handleResponse<T>(response);
+  }
+
+  async delete<T>(endpoint: string, data?: unknown): Promise<T> {
     const response = await fetch(getApiUrl(endpoint), {
       method: "DELETE",
       headers: this.getAuthHeaders(),
       credentials: "include",
+      body: data ? JSON.stringify(data) : undefined,
     });
 
     return this.handleResponse<T>(response);

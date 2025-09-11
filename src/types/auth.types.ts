@@ -40,12 +40,27 @@ export interface AuthResponse {
   res: {
     id: string;
     email: string;
+    accessToken?: string;
+    role?: UserRoles;
+    name?: string;
+  };
+}
+
+export interface LoginResponse {
+  status: number;
+  message: string;
+  res: {
+    accessToken: string;
+    email: string;
+    role: UserRoles;
+    id: string;
+    name: string;
   };
 }
 
 export interface AuthTokens {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
 }
 
 export interface User {

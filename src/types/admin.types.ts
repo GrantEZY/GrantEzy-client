@@ -41,3 +41,30 @@ export interface GetAllUsersResponse {
     pagination: PaginationMeta;
   };
 }
+
+// Missing types for admin operations
+export interface AddUserRequest {
+  email: string;
+  role: UserRoles;
+}
+
+export enum UpdateRole {
+  ADD_ROLE = "ADD_ROLE",
+  DELETE_ROLE = "DELETE_ROLE",
+}
+
+export interface UpdateUserRoleRequest {
+  email: string;
+  type: UpdateRole;
+  role: UserRoles;
+}
+
+export interface DeleteUserRequest {
+  email: string;
+}
+
+export interface AdminOperationResponse {
+  status: number;
+  message: string;
+  res: Record<string, unknown>;
+}

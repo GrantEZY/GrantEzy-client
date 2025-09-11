@@ -3,7 +3,14 @@
  */
 import { API_CONFIG } from "../lib/config/api.config";
 import { httpClient } from "../lib/http/http-client";
-import { GetAllUsersRequest, GetAllUsersResponse } from "../types/admin.types";
+import { 
+  GetAllUsersRequest, 
+  GetAllUsersResponse,
+  AddUserRequest,
+  UpdateUserRoleRequest,
+  DeleteUserRequest,
+  AdminOperationResponse
+} from "../types/admin.types";
 
 export class AdminService {
   async getAllUsers(params: GetAllUsersRequest): Promise<GetAllUsersResponse> {
@@ -27,6 +34,27 @@ export class AdminService {
     return httpClient.get<GetAllUsersResponse>(
       API_CONFIG.ENDPOINTS.ADMIN.GET_USERS,
       queryParams,
+    );
+  }
+
+  async addUser(data: AddUserRequest): Promise<AdminOperationResponse> {
+    return httpClient.post<AdminOperationResponse>(
+      API_CONFIG.ENDPOINTS.ADMIN.ADD_USER,
+      data,
+    );
+  }
+
+  async updateUserRole(data: UpdateUserRoleRequest): Promise<AdminOperationResponse> {
+    return httpClient.patch<AdminOperationResponse>(
+      API_CONFIG.ENDPOINTS.ADMIN.UPDATE_ROLE,
+      data,
+    );
+  }
+
+  async deleteUser(data: DeleteUserRequest): Promise<AdminOperationResponse> {
+    return httpClient.delete<AdminOperationResponse>(
+      API_CONFIG.ENDPOINTS.ADMIN.DELETE_USER,
+      data,
     );
   }
 }
