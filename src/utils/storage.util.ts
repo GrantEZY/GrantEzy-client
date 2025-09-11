@@ -14,7 +14,9 @@ export class StorageUtil {
     if (!this.isClient()) return;
 
     localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, tokens.accessToken);
-    localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
+    if (tokens.refreshToken) {
+      localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
+    }
   }
 
   getAccessToken(): string | null {

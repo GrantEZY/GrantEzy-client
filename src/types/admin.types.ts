@@ -36,9 +36,9 @@ export interface PaginationMeta {
 export interface GetAllUsersResponse {
   status: number;
   message: string;
-  data: {
-    users: AdminUser[];
-    pagination: PaginationMeta;
+  res: {
+    users: any[]; // Backend user structure is complex, we'll map it in the store
+    totalNumberOfUsers: number;
   };
 }
 

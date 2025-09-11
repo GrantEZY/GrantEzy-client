@@ -5,12 +5,12 @@ import { create } from "zustand";
 
 import { adminService } from "../services/admin.service";
 import {
+  AddUserRequest,
   AdminUser,
+  DeleteUserRequest,
   GetAllUsersRequest,
   PaginationMeta,
-  AddUserRequest,
   UpdateUserRoleRequest,
-  DeleteUserRequest,
 } from "../types/admin.types";
 
 interface AdminState {
@@ -45,9 +45,37 @@ export const useAdminStore = create<AdminStore>((set) => ({
       const response = await adminService.getAllUsers(params);
 
       if (response.status === 200) {
+        // Map the backend user structure to frontend AdminUser structure
+        const mappedUsers: AdminUser[] = response.res.users.map(
+          (user: any) => ({
+            id: user.personId,
+            firstName: user.person.firstName,
+            lastName: user.person.lastName,
+            email: user.contact.email,
+            role: user.role[0] ? JSON.parse(user.role[0])[0] : "NORMAL_USER",
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+          }),
+        );
+
+        // Create pagination from the response
+        const totalItems = response.res.totalNumberOfUsers;
+        const currentPage = params.page;
+        const itemsPerPage = params.numberOfResults;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        const pagination: PaginationMeta = {
+          currentPage,
+          totalPages,
+          totalItems,
+          itemsPerPage,
+          hasNextPage: currentPage < totalPages,
+          hasPreviousPage: currentPage > 1,
+        };
+
         set({
-          users: response.data.users,
-          pagination: response.data.pagination,
+          users: mappedUsers,
+          pagination,
           isLoading: false,
         });
       }
@@ -66,7 +94,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await adminService.addUser(data);
-      
+
       if (response.status === 201) {
         set({ isLoading: false });
         return true;
@@ -87,7 +115,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await adminService.updateUserRole(data);
-      
+
       if (response.status === 200) {
         set({ isLoading: false });
         return true;
@@ -108,7 +136,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await adminService.deleteUser(data);
-      
+
       if (response.status === 200) {
         set({ isLoading: false });
         return true;

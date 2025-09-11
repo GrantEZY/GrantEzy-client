@@ -11,6 +11,7 @@ import {
   LoginRequest,
   RegisterRequest,
   User,
+  UserCommitmentStatus,
 } from "../types/auth.types";
 import { storageUtil } from "../utils/storage.util";
 
@@ -43,15 +44,34 @@ export const useAuthStore = create<AuthStore>()(
           const response = await authService.login(credentials);
 
           if (response.status === 200) {
-            // Extract tokens from cookies or response headers
-            // You might need to adjust this based on your server response
-            const user = response.res as User;
+            // Extract access token and user data from response
+            const { accessToken, email, role, id, name } = response.res;
+
+            const user: User = {
+              id,
+              firstName: name.split(" ")[0] || name,
+              lastName: name.split(" ")[1] || "",
+              email,
+              role,
+              commitment: UserCommitmentStatus.FULL_TIME, // Default value
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            };
+
+            const tokens: AuthTokens = {
+              accessToken,
+            };
 
             set({
               user,
+              tokens,
               isAuthenticated: true,
               isLoading: false,
             });
+
+            // Save to localStorage
+            get().setUser(user);
+            get().setTokens(tokens);
           }
         } catch (error) {
           set({ isLoading: false });
@@ -124,10 +144,10 @@ export const useAuthStore = create<AuthStore>()(
         const accessToken = storageUtil.getAccessToken();
         const refreshToken = storageUtil.getRefreshToken();
 
-        if (user && accessToken && refreshToken) {
+        if (user && accessToken) {
           set({
             user,
-            tokens: { accessToken, refreshToken },
+            tokens: { accessToken, ...(refreshToken && { refreshToken }) },
             isAuthenticated: true,
           });
         }

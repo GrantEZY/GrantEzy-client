@@ -1,13 +1,20 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+
+import { useAuthStore } from "@/store/auth.store";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  // The auth state is managed by Zustand store with persistence
-  // This provider can be used for any global auth setup if needed
+  const initialize = useAuthStore((state) => state.initialize);
+
+  useEffect(() => {
+    // Initialize auth state from localStorage on app startup
+    initialize();
+  }, [initialize]);
+
   return <>{children}</>;
 }
