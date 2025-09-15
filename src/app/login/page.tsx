@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 import { useAuth } from "@/hooks/useAuth";
 import { UserRoles } from "@/types/auth.types";
@@ -134,6 +135,15 @@ export default function LoginPage() {
           <div className="text-center">
             <p className="text-sm text-gray-600">
               Test credentials: admin@test.com / password123
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Don't have an account?{" "}
+              <Link 
+                href="/signup" 
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
+                Sign up here
+              </Link>
             </p>
           </div>
         </form>
