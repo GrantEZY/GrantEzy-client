@@ -24,7 +24,7 @@ export interface AdminUser {
   // Additional fields from backend
   firstName?: string; // For backward compatibility
   lastName?: string; // For backward compatibility  
-  email?: string; // For backward compatibility
+  email: string; // Make email required - extracted from contact.email or fallback
 }
 
 export interface GetAllUsersRequest {

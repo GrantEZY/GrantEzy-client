@@ -130,6 +130,9 @@ export function EditUserModal({ isOpen, onClose, onSubmit, isLoading, user }: Ed
               <option value={UpdateRole.ADD_ROLE}>Add Role</option>
               <option value={UpdateRole.DELETE_ROLE}>Remove Role</option>
             </select>
+            <p className="mt-1 text-xs text-gray-500">
+              To change a role: First remove the old role, then add the new role
+            </p>
           </div>
 
           <div>

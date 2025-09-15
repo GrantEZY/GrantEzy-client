@@ -40,7 +40,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
 
   // Actions
   getAllUsers: async (params: GetAllUsersRequest) => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true, error: null, users: [] }); // Clear existing users to force fresh display
     try {
       const response = await adminService.getAllUsers(params);
 
@@ -56,8 +56,23 @@ export const useAdminStore = create<AdminStore>((set) => ({
           totalPages: Math.ceil(totalUsers / pageSize),
         };
 
+        // Debug: Log the raw response to see what roles we're getting
+        console.log('Fresh user data from backend:', response.res.users);
+
         set({
-          users: response.res.users,
+          users: response.res.users.map(user => {
+            // Debug: Log each user's role data
+            console.log(`User ${user.contact?.email || user.email}: role = ${JSON.stringify(user.role)}`);
+            
+            return {
+              ...user,
+              // Ensure email is always available at the top level for compatibility
+              email: user.contact?.email || user.email || 'N/A',
+              // Ensure names are available at the top level for compatibility  
+              firstName: user.person?.firstName || user.firstName || 'N/A',
+              lastName: user.person?.lastName || user.lastName || ''
+            };
+          }),
           pagination,
           isLoading: false,
         });
@@ -97,7 +112,9 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateUserRole: async (data: UpdateUserRoleRequest) => {
     set({ isLoading: true, error: null });
     try {
+      console.log('Updating user role with data:', data);
       const response = await adminService.updateUserRole(data);
+      console.log('Update role response:', response);
       
       if (response.status === 200) {
         set({ isLoading: false });

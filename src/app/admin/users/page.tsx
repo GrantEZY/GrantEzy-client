@@ -6,7 +6,7 @@ import AdminLayout from "@/components/layout/AdminLayout";
 import { useAdmin } from "@/hooks/useAdmin";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRoles } from "@/types/auth.types";
-import { AdminUser, AddUserRequest, UpdateUserRoleRequest, DeleteUserRequest } from "@/types/admin.types";
+import { AdminUser, AddUserRequest, UpdateUserRoleRequest, DeleteUserRequest, UpdateRole } from "@/types/admin.types";
 import { AddUserModal } from "@/components/admin/AddUserModal";
 import { EditUserModal } from "@/components/admin/EditUserModal";
 import { DeleteUserModal } from "@/components/admin/DeleteUserModal";
@@ -267,13 +267,67 @@ function AdminUsersPageContent() {
   };
 
   const handleUpdateUser = async (userData: any) => {
-    const result = await updateUser(userData);
+    // For role updates, we need to handle the logic of replacing roles
+    // The backend requires separate ADD_ROLE and DELETE_ROLE operations
+    
+    const currentUser = selectedUser;
+    if (!currentUser) return { success: false, error: 'No user selected' };
+    
+    const currentRole = Array.isArray(currentUser.role) ? currentUser.role[0] : currentUser.role;
+    const newRole = userData.role;
+    
+    console.log('Role update:', { currentRole, newRole, userData });
+    
+    let result: { success: boolean; error?: string } = { success: true };
+    
+    try {
+      // If the user already has a different role, remove it first
+      if (currentRole && currentRole !== newRole && currentRole !== UserRoles.NORMAL_USER) {
+        console.log('Removing old role:', currentRole);
+        const removeResult = await updateUser({
+          email: userData.email,
+          type: UpdateRole.DELETE_ROLE,
+          role: currentRole
+        });
+        
+        if (!removeResult.success) {
+          throw new Error('Failed to remove old role');
+        }
+      }
+      
+      // Add the new role (unless it's the same as current)
+      if (newRole !== currentRole) {
+        console.log('Adding new role:', newRole);
+        const addResult = await updateUser({
+          email: userData.email,
+          type: UpdateRole.ADD_ROLE,
+          role: newRole
+        });
+        
+        if (!addResult.success) {
+          throw new Error('Failed to add new role');
+        }
+      }
+      
+    } catch (error) {
+      result = { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Failed to update role'
+      };
+    }
+    
     if (result.success) {
-      await loadUsers(); // Refresh the user list
+      // Clear any cached state and close modal first
       setSelectedUser(null);
+      setIsEditModalOpen(false);
+      
+      // Force refresh the user list to get updated data from database
+      // This ensures the table shows the latest role information
+      await loadUsers();
+      
       showToast({
         type: 'success',
-        message: 'User role updated successfully!'
+        message: `User role updated successfully! Table refreshed with latest data.`
       });
     } else {
       showToast({
