@@ -49,7 +49,7 @@ function SidebarItem({
   }`;
 
   return (
-    <li className="relative">
+    <>
       {href !== "#" ? (
         <Link
           className={className}
@@ -70,7 +70,7 @@ function SidebarItem({
           {content}
         </button>
       )}
-    </li>
+    </>
   );
 }
 

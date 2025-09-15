@@ -9,13 +9,22 @@ export interface UserFilterDto {
 }
 
 export interface AdminUser {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: UserRoles;
+  id?: string; // For backward compatibility
+  personId: string;
+  person: {
+    firstName: string;
+    lastName: string;
+  };
+  contact: {
+    email: string;
+  };
+  role: UserRoles[];
   createdAt: string;
   updatedAt: string;
+  // Additional fields from backend
+  firstName?: string; // For backward compatibility
+  lastName?: string; // For backward compatibility  
+  email?: string; // For backward compatibility
 }
 
 export interface GetAllUsersRequest {
@@ -25,19 +34,17 @@ export interface GetAllUsersRequest {
 }
 
 export interface PaginationMeta {
-  currentPage: number;
+  page: number;
+  limit: number;
+  total: number;
   totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
 }
 
 export interface GetAllUsersResponse {
   status: number;
   message: string;
   res: {
-    users: any[]; // Backend user structure is complex, we'll map it in the store
+    users: AdminUser[];
     totalNumberOfUsers: number;
   };
 }

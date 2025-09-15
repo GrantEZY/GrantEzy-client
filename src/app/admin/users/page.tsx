@@ -59,22 +59,22 @@ function UserTable({ users, isLoading, onEditUser, onDeleteUser }: UserTableProp
             </tr>
           ) : (
             users.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50">
+              <tr key={user.personId || user.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
-                    {user.firstName} {user.lastName}
+                    {user.person?.firstName || user.firstName || 'N/A'} {user.person?.lastName || user.lastName || ''}
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-700">{user.email}</div>
+                  <div className="text-sm text-gray-700">{user.contact?.email || user.email || 'N/A'}</div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
-                    {user.role}
+                    {Array.isArray(user.role) ? user.role[0] : user.role || 'N/A'}
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button 
@@ -108,20 +108,24 @@ function Pagination({ pagination, onPageChange }: PaginationProps) {
   if (!pagination) return null;
 
   const { currentPage, totalPages, hasNextPage, hasPreviousPage } = pagination;
+  
+  // Add safety checks for NaN values
+  const safeCurrentPage = isNaN(currentPage) ? 1 : currentPage;
+  const safeTotalPages = isNaN(totalPages) ? 1 : totalPages;
 
   return (
     <div className="flex items-center justify-between bg-white px-4 py-3 sm:px-6 border-t border-gray-200">
       <div className="flex flex-1 justify-between sm:hidden">
         <button
           disabled={!hasPreviousPage}
-          onClick={() => onPageChange(currentPage - 1)}
+          onClick={() => onPageChange(safeCurrentPage - 1)}
           className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Previous
         </button>
         <button
           disabled={!hasNextPage}
-          onClick={() => onPageChange(currentPage + 1)}
+          onClick={() => onPageChange(safeCurrentPage + 1)}
           className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Next
@@ -130,8 +134,8 @@ function Pagination({ pagination, onPageChange }: PaginationProps) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing page <span className="font-medium">{currentPage}</span> of{" "}
-            <span className="font-medium">{totalPages}</span>
+            Showing page <span className="font-medium">{safeCurrentPage}</span> of{" "}
+            <span className="font-medium">{safeTotalPages}</span>
           </p>
         </div>
         <div>
@@ -147,16 +151,16 @@ function Pagination({ pagination, onPageChange }: PaginationProps) {
               </svg>
             </button>
             
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageNum = currentPage <= 3 ? i + 1 : currentPage - 2 + i;
-              if (pageNum > totalPages) return null;
+            {Array.from({ length: Math.min(5, safeTotalPages) }, (_, i) => {
+              const pageNum = safeCurrentPage <= 3 ? i + 1 : safeCurrentPage - 2 + i;
+              if (pageNum > safeTotalPages) return null;
               
               return (
                 <button
                   key={pageNum}
                   onClick={() => onPageChange(pageNum)}
                   className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-                    pageNum === currentPage
+                    pageNum === safeCurrentPage
                       ? "z-10 bg-blue-600 text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
                       : "text-gray-900"
                   }`}

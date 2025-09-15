@@ -11,7 +11,14 @@ interface DeleteUserModalProps {
     email: string;
     firstName?: string;
     lastName?: string;
-    role?: string;
+    role?: string | string[];
+    person?: {
+      firstName: string;
+      lastName: string;
+    };
+    contact?: {
+      email: string;
+    };
   } | null;
 }
 
@@ -19,7 +26,9 @@ export function DeleteUserModal({ isOpen, onClose, onConfirm, isLoading, user }:
   const handleConfirm = async () => {
     if (!user) return;
     
-    const result = await onConfirm({ email: user.email });
+    // Get email from either flat or nested structure
+    const userEmail = user.contact?.email || user.email;
+    const result = await onConfirm({ email: userEmail });
     
     if (result.success) {
       onClose();
@@ -28,9 +37,21 @@ export function DeleteUserModal({ isOpen, onClose, onConfirm, isLoading, user }:
 
   if (!isOpen || !user) return null;
 
+  // Extract user details with fallbacks for nested structure
+  const userName = user.person?.firstName && user.person?.lastName
+    ? `${user.person.firstName} ${user.person.lastName}`
+    : user.firstName && user.lastName
+    ? `${user.firstName} ${user.lastName}`
+    : 'User';
+  
+  const userEmail = user.contact?.email || user.email;
+  const userRole = Array.isArray(user.role) 
+    ? user.role[0]?.replace(/_/g, ' ') 
+    : user.role?.replace(/_/g, ' ');
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-200 scale-100">
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-red-600">Delete User</h2>
         </div>
@@ -52,15 +73,10 @@ export function DeleteUserModal({ isOpen, onClose, onConfirm, isLoading, user }:
                 Are you sure you want to delete this user?
               </h3>
               <div className="mt-2 text-sm text-gray-600">
-                <p className="font-medium">
-                  {user.firstName && user.lastName 
-                    ? `${user.firstName} ${user.lastName}`
-                    : 'User'
-                  }
-                </p>
-                <p className="text-gray-500">{user.email}</p>
-                {user.role && (
-                  <p className="text-gray-500">Role: {user.role.replace(/_/g, ' ')}</p>
+                <p className="font-medium">{userName}</p>
+                <p className="text-gray-500">{userEmail}</p>
+                {userRole && (
+                  <p className="text-gray-500">Role: {userRole}</p>
                 )}
               </div>
             </div>

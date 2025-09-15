@@ -11,7 +11,6 @@ import {
   LoginRequest,
   RegisterRequest,
   User,
-  UserCommitmentStatus,
 } from "../types/auth.types";
 import { storageUtil } from "../utils/storage.util";
 
@@ -44,22 +43,25 @@ export const useAuthStore = create<AuthStore>()(
           const response = await authService.login(credentials);
 
           if (response.status === 200) {
-            // Extract access token and user data from response
-            const { accessToken, email, role, id, name } = response.res;
-
-            const user: User = {
-              id,
-              firstName: name.split(" ")[0] || name,
-              lastName: name.split(" ")[1] || "",
-              email,
-              role,
-              commitment: UserCommitmentStatus.FULL_TIME, // Default value
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
+            // Extract user data and access token from response
+            const userData = response.res;
+            
+            const tokens: AuthTokens = {
+              accessToken: userData.accessToken || '',
             };
 
-            const tokens: AuthTokens = {
-              accessToken,
+            // Store tokens in localStorage
+            storageUtil.setTokens(tokens);
+
+            const user: User = {
+              id: userData.id,
+              firstName: userData.name?.split(' ')[0] || '',
+              lastName: userData.name?.split(' ')[1] || '',
+              email: userData.email,
+              role: userData.role,
+              commitment: 'FULL_TIME' as any, // Default value, adjust as needed
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
             };
 
             set({
@@ -68,10 +70,6 @@ export const useAuthStore = create<AuthStore>()(
               isAuthenticated: true,
               isLoading: false,
             });
-
-            // Save to localStorage
-            get().setUser(user);
-            get().setTokens(tokens);
           }
         } catch (error) {
           set({ isLoading: false });
@@ -144,10 +142,10 @@ export const useAuthStore = create<AuthStore>()(
         const accessToken = storageUtil.getAccessToken();
         const refreshToken = storageUtil.getRefreshToken();
 
-        if (user && accessToken) {
+        if (user && accessToken && refreshToken) {
           set({
             user,
-            tokens: { accessToken, ...(refreshToken && { refreshToken }) },
+            tokens: { accessToken, refreshToken },
             isAuthenticated: true,
           });
         }

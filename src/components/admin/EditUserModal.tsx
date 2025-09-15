@@ -11,9 +11,16 @@ interface EditUserModalProps {
   isLoading: boolean;
   user?: {
     email: string;
-    role: UserRoles;
+    role: UserRoles | UserRoles[];
     firstName?: string;
     lastName?: string;
+    person?: {
+      firstName: string;
+      lastName: string;
+    };
+    contact?: {
+      email: string;
+    };
   } | null;
 }
 
@@ -27,21 +34,30 @@ export function EditUserModal({ isOpen, onClose, onSubmit, isLoading, user }: Ed
 
   useEffect(() => {
     if (user && isOpen) {
+      // Extract email from user object (handle both flat and nested structure)
+      const userEmail = user.contact?.email || user.email || '';
+      
+      // Extract role (handle both single role and array of roles)
+      const userRole = Array.isArray(user.role) 
+        ? user.role[0] || UserRoles.APPLICANT 
+        : user.role || UserRoles.APPLICANT;
+      
       setFormData({
-        email: user.email,
+        email: userEmail,
         type: UpdateRole.ADD_ROLE,
-        role: user.role,
+        role: userRole,
       });
+      setErrors({}); // Clear any previous errors
     }
   }, [user, isOpen]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+    // Email validation removed since it's readonly and pre-filled
+    // Only validate if we have required data
+    if (!formData.email) {
+      newErrors.email = 'User email is required';
     }
 
     setErrors(newErrors);
@@ -74,38 +90,32 @@ export function EditUserModal({ isOpen, onClose, onSubmit, isLoading, user }: Ed
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+    <div className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-200 scale-100">
         <div className="px-6 py-4 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Edit User Role</h2>
           {user && (
-            <p className="text-sm text-gray-600 mt-1">
-              {user.firstName && user.lastName 
-                ? `${user.firstName} ${user.lastName} (${user.email})`
-                : user.email
-              }
-            </p>
+            <div className="text-sm text-gray-600 mt-1">
+              <p className="font-medium">
+                {user.person?.firstName || user.firstName || ''} {user.person?.lastName || user.lastName || ''}
+              </p>
+              <p className="text-gray-500">{user.contact?.email || user.email}</p>
+            </div>
           )}
         </div>
         
         <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
+              User Email
             </label>
             <input
               type="email"
-              value={formData.email}
-              onChange={(e) => handleChange('email', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter user's email address"
-              disabled={true} // Email shouldn't be editable in update mode
+              value={formData.email || ''}
+              readOnly
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-600 cursor-not-allowed"
+              placeholder="User email will be displayed here"
             />
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-            )}
           </div>
 
           <div>
