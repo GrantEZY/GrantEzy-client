@@ -1,9 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { useRouter } from "next/navigation";
+
 import { useAuth } from "@/hooks/useAuth";
+
 import { UserRoles } from "@/types/auth.types";
 
 interface RoleCardProps {
@@ -66,7 +68,7 @@ export default function RoleSelectionMenu() {
 
   const handleRoleSelect = (role: string) => {
     setSelectedRole((prev) => (prev === role ? null : role));
-    
+
     // Navigate to the appropriate admin page
     if (role === "startups") {
       router.push("/admin/startups");
@@ -74,16 +76,23 @@ export default function RoleSelectionMenu() {
       router.push("/admin/eirs");
     } else if (role === "users") {
       router.push("/admin/users");
+    } else if (role === "organizations") {
+      router.push("/admin/organizations");
     }
   };
 
   // Check if user has admin access
   if (!isAuthenticated || user?.role !== UserRoles.ADMIN) {
     return (
-      <div className="h-full w-full flex items-center justify-center">
+      <div className="flex h-full w-full items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-          <p className="text-gray-600">You need admin privileges to access this page.</p>
+          <h2 className="mb-2 text-xl font-semibold text-gray-900">
+            Access Denied
+          </h2>
+
+          <p className="text-gray-600">
+            You need admin privileges to access this page.
+          </p>
         </div>
       </div>
     );
@@ -111,7 +120,7 @@ export default function RoleSelectionMenu() {
           {/* Role Selection Cards */}
           <div
             aria-label="Role selection"
-            className="flex items-start space-x-8"
+            className="flex flex-wrap items-start gap-4 space-x-8"
             role="group"
           >
             <RoleCard
@@ -175,6 +184,27 @@ export default function RoleSelectionMenu() {
               onClick={() => handleRoleSelect("users")}
               selected={selectedRole === "users"}
               title="All Users"
+            />
+
+            <RoleCard
+              icon={
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                  />
+                </svg>
+              }
+              onClick={() => handleRoleSelect("organizations")}
+              selected={selectedRole === "organizations"}
+              title="Organizations"
             />
           </div>
         </div>

@@ -5,17 +5,22 @@ import { create } from "zustand";
 
 import { adminService } from "../services/admin.service";
 import {
-  AdminUser,
-  GetAllUsersRequest,
-  PaginationMeta,
+  AddOrganizationRequest,
   AddUserRequest,
-  UpdateUserRoleRequest,
+  AdminUser,
+  DeleteOrganizationRequest,
   DeleteUserRequest,
+  GetAllUsersRequest,
+  Organization,
+  PaginationMeta,
+  UpdateOrganizationRequest,
+  UpdateUserRoleRequest,
 } from "../types/admin.types";
 
 interface AdminState {
   users: AdminUser[];
   pagination: PaginationMeta | null;
+  organizations: Organization[];
   isLoading: boolean;
   error: string | null;
 }
@@ -27,6 +32,11 @@ interface AdminActions {
   deleteUser: (data: DeleteUserRequest) => Promise<boolean>;
   clearUsers: () => void;
   setError: (error: string | null) => void;
+  // Organization actions
+  getOrganizations: () => Promise<void>;
+  addOrganization: (data: AddOrganizationRequest) => Promise<boolean>;
+  updateOrganization: (data: UpdateOrganizationRequest) => Promise<boolean>;
+  deleteOrganization: (data: DeleteOrganizationRequest) => Promise<boolean>;
 }
 
 type AdminStore = AdminState & AdminActions;
@@ -35,6 +45,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
   // Initial state
   users: [],
   pagination: null,
+  organizations: [],
   isLoading: false,
   error: null,
 
@@ -48,7 +59,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
         // Create pagination metadata from the response
         const totalUsers = response.res.totalNumberOfUsers || 0;
         const pageSize = params.numberOfResults || 10;
-        
+
         const pagination: PaginationMeta = {
           page: params.page || 1,
           limit: pageSize,
@@ -56,21 +67,15 @@ export const useAdminStore = create<AdminStore>((set) => ({
           totalPages: Math.ceil(totalUsers / pageSize),
         };
 
-        // Debug: Log the raw response to see what roles we're getting
-        console.log('Fresh user data from backend:', response.res.users);
-
         set({
-          users: response.res.users.map(user => {
-            // Debug: Log each user's role data
-            console.log(`User ${user.contact?.email || user.email}: role = ${JSON.stringify(user.role)}`);
-            
+          users: response.res.users.map((user) => {
             return {
               ...user,
               // Ensure email is always available at the top level for compatibility
-              email: user.contact?.email || user.email || 'N/A',
-              // Ensure names are available at the top level for compatibility  
-              firstName: user.person?.firstName || user.firstName || 'N/A',
-              lastName: user.person?.lastName || user.lastName || ''
+              email: user.contact?.email || user.email || "N/A",
+              // Ensure names are available at the top level for compatibility
+              firstName: user.person?.firstName || user.firstName || "N/A",
+              lastName: user.person?.lastName || user.lastName || "",
             };
           }),
           pagination,
@@ -92,8 +97,9 @@ export const useAdminStore = create<AdminStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await adminService.addUser(data);
-      
-      if (response.status === 200) {
+
+      // Backend returns 201 for new users, 200 for existing users with role added
+      if (response.status === 200 || response.status === 201) {
         set({ isLoading: false });
         return true;
       }
@@ -112,18 +118,31 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateUserRole: async (data: UpdateUserRoleRequest) => {
     set({ isLoading: true, error: null });
     try {
-      console.log('Updating user role with data:', data);
       const response = await adminService.updateUserRole(data);
-      console.log('Update role response:', response);
-      
-      if (response.status === 200) {
+
+      // Backend returns 204 for successful update
+      if (response.status === 200 || response.status === 204) {
         set({ isLoading: false });
         return true;
       }
       return false;
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to update user role";
+    } catch (error: unknown) {
+      let errorMessage = "Failed to update user role";
+
+      // Extract detailed error message from API response
+      if (error && typeof error === "object" && "response" in error) {
+        const apiError = error as {
+          response?: { data?: { message?: string } };
+        };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
+
+      console.error("Update user role error:", error);
+
       set({
         error: errorMessage,
         isLoading: false,
@@ -136,7 +155,8 @@ export const useAdminStore = create<AdminStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await adminService.deleteUser(data);
-      
+
+      // Backend returns 200 for successful deletion
       if (response.status === 200) {
         set({ isLoading: false });
         return true;
@@ -163,5 +183,97 @@ export const useAdminStore = create<AdminStore>((set) => ({
 
   setError: (error: string | null) => {
     set({ error });
+  },
+
+  // Organization actions
+  getOrganizations: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.getOrganizations();
+
+      if (response.status === 200) {
+        set({
+          organizations: response.res.organizations,
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch organizations";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      throw error;
+    }
+  },
+
+  addOrganization: async (data: AddOrganizationRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.addOrganization(data);
+
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to add organization";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      return false;
+    }
+  },
+
+  updateOrganization: async (data: UpdateOrganizationRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.updateOrganization(data);
+
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to update organization";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      return false;
+    }
+  },
+
+  deleteOrganization: async (data: DeleteOrganizationRequest) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await adminService.deleteOrganization(data);
+
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to delete organization";
+      set({
+        error: errorMessage,
+        isLoading: false,
+      });
+      return false;
+    }
   },
 }));

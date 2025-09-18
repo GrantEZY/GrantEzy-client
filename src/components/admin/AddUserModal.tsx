@@ -1,19 +1,27 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { AddUserRequest } from '../../types/admin.types';
-import { UserRoles } from '../../types/auth.types';
+import { useState } from "react";
+
+import { AddUserRequest } from "../../types/admin.types";
+import { UserRoles } from "../../types/auth.types";
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (userData: AddUserRequest) => Promise<{ success: boolean; error?: string }>;
+  onSubmit: (
+    userData: AddUserRequest,
+  ) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
 }
 
-export function AddUserModal({ isOpen, onClose, onSubmit, isLoading }: AddUserModalProps) {
+export function AddUserModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  isLoading,
+}: AddUserModalProps) {
   const [formData, setFormData] = useState<AddUserRequest>({
-    email: '',
+    email: "",
     role: UserRoles.APPLICANT,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -22,9 +30,9 @@ export function AddUserModal({ isOpen, onClose, onSubmit, isLoading }: AddUserMo
     const newErrors: Record<string, string> = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     setErrors(newErrors);
@@ -33,17 +41,17 @@ export function AddUserModal({ isOpen, onClose, onSubmit, isLoading }: AddUserMo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
 
     const result = await onSubmit(formData);
-    
+
     if (result.success) {
       // Reset form and close modal
       setFormData({
-        email: '',
+        email: "",
         role: UserRoles.APPLICANT,
       });
       setErrors({});
@@ -52,77 +60,84 @@ export function AddUserModal({ isOpen, onClose, onSubmit, isLoading }: AddUserMo
   };
 
   const handleChange = (field: keyof AddUserRequest, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error for this field when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: '' }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/10 backdrop-blur-md flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 transform transition-all duration-200 scale-100">
-        <div className="px-6 py-4 border-b border-gray-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-md">
+      <div className="mx-4 w-full max-w-md scale-100 transform rounded-lg bg-white shadow-xl transition-all duration-200">
+        <div className="border-b border-gray-200 px-6 py-4">
           <h2 className="text-xl font-semibold text-gray-900">Add User Role</h2>
-          <p className="text-sm text-gray-600 mt-1">
+
+          <p className="mt-1 text-sm text-gray-600">
             Assign a role to an existing user by their email address
           </p>
         </div>
-        
-        <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+
+        <form className="space-y-4 px-6 py-4" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Email Address
             </label>
+
             <input
+              className={`w-full rounded-md border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
+              onChange={(e) => handleChange("email", e.target.value)}
+              placeholder="Enter user's email address"
               type="email"
               value={formData.email}
-              onChange={(e) => handleChange('email', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Enter user's email address"
             />
+
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">{errors.email}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Role
             </label>
+
             <select
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+              onChange={(e) =>
+                handleChange("role", e.target.value as UserRoles)
+              }
               value={formData.role}
-              onChange={(e) => handleChange('role', e.target.value as UserRoles)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
               {Object.values(UserRoles).map((role) => (
                 <option key={role} value={role}>
-                  {role.replace(/_/g, ' ')}
+                  {role.replace(/_/g, " ")}
                 </option>
               ))}
             </select>
           </div>
         </form>
 
-        <div className="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+        <div className="flex justify-end space-x-3 border-t border-gray-200 px-6 py-4">
           <button
-            type="button"
-            onClick={onClose}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:outline-none"
             disabled={isLoading}
+            onClick={onClose}
+            type="button"
           >
             Cancel
           </button>
+
           <button
-            onClick={handleSubmit}
+            className="rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             disabled={isLoading}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleSubmit}
           >
-            {isLoading ? 'Adding...' : 'Add Role'}
+            {isLoading ? "Adding..." : "Add Role"}
           </button>
         </div>
       </div>

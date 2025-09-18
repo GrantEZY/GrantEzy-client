@@ -4,11 +4,11 @@
 import { useCallback } from "react";
 
 import { useAdminStore } from "../store/admin.store";
-import { 
-  GetAllUsersRequest,
+import {
   AddUserRequest,
+  DeleteUserRequest,
+  GetAllUsersRequest,
   UpdateUserRoleRequest,
-  DeleteUserRequest 
 } from "../types/admin.types";
 import { UserRoles } from "../types/auth.types";
 
@@ -67,8 +67,8 @@ export const useAdmin = () => {
   const refreshUsers = useCallback(async () => {
     if (pagination) {
       return fetchUsers({
-        page: pagination.currentPage,
-        numberOfResults: pagination.itemsPerPage,
+        page: pagination.page,
+        numberOfResults: pagination.limit,
       });
     }
     return fetchUsersWithDefaults();
@@ -92,6 +92,14 @@ export const useAdmin = () => {
     async (userData: UpdateUserRoleRequest) => {
       try {
         const success = await updateUserRole(userData);
+        if (!success) {
+          // If the store has an error, use that
+          const storeError = useAdminStore.getState().error;
+          return {
+            success: false,
+            error: storeError || "Failed to update user",
+          };
+        }
         return { success };
       } catch (error) {
         const message =
