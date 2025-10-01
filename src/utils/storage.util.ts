@@ -17,6 +17,12 @@ export class StorageUtil {
     if (tokens.refreshToken) {
       localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
     }
+
+    // Also set as cookie for middleware to access
+    document.cookie = `accessToken=${tokens.accessToken}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
+    if (tokens.refreshToken) {
+      document.cookie = `refreshToken=${tokens.refreshToken}; path=/; max-age=${60 * 60 * 24 * 30}`; // 30 days
+    }
   }
 
   getAccessToken(): string | null {
@@ -34,6 +40,10 @@ export class StorageUtil {
 
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+
+    // Also clear cookies
+    document.cookie = "accessToken=; path=/; max-age=0";
+    document.cookie = "refreshToken=; path=/; max-age=0";
   }
 
   // User management

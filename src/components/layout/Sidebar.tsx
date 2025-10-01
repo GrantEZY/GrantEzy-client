@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 
 interface MenuItem {
   icon: React.ReactNode;
@@ -38,6 +39,7 @@ function SidebarItem({
       >
         {icon}
       </span>
+
       <span>{label}</span>
     </>
   );
@@ -51,10 +53,7 @@ function SidebarItem({
   return (
     <>
       {href !== "#" ? (
-        <Link
-          className={className}
-          href={href}
-        >
+        <Link className={className} href={href}>
           {content}
         </Link>
       ) : (
@@ -239,35 +238,44 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const menuItems: MenuItem[] = [
-    { icon: icons.home, label: "Home", active: pathname === "/admin", href: "/admin" },
+    {
+      icon: icons.home,
+      label: "Home",
+      active: pathname === "/admin",
+      href: "/admin",
+    },
     { icon: icons.academics, label: "Academics", active: false },
     { icon: icons.honors, label: "Honors", active: false },
     { icon: icons.btp, label: "BTP", active: false },
     { icon: icons.feedback, label: "Feedback Form", active: false },
-    { icon: icons.people, label: "People", active: pathname.includes("/admin/") },
+    {
+      icon: icons.people,
+      label: "People",
+      active: pathname.includes("/admin/"),
+    },
   ];
 
   const subItems: MenuItem[] = [
-    { 
-      icon: icons.startups, 
-      label: "Startups", 
-      active: pathname === "/admin/startups", 
+    {
+      icon: icons.startups,
+      label: "Startups",
+      active: pathname === "/admin/startups",
       isSubItem: true,
-      href: "/admin/startups"
+      href: "/admin/startups",
     },
-    { 
-      icon: icons.mentors, 
-      label: "All Users", 
-      active: pathname === "/admin/users", 
+    {
+      icon: icons.mentors,
+      label: "All Users",
+      active: pathname === "/admin/users",
       isSubItem: true,
-      href: "/admin/users"
+      href: "/admin/users",
     },
-    { 
-      icon: icons.eirs, 
-      label: "EIRs", 
-      active: pathname === "/admin/eirs", 
+    {
+      icon: icons.eirs,
+      label: "EIRs",
+      active: pathname === "/admin/eirs",
       isSubItem: true,
-      href: "/admin/eirs"
+      href: "/admin/eirs",
     },
   ];
 

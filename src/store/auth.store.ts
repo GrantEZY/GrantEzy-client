@@ -11,6 +11,7 @@ import {
   LoginRequest,
   RegisterRequest,
   User,
+  UserCommitmentStatus,
 } from "../types/auth.types";
 import { storageUtil } from "../utils/storage.util";
 
@@ -45,9 +46,9 @@ export const useAuthStore = create<AuthStore>()(
           if (response.status === 200) {
             // Extract user data and access token from response
             const userData = response.res;
-            
+
             const tokens: AuthTokens = {
-              accessToken: userData.accessToken || '',
+              accessToken: userData.accessToken || "",
             };
 
             // Store tokens in localStorage
@@ -55,11 +56,11 @@ export const useAuthStore = create<AuthStore>()(
 
             const user: User = {
               id: userData.id,
-              firstName: userData.name?.split(' ')[0] || '',
-              lastName: userData.name?.split(' ')[1] || '',
+              firstName: userData.name?.split(" ")[0] || "",
+              lastName: userData.name?.split(" ")[1] || "",
               email: userData.email,
               role: userData.role,
-              commitment: 'FULL_TIME' as any, // Default value, adjust as needed
+              commitment: UserCommitmentStatus.FULL_TIME, // Default value, adjust as needed
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             };

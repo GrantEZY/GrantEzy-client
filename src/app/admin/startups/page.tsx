@@ -2,12 +2,23 @@
 
 import { useEffect } from "react";
 
+import { AuthGuard } from "@/components/guards/AuthGuard";
 import AdminLayout from "@/components/layout/AdminLayout";
+
 import { useAdmin } from "@/hooks/useAdmin";
 import { useAuth } from "@/hooks/useAuth";
+
 import { UserRoles } from "@/types/auth.types";
 
 export default function StartupsPage() {
+  return (
+    <AuthGuard>
+      <StartupsPageContent />
+    </AuthGuard>
+  );
+}
+
+function StartupsPageContent() {
   const { user, isAuthenticated } = useAuth();
   const { users, isLoading, error, fetchUsersWithDefaults } = useAdmin();
 
@@ -22,8 +33,10 @@ export default function StartupsPage() {
   if (!isAuthenticated) {
     return (
       <AdminLayout>
-        <div className="flex justify-center items-center h-64">
-          <div className="text-gray-500">Please log in to access this page.</div>
+        <div className="flex h-64 items-center justify-center">
+          <div className="text-gray-500">
+            Please log in to access this page.
+          </div>
         </div>
       </AdminLayout>
     );
@@ -32,8 +45,10 @@ export default function StartupsPage() {
   if (user?.role !== UserRoles.ADMIN) {
     return (
       <AdminLayout>
-        <div className="flex justify-center items-center h-64">
-          <div className="text-red-500">Access denied. Admin privileges required.</div>
+        <div className="flex h-64 items-center justify-center">
+          <div className="text-red-500">
+            Access denied. Admin privileges required.
+          </div>
         </div>
       </AdminLayout>
     );
@@ -43,18 +58,23 @@ export default function StartupsPage() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">Startup Management</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">
+              Startup Management
+            </h1>
+
             <p className="mt-1 text-sm text-gray-600">
               Manage startup applicants and team members
             </p>
           </div>
+
           <div className="flex space-x-3">
-            <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+            <button className="rounded-lg bg-green-600 px-4 py-2 text-white transition-colors hover:bg-green-700">
               Approve Application
             </button>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+
+            <button className="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700">
               Add Startup
             </button>
           </div>
@@ -62,39 +82,69 @@ export default function StartupsPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="overflow-hidden rounded-lg bg-white shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-blue-500">
+                    <svg
+                      className="h-5 w-5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
                 </div>
+
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Applications</dt>
-                    <dd className="text-lg font-medium text-gray-900">{users.length}</dd>
+                    <dt className="truncate text-sm font-medium text-gray-500">
+                      Total Applications
+                    </dt>
+
+                    <dd className="text-lg font-medium text-gray-900">
+                      {users.length}
+                    </dd>
                   </dl>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="overflow-hidden rounded-lg bg-white shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-green-500">
+                    <svg
+                      className="h-5 w-5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M5 13l4 4L19 7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
                 </div>
+
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Approved</dt>
+                    <dt className="truncate text-sm font-medium text-gray-500">
+                      Approved
+                    </dt>
+
                     <dd className="text-lg font-medium text-gray-900">0</dd>
                   </dl>
                 </div>
@@ -102,20 +152,36 @@ export default function StartupsPage() {
             </div>
           </div>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="overflow-hidden rounded-lg bg-white shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-yellow-500 rounded-md flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md bg-yellow-500">
+                    <svg
+                      className="h-5 w-5 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
                 </div>
+
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Pending Review</dt>
-                    <dd className="text-lg font-medium text-gray-900">{users.length}</dd>
+                    <dt className="truncate text-sm font-medium text-gray-500">
+                      Pending Review
+                    </dt>
+
+                    <dd className="text-lg font-medium text-gray-900">
+                      {users.length}
+                    </dd>
                   </dl>
                 </div>
               </div>
@@ -124,28 +190,47 @@ export default function StartupsPage() {
         </div>
 
         {/* Debug Information */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-blue-800">Debug Information</h3>
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <h3 className="text-sm font-medium text-blue-800">
+            Debug Information
+          </h3>
+
           <div className="mt-2 text-sm text-blue-700">
             <p>Users loaded: {users.length}</p>
+
             <p>Loading: {isLoading ? "Yes" : "No"}</p>
+
             <p>Error: {error || "None"}</p>
+
             <p>Authenticated: {isAuthenticated ? "Yes" : "No"}</p>
+
             <p>User role: {user?.role || "None"}</p>
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                    fillRule="evenodd"
+                  />
                 </svg>
               </div>
+
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Error loading startup data</h3>
+                <h3 className="text-sm font-medium text-red-800">
+                  Error loading startup data
+                </h3>
+
                 <div className="mt-2 text-sm text-red-700">{error}</div>
               </div>
             </div>
@@ -153,17 +238,20 @@ export default function StartupsPage() {
         )}
 
         {/* Startups Table */}
-        <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        <div className="overflow-hidden bg-white shadow sm:rounded-md">
           <div className="px-4 py-5 sm:px-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900">Startup Applications</h3>
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              Startup Applications
+            </h3>
+
             <p className="mt-1 max-w-2xl text-sm text-gray-500">
               List of all startup applications and their current status
             </p>
           </div>
-          
+
           {isLoading ? (
-            <div className="flex justify-center items-center h-32">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <div className="flex h-32 items-center justify-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
             </div>
           ) : (
             <ul className="divide-y divide-gray-200">
@@ -174,33 +262,54 @@ export default function StartupsPage() {
               ) : (
                 users.map((user) => (
                   <li key={user.id}>
-                    <div className="px-4 py-4 flex items-center justify-between">
+                    <div className="flex items-center justify-between px-4 py-4">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-10 w-10">
-                          <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center">
+                        <div className="h-10 w-10 flex-shrink-0">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500">
                             <span className="text-sm font-medium text-white">
-                              {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                              {(
+                                user.firstName ||
+                                user.person?.firstName ||
+                                "U"
+                              ).charAt(0)}
+
+                              {(
+                                user.lastName ||
+                                user.person?.lastName ||
+                                "N"
+                              ).charAt(0)}
                             </span>
                           </div>
                         </div>
+
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {user.firstName} {user.lastName}
+                            {user.firstName ||
+                              user.person?.firstName ||
+                              "Unknown"}{" "}
+                            {user.lastName || user.person?.lastName || "User"}
                           </div>
-                          <div className="text-sm text-gray-500">{user.email}</div>
+
+                          <div className="text-sm text-gray-500">
+                            {user.email}
+                          </div>
                         </div>
                       </div>
+
                       <div className="flex items-center space-x-2">
-                        <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        <span className="inline-flex rounded-full bg-yellow-100 px-2 py-1 text-xs font-semibold text-yellow-800">
                           Pending
                         </span>
-                        <button className="text-blue-600 hover:text-blue-900 text-sm font-medium">
+
+                        <button className="text-sm font-medium text-blue-600 hover:text-blue-900">
                           Review
                         </button>
-                        <button className="text-green-600 hover:text-green-900 text-sm font-medium">
+
+                        <button className="text-sm font-medium text-green-600 hover:text-green-900">
                           Approve
                         </button>
-                        <button className="text-red-600 hover:text-red-900 text-sm font-medium">
+
+                        <button className="text-sm font-medium text-red-600 hover:text-red-900">
                           Reject
                         </button>
                       </div>

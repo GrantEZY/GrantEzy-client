@@ -20,8 +20,34 @@ export class HttpClient {
     };
   }
 
+  private handleAuthError(): void {
+    if (typeof window !== "undefined") {
+      // Clear auth data
+      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+      localStorage.removeItem(STORAGE_KEYS.USER);
+
+      // Get current path to redirect back after login
+      const currentPath = window.location.pathname;
+      const isLoginPage = currentPath === "/login";
+      const isSignupPage = currentPath === "/signup";
+
+      // Only redirect if not already on auth pages
+      if (!isLoginPage && !isSignupPage) {
+        window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+      }
+    }
+  }
+
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
+      // Handle authentication errors (401 Unauthorized)
+      if (response.status === 401) {
+        this.handleAuthError();
+        throw new Error("Authentication required. Redirecting to login...");
+      }
+
+      // Handle other errors
       const errorData: ApiError = await response.json();
       throw new Error(
         errorData.message || `HTTP error! status: ${response.status}`,

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { AddUserModal } from "@/components/admin/AddUserModal";
 import { DeleteUserModal } from "@/components/admin/DeleteUserModal";
 import { EditUserModal } from "@/components/admin/EditUserModal";
+import { AuthGuard } from "@/components/guards/AuthGuard";
 import AdminLayout from "@/components/layout/AdminLayout";
 import { showToast, ToastProvider } from "@/components/ui/ToastNew";
 
@@ -681,8 +682,10 @@ function AdminUsersPageContent() {
 
 export default function AdminUsersPage() {
   return (
-    <ToastProvider>
-      <AdminUsersPageContent />
-    </ToastProvider>
+    <AuthGuard>
+      <ToastProvider>
+        <AdminUsersPageContent />
+      </ToastProvider>
+    </AuthGuard>
   );
 }

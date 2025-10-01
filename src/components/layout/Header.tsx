@@ -154,19 +154,16 @@ export default function Header() {
                 initials={getUserInitials()}
                 name={getUserName()}
               />
+
               <button
+                className="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
                 onClick={handleLogout}
-                className="text-sm text-gray-600 hover:text-gray-900 px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
               >
                 Logout
               </button>
             </div>
           ) : (
-            <UserInfo
-              greeting="Please log in"
-              initials="?"
-              name="Guest"
-            />
+            <UserInfo greeting="Please log in" initials="?" name="Guest" />
           )}
         </div>
       </div>

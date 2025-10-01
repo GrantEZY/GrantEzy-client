@@ -7,6 +7,7 @@ import { useAdminStore } from "@/store/admin.store";
 import { AddOrganizationModal } from "@/components/admin/AddOrganizationModal";
 import { DeleteOrganizationModal } from "@/components/admin/DeleteOrganizationModal";
 import { EditOrganizationModal } from "@/components/admin/EditOrganizationModal";
+import { AuthGuard } from "@/components/guards/AuthGuard";
 import AdminLayout from "@/components/layout/AdminLayout";
 import { showToast, ToastProvider } from "@/components/ui/ToastNew";
 
@@ -337,8 +338,10 @@ function OrganizationsPageContent() {
 
 export default function OrganizationsPage() {
   return (
-    <ToastProvider>
-      <OrganizationsPageContent />
-    </ToastProvider>
+    <AuthGuard>
+      <ToastProvider>
+        <OrganizationsPageContent />
+      </ToastProvider>
+    </AuthGuard>
   );
 }

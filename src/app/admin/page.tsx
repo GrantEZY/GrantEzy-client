@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 
 import RoleSelectionMenu from "@/components/admin/RoleSelectionMenu";
+import { AuthGuard } from "@/components/guards/AuthGuard";
 import AdminLayout from "@/components/layout/AdminLayout";
 
 export const metadata: Metadata = {
@@ -11,8 +12,10 @@ export const metadata: Metadata = {
 
 export default function AdminPage() {
   return (
-    <AdminLayout>
-      <RoleSelectionMenu />
-    </AdminLayout>
+    <AuthGuard>
+      <AdminLayout>
+        <RoleSelectionMenu />
+      </AdminLayout>
+    </AuthGuard>
   );
 }
