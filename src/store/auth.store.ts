@@ -19,7 +19,7 @@ interface AuthActions {
   login: (credentials: LoginRequest) => Promise<void>;
   register: (userData: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
-  refreshToken: () => Promise<void>;
+  refreshToken: () => Promise<boolean>;
   setUser: (user: User) => void;
   setTokens: (tokens: AuthTokens) => void;
   clearAuth: () => void;
@@ -48,19 +48,20 @@ export const useAuthStore = create<AuthStore>()(
             const userData = response.res;
 
             const tokens: AuthTokens = {
-              accessToken: userData.accessToken || "",
+              accessToken: userData.accessToken,
+              // Note: refreshToken is in httpOnly cookie "jwtToken" (managed by backend)
             };
 
-            // Store tokens in localStorage
+            // Store accessToken in localStorage
             storageUtil.setTokens(tokens);
 
             const user: User = {
               id: userData.id,
               firstName: userData.name?.split(" ")[0] || "",
-              lastName: userData.name?.split(" ")[1] || "",
+              lastName: userData.name?.split(" ").slice(1).join(" ") || "",
               email: userData.email,
               role: userData.role,
-              commitment: UserCommitmentStatus.FULL_TIME, // Default value, adjust as needed
+              commitment: UserCommitmentStatus.FULL_TIME, // Default value
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             };
@@ -71,10 +72,21 @@ export const useAuthStore = create<AuthStore>()(
               isAuthenticated: true,
               isLoading: false,
             });
+          } else {
+            // Handle non-200 status from backend
+            set({ isLoading: false });
+            const errorMessage = response.message || "Login failed";
+            console.error("Login failed:", response);
+            throw new Error(errorMessage);
           }
         } catch (error) {
           set({ isLoading: false });
-          throw error;
+          console.error("Login error:", error);
+          // Re-throw with better error message
+          if (error instanceof Error) {
+            throw error;
+          }
+          throw new Error("An unexpected error occurred during login");
         }
       },
 
@@ -85,7 +97,6 @@ export const useAuthStore = create<AuthStore>()(
 
           if (response.status === 201) {
             // Handle successful registration
-            // You might want to automatically log in or redirect
             set({ isLoading: false });
           }
         } catch (error) {
@@ -107,11 +118,31 @@ export const useAuthStore = create<AuthStore>()(
 
       refreshToken: async () => {
         try {
-          const tokens = await authService.refreshToken();
-          get().setTokens(tokens);
-        } catch (error) {
+          const response = await authService.refreshToken();
+
+          if (response.status === 200) {
+            const newAccessToken = response.res.accessToken;
+            const tokens: AuthTokens = {
+              accessToken: newAccessToken,
+            };
+
+            get().setTokens(tokens);
+            return true;
+          }
+
+          // If refresh failed, clear auth
           get().clearAuth();
-          throw error;
+          return false;
+        } catch (error) {
+          // Refresh token expired or invalid - clear auth and redirect to login
+          get().clearAuth();
+
+          // Redirect to login
+          if (typeof window !== "undefined") {
+            window.location.href = "/login";
+          }
+
+          return false;
         }
       },
 
@@ -141,12 +172,12 @@ export const useAuthStore = create<AuthStore>()(
       initialize: () => {
         const user = storageUtil.getUser();
         const accessToken = storageUtil.getAccessToken();
-        const refreshToken = storageUtil.getRefreshToken();
 
-        if (user && accessToken && refreshToken) {
+        // Only need accessToken in localStorage (refreshToken is in httpOnly cookie)
+        if (user && accessToken) {
           set({
             user,
-            tokens: { accessToken, refreshToken },
+            tokens: { accessToken },
             isAuthenticated: true,
           });
         }

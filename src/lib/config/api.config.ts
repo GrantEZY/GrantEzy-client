@@ -23,6 +23,18 @@ export const API_CONFIG = {
       DELETE_ORGANIZATION: "/admin/delete-organization",
       UPDATE_ORGANIZATION: "/admin/update-organization",
     },
+    GCV: {
+      // GCV Member Management
+      GET_MEMBERS: "/gcv/get-gcv-members",
+      ADD_MEMBER: "/gcv/add-gcv-member",
+      UPDATE_MEMBER_ROLE: "/gcv/update-gcv-role",
+      // GCV Program Management
+      CREATE_PROGRAM: "/gcv/create-program",
+      GET_PROGRAMS: "/gcv/get-programs",
+      UPDATE_PROGRAM: "/gcv/update-program",
+      DELETE_PROGRAM: "/gcv/delete-program",
+      ADD_PROGRAM_MANAGER: "/gcv/add-program-manager",
+    },
     HEALTH: "/health",
   },
   HEADERS: {
@@ -37,6 +49,7 @@ export const getApiUrl = (endpoint: string): string => {
 
 export const STORAGE_KEYS = {
   ACCESS_TOKEN: "grantezy_access_token",
-  REFRESH_TOKEN: "grantezy_refresh_token",
   USER: "grantezy_user",
+  // Note: REFRESH_TOKEN is not stored in frontend
+  // It's managed by backend as httpOnly cookie named "jwtToken"
 } as const;

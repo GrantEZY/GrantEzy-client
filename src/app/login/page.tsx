@@ -9,6 +9,18 @@ import { useAuth } from "@/hooks/useAuth";
 
 import { UserRoles } from "@/types/auth.types";
 
+// Role-based redirect mapping
+const getRoleBasedRedirect = (role: string): string => {
+  switch (role) {
+    case UserRoles.ADMIN:
+      return "/admin";
+    case UserRoles.COMMITTEE_MEMBER:
+      return "/gcv";
+    default:
+      return "/";
+  }
+};
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,17 +38,36 @@ export default function LoginPage() {
     setError("");
 
     try {
+      console.log("Attempting login with:", { email, role });
       const result = await login({ email, password, role });
+      console.log("Login result:", result);
 
       if (result.success) {
-        // Redirect to the original page or default to admin
-        const redirect = searchParams.get("redirect") || "/admin";
+        // Use the backend role from the authenticated user, not the dropdown selection
+        const backendRole = result.user?.role || role;
+
+        // Get redirect from query params or use role-based default
+        const queryRedirect = searchParams.get("redirect");
+        const defaultRedirect = getRoleBasedRedirect(backendRole);
+        const redirect = queryRedirect || defaultRedirect;
+
+        console.log(
+          "Login successful, redirecting to:",
+          redirect,
+          "based on backend role:",
+          backendRole,
+        );
         router.push(redirect);
       } else {
-        setError(result.error || "Login failed");
+        const errorMsg = result.error || "Login failed";
+        console.error("Login failed:", errorMsg);
+        setError(errorMsg);
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      const errorMsg =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      console.error("Login error caught:", err);
+      setError(errorMsg);
     } finally {
       setIsLoading(false);
     }

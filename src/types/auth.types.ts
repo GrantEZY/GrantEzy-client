@@ -50,17 +50,32 @@ export interface LoginResponse {
   status: number;
   message: string;
   res: {
-    accessToken: string;
+    id: string;
     email: string;
     role: UserRoles;
-    id: string;
     name: string;
+    accessToken: string;
+  };
+}
+
+export interface RefreshResponse {
+  status: number;
+  message: string;
+  res: {
+    userData: {
+      id: string;
+      email: string;
+      role: UserRoles;
+      token_version: number;
+    };
+    accessToken: string;
   };
 }
 
 export interface AuthTokens {
   accessToken: string;
-  refreshToken?: string;
+  // Note: refreshToken is managed by backend as httpOnly cookie named "jwtToken"
+  // Frontend never stores or accesses it directly
 }
 
 export interface User {

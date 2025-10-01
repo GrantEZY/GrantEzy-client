@@ -7,6 +7,7 @@ import { useAuthStore } from "../store/auth.store";
 import { LoginRequest, RegisterRequest } from "../types/auth.types";
 
 export const useAuth = () => {
+  const store = useAuthStore();
   const {
     user,
     tokens,
@@ -18,7 +19,7 @@ export const useAuth = () => {
     refreshToken,
     clearAuth,
     initialize,
-  } = useAuthStore();
+  } = store;
 
   // Initialize auth state on mount
   useEffect(() => {
@@ -28,7 +29,9 @@ export const useAuth = () => {
   const handleLogin = async (credentials: LoginRequest) => {
     try {
       await login(credentials);
-      return { success: true };
+      // Get the updated user from the store after successful login
+      const currentUser = useAuthStore.getState().user;
+      return { success: true, user: currentUser };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
       return { success: false, error: message };
@@ -58,8 +61,8 @@ export const useAuth = () => {
 
   const handleRefreshToken = async () => {
     try {
-      await refreshToken();
-      return { success: true };
+      const success = await refreshToken();
+      return { success };
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Token refresh failed";
