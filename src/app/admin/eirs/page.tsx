@@ -293,11 +293,16 @@ function EIRsPageContent() {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2 lg:grid-cols-3">
-              {users.map((user) => (
-                <div
-                  className="rounded-lg bg-gray-50 p-6 transition-shadow hover:shadow-md"
-                  key={user.id}
-                >
+              {users
+                .filter(
+                  (user, index, self) =>
+                    self.findIndex((u) => u.id === user.id) === index
+                )
+                .map((user) => (
+                  <div
+                    className="rounded-lg bg-gray-50 p-6 transition-shadow hover:shadow-md"
+                    key={user.id}
+                  >
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-500">

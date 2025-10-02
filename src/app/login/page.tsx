@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -31,6 +31,14 @@ export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Set initial role based on redirect parameter
+  useEffect(() => {
+    const redirect = searchParams.get("redirect");
+    if (redirect === "/gcv") {
+      setRole(UserRoles.COMMITTEE_MEMBER);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -196,6 +204,16 @@ export default function LoginPage() {
                 href="/signup"
               >
                 Sign up here
+              </Link>
+            </p>
+
+            <p className="mt-2 text-sm text-gray-600">
+              Access GCV Dashboard?{" "}
+              <Link
+                className="font-medium text-purple-600 hover:text-purple-500"
+                href="/login?redirect=/gcv"
+              >
+                Login as Committee Member
               </Link>
             </p>
           </div>
