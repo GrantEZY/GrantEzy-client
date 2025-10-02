@@ -55,7 +55,7 @@ export function AddProgramManagerModal({
   if (!isOpen) return null;
 
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-md">
       <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">

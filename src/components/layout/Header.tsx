@@ -104,8 +104,8 @@ export default function Header() {
 
   // Get user display name
   const getUserName = () => {
-    if (user?.firstName && user?.lastName) {
-      return `${user.firstName} ${user.lastName}`;
+    if (user?.firstName) {
+      return user.firstName;
     }
     return "User";
   };
@@ -154,13 +154,6 @@ export default function Header() {
                 initials={getUserInitials()}
                 name={getUserName()}
               />
-
-              <button
-                className="rounded-md border border-gray-300 px-3 py-1 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
             </div>
           ) : (
             <UserInfo greeting="Please log in" initials="?" name="Guest" />
