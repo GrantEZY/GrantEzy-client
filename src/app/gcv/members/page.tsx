@@ -34,6 +34,7 @@ export default function GCVMembersPage() {
       getAllGCVMembers({
         page,
         numberOfResults: pageSize,
+        filter: { role: UserRoles.COMMITTEE_MEMBER }
       });
     },
     [getAllGCVMembers],

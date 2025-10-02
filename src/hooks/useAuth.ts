@@ -1,7 +1,6 @@
 /**
  * Custom hooks for authentication
  */
-import { useEffect } from "react";
 
 import { useAuthStore } from "../store/auth.store";
 import { LoginRequest, RegisterRequest } from "../types/auth.types";
@@ -13,7 +12,6 @@ export const useAuth = () => {
     tokens,
     isAuthenticated,
     isLoading,
-    isHydrated,
     login,
     register,
     logout,

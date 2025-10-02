@@ -8,6 +8,7 @@ import { AuthGuard } from "@/components/guards/AuthGuard";
 import GCVLayout from "@/components/layout/GCVLayout";
 
 import { useGcv } from "@/hooks/useGcv";
+import { UserRoles } from "@/types/auth.types";
 
 export default function GCVDashboard() {
   const {
@@ -22,12 +23,14 @@ export default function GCVDashboard() {
   } = useGcv();
 
   useEffect(() => {
-    // Fetch initial data
-    getAllGCVMembers({ page: 1, numberOfResults: 5 });
+    // Fetch initial data - get all committee members to count them
+    getAllGCVMembers({ 
+      page: 1, 
+      numberOfResults: 1000, // Large number to get all committee members
+      filter: { role: UserRoles.COMMITTEE_MEMBER }
+    });
     getPrograms({ page: 1, numberOfResults: 5 });
-  }, []);
-
-  return (
+  }, []);  return (
     <AuthGuard>
       <GCVLayout>
         <div className="space-y-6">
@@ -48,11 +51,11 @@ export default function GCVDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">
-                    Total Members
+                    Total Committee Members
                   </p>
 
                   <p className="mt-2 text-3xl font-bold text-gray-900">
-                    {isMembersLoading ? "..." : membersPagination?.total || 0}
+                    {isMembersLoading ? "..." : members.length}
                   </p>
                 </div>
 
