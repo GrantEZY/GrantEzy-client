@@ -14,17 +14,14 @@ interface AuthProviderProps {
 const TOKEN_REFRESH_INTERVAL = 50 * 60 * 1000; // 50 minutes in milliseconds
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const initialize = useAuthStore((state) => state.initialize);
   const refreshToken = useAuthStore((state) => state.refreshToken);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const pathname = usePathname();
 
   const refreshTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    // Initialize auth state from localStorage on app startup
-    initialize();
-  }, [initialize]);
+  // Zustand persist handles auth state restoration automatically
+  // No need to manually call initialize()
 
   useEffect(() => {
     // Don't set up refresh on login/signup pages to prevent redirects during login

@@ -18,24 +18,22 @@ interface AuthGuardProps {
 export function AuthGuard({ children, fallback }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, isLoading, initialize } = useAuthStore();
+  const { isAuthenticated, isLoading, isHydrated } = useAuthStore();
+
+  // AuthProvider handles initialization on app startup
+  // No need to call initialize() here
 
   useEffect(() => {
-    // Initialize auth state from localStorage
-    initialize();
-  }, [initialize]);
-
-  useEffect(() => {
-    // If not loading and not authenticated, redirect to login
-    if (!isLoading && !isAuthenticated) {
+    // Wait for hydration to complete before checking authentication
+    if (isHydrated && !isLoading && !isAuthenticated) {
       // Save current path to redirect back after login
       const loginUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
       router.push(loginUrl);
     }
-  }, [isAuthenticated, isLoading, router, pathname]);
+  }, [isAuthenticated, isLoading, isHydrated, router, pathname]);
 
-  // Show loading state while checking authentication
-  if (isLoading) {
+  // Show loading state while checking authentication or hydrating
+  if (!isHydrated || isLoading) {
     return (
       fallback || (
         <div className="flex min-h-screen items-center justify-center">

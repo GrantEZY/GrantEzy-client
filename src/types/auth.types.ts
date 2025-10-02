@@ -94,4 +94,5 @@ export interface AuthState {
   tokens: AuthTokens | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isHydrated: boolean; // Track when Zustand persist has completed
 }

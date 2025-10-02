@@ -23,7 +23,6 @@ interface AuthActions {
   setUser: (user: User) => void;
   setTokens: (tokens: AuthTokens) => void;
   clearAuth: () => void;
-  initialize: () => void;
 }
 
 type AuthStore = AuthState & AuthActions;
@@ -36,6 +35,7 @@ export const useAuthStore = create<AuthStore>()(
       tokens: null,
       isAuthenticated: false,
       isLoading: false,
+      isHydrated: false,
 
       // Actions
       login: async (credentials: LoginRequest) => {
@@ -168,20 +168,6 @@ export const useAuthStore = create<AuthStore>()(
         });
         storageUtil.clearAuthData();
       },
-
-      initialize: () => {
-        const user = storageUtil.getUser();
-        const accessToken = storageUtil.getAccessToken();
-
-        // Only need accessToken in localStorage (refreshToken is in httpOnly cookie)
-        if (user && accessToken) {
-          set({
-            user,
-            tokens: { accessToken },
-            isAuthenticated: true,
-          });
-        }
-      },
     }),
     {
       name: "auth-store",
@@ -190,6 +176,11 @@ export const useAuthStore = create<AuthStore>()(
         tokens: state.tokens,
         isAuthenticated: state.isAuthenticated,
       }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.isHydrated = true;
+        }
+      },
     },
   ),
 );

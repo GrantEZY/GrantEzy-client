@@ -13,18 +13,16 @@ export const useAuth = () => {
     tokens,
     isAuthenticated,
     isLoading,
+    isHydrated,
     login,
     register,
     logout,
     refreshToken,
     clearAuth,
-    initialize,
   } = store;
 
-  // Initialize auth state on mount
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
+  // Note: AuthProvider handles initialization on app startup
+  // No need to call initialize() here to avoid redundant calls
 
   const handleLogin = async (credentials: LoginRequest) => {
     try {
