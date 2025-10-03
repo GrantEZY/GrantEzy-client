@@ -1,0 +1,50 @@
+export const openCalls = [
+  {
+    title: 'Student Innovation Grant',
+    deadline: 'March 15, 2025',
+    funding: '₹15 Lakhs',
+    description: 'Empowering student innovators to develop cutting-edge solutions for real-world problems through comprehensive funding',
+    status: 'Open',
+    category: 'Student Innovation',
+    eligibility: 'All Students',
+    duration: '12 months',
+    applications: '200+',
+    icon: 'FaRocket',
+    color: 'blue',
+    impact: 'Early Stage Funding',
+    timeline: '12 months',
+    tags: ['Innovation', 'Student', 'Technology']
+  },
+  {
+    title: 'Technology Transfer Grant',
+    deadline: 'April 10, 2025',
+    funding: '₹50 Lakhs',
+    description: 'Accelerating the commercialization of research outcomes through strategic partnerships and industry collaboration.',
+    status: 'Open',
+    category: 'Research Transfer',
+    eligibility: 'Faculty & Students',
+    duration: '18 months',
+    applications: '150+',
+    icon: 'FaBolt',
+    color: 'green',
+    impact: 'Research to Market',
+    timeline: '18 months',
+    tags: ['Technology', 'Research', 'Commercialization']
+  },
+  {
+    title: 'Social Impact Challenge',
+    deadline: 'May 20, 2025',
+    funding: '₹30 Lakhs',
+    description: 'Supporting startups focused on solving social and environmental challenges with sustainable solutions.',
+    status: 'Coming Soon',
+    category: 'Social Impact',
+    eligibility: 'Social entrepreneurs',
+    duration: '15 months',
+    applications: 'Opening Soon',
+    icon: 'FaHeartbeat',
+    color: 'red',
+    impact: 'Social Change',
+    timeline: '15 months',
+    tags: ['Social Impact', 'Environment', 'Sustainability']
+  }
+];

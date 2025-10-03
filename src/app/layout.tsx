@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 
 import "./globals.css";
+import { Providers } from "@/components/providers/ThemeProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -22,10 +23,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = sessionStorage.getItem('theme-mode') || 'light';
+                  document.documentElement.className = theme;
+                } catch (e) {
+                  document.documentElement.className = 'light';
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} font-inter antialiased`}>
+        suppressHydrationWarning
         <AuthProvider>
-          {children}
+        <Providers>
+            {children}
+        </Providers>
         </AuthProvider>
       </body>
     </html>
