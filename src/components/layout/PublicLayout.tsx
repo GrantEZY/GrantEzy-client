@@ -1,9 +1,20 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { navItems, footerLinks, contactInfo, copyrightText } from '@/constants';
 import DarkModeToggle from '@/components/ui/DarkModeToggle';
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  MobileNavHeader,
+  MobileNavMenu,
+  MobileNavToggle,
+  NavbarButton,
+} from '@/components/ui/resizable-navbar';
 
 interface PublicHeaderProps {
   onNavigate?: (section: string) => void;
@@ -11,95 +22,178 @@ interface PublicHeaderProps {
 
 function PublicHeader({ onNavigate }: PublicHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const router = useRouter();
+
+  // Handle scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Transform navItems to match the expected format
+  const navLinks = navItems.map((item) => ({
+    name: item.label,
+    link: `#${item.id}`,
+  }));
 
   return (
-    <header className="bg-[var(--color-white)] border-b border-[var(--color-gray-200)] px-4 sm:px-6 py-4 sticky top-0 z-50">
-      <div className="flex items-center justify-between">
-        {/* Logo Section */}
-        <div className="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
-          <Image
-            src="/assets/College_Logo.png"
-            alt="College Logo"
-            width={50}
-            height={50}
-            className="sm:w-[60px] sm:h-[60px] lg:w-[70px] lg:h-[70px] rounded-full"
-            priority
-          />
-          <div className="flex flex-col">
-            <h1 className="text-sm sm:text-base font-semibold text-[var(--color-gray-800)] leading-tight">
-              <span className="hidden sm:inline">Indian Institute of Information <br /> Technology Sri City</span>
-              <span className="sm:hidden">IIIT Sri City</span>
-            </h1>
-            <p className="pt-1 text-xs text-[var(--color-gray-600)] hidden sm:block">भारतीय सूचना प्रौद्योगिकी संस्थान श्री सिटी</p>
-          </div>
-        </div>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onNavigate?.(item.id)}
-              className="text-[var(--color-gray-700)] hover:text-[var(--color-blue-600)] font-medium transition-colors duration-200 text-sm xl:text-base"
-            >
-              {item.label}
-            </button>
-          ))}
-        </nav>
-
-        {/* Desktop Action Buttons */}
-        <div className="hidden md:flex items-center space-x-3 flex-shrink-0">
-          <DarkModeToggle />
-          <button className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-4 lg:px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200 text-sm lg:text-base">
-            Sign In
-          </button>
-          <button className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-4 lg:px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-700)] transition-colors duration-200 text-sm lg:text-base">
-            Login
-          </button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-[var(--color-gray-300)] hover:bg-[var(--color-gray-50)] transition-colors duration-200"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          <svg className="w-5 h-5 text-[var(--color-gray-700)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden mt-4 py-4 border-t border-[var(--color-gray-200)]">
-          <nav className="flex flex-col space-y-3">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  onNavigate?.(item.id);
-                  setIsMobileMenuOpen(false);
-                }}
-                className="text-left text-[var(--color-gray-700)] hover:text-[var(--color-blue-600)] font-medium transition-colors duration-200 py-2"
-              >
-                {item.label}
-              </button>
-            ))}
-            <div className="flex flex-col space-y-3 pt-4 border-t border-[var(--color-gray-200)]">
-              <div className="flex justify-center pb-2">
-                <DarkModeToggle />
+    <>
+      {/* Old Navbar Design - Hide when scrolled with transition */}
+      <div 
+        className={`transition-all duration-300 ease-in-out ${
+          isScrolled 
+            ? 'opacity-0 -translate-y-full pointer-events-none' 
+            : 'opacity-100 translate-y-0'
+        }`}
+      >
+        <header className="bg-[var(--color-white)] border-b border-[var(--color-gray-200)] px-4 sm:px-6 py-4 sticky top-0 z-40">
+          <div className="flex items-center justify-between">
+            {/* Logo Section */}
+            <div className="flex items-center space-x-3 sm:space-x-4 flex-shrink-0">
+              <Image
+                src="/assets/College_Logo.png"
+                alt="College Logo"
+                width={50}
+                height={50}
+                className="sm:w-[60px] sm:h-[60px] lg:w-[70px] lg:h-[70px] rounded-full"
+                priority
+              />
+              <div className="flex flex-col">
+                <h1 className="text-sm sm:text-base font-semibold text-[var(--color-gray-800)] leading-tight">
+                  <span className="hidden sm:inline">Indian Institute of Information <br /> Technology Sri City</span>
+                  <span className="sm:hidden">IIIT Sri City</span>
+                </h1>
+                <p className="pt-1 text-xs text-[var(--color-gray-600)] hidden sm:block">भारतीय सूचना प्रौद्योगिकी संस्थान श्री सिटी</p>
               </div>
-              <button className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200 text-center">
-                Sign In
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-6 xl:space-x-8">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onNavigate?.(item.id)}
+                  className="text-[var(--color-gray-700)] hover:text-[var(--color-blue-600)] font-medium transition-colors duration-200 text-sm xl:text-base"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            {/* Desktop Action Buttons */}
+            <div className="hidden md:flex items-center space-x-3 flex-shrink-0">
+              <DarkModeToggle />
+              <button 
+                onClick={() => router.push('/signup')}
+                className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-4 lg:px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200 text-sm lg:text-base"
+              >
+                Sign Up
               </button>
-              <button className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-700)] transition-colors duration-200 text-center">
+              <button 
+                onClick={() => router.push('/login')}
+                className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-4 lg:px-6 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-700)] transition-colors duration-200 text-sm lg:text-base"
+              >
                 Login
               </button>
             </div>
-          </nav>
-        </div>
-      )}
-    </header>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden flex items-center justify-center w-10 h-10 rounded-lg border border-[var(--color-gray-300)] hover:bg-[var(--color-gray-50)] transition-colors duration-200"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <svg className="w-5 h-5 text-[var(--color-gray-700)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {isMobileMenuOpen && (
+            <div className="md:hidden mt-4 py-4 border-t border-[var(--color-gray-200)]">
+              <nav className="flex flex-col space-y-3">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      onNavigate?.(item.id);
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="text-left text-[var(--color-gray-700)] hover:text-[var(--color-blue-600)] font-medium transition-colors duration-200 py-2"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div className="flex flex-col space-y-3 pt-4 border-t border-[var(--color-gray-200)]">
+                  <div className="flex justify-center pb-2">
+                    <DarkModeToggle />
+                  </div>
+                  <button 
+                    onClick={() => {
+                      router.push('/signup');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="border border-[var(--color-blue-600)] text-[var(--color-gray-900)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-50)] transition-colors duration-200 text-center"
+                  >
+                    Sign Up
+                  </button>
+                  <button 
+                    onClick={() => {
+                      router.push('/login');
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className="bg-[var(--color-blue-600)] text-[var(--color-white)] px-4 py-2 rounded-lg font-medium hover:bg-[var(--color-blue-700)] transition-colors duration-200 text-center"
+                  >
+                    Login
+                  </button>
+                </div>
+              </nav>
+            </div>
+          )}
+        </header>
+      </div>
+
+      {/* Resizable Navbar - Uses its own scroll detection */}
+      <Navbar className="fixed top-0 z-50">
+        <NavBody>
+          {({ visible }: { visible?: boolean }) => (
+            <>
+              {/* Logo Section */}
+              <div className="flex items-center space-x-3 flex-shrink-0">
+                <Image
+                  src="/assets/College_Logo.png"
+                  alt="College Logo"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                  priority
+                />
+                <div className="flex flex-col">
+                  <h1 className="text-sm font-semibold text-black leading-tight">
+                    IIIT Sri City
+                  </h1>
+                </div>
+              </div>
+
+              {/* Navigation Items */}
+              <NavItems 
+                items={navLinks}
+              />
+
+              {/* Dark Mode Toggle */}
+              <div className="flex items-center flex-shrink-0">
+                <DarkModeToggle />
+              </div>
+            </>
+          )}
+        </NavBody>
+      </Navbar>
+    </>
   );
 }
 

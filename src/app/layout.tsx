@@ -41,7 +41,6 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} font-inter antialiased`}>
-        suppressHydrationWarning
         <AuthProvider>
         <Providers>
             {children}
