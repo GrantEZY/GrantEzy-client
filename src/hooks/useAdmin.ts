@@ -16,6 +16,7 @@ export const useAdmin = () => {
   const {
     users,
     pagination,
+    organizations,
     isLoading,
     error,
     getAllUsers,
@@ -24,6 +25,10 @@ export const useAdmin = () => {
     deleteUser,
     clearUsers,
     setError,
+    getOrganizations,
+    addOrganization,
+    updateOrganization,
+    deleteOrganization,
   } = useAdminStore();
 
   const fetchUsers = useCallback(
@@ -124,10 +129,22 @@ export const useAdmin = () => {
     [deleteUser],
   );
 
+  const fetchOrganizations = useCallback(async () => {
+    try {
+      await getOrganizations();
+      return { success: true };
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to fetch organizations";
+      return { success: false, error: message };
+    }
+  }, [getOrganizations]);
+
   return {
     // State
     users,
     pagination,
+    organizations,
     isLoading,
     error,
 
@@ -141,5 +158,6 @@ export const useAdmin = () => {
     removeUser,
     clearUsers,
     setError,
+    fetchOrganizations,
   };
 };

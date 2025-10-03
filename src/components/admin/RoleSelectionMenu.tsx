@@ -16,9 +16,13 @@ interface RoleCardProps {
 }
 
 function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
-  const baseClasses = `w-[300px] h-[200px] rounded-[30px] flex flex-col items-center justify-center space-y-4 transition-shadow duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`;
+  const baseClasses = `w-[300px] h-[200px] rounded-[30px] flex flex-col items-center justify-center space-y-4 transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2`;
 
-  const selectedStyle: React.CSSProperties | undefined = selected
+  const cardClasses = selected
+    ? `${baseClasses} text-white`
+    : `${baseClasses} bg-white hover:shadow-2xl hover:scale-105 hover:text-white group`;
+
+  const cardStyle: React.CSSProperties = selected
     ? {
         background: "var(--color-blue-custom)",
         boxShadow:
@@ -27,33 +31,46 @@ function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
       }
     : {
         boxShadow: "0px 0px 13.9px 0px var(--shadow-light)",
-        background: "var(--color-white)",
       };
+
+  const hoverStyle: React.CSSProperties = !selected ? {
+    background: "linear-gradient(135deg, var(--color-blue-custom) 0%, var(--color-blue-600, #2563eb) 50%, var(--color-blue-700, #1d4ed8) 100%)",
+  } : {};
 
   return (
     <button
       aria-pressed={selected}
-      className={baseClasses + (selected ? " " : " hover:shadow-lg")}
+      className={cardClasses}
       onClick={onClick}
-      style={selectedStyle}
+      style={cardStyle}
+      onMouseEnter={(e) => {
+        if (!selected) {
+          Object.assign(e.currentTarget.style, hoverStyle);
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!selected) {
+          e.currentTarget.style.background = 'white';
+        }
+      }}
     >
       <div
-        className={`h-12 w-12 ${selected ? "bg-white/20" : "bg-[var(--color-gray-100)]"} flex items-center justify-center rounded-full`}
+        className={`h-12 w-12 ${selected ? "bg-white/20" : "bg-[var(--color-gray-100)] group-hover:bg-white/20"} flex items-center justify-center rounded-full transition-all duration-200`}
       >
         {/* icon should inherit currentColor, so we toggle text color */}
         <span
-          className={
+          className={`transition-colors duration-200 ${
             selected
-              ? "text-[var(--color-white)]"
-              : "text-[var(--color-gray-600)]"
-          }
+              ? "text-white"
+              : "text-[var(--color-gray-600)] group-hover:text-white"
+          }`}
         >
           {icon}
         </span>
       </div>
 
       <h3
-        className={`${selected ? "text-[var(--color-white)]" : "text-[var(--color-gray-800)]"} font-inter text-[22px] font-normal`}
+        className={`${selected ? "text-white" : "text-[var(--color-gray-800)] group-hover:text-white"} font-inter text-[22px] font-normal transition-colors duration-200`}
       >
         {title}
       </h3>
