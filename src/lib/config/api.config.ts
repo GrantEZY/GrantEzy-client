@@ -35,6 +35,15 @@ export const API_CONFIG = {
       DELETE_PROGRAM: "/gcv/delete-program",
       ADD_PROGRAM_MANAGER: "/gcv/add-program-manager",
     },
+    PM: {
+      // PM Cycle Management
+      CREATE_CYCLE: "/pm/create-cycle",
+      GET_PROGRAM_CYCLES: "/pm/get-program-cycles",
+      UPDATE_CYCLE_DETAILS: "/pm/update-cycle-details",
+      DELETE_CYCLE: "/pm/delete-program-cycle",
+      // PM Program Management (for assigned programs)
+      GET_ASSIGNED_PROGRAMS: "/pm/get-assigned-programs",
+    },
     HEALTH: "/health",
   },
   HEADERS: {

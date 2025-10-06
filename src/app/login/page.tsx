@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -16,6 +16,8 @@ const getRoleBasedRedirect = (role: string): string => {
       return "/admin";
     case UserRoles.COMMITTEE_MEMBER:
       return "/gcv";
+    case UserRoles.PROGRAM_MANAGER:
+      return "/pm";
     default:
       return "/";
   }
@@ -46,9 +48,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      console.log("Attempting login with:", { email, role });
       const result = await login({ email, password, role });
-      console.log("Login result:", result);
 
       if (result.success) {
         // Use the backend role from the authenticated user, not the dropdown selection
@@ -59,12 +59,6 @@ export default function LoginPage() {
         const defaultRedirect = getRoleBasedRedirect(backendRole);
         const redirect = queryRedirect || defaultRedirect;
 
-        console.log(
-          "Login successful, redirecting to:",
-          redirect,
-          "based on backend role:",
-          backendRole,
-        );
         router.push(redirect);
       } else {
         const errorMsg = result.error || "Login failed";
@@ -214,6 +208,16 @@ export default function LoginPage() {
                 href="/login?redirect=/gcv"
               >
                 Login as Committee Member
+              </Link>
+            </p>
+
+            <p className="mt-2 text-sm text-gray-600">
+              Access PM Dashboard?{" "}
+              <Link
+                className="font-medium text-green-600 hover:text-green-500"
+                href="/login?redirect=/pm"
+              >
+                Login as Program Manager
               </Link>
             </p>
           </div>

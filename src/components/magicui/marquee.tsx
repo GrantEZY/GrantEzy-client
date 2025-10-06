@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
 import { ComponentPropsWithoutRef } from "react";
- 
+
+import { cn } from "@/lib/utils";
+
 interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
   /**
    * Optional CSS class name to apply custom styles
@@ -31,7 +32,7 @@ interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
    */
   repeat?: number;
 }
- 
+
 export function Marquee({
   className,
   reverse = false,
@@ -45,7 +46,7 @@ export function Marquee({
     <div
       {...props}
       className={cn(
-        "group flex overflow-hidden p-2 [--duration:40s] [--gap:1rem] [gap:var(--gap)]",
+        "group flex [gap:var(--gap)] overflow-hidden p-2 [--duration:40s] [--gap:1rem]",
         {
           "flex-row": !vertical,
           "flex-col": vertical,
@@ -57,13 +58,13 @@ export function Marquee({
         .fill(0)
         .map((_, i) => (
           <div
-            key={i}
             className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
               "animate-marquee flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,
               "group-hover:[animation-play-state:paused]": pauseOnHover,
               "[animation-direction:reverse]": reverse,
             })}
+            key={i}
           >
             {children}
           </div>
