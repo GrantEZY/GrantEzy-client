@@ -37,47 +37,47 @@ export default function CreateCycleModal({
       endDate: "",
     },
     trlCriteria: {
-      [TRL.TRL1]: {
+      [TRL.TRL_1]: {
         requirements: ["Basic research"],
         evidence: ["Research documentation"],
         metrics: ["Initial concept validation"],
       },
-      [TRL.TRL2]: {
+      [TRL.TRL_2]: {
         requirements: ["Technology concept formulated"],
         evidence: ["Concept documentation"],
         metrics: ["Feasibility assessment"],
       },
-      [TRL.TRL3]: {
+      [TRL.TRL_3]: {
         requirements: ["Experimental proof of concept"],
         evidence: ["Prototype development"],
         metrics: ["Performance metrics"],
       },
-      [TRL.TRL4]: {
+      [TRL.TRL_4]: {
         requirements: ["Technology validated in lab"],
         evidence: ["Lab test results"],
         metrics: ["Validation reports"],
       },
-      [TRL.TRL5]: {
+      [TRL.TRL_5]: {
         requirements: ["Technology validated in relevant environment"],
         evidence: ["Field test results"],
         metrics: ["Performance data"],
       },
-      [TRL.TRL6]: {
+      [TRL.TRL_6]: {
         requirements: ["Technology demonstrated in relevant environment"],
         evidence: ["Demo results"],
         metrics: ["Market readiness"],
       },
-      [TRL.TRL7]: {
+      [TRL.TRL_7]: {
         requirements: ["System prototype demonstration"],
         evidence: ["Prototype testing"],
         metrics: ["System performance"],
       },
-      [TRL.TRL8]: {
+      [TRL.TRL_8]: {
         requirements: ["System complete and qualified"],
         evidence: ["Complete system"],
         metrics: ["Quality metrics"],
       },
-      [TRL.TRL9]: {
+      [TRL.TRL_9]: {
         requirements: ["Actual system proven in operational environment"],
         evidence: ["Operational proof"],
         metrics: ["Commercial metrics"],

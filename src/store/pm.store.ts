@@ -5,23 +5,15 @@ import { create } from "zustand";
 
 import { pmService } from "../services/pm.service";
 import { PaginationMeta } from "../types/admin.types";
-import { Program } from "../types/gcv.types";
 import {
   CreateCycleRequest,
   Cycle,
   DeleteCycleRequest,
-  GetAssignedProgramsRequest,
   GetProgramCyclesRequest,
   UpdateCycleRequest,
 } from "../types/pm.types";
 
 interface PMState {
-  // Programs state (assigned to PM)
-  assignedPrograms: Program[];
-  programsPagination: PaginationMeta | null;
-  isProgramsLoading: boolean;
-  programsError: string | null;
-
   // Cycles state
   cycles: Cycle[];
   cyclesPagination: PaginationMeta | null;
@@ -33,10 +25,7 @@ interface PMState {
 }
 
 interface PMActions {
-  // Program actions
-  getAssignedPrograms: (params: GetAssignedProgramsRequest) => Promise<void>;
-  clearPrograms: () => void;
-  setProgramsError: (error: string | null) => void;
+  // Program selection
   setSelectedProgramId: (programId: string | null) => void;
 
   // Cycle actions
@@ -55,81 +44,13 @@ type PMStore = PMState & PMActions;
 
 export const usePMStore = create<PMStore>((set, get) => ({
   // Initial state
-  assignedPrograms: [],
-  programsPagination: null,
-  isProgramsLoading: false,
-  programsError: null,
   cycles: [],
   cyclesPagination: null,
   isCyclesLoading: false,
   cyclesError: null,
   selectedProgramId: null,
 
-  // ============= Program Actions =============
-
-  getAssignedPrograms: async (params: GetAssignedProgramsRequest) => {
-    set({ isProgramsLoading: true, programsError: null });
-    try {
-      const response = await pmService.getAssignedPrograms(params);
-
-      if (response.status === 200) {
-        const { programs, numberOfPrograms: total } = response.res;
-
-        // Calculate pagination
-        const pagination: PaginationMeta = {
-          page: params.page,
-          limit: params.numberOfResults,
-          total,
-          totalPages: Math.ceil(total / params.numberOfResults),
-        };
-
-        set({
-          assignedPrograms: programs,
-          programsPagination: pagination,
-          isProgramsLoading: false,
-          programsError: null,
-        });
-      } else {
-        throw new Error(
-          response.message || "Failed to fetch assigned programs",
-        );
-      }
-    } catch (error) {
-      let errorMessage = "Failed to fetch assigned programs";
-
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
-        errorMessage = String(error.message);
-      }
-
-      set({
-        assignedPrograms: [],
-        programsPagination: null,
-        isProgramsLoading: false,
-        programsError: errorMessage,
-      });
-
-      console.error("Get assigned programs error:", error);
-      throw error;
-    }
-  },
-
-  clearPrograms: () => {
-    set({
-      assignedPrograms: [],
-      programsPagination: null,
-      programsError: null,
-    });
-  },
-
-  setProgramsError: (error: string | null) => {
-    set({ programsError: error });
-  },
+  // ============= Program Selection =============
 
   setSelectedProgramId: (programId: string | null) => {
     set({ selectedProgramId: programId });
@@ -248,7 +169,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         // Update the cycle in the local state
         const { cycles } = get();
         const updatedCycles = cycles.map((cycle) =>
-          cycle.id === data.cycleId
+          cycle.id === data.id
             ? { ...cycle, ...data, updatedAt: new Date().toISOString() }
             : cycle,
         );
@@ -338,10 +259,6 @@ export const usePMStore = create<PMStore>((set, get) => ({
   // Clear all
   clearAll: () => {
     set({
-      assignedPrograms: [],
-      programsPagination: null,
-      isProgramsLoading: false,
-      programsError: null,
       cycles: [],
       cyclesPagination: null,
       isCyclesLoading: false,

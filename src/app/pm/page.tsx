@@ -1,69 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
 import Link from "next/link";
-
 import { AuthGuard } from "@/components/guards/AuthGuard";
-import PMLayout from "@/components/layout/PMLayout.tsx";
-
-import { usePm } from "@/hooks/usePm";
-
-import { Program, ProgramStatus } from "@/types/gcv.types";
-import type { Cycle } from "@/types/pm.types";
+import PMLayout from "@/components/layout/PMLayout";
 
 export default function PMDashboard() {
-  const { assignedPrograms, isProgramsLoading, getAssignedPrograms, cycles } =
-    usePm();
-
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-
-  useEffect(() => {
-    if (isFirstLoad) {
-      // Load assigned programs on first mount
-      getAssignedPrograms({
-        page: 1,
-        numberOfResults: 10,
-      });
-      setIsFirstLoad(false);
-    }
-  }, [isFirstLoad, getAssignedPrograms]);
-
-  const activePrograms = assignedPrograms.filter(
-    (program: Program) => program.status === ProgramStatus.ACTIVE,
-  );
-
-  const activeCyclesCount = cycles.filter(
-    (cycle: Cycle) => cycle.status === "ACTIVE",
-  ).length;
-
-  const totalBudgetAllocated = cycles.reduce(
-    (total: number, cycle: Cycle) => total + cycle.budget.amount,
-    0,
-  );
-
   return (
-    <AuthGuard>
+    <AuthGuard >
       <PMLayout>
         <div className="space-y-6">
-          {/* Header */}
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
                 Program Manager Dashboard
               </h1>
-
               <p className="mt-2 text-gray-600">
-                Manage your assigned programs and cycles
+                Manage program cycles, review applications, and track progress
               </p>
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-lg bg-white p-6 shadow">
-              <div className="flex items-center">
-                <div className="rounded-lg bg-blue-100 p-2">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Link
+              href="/pm/cycles"
+              className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-blue-300"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="rounded-full bg-blue-100 p-3">
                   <svg
                     className="h-6 w-6 text-blue-600"
                     fill="none"
@@ -71,29 +34,35 @@ export default function PMDashboard() {
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                     />
                   </svg>
                 </div>
-
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
-                    Total Programs
-                  </p>
-
-                  <p className="text-2xl font-bold text-gray-900">
-                    {assignedPrograms.length}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Manage Cycles
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Create and manage program cycles
                   </p>
                 </div>
               </div>
-            </div>
+              <div className="mt-4">
+                <span className="text-sm font-medium text-blue-600 group-hover:text-blue-700">
+                  View Cycles →
+                </span>
+              </div>
+            </Link>
 
-            <div className="rounded-lg bg-white p-6 shadow">
-              <div className="flex items-center">
-                <div className="rounded-lg bg-green-100 p-2">
+            <Link
+              href="/pm/programs"
+              className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-green-300"
+            >
+              <div className="flex items-center space-x-4">
+                <div className="rounded-full bg-green-100 p-3">
                   <svg
                     className="h-6 w-6 text-green-600"
                     fill="none"
@@ -101,59 +70,32 @@ export default function PMDashboard() {
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   </svg>
                 </div>
-
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
-                    Active Cycles
-                  </p>
-
-                  <p className="text-2xl font-bold text-gray-900">
-                    {activeCyclesCount}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    View Programs
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    See all available programs
                   </p>
                 </div>
               </div>
-            </div>
-
-            <div className="rounded-lg bg-white p-6 shadow">
-              <div className="flex items-center">
-                <div className="rounded-lg bg-yellow-100 p-2">
-                  <svg
-                    className="h-6 w-6 text-yellow-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                    />
-                  </svg>
-                </div>
-
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
-                    Total Budget
-                  </p>
-
-                  <p className="text-2xl font-bold text-gray-900">
-                    ₹{(totalBudgetAllocated / 100000).toFixed(1)}L
-                  </p>
-                </div>
+              <div className="mt-4">
+                <span className="text-sm font-medium text-green-600 group-hover:text-green-700">
+                  View Programs →
+                </span>
               </div>
-            </div>
+            </Link>
 
-            <div className="rounded-lg bg-white p-6 shadow">
-              <div className="flex items-center">
-                <div className="rounded-lg bg-purple-100 p-2">
+            <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center space-x-4">
+                <div className="rounded-full bg-purple-100 p-3">
                   <svg
                     className="h-6 w-6 text-purple-600"
                     fill="none"
@@ -161,209 +103,57 @@ export default function PMDashboard() {
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
                     />
                   </svg>
                 </div>
-
-                <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">
-                    Active Programs
-                  </p>
-
-                  <p className="text-2xl font-bold text-gray-900">
-                    {activePrograms.length}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Documentation
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Guide for program managers
                   </p>
                 </div>
+              </div>
+              <div className="mt-4">
+                <span className="text-sm font-medium text-purple-600">
+                  Coming Soon
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <div className="rounded-lg bg-white shadow">
-            <div className="p-6">
-              <h2 className="mb-4 text-xl font-semibold text-gray-900">
-                Quick Actions
-              </h2>
-
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <Link
-                  className="rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-300 hover:shadow-md"
-                  href="/pm/cycles"
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-blue-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
                 >
-                  <div className="flex items-center space-x-3">
-                    <div className="rounded-lg bg-blue-100 p-2">
-                      <svg
-                        className="h-5 w-5 text-blue-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                        />
-                      </svg>
-                    </div>
-
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        Create New Cycle
-                      </h3>
-
-                      <p className="text-sm text-gray-600">
-                        Set up a new funding cycle
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-
-                <Link
-                  className="rounded-lg border border-gray-200 p-4 transition-all hover:border-green-300 hover:shadow-md"
-                  href="/pm/programs"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="rounded-lg bg-green-100 p-2">
-                      <svg
-                        className="h-5 w-5 text-green-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                        />
-                      </svg>
-                    </div>
-
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        View Programs
-                      </h3>
-
-                      <p className="text-sm text-gray-600">
-                        Manage your assigned programs
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-
-                <Link
-                  className="rounded-lg border border-gray-200 p-4 transition-all hover:border-purple-300 hover:shadow-md"
-                  href="/pm/dashboard"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="rounded-lg bg-purple-100 p-2">
-                      <svg
-                        className="h-5 w-5 text-purple-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                        />
-                      </svg>
-                    </div>
-
-                    <div>
-                      <h3 className="font-medium text-gray-900">Analytics</h3>
-
-                      <p className="text-sm text-gray-600">
-                        View detailed analytics
-                      </p>
-                    </div>
-                  </div>
-                </Link>
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
-            </div>
-          </div>
-
-          {/* Recent Programs */}
-          <div className="rounded-lg bg-white shadow">
-            <div className="p-6">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
-                  Assigned Programs
-                </h2>
-
-                <Link
-                  className="text-sm font-medium text-blue-600 hover:text-blue-700"
-                  href="/pm/programs"
-                >
-                  View All
-                </Link>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-blue-800">
+                  Getting Started
+                </h3>
+                <div className="mt-2 text-sm text-blue-700">
+                  <p>
+                    As a Program Manager, you can create and manage program cycles.
+                    Each cycle defines funding rounds, budgets, TRL criteria, and
+                    scoring schemes for evaluating applications.
+                  </p>
+                </div>
               </div>
-
-              {isProgramsLoading ? (
-                <div className="flex justify-center py-8">
-                  <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                </div>
-              ) : assignedPrograms.length === 0 ? (
-                <div className="py-8 text-center">
-                  <p className="text-gray-500">No programs assigned yet</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {assignedPrograms.slice(0, 5).map((program: Program) => (
-                    <div
-                      className="flex items-center justify-between rounded-lg border border-gray-200 p-4"
-                      key={program.id}
-                    >
-                      <div className="flex-1">
-                        <h3 className="font-medium text-gray-900">
-                          {program.details.name}
-                        </h3>
-
-                        <p className="text-sm text-gray-600">
-                          {program.details.description}
-                        </p>
-
-                        <div className="mt-2 flex items-center space-x-4">
-                          <span className="text-xs text-gray-500">
-                            Budget: ₹
-                            {(program.budget.amount / 100000).toFixed(1)}L
-                          </span>
-
-                          <span className="text-xs text-gray-500">
-                            {program.organization?.name}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs font-medium ${
-                            program.status === ProgramStatus.ACTIVE
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {program.status}
-                        </span>
-
-                        <Link
-                          className="text-sm font-medium text-blue-600 hover:text-blue-700"
-                          href={`/pm/cycles?programId=${program.id}`}
-                        >
-                          View Cycles
-                        </Link>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
         </div>

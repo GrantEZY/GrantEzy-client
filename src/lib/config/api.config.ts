@@ -41,8 +41,6 @@ export const API_CONFIG = {
       GET_PROGRAM_CYCLES: "/pm/get-program-cycles",
       UPDATE_CYCLE_DETAILS: "/pm/update-cycle-details",
       DELETE_CYCLE: "/pm/delete-program-cycle",
-      // PM Program Management (for assigned programs)
-      GET_ASSIGNED_PROGRAMS: "/pm/get-assigned-programs",
     },
     HEALTH: "/health",
   },

@@ -8,8 +8,6 @@ import {
   CreateCycleResponse,
   DeleteCycleRequest,
   DeleteCycleResponse,
-  GetAssignedProgramsRequest,
-  GetAssignedProgramsResponse,
   GetProgramCyclesRequest,
   GetProgramCyclesResponse,
   UpdateCycleRequest,
@@ -64,37 +62,6 @@ export class PMService {
     return httpClient.delete<DeleteCycleResponse>(
       API_CONFIG.ENDPOINTS.PM.DELETE_CYCLE,
       data,
-    );
-  }
-
-  // ============= Program Management =============
-
-  /**
-   * Get programs assigned to the current PM with pagination and filtering
-   */
-  async getAssignedPrograms(
-    params: GetAssignedProgramsRequest,
-  ): Promise<GetAssignedProgramsResponse> {
-    const queryParams: Record<string, string> = {
-      page: params.page.toString(),
-      numberOfResults: params.numberOfResults.toString(),
-    };
-
-    if (params.filter) {
-      if (params.filter.status) {
-        queryParams.status = params.filter.status;
-      }
-      if (params.filter.otherFilters) {
-        // Convert other filters to query params
-        Object.entries(params.filter.otherFilters).forEach(([key, value]) => {
-          queryParams[key] = String(value);
-        });
-      }
-    }
-
-    return httpClient.get<GetAssignedProgramsResponse>(
-      API_CONFIG.ENDPOINTS.PM.GET_ASSIGNED_PROGRAMS,
-      queryParams,
     );
   }
 }

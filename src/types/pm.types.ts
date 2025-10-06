@@ -6,15 +6,15 @@ import { Program } from "./gcv.types";
 // ============= Enums =============
 
 export enum TRL {
-  TRL1 = "TRL1",
-  TRL2 = "TRL2",
-  TRL3 = "TRL3",
-  TRL4 = "TRL4",
-  TRL5 = "TRL5",
-  TRL6 = "TRL6",
-  TRL7 = "TRL7",
-  TRL8 = "TRL8",
-  TRL9 = "TRL9",
+  TRL_1 = "TRL_1",
+  TRL_2 = "TRL_2",
+  TRL_3 = "TRL_3",
+  TRL_4 = "TRL_4",
+  TRL_5 = "TRL_5",
+  TRL_6 = "TRL_6",
+  TRL_7 = "TRL_7",
+  TRL_8 = "TRL_8",
+  TRL_9 = "TRL_9",
 }
 
 export enum CycleStatus {
@@ -116,13 +116,10 @@ export interface GetProgramCyclesResponse {
 
 // Update Cycle
 export interface UpdateCycleRequest {
-  cycleId: string;
+  id: string;
   round?: ProgramRound;
-  budget?: Money;
   duration?: Duration;
   trlCriteria?: Record<TRL, TRLCriteria>;
-  scoringScheme?: ScoringScheme;
-  status?: CycleStatus;
 }
 
 export interface UpdateCycleResponse {
@@ -144,25 +141,6 @@ export interface DeleteCycleResponse {
   message: string;
   res: {
     status: boolean;
-  };
-}
-
-// Get Assigned Programs (for PM to see their programs)
-export interface GetAssignedProgramsRequest {
-  page: number;
-  numberOfResults: number;
-  filter?: {
-    status?: string;
-    otherFilters?: Record<string, string | number | boolean>;
-  };
-}
-
-export interface GetAssignedProgramsResponse {
-  status: number;
-  message: string;
-  res: {
-    programs: Program[];
-    numberOfPrograms: number;
   };
 }
 

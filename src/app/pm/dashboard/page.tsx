@@ -1,76 +1,126 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import PMLayout from "@/components/layout/PMLayout";
-
 import { usePm } from "@/hooks/usePm";
-
+import { useGcv } from "@/hooks/useGcv";
+import { CycleStatus } from "@/types/pm.types";
 import { Program } from "@/types/gcv.types";
-import type { Cycle } from "@/types/pm.types";
 
 export default function PMDashboardPage() {
-  const { assignedPrograms, cycles, isProgramsLoading, getAssignedPrograms } =
-    usePm();
+  const { cycles, selectedProgramId, setSelectedProgramId } = usePm();
+  const { programs, getPrograms, isProgramsLoading } = useGcv();
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-
+  // Load programs on mount
   useEffect(() => {
-    if (isFirstLoad) {
-      getAssignedPrograms({
-        page: 1,
-        numberOfResults: 10,
-      });
-      setIsFirstLoad(false);
+    if (programs.length === 0 && !isProgramsLoading) {
+      getPrograms({ page: 1, numberOfResults: 100 });
     }
-  }, [isFirstLoad, getAssignedPrograms]);
+  }, []);
 
-  // Calculate dashboard metrics
-  const totalPrograms = assignedPrograms.length;
-  const activeCycles =
-    cycles?.filter((cycle: Cycle) => cycle.status === "ACTIVE") || [];
+  // Find selected program details
+  useEffect(() => {
+    if (selectedProgramId && programs.length > 0) {
+      const program = programs.find((p) => p.id === selectedProgramId);
+      setSelectedProgram(program || null);
+    }
+  }, [selectedProgramId, programs]);
 
-  const totalBudget =
-    cycles?.reduce(
-      (sum: number, cycle: Cycle) => sum + cycle.budget.amount,
-      0,
-    ) || 0;
-  const upcomingDeadlines = cycles?.filter((cycle: Cycle) => {
-    if (!cycle.duration.endDate) return false;
-    const endDate = new Date(cycle.duration.endDate);
+  // Calculate metrics
+  const metrics = useMemo(() => {
+    const totalCycles = cycles.length;
+    const activeCycles = cycles.filter(cycle => cycle.status === CycleStatus.ACTIVE).length;
+    const completedCycles = cycles.filter(cycle => cycle.status === CycleStatus.COMPLETED).length;
+    const draftCycles = cycles.filter(cycle => cycle.status === CycleStatus.DRAFT).length;
+    
+    const totalBudget = cycles.reduce((sum, cycle) => sum + (cycle.budget?.amount || 0), 0);
+    const activeBudget = cycles
+      .filter(cycle => cycle.status === CycleStatus.ACTIVE)
+      .reduce((sum, cycle) => sum + (cycle.budget?.amount || 0), 0);
+
+    // Upcoming deadlines (cycles ending in next 30 days)
     const now = new Date();
-    const daysUntilEnd = Math.ceil(
-      (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
-    );
-    return daysUntilEnd <= 30 && daysUntilEnd > 0;
-  }).length;
+    const upcomingDeadlines = cycles.filter(cycle => {
+      if (!cycle.duration?.endDate || cycle.status === CycleStatus.COMPLETED) return false;
+      const endDate = new Date(cycle.duration.endDate);
+      const daysUntilEnd = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      return daysUntilEnd <= 30 && daysUntilEnd > 0;
+    }).length;
 
-  if (isProgramsLoading) {
-    return (
-      <AuthGuard>
-        <PMLayout>
-          <div className="flex h-64 items-center justify-center">
-            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-          </div>
-        </PMLayout>
-      </AuthGuard>
-    );
-  }
+    return {
+      totalCycles,
+      activeCycles,
+      completedCycles,
+      draftCycles,
+      totalBudget,
+      activeBudget,
+      upcomingDeadlines,
+    };
+  }, [cycles]);
+
+  const formatCurrency = (amount: number, currency = "INR") => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  const getStatusBadgeColor = (status?: CycleStatus) => {
+    switch (status) {
+      case CycleStatus.ACTIVE:
+        return "bg-green-100 text-green-800";
+      case CycleStatus.COMPLETED:
+        return "bg-blue-100 text-blue-800";
+      case CycleStatus.DRAFT:
+        return "bg-gray-100 text-gray-800";
+      case CycleStatus.INACTIVE:
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const recentCycles = cycles
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
 
   return (
     <AuthGuard>
       <PMLayout>
         <div className="space-y-6">
           {/* Header */}
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Analytics & Reports
-            </h1>
-
-            <p className="mt-2 text-gray-600">
-              Detailed insights into your program management activities
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Program Manager Analytics
+              </h1>
+              <p className="mt-2 text-gray-600">
+                {selectedProgram 
+                  ? `Analytics for ${selectedProgram.details.name}`
+                  : "Overview of your cycle management activities"
+                }
+              </p>
+            </div>
+            <div className="flex space-x-3">
+              <Link
+                href="/pm/programs"
+                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Select Program
+              </Link>
+              {selectedProgramId && (
+                <Link
+                  href={`/pm/cycles?programId=${selectedProgramId}`}
+                  className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                >
+                  Manage Cycles
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Key Metrics Grid */}
@@ -85,25 +135,22 @@ export default function PMDashboardPage() {
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
                     />
                   </svg>
                 </div>
-
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
-                    Total Programs
+                    Total Cycles
                   </p>
-
                   <p className="text-3xl font-bold text-gray-900">
-                    {totalPrograms}
+                    {metrics.totalCycles}
                   </p>
-
-                  <p className="text-sm text-green-600">
-                    All assigned programs
+                  <p className="text-sm text-gray-500">
+                    All funding cycles
                   </p>
                 </div>
               </div>
@@ -119,33 +166,32 @@ export default function PMDashboardPage() {
                     viewBox="0 0 24 24"
                   >
                     <path
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
                     />
                   </svg>
                 </div>
-
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
                     Active Cycles
                   </p>
-
                   <p className="text-3xl font-bold text-gray-900">
-                    {activeCycles}
+                    {metrics.activeCycles}
                   </p>
-
-                  <p className="text-sm text-green-600">Currently running</p>
+                  <p className="text-sm text-green-600">
+                    Currently running
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className="rounded-lg bg-white p-6 shadow">
               <div className="flex items-center">
-                <div className="rounded-lg bg-yellow-100 p-3">
+                <div className="rounded-lg bg-purple-100 p-3">
                   <svg
-                    className="h-8 w-8 text-yellow-600"
+                    className="h-8 w-8 text-purple-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -158,18 +204,15 @@ export default function PMDashboardPage() {
                     />
                   </svg>
                 </div>
-
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
                     Total Budget
                   </p>
-
                   <p className="text-3xl font-bold text-gray-900">
-                    ₹{(totalBudget / 100000).toFixed(1)}L
+                    {formatCurrency(metrics.totalBudget)}
                   </p>
-
-                  <p className="text-sm text-green-600">
-                    Allocated across cycles
+                  <p className="text-sm text-purple-600">
+                    All cycles combined
                   </p>
                 </div>
               </div>
@@ -177,9 +220,9 @@ export default function PMDashboardPage() {
 
             <div className="rounded-lg bg-white p-6 shadow">
               <div className="flex items-center">
-                <div className="rounded-lg bg-red-100 p-3">
+                <div className="rounded-lg bg-orange-100 p-3">
                   <svg
-                    className="h-8 w-8 text-red-600"
+                    className="h-8 w-8 text-orange-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -192,193 +235,275 @@ export default function PMDashboardPage() {
                     />
                   </svg>
                 </div>
-
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">
                     Upcoming Deadlines
                   </p>
-
                   <p className="text-3xl font-bold text-gray-900">
-                    {upcomingDeadlines}
+                    {metrics.upcomingDeadlines}
                   </p>
-
-                  <p className="text-sm text-red-600">Next 30 days</p>
+                  <p className="text-sm text-orange-600">
+                    Next 30 days
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Charts and Analytics Section */}
+          {/* Status Distribution */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            {/* Program Status Distribution */}
             <div className="rounded-lg bg-white p-6 shadow">
-              <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                Program Status Distribution
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Cycle Status Distribution
               </h3>
-
-              <div className="space-y-4">
-                {["ACTIVE", "INACTIVE", "ARCHIVED"].map((status) => {
-                  const count = assignedPrograms.filter(
-                    (program: Program) => program.status === status,
-                  ).length;
-                  const percentage =
-                    totalPrograms > 0
-                      ? Math.round((count / totalPrograms) * 100)
-                      : 0;
-
-                  return (
-                    <div
-                      className="flex items-center justify-between"
-                      key={status}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div
-                          className={`h-3 w-3 rounded-full ${
-                            status === "ACTIVE"
-                              ? "bg-green-500"
-                              : status === "INACTIVE"
-                                ? "bg-yellow-500"
-                                : "bg-gray-500"
-                          }`}
-                        ></div>
-
-                        <span className="text-sm font-medium text-gray-900 capitalize">
-                          {status.toLowerCase()}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className="h-2 w-24 rounded-full bg-gray-200">
-                          <div
-                            className={`h-2 rounded-full ${
-                              status === "ACTIVE"
-                                ? "bg-green-500"
-                                : status === "INACTIVE"
-                                  ? "bg-yellow-500"
-                                  : "bg-gray-500"
-                            }`}
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-
-                        <span className="w-12 text-sm text-gray-600">
-                          {count}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-green-100 text-green-800">
+                      ACTIVE
+                    </span>
+                    <span className="ml-2 text-sm text-gray-600">Active Cycles</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">
+                    {metrics.activeCycles}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800">
+                      COMPLETED
+                    </span>
+                    <span className="ml-2 text-sm text-gray-600">Completed Cycles</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">
+                    {metrics.completedCycles}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-800">
+                      DRAFT
+                    </span>
+                    <span className="ml-2 text-sm text-gray-600">Draft Cycles</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">
+                    {metrics.draftCycles}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Cycle Status Overview */}
             <div className="rounded-lg bg-white p-6 shadow">
-              <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                Cycle Status Overview
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Budget Overview
               </h3>
-
-              <div className="space-y-4">
-                {["ACTIVE", "INACTIVE", "DRAFT", "COMPLETED"].map((status) => {
-                  const count = cycles.filter(
-                    (cycle) => cycle.status === status,
-                  ).length;
-                  const percentage =
-                    cycles.length > 0
-                      ? Math.round((count / cycles.length) * 100)
-                      : 0;
-
-                  return (
-                    <div
-                      className="flex items-center justify-between"
-                      key={status}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div
-                          className={`h-3 w-3 rounded-full ${
-                            status === "ACTIVE"
-                              ? "bg-green-500"
-                              : status === "DRAFT"
-                                ? "bg-blue-500"
-                                : status === "COMPLETED"
-                                  ? "bg-purple-500"
-                                  : "bg-gray-500"
-                          }`}
-                        ></div>
-
-                        <span className="text-sm font-medium text-gray-900 capitalize">
-                          {status.toLowerCase()}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className="h-2 w-24 rounded-full bg-gray-200">
-                          <div
-                            className={`h-2 rounded-full ${
-                              status === "ACTIVE"
-                                ? "bg-green-500"
-                                : status === "DRAFT"
-                                  ? "bg-blue-500"
-                                  : status === "COMPLETED"
-                                    ? "bg-purple-500"
-                                    : "bg-gray-500"
-                            }`}
-                            style={{ width: `${percentage}%` }}
-                          ></div>
-                        </div>
-
-                        <span className="w-12 text-sm text-gray-600">
-                          {count}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Total Allocated</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {formatCurrency(metrics.totalBudget)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Active Cycles Budget</span>
+                  <span className="text-sm font-medium text-green-600">
+                    {formatCurrency(metrics.activeBudget)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Average per Cycle</span>
+                  <span className="text-sm font-medium text-gray-900">
+                    {metrics.totalCycles > 0 
+                      ? formatCurrency(Math.round(metrics.totalBudget / metrics.totalCycles))
+                      : formatCurrency(0)
+                    }
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Recent Activity */}
+          {/* Recent Cycles */}
           <div className="rounded-lg bg-white shadow">
-            <div className="p-6">
-              <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                Recent Activity
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">
+                Recent Cycles
               </h3>
-
-              <div className="space-y-4">
-                {cycles.length === 0 ? (
-                  <div className="py-8 text-center">
-                    <p className="text-gray-500">No recent activity</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {cycles.slice(0, 5).map((cycle: Cycle) => (
-                      <div
-                        className="flex items-center space-x-4 rounded-lg bg-gray-50 p-3"
-                        key={cycle.id}
-                      >
-                        <div className="flex-shrink-0">
-                          <div className="h-2 w-2 rounded-full bg-blue-500"></div>
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium text-gray-900">
-                            Cycle {cycle.round.year} {cycle.round.type}
-                          </p>
-
-                          <p className="text-sm text-gray-600">
-                            Budget: ₹{(cycle.budget.amount / 100000).toFixed(1)}
-                            L • Status: {cycle.status || "Active"}
-                          </p>
-                        </div>
-
-                        <div className="text-sm text-gray-500">
-                          {new Date(cycle.updatedAt).toLocaleDateString()}
-                        </div>
-                      </div>
+            </div>
+            <div className="overflow-x-auto">
+              {recentCycles.length === 0 ? (
+                <div className="p-12 text-center">
+                  <svg
+                    className="mx-auto mb-4 h-12 w-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
+                  </svg>
+                  <h4 className="text-lg font-medium text-gray-900 mb-2">
+                    No cycles yet
+                  </h4>
+                  <p className="text-gray-600 mb-4">
+                    {selectedProgram 
+                      ? "Create your first cycle for this program"
+                      : "Select a program to start managing cycles"
+                    }
+                  </p>
+                  {selectedProgramId ? (
+                    <Link
+                      href={`/pm/cycles?programId=${selectedProgramId}`}
+                      className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                      Create First Cycle
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/pm/programs"
+                      className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                    >
+                      Select Program
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Round
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Budget
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Duration
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200 bg-white">
+                    {recentCycles.map((cycle) => (
+                      <tr key={cycle.id} className="hover:bg-gray-50">
+                        <td className="whitespace-nowrap px-6 py-4">
+                          <div className="text-sm font-medium text-gray-900">
+                            Year {cycle.round.year}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {cycle.round.type}
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          <div className="text-sm text-gray-900">
+                            {formatCurrency(cycle.budget.amount, cycle.budget.currency)}
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          <span
+                            className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${getStatusBadgeColor(
+                              cycle.status
+                            )}`}
+                          >
+                            {cycle.status || "DRAFT"}
+                          </span>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                          {cycle.duration.startDate 
+                            ? new Date(cycle.duration.startDate).toLocaleDateString()
+                            : "Not set"
+                          }
+                          {cycle.duration.endDate && (
+                            <div>to {new Date(cycle.duration.endDate).toLocaleDateString()}</div>
+                          )}
+                        </td>
+                      </tr>
                     ))}
-                  </div>
-                )}
-              </div>
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="rounded-lg bg-blue-50 border border-blue-200 p-6">
+            <h3 className="text-lg font-medium text-blue-900 mb-4">
+              Quick Actions
+            </h3>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href="/pm/programs"
+                className="inline-flex items-center rounded-md border border-blue-300 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+              >
+                <svg
+                  className="mr-2 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
+                Browse Programs
+              </Link>
+              {selectedProgramId && (
+                <>
+                  <Link
+                    href={`/pm/cycles?programId=${selectedProgramId}`}
+                    className="inline-flex items-center rounded-md border border-blue-300 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                  >
+                    <svg
+                      className="mr-2 h-4 w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
+                    </svg>
+                    Manage Cycles
+                  </Link>
+                </>
+              )}
+              <Link
+                href="/gcv/programs"
+                className="inline-flex items-center rounded-md border border-blue-300 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+              >
+                <svg
+                  className="mr-2 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                  <path
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
+                View All Programs
+              </Link>
             </div>
           </div>
         </div>
