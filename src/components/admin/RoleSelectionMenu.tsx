@@ -33,16 +33,18 @@ function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
         boxShadow: "0px 0px 13.9px 0px var(--shadow-light)",
       };
 
-  const hoverStyle: React.CSSProperties = !selected ? {
-    background: "linear-gradient(135deg, var(--color-blue-custom) 0%, var(--color-blue-600, #2563eb) 50%, var(--color-blue-700, #1d4ed8) 100%)",
-  } : {};
+  const hoverStyle: React.CSSProperties = !selected
+    ? {
+        background:
+          "linear-gradient(135deg, var(--color-blue-custom) 0%, var(--color-blue-600, #2563eb) 50%, var(--color-blue-700, #1d4ed8) 100%)",
+      }
+    : {};
 
   return (
     <button
       aria-pressed={selected}
       className={cardClasses}
       onClick={onClick}
-      style={cardStyle}
       onMouseEnter={(e) => {
         if (!selected) {
           Object.assign(e.currentTarget.style, hoverStyle);
@@ -50,9 +52,10 @@ function RoleCard({ title, icon, onClick, selected = false }: RoleCardProps) {
       }}
       onMouseLeave={(e) => {
         if (!selected) {
-          e.currentTarget.style.background = 'white';
+          e.currentTarget.style.background = "white";
         }
       }}
+      style={cardStyle}
     >
       <div
         className={`h-12 w-12 ${selected ? "bg-white/20" : "bg-[var(--color-gray-100)] group-hover:bg-white/20"} flex items-center justify-center rounded-full transition-all duration-200`}

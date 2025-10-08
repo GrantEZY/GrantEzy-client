@@ -14,12 +14,7 @@ import { UserRoles } from "@/types/auth.types";
 
 export default function AdminEIRsPage() {
   const { user, isAuthenticated } = useAuth();
-  const {
-    users,
-    pagination,
-    isLoading,
-    fetchUsers,
-  } = useAdmin();
+  const { users, pagination, isLoading, fetchUsers } = useAdmin();
 
   // State for filters and pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -44,10 +39,11 @@ export default function AdminEIRsPage() {
   }, [isAuthenticated, user, loadEIRs]);
 
   // Filter users by search term locally
-  const filteredEIRs = users.filter(eir => {
+  const filteredEIRs = users.filter((eir) => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
-    const fullName = `${eir.person?.firstName || eir.firstName || ""} ${eir.person?.lastName || eir.lastName || ""}`.toLowerCase();
+    const fullName =
+      `${eir.person?.firstName || eir.firstName || ""} ${eir.person?.lastName || eir.lastName || ""}`.toLowerCase();
     const email = (eir.contact?.email || eir.email || "").toLowerCase();
     return fullName.includes(searchLower) || email.includes(searchLower);
   });
@@ -62,17 +58,23 @@ export default function AdminEIRsPage() {
 
   // Handle actions
   const handleApprove = async (eir: AdminUser) => {
-    showToast.success(`Active eir application for ${eir.person?.firstName || eir.firstName}`);
+    showToast.success(
+      `Active eir application for ${eir.person?.firstName || eir.firstName}`,
+    );
     // TODO: Implement actual approval logic
   };
 
   const handleReject = async (eir: AdminUser) => {
-    showToast.error(`Inactive eir application for ${eir.person?.firstName || eir.firstName}`);
+    showToast.error(
+      `Inactive eir application for ${eir.person?.firstName || eir.firstName}`,
+    );
     // TODO: Implement actual rejection logic
   };
 
   const handleReview = (eir: AdminUser) => {
-    showToast.info(`Opening detailed review for ${eir.person?.firstName || eir.firstName}`);
+    showToast.info(
+      `Opening detailed review for ${eir.person?.firstName || eir.firstName}`,
+    );
     // TODO: Implement detailed review modal
   };
 
@@ -83,8 +85,13 @@ export default function AdminEIRsPage() {
         <AdminLayout>
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2">Access Denied</h2>
-              <p className="text-gray-600">You need admin privileges to access this page.</p>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">
+                Access Denied
+              </h2>
+
+              <p className="text-gray-600">
+                You need admin privileges to access this page.
+              </p>
             </div>
           </div>
         </AdminLayout>
@@ -96,31 +103,58 @@ export default function AdminEIRsPage() {
     <ToastProvider>
       <AuthGuard>
         <AdminLayout>
-          <div className="space-y-6 md:space-y-8 p-4 sm:p-6">
+          <div className="space-y-6 p-4 sm:p-6 md:space-y-8">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">EIR Management</h1>
-                <p className="text-sm sm:text-base text-gray-600">
+                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                  EIR Management
+                </h1>
+
+                <p className="text-sm text-gray-600 sm:text-base">
                   Manage eir EIRs and team members
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2">
+
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <button
-                  onClick={() => showToast.info("Bulk approval feature coming soon")}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
+                  onClick={() =>
+                    showToast.info("Bulk approval feature coming soon")
+                  }
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M5 13l4 4L19 7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
                   </svg>
                   Bulk Approve
                 </button>
+
                 <button
+                  className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                   onClick={() => showToast.info("Add eir feature coming soon")}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
                   </svg>
                   Add EIR
                 </button>
@@ -128,124 +162,210 @@ export default function AdminEIRsPage() {
             </div>
 
             {/* Statistics Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+              <div className="rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 border-2 border-blue-200">
-                    <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-blue-200 bg-blue-100">
+                    <svg
+                      className="h-6 w-6 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
+
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Total Applications</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Total Applications
+                    </p>
+
+                    <p className="text-2xl font-bold text-gray-900">
+                      {stats.total}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-yellow-100 border-2 border-yellow-200">
-                    <svg className="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-yellow-200 bg-yellow-100">
+                    <svg
+                      className="h-6 w-6 text-yellow-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
+
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Active</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
+
+                    <p className="text-2xl font-bold text-gray-900">
+                      {stats.active}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 border-2 border-green-200">
-                    <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-green-200 bg-green-100">
+                    <svg
+                      className="h-6 w-6 text-green-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M5 13l4 4L19 7"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
+
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-600">Active</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.mentees}</p>
+
+                    <p className="text-2xl font-bold text-gray-900">
+                      {stats.mentees}
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg border border-gray-200 p-6">
+              <div className="rounded-lg border border-gray-200 bg-white p-6">
                 <div className="flex items-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 border-2 border-red-200">
-                    <svg className="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-red-200 bg-red-100">
+                    <svg
+                      className="h-6 w-6 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M6 18L18 6M6 6l12 12"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
                     </svg>
                   </div>
+
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">Inactive</p>
-                    <p className="text-2xl font-bold text-gray-900">{stats.projects}</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Inactive
+                    </p>
+
+                    <p className="text-2xl font-bold text-gray-900">
+                      {stats.projects}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Filters and Search */}
-            <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row gap-4">
+            <div className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row">
                 {/* Search */}
                 <div className="flex-1">
-                  <label htmlFor="search" className="sr-only">Search eirs</label>
+                  <label className="sr-only" htmlFor="search">
+                    Search eirs
+                  </label>
+
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                      <svg
+                        className="h-5 w-5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                        />
                       </svg>
                     </div>
+
                     <input
+                      className="block w-full rounded-md border border-gray-300 bg-white py-2 pr-3 pl-10 text-sm leading-5 placeholder-gray-500 focus:border-blue-500 focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                       id="search"
                       name="search"
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search by name or email..."
                       type="search"
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
 
                 {/* Status Filter */}
                 <div className="sm:w-48">
-                  <label htmlFor="status-filter" className="sr-only">Filter by status</label>
+                  <label className="sr-only" htmlFor="status-filter">
+                    Filter by status
+                  </label>
+
                   <select
+                    className="block w-full rounded-md border border-gray-300 py-2 pr-10 pl-3 text-base focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
                     id="status-filter"
                     name="status-filter"
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                    value={selectedStatus}
                     onChange={(e) => {
                       setSelectedStatus(e.target.value);
                       setCurrentPage(1);
                     }}
+                    value={selectedStatus}
                   >
                     <option value="all">All Status</option>
+
                     <option value="pending">Pending</option>
+
                     <option value="approved">Active</option>
+
                     <option value="rejected">Inactive</option>
                   </select>
                 </div>
 
                 {/* Page Size */}
                 <div className="sm:w-32">
-                  <label htmlFor="page-size" className="sr-only">Items per page</label>
+                  <label className="sr-only" htmlFor="page-size">
+                    Items per page
+                  </label>
+
                   <select
+                    className="block w-full rounded-md border border-gray-300 py-2 pr-10 pl-3 text-base focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
                     id="page-size"
                     name="page-size"
-                    className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
-                    value={pageSize}
                     onChange={(e) => {
                       setPageSize(Number(e.target.value));
                       setCurrentPage(1);
                     }}
+                    value={pageSize}
                   >
                     <option value="10">10</option>
+
                     <option value="25">25</option>
+
                     <option value="50">50</option>
+
                     <option value="100">100</option>
                   </select>
                 </div>
@@ -253,12 +373,18 @@ export default function AdminEIRsPage() {
 
               {/* Stats */}
               <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-600">
-                <span>Total: {pagination?.total || filteredEIRs.length} EIRs</span>
+                <span>
+                  Total: {pagination?.total || filteredEIRs.length} EIRs
+                </span>
+
                 <span>•</span>
+
                 <span>Showing: {filteredEIRs.length} results</span>
+
                 {selectedStatus !== "all" && (
                   <>
                     <span>•</span>
+
                     <span>Status: {selectedStatus}</span>
                   </>
                 )}
@@ -266,7 +392,7 @@ export default function AdminEIRsPage() {
             </div>
 
             {/* EIRs List */}
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
               {/* Mobile view */}
               <div className="block sm:hidden">
                 {isLoading ? (
@@ -280,46 +406,60 @@ export default function AdminEIRsPage() {
                 ) : (
                   <div className="divide-y divide-gray-200">
                     {filteredEIRs.map((eir) => (
-                      <div key={eir.personId} className="p-4">
+                      <div className="p-4" key={eir.personId}>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 border-2 border-blue-200">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-blue-200 bg-blue-100">
                               <span className="text-sm font-semibold text-blue-700">
-                                {eir.person?.firstName?.charAt(0) || eir.firstName?.charAt(0) || "?"}
-                                {eir.person?.lastName?.charAt(0) || eir.lastName?.charAt(0) || ""}
+                                {eir.person?.firstName?.charAt(0) ||
+                                  eir.firstName?.charAt(0) ||
+                                  "?"}
+
+                                {eir.person?.lastName?.charAt(0) ||
+                                  eir.lastName?.charAt(0) ||
+                                  ""}
                               </span>
                             </div>
+
                             <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium text-gray-900 truncate">
-                                {eir.person?.firstName || eir.firstName || "Unknown"} {eir.person?.lastName || eir.lastName || ""}
+                              <p className="truncate text-sm font-medium text-gray-900">
+                                {eir.person?.firstName ||
+                                  eir.firstName ||
+                                  "Unknown"}{" "}
+                                {eir.person?.lastName || eir.lastName || ""}
                               </p>
-                              <p className="text-sm text-gray-500 truncate">
+
+                              <p className="truncate text-sm text-gray-500">
                                 {eir.contact?.email || eir.email || "No email"}
                               </p>
                             </div>
                           </div>
+
                           <div className="flex items-center space-x-2">
-                            <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <span className="inline-flex items-center rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">
                               Pending
                             </span>
                           </div>
                         </div>
+
                         <div className="mt-3 flex space-x-2">
                           <button
+                            className="flex-1 rounded-md bg-blue-50 px-3 py-2 text-sm font-medium text-blue-700 hover:bg-blue-100"
                             onClick={() => handleReview(eir)}
-                            className="flex-1 bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-md text-sm font-medium"
                           >
                             Review
                           </button>
+
                           <button
+                            className="flex-1 rounded-md bg-green-50 px-3 py-2 text-sm font-medium text-green-700 hover:bg-green-100"
                             onClick={() => handleApprove(eir)}
-                            className="flex-1 bg-green-50 text-green-700 hover:bg-green-100 px-3 py-2 rounded-md text-sm font-medium"
                           >
                             Approve
                           </button>
+
                           <button
+                            className="flex-1 rounded-md bg-red-50 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-100"
                             onClick={() => handleReject(eir)}
-                            className="flex-1 bg-red-50 text-red-700 hover:bg-red-100 px-3 py-2 rounded-md text-sm font-medium"
                           >
                             Reject
                           </button>
@@ -335,24 +475,28 @@ export default function AdminEIRsPage() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         EIR
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Status
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Joined
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+
+                      <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Actions
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+
+                  <tbody className="divide-y divide-gray-200 bg-white">
                     {isLoading ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-12 text-center">
+                        <td className="px-6 py-12 text-center" colSpan={4}>
                           <div className="flex justify-center">
                             <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
                           </div>
@@ -360,55 +504,77 @@ export default function AdminEIRsPage() {
                       </tr>
                     ) : filteredEIRs.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-6 py-12 text-center text-gray-500">
+                        <td
+                          className="px-6 py-12 text-center text-gray-500"
+                          colSpan={4}
+                        >
                           No eir EIRs found
                         </td>
                       </tr>
                     ) : (
                       filteredEIRs.map((eir) => (
-                        <tr key={eir.personId} className="hover:bg-gray-50">
+                        <tr className="hover:bg-gray-50" key={eir.personId}>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
-                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 border-2 border-blue-200">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-blue-200 bg-blue-100">
                                 <span className="text-sm font-semibold text-blue-700">
-                                  {eir.person?.firstName?.charAt(0) || eir.firstName?.charAt(0) || "?"}
-                                  {eir.person?.lastName?.charAt(0) || eir.lastName?.charAt(0) || ""}
+                                  {eir.person?.firstName?.charAt(0) ||
+                                    eir.firstName?.charAt(0) ||
+                                    "?"}
+
+                                  {eir.person?.lastName?.charAt(0) ||
+                                    eir.lastName?.charAt(0) ||
+                                    ""}
                                 </span>
                               </div>
+
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {eir.person?.firstName || eir.firstName || "Unknown"} {eir.person?.lastName || eir.lastName || ""}
+                                  {eir.person?.firstName ||
+                                    eir.firstName ||
+                                    "Unknown"}{" "}
+                                  {eir.person?.lastName || eir.lastName || ""}
                                 </div>
+
                                 <div className="text-sm text-gray-500">
-                                  {eir.contact?.email || eir.email || "No email"}
+                                  {eir.contact?.email ||
+                                    eir.email ||
+                                    "No email"}
                                 </div>
                               </div>
                             </div>
                           </td>
+
                           <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <span className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
                               Active
                             </span>
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {eir.createdAt ? new Date(eir.createdAt).toLocaleDateString() : "N/A"}
+
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                            {eir.createdAt
+                              ? new Date(eir.createdAt).toLocaleDateString()
+                              : "N/A"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+
+                          <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
                             <button
+                              className="mr-4 text-blue-600 hover:text-blue-900"
                               onClick={() => handleReview(eir)}
-                              className="text-blue-600 hover:text-blue-900 mr-4"
                             >
                               Review
                             </button>
+
                             <button
+                              className="mr-4 text-green-600 hover:text-green-900"
                               onClick={() => handleApprove(eir)}
-                              className="text-green-600 hover:text-green-900 mr-4"
                             >
                               Approve
                             </button>
+
                             <button
-                              onClick={() => handleReject(eir)}
                               className="text-red-600 hover:text-red-900"
+                              onClick={() => handleReject(eir)}
                             >
                               Reject
                             </button>
@@ -423,53 +589,89 @@ export default function AdminEIRsPage() {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 rounded-lg border">
-                <div className="flex-1 flex justify-between sm:hidden">
+              <div className="flex items-center justify-between rounded-lg border border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                <div className="flex flex-1 justify-between sm:hidden">
                   <button
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={currentPage <= 1}
-                    className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                   >
                     Previous
                   </button>
+
                   <button
-                    onClick={() => setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))}
+                    className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={currentPage >= pagination.totalPages}
-                    className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={() =>
+                      setCurrentPage(
+                        Math.min(pagination.totalPages, currentPage + 1),
+                      )
+                    }
                   >
                     Next
                   </button>
                 </div>
-                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+
+                <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-gray-700">
-                      Showing page <span className="font-medium">{currentPage}</span> of{" "}
-                      <span className="font-medium">{pagination.totalPages}</span>
+                      Showing page{" "}
+                      <span className="font-medium">{currentPage}</span> of{" "}
+                      <span className="font-medium">
+                        {pagination.totalPages}
+                      </span>
                     </p>
                   </div>
+
                   <div>
-                    <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                    <nav className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm">
                       <button
-                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                        className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={currentPage <= 1}
-                        className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() =>
+                          setCurrentPage(Math.max(1, currentPage - 1))
+                        }
                       >
                         <span className="sr-only">Previous</span>
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+
+                        <svg
+                          className="h-5 w-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            clipRule="evenodd"
+                            d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                            fillRule="evenodd"
+                          />
                         </svg>
                       </button>
-                      <span className="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+
+                      <span className="relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700">
                         {currentPage}
                       </span>
+
                       <button
-                        onClick={() => setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))}
+                        className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={currentPage >= pagination.totalPages}
-                        className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={() =>
+                          setCurrentPage(
+                            Math.min(pagination.totalPages, currentPage + 1),
+                          )
+                        }
                       >
                         <span className="sr-only">Next</span>
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+
+                        <svg
+                          className="h-5 w-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            clipRule="evenodd"
+                            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                            fillRule="evenodd"
+                          />
                         </svg>
                       </button>
                     </nav>
