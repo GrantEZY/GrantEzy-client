@@ -255,3 +255,57 @@ export interface PaginationMeta {
   total: number;
   totalPages: number;
 }
+
+// ============= GCV Program Cycles Types =============
+
+export interface GetGCVProgramCyclesRequest {
+  programId: string;
+  page: number;
+  numberOfResults: number;
+}
+
+export interface GetGCVProgramCyclesResponse {
+  status: number;
+  message: string;
+  res: {
+    cycles: import("./pm.types").Cycle[];
+    totalNumberOfCycles: number;
+  };
+}
+
+export interface GetGCVCycleDetailsRequest {
+  cycleSlug: string;
+}
+
+export interface GetGCVCycleDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    cycle: import("./pm.types").Cycle;
+  };
+}
+
+export interface GetGCVApplicationDetailsRequest {
+  applicationSlug: string;
+}
+
+// ============= Application Types =============
+
+export interface GrantApplication {
+  id: string;
+  cycleId: string;
+  applicantId: string;
+  applicationData: Record<string, unknown>;
+  status: string;
+  submittedAt: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GetGCVApplicationDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    application: GrantApplication;
+  };
+}

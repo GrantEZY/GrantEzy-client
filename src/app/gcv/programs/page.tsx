@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { AddProgramManagerModal } from "@/components/gcv/AddProgramManagerModal";
 import { DeleteProgramModal } from "@/components/gcv/DeleteProgramModal";
+import { ProgramCyclesModal } from "@/components/gcv/ProgramCyclesModal";
 import { ProgramModal } from "@/components/gcv/ProgramModal";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import GCVLayout from "@/components/layout/GCVLayout";
@@ -36,6 +37,7 @@ export default function GCVProgramsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isManagerModalOpen, setIsManagerModalOpen] = useState(false);
+  const [isCyclesModalOpen, setIsCyclesModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -80,16 +82,12 @@ export default function GCVProgramsPage() {
     data: CreateProgramRequest | UpdateProgramRequest,
   ) => {
     try {
-      console.log("Updating program with data:", data);
       const success = await updateProgram(data as UpdateProgramRequest);
-      console.log("Update program success:", success);
       if (success) {
         showToast.success("Program updated successfully!");
         setIsEditModalOpen(false);
         setSelectedProgram(null);
-        console.log("Fetching programs after update...");
         await fetchPrograms(currentPage);
-        console.log("Programs refreshed after update");
       }
     } catch (error) {
       // Extract detailed error message from the store
@@ -106,16 +104,12 @@ export default function GCVProgramsPage() {
     if (!selectedProgram) return;
 
     try {
-      console.log("Deleting program with ID:", selectedProgram.id);
       const success = await deleteProgram({ id: selectedProgram.id });
-      console.log("Delete program success:", success);
       if (success) {
         showToast.success("Program deleted successfully!");
         setIsDeleteModalOpen(false);
         setSelectedProgram(null);
-        console.log("Fetching programs after delete...");
         await fetchPrograms(currentPage);
-        console.log("Programs refreshed after delete");
       }
     } catch (error) {
       // Extract detailed error message from the store
@@ -268,8 +262,13 @@ export default function GCVProgramsPage() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredPrograms.map((program) => (
                 <div
-                  className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:shadow-md"
+                  className="group relative cursor-pointer overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-200 hover:border-blue-300 hover:shadow-md"
                   key={program.id}
+                  onClick={() => {
+                    setSelectedProgram(program);
+                    setIsCyclesModalOpen(true);
+                  }}
+                  title="Click to view program cycles"
                 >
                   {/* Status Badge */}
                   <div className="absolute top-4 right-4 z-10">
@@ -384,7 +383,8 @@ export default function GCVProgramsPage() {
                       ) : (
                         <button
                           className="flex w-full items-center justify-center space-x-2 rounded-md border-2 border-dashed border-gray-300 px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation();
                             setSelectedProgram(program);
                             setIsManagerModalOpen(true);
                           }}
@@ -414,7 +414,8 @@ export default function GCVProgramsPage() {
                     <div className="flex space-x-1">
                       <button
                         className="rounded border border-gray-200 bg-white p-1.5 text-gray-600 shadow-sm transition-colors duration-200 hover:bg-gray-50 hover:text-blue-600"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSelectedProgram(program);
                           setIsEditModalOpen(true);
                         }}
@@ -437,7 +438,8 @@ export default function GCVProgramsPage() {
 
                       <button
                         className="rounded border border-gray-200 bg-white p-1.5 text-gray-600 shadow-sm transition-colors duration-200 hover:border-red-200 hover:bg-red-50 hover:text-red-600"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setSelectedProgram(program);
                           setIsDeleteModalOpen(true);
                         }}
@@ -570,6 +572,15 @@ export default function GCVProgramsPage() {
           }}
           onSubmit={handleAddManager}
           programName={selectedProgram?.details.name || ""}
+        />
+
+        <ProgramCyclesModal
+          isOpen={isCyclesModalOpen}
+          onClose={() => {
+            setIsCyclesModalOpen(false);
+            setSelectedProgram(null);
+          }}
+          program={selectedProgram}
         />
       </GCVLayout>
     </AuthGuard>

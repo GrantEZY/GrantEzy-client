@@ -26,9 +26,6 @@ export const useAdmin = () => {
     clearUsers,
     setError,
     getOrganizations,
-    addOrganization,
-    updateOrganization,
-    deleteOrganization,
   } = useAdminStore();
 
   const fetchUsers = useCallback(
@@ -135,7 +132,9 @@ export const useAdmin = () => {
       return { success: true };
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : "Failed to fetch organizations";
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch organizations";
       return { success: false, error: message };
     }
   }, [getOrganizations]);

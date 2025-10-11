@@ -34,6 +34,10 @@ export const API_CONFIG = {
       UPDATE_PROGRAM: "/gcv/update-program",
       DELETE_PROGRAM: "/gcv/delete-program",
       ADD_PROGRAM_MANAGER: "/gcv/add-program-manager",
+      // GCV Program Cycles
+      GET_PROGRAM_CYCLES: "/gcv/get-program-cycles",
+      GET_CYCLE_DETAILS: "/gcv/get-cycle-details",
+      GET_APPLICATION_DETAILS: "/gcv/get-application-details",
     },
     PM: {
       // PM Cycle Management

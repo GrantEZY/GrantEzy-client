@@ -16,6 +16,12 @@ import {
   GetAllGCVMembersResponse,
   GetAllProgramsRequest,
   GetAllProgramsResponse,
+  GetGCVApplicationDetailsRequest,
+  GetGCVApplicationDetailsResponse,
+  GetGCVCycleDetailsRequest,
+  GetGCVCycleDetailsResponse,
+  GetGCVProgramCyclesRequest,
+  GetGCVProgramCyclesResponse,
   UpdateGCVUserRoleRequest,
   UpdateGCVUserRoleResponse,
   UpdateProgramRequest,
@@ -148,6 +154,58 @@ export class GCVService {
     return httpClient.post<AddProgramManagerResponse>(
       API_CONFIG.ENDPOINTS.GCV.ADD_PROGRAM_MANAGER,
       data,
+    );
+  }
+
+  // ============= Program Cycles Management =============
+
+  /**
+   * Get all cycles for a specific program with pagination
+   */
+  async getProgramCycles(
+    params: GetGCVProgramCyclesRequest,
+  ): Promise<GetGCVProgramCyclesResponse> {
+    const queryParams: Record<string, string> = {
+      programId: params.programId,
+      page: params.page.toString(),
+      numberOfResults: params.numberOfResults.toString(),
+    };
+
+    return httpClient.get<GetGCVProgramCyclesResponse>(
+      API_CONFIG.ENDPOINTS.GCV.GET_PROGRAM_CYCLES,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get cycle details by cycle slug
+   */
+  async getCycleDetails(
+    params: GetGCVCycleDetailsRequest,
+  ): Promise<GetGCVCycleDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      cycleSlug: params.cycleSlug,
+    };
+
+    return httpClient.get<GetGCVCycleDetailsResponse>(
+      API_CONFIG.ENDPOINTS.GCV.GET_CYCLE_DETAILS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get application details by application slug
+   */
+  async getApplicationDetails(
+    params: GetGCVApplicationDetailsRequest,
+  ): Promise<GetGCVApplicationDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      applicationSlug: params.applicationSlug,
+    };
+
+    return httpClient.get<GetGCVApplicationDetailsResponse>(
+      API_CONFIG.ENDPOINTS.GCV.GET_APPLICATION_DETAILS,
+      queryParams,
     );
   }
 }

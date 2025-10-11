@@ -73,6 +73,7 @@ export interface Cycle {
   trlCriteria: Record<TRL, TRLCriteria>;
   scoringScheme: ScoringScheme;
   status?: CycleStatus;
+  slug?: string;
   createdAt: string;
   updatedAt: string;
 }
