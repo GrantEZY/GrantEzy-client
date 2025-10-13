@@ -101,9 +101,9 @@ export interface CreateCycleResponse {
 
 // Get Program Cycles
 export interface GetProgramCyclesRequest {
-  programId: string;
   page: number;
   numberOfResults: number;
+  // Note: programId is not needed - backend determines program from logged-in PM user
 }
 
 export interface GetProgramCyclesResponse {

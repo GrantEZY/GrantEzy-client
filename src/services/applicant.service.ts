@@ -104,6 +104,18 @@ export class ApplicantService {
       data,
     );
   }
+
+  /**
+   * Get application details with cycle information
+   * Used to check if user has an existing application for a cycle (draft or submitted)
+   */
+  async getApplicationWithCycle(
+    cycleSlug: string,
+  ): Promise<any> {
+    return httpClient.get<any>(
+      `${API_CONFIG.ENDPOINTS.APPLICANT.GET_APPLICATION_WITH_CYCLE}?cycleSlug=${cycleSlug}`,
+    );
+  }
 }
 
 export const applicantService = new ApplicantService();

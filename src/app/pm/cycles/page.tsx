@@ -12,63 +12,29 @@ import { CycleStatus, Cycle } from "@/types/pm.types";
 import { Program } from "@/types/gcv.types";
 
 function CyclesPageContent() {
-  const searchParams = useSearchParams();
-  const programId = searchParams.get("programId");
-
   const {
     cycles,
     cyclesPagination,
     isCyclesLoading,
     cyclesError,
-    selectedProgramId,
     getProgramCycles,
-    setSelectedProgramId,
     deleteCycle,
   } = usePm();
 
-  const { programs, getPrograms, isProgramsLoading } = useGcv();
-
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
+  
+  // Get programId from the first cycle (backend ensures PM only manages one program)
+  const programId = cycles.length > 0 ? cycles[0].programId : null;
 
-  // Load programs on mount
+  // Load cycles on mount - backend will determine the program from logged-in PM user
   useEffect(() => {
-    if (programs.length === 0 && !isProgramsLoading) {
-      getPrograms({ page: 1, numberOfResults: 100 });
-    }
+    loadCycles(1);
   }, []);
 
-  // Set selected program from URL parameter
-  useEffect(() => {
-    if (programId && programId !== selectedProgramId) {
-      setSelectedProgramId(programId);
-    }
-  }, [programId, selectedProgramId, setSelectedProgramId]);
-
-  // Find selected program details from GCV programs
-  useEffect(() => {
-    if (selectedProgramId && programs.length > 0) {
-      const program = programs.find((p) => p.id === selectedProgramId);
-      setSelectedProgram(program || null);
-    }
-  }, [selectedProgramId, programs]);
-
-  // Load cycles when program is selected
-  useEffect(() => {
-    if (selectedProgramId && isFirstLoad) {
-      loadCycles(1);
-      setIsFirstLoad(false);
-    }
-  }, [selectedProgramId, isFirstLoad]);
-
   const loadCycles = async (page: number) => {
-    if (!selectedProgramId) return;
-
     try {
       await getProgramCycles({
-        programId: selectedProgramId,
         page,
         numberOfResults: 10,
       });
@@ -131,57 +97,7 @@ function CyclesPageContent() {
     }).format(amount);
   };
 
-  if (!selectedProgramId) {
-    return (
-      <AuthGuard>
-        <PMLayout>
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Cycles Management
-              </h1>
-              <p className="mt-2 text-gray-600">
-                Manage funding cycles for programs
-              </p>
-            </div>
-
-            <div className="rounded-lg bg-white p-8 text-center shadow">
-              <svg
-                className="mx-auto mb-4 h-12 w-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                />
-              </svg>
-
-              <h3 className="mb-2 text-lg font-medium text-gray-900">
-                Select a Program
-              </h3>
-
-              <p className="mb-4 text-gray-600">
-                Please select a program to view and manage its cycles
-              </p>
-
-              <Link
-                className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                href="/pm/programs"
-              >
-                View Programs
-              </Link>
-            </div>
-          </div>
-        </PMLayout>
-      </AuthGuard>
-    );
-  }
-
-  if (isCyclesLoading && isFirstLoad) {
+  if (isCyclesLoading && cycles.length === 0) {
     return (
       <AuthGuard>
         <PMLayout>
@@ -202,28 +118,15 @@ function CyclesPageContent() {
               <h1 className="text-3xl font-bold text-gray-900">
                 Cycles Management
               </h1>
-
-              {selectedProgram && (
-                <p className="mt-2 text-gray-600">
-                  Managing cycles for:{" "}
-                  <span className="font-medium">
-                    {selectedProgram.details.name}
-                  </span>
-                </p>
-              )}
+              <p className="mt-2 text-gray-600">
+                Manage funding cycles for your assigned program
+              </p>
             </div>
 
             <div className="flex space-x-3">
-              <Link
-                href="/pm/programs"
-                className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Change Program
-              </Link>
               <button
                 className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                 onClick={handleCreateCycle}
-                disabled={!selectedProgramId}
               >
                 <svg
                   className="mr-2 h-5 w-5"
@@ -454,12 +357,12 @@ function CyclesPageContent() {
           )}
         </div>
 
-        {isCreateModalOpen && selectedProgramId && (
+        {isCreateModalOpen && programId && (
           <CreateCycleModal
             isOpen={isCreateModalOpen}
             onClose={() => setIsCreateModalOpen(false)}
             onSuccess={handleCreateSuccess}
-            programId={selectedProgramId}
+            programId={programId}
           />
         )}
       </PMLayout>

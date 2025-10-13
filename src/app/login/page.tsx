@@ -18,6 +18,8 @@ const getRoleBasedRedirect = (role: string): string => {
       return "/gcv";
     case UserRoles.PROGRAM_MANAGER:
       return "/pm";
+    case UserRoles.APPLICANT:
+      return "/applicant";
     default:
       return "/";
   }
@@ -39,6 +41,10 @@ export default function LoginPage() {
     const redirect = searchParams.get("redirect");
     if (redirect === "/gcv") {
       setRole(UserRoles.COMMITTEE_MEMBER);
+    } else if (redirect === "/pm") {
+      setRole(UserRoles.PROGRAM_MANAGER);
+    } else if (redirect === "/applicant") {
+      setRole(UserRoles.APPLICANT);
     }
   }, [searchParams]);
 
@@ -218,6 +224,16 @@ export default function LoginPage() {
                 href="/login?redirect=/pm"
               >
                 Login as Program Manager
+              </Link>
+            </p>
+
+            <p className="mt-2 text-sm text-gray-600">
+              Apply for Grants?{" "}
+              <Link
+                className="font-medium text-orange-600 hover:text-orange-500"
+                href="/login?redirect=/applicant"
+              >
+                Login as Applicant
               </Link>
             </p>
           </div>

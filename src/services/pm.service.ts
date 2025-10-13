@@ -28,13 +28,13 @@ export class PMService {
   }
 
   /**
-   * Get all cycles for a specific program with pagination
+   * Get all cycles for the PM's assigned program with pagination
+   * Note: Backend automatically determines the program based on logged-in PM user
    */
   async getProgramCycles(
     params: GetProgramCyclesRequest,
   ): Promise<GetProgramCyclesResponse> {
     const queryParams: Record<string, string> = {
-      programId: params.programId,
       page: params.page.toString(),
       numberOfResults: params.numberOfResults.toString(),
     };

@@ -63,6 +63,9 @@ interface ApplicantActions {
     data: AddApplicationTeammatesRequest,
   ) => Promise<boolean>;
   
+  // Load saved application (draft restoration)
+  loadSavedApplication: (cycleSlug: string) => Promise<Application | null>;
+  
   // Navigation helpers
   setCurrentStep: (step: ApplicationStep) => void;
   goToNextStep: () => void;
@@ -469,5 +472,60 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       error: null,
       successMessage: null,
     });
+  },
+
+  // Load saved application for draft restoration
+  loadSavedApplication: async (cycleSlug: string): Promise<Application | null> => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await applicantService.getApplicationWithCycle(cycleSlug);
+      
+      if (response.status === 200 && response.res.applicationDetails) {
+        const savedApp = response.res.applicationDetails;
+        
+        // Map backend application to frontend Application type
+        const application: Application = {
+          id: savedApp.id,
+          userId: savedApp.applicantId,
+          cycleId: savedApp.cycleId,
+          stepNumber: savedApp.stepNumber || 1,
+          basicInfo: savedApp.basicInfo ? {
+            title: savedApp.basicInfo.Title,
+            summary: savedApp.basicInfo.Summary,
+            problem: savedApp.basicInfo.Problem,
+            solution: savedApp.basicInfo.Solution,
+            innovation: savedApp.basicInfo.Innovation,
+          } : undefined,
+          budget: savedApp.budget,
+          technicalSpec: savedApp.technicalSpecs,
+          marketInfo: savedApp.marketInfo,
+          revenueModel: savedApp.revenueModel,
+          risks: savedApp.risks,
+          milestones: savedApp.milestones,
+          documents: savedApp.documents,
+          teamMateInvites: savedApp.teamMateInvites,
+          isSubmitted: savedApp.status === "SUBMITTED",
+        };
+        
+        // Set the application and navigate to the correct step
+        const targetStep = (savedApp.stepNumber || 1) as ApplicationStep;
+        set({
+          currentApplication: application,
+          currentStep: targetStep,
+          isLoading: false,
+        });
+        
+        get().updateApplicationSteps();
+        return application;
+      }
+      
+      // No saved application found
+      set({ isLoading: false });
+      return null;
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to load saved application";
+      set({ error: errorMessage, isLoading: false });
+      return null;
+    }
   },
 }));

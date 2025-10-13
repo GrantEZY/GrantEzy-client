@@ -67,6 +67,9 @@ export const useApplicant = () => {
   const resetApplicationState = useApplicantStore(
     (state) => state.resetApplicationState,
   );
+  const loadSavedApplication = useApplicantStore(
+    (state) => state.loadSavedApplication,
+  );
 
   // Computed values
   const isFirstStep = currentStep === ApplicationStep.BASIC_INFO;
@@ -208,6 +211,7 @@ export const useApplicant = () => {
     clearError,
     clearSuccessMessage,
     resetApplicationState,
+    loadSavedApplication,
     
     // Helper functions
     getCurrentStepInfo,

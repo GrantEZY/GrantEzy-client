@@ -55,6 +55,13 @@ export const API_CONFIG = {
       ADD_RISKS_MILESTONES: "/applicant/add-application-risks-and-milestones",
       ADD_DOCUMENTS: "/applicant/add-application-documents",
       ADD_TEAMMATES: "/applicant/add-application-teammates",
+      GET_USER_APPLICATIONS: "/applicant/get-user-applications",
+      GET_APPLICATION_WITH_CYCLE: "/applicant/get-application-details-with-cycle",
+    },
+    PUBLIC: {
+      // Public endpoints (no auth required)
+      GET_ACTIVE_CYCLES: "/public/active-program-cycles",
+      GET_CYCLE_DETAILS: "/public/program-cycle-details",
     },
     HEALTH: "/health",
   },

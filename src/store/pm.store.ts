@@ -70,16 +70,11 @@ export const usePMStore = create<PMStore>((set, get) => ({
       if (response.status === 201) {
         set({ isCyclesLoading: false, cyclesError: null });
 
-        // Refresh cycles for the current program if it matches
-        const currentProgramId = get().selectedProgramId;
-        if (currentProgramId === data.programId) {
-          // Refresh cycles list
-          await get().getProgramCycles({
-            programId: data.programId,
-            page: 1,
-            numberOfResults: 10,
-          });
-        }
+        // Refresh cycles list after creating a new cycle
+        await get().getProgramCycles({
+          page: 1,
+          numberOfResults: 10,
+        });
 
         return true;
       } else {
