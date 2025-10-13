@@ -46,6 +46,16 @@ export const API_CONFIG = {
       UPDATE_CYCLE_DETAILS: "/pm/update-cycle-details",
       DELETE_CYCLE: "/pm/delete-program-cycle",
     },
+    APPLICANT: {
+      // Application Submission Steps
+      CREATE_APPLICATION: "/applicant/create-application",
+      ADD_BUDGET: "/applicant/add-application-budget",
+      ADD_TECHNICAL_DETAILS: "/applicant/add-application-technical-details",
+      ADD_REVENUE_STREAM: "/applicant/add-application-revenue-stream",
+      ADD_RISKS_MILESTONES: "/applicant/add-application-risks-and-milestones",
+      ADD_DOCUMENTS: "/applicant/add-application-documents",
+      ADD_TEAMMATES: "/applicant/add-application-teammates",
+    },
     HEALTH: "/health",
   },
   HEADERS: {
