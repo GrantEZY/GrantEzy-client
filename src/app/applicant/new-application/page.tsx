@@ -7,6 +7,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthGuard } from "@/components/guards/AuthGuard";
+import ApplicantLayout from "@/components/layout/ApplicantLayout";
 import { useApplicant } from "@/hooks/useApplicant";
 import ApplicationStepper from "@/components/applicant/ApplicationStepper";
 import ApplicationProgress from "@/components/applicant/ApplicationProgress";
@@ -85,17 +86,16 @@ export default function NewApplicationPage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              New Application
-            </h1>
-            <p className="mt-2 text-gray-600">
-              Complete all 7 steps to submit your application
-            </p>
-          </div>
+      <ApplicantLayout>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            New Application
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Complete all 7 steps to submit your application
+          </p>
+        </div>
 
           {/* Progress Bar */}
           <ApplicationProgress
@@ -232,8 +232,7 @@ export default function NewApplicationPage() {
               </div>
             </div>
           )}
-        </div>
-      </div>
+      </ApplicantLayout>
     </AuthGuard>
   );
 }

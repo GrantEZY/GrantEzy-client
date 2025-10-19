@@ -20,8 +20,8 @@ export function DeleteProgramModal({
   if (!isOpen) return null;
 
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-md">
+      <div className="w-full max-w-md scale-100 transform rounded-lg bg-white p-6 shadow-xl transition-all duration-200">
         <div className="mb-4">
           <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
             <svg

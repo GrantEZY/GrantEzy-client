@@ -160,8 +160,8 @@ export default function CreateCycleModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="mx-4 w-full max-w-4xl transform rounded-lg bg-white shadow-xl transition-all duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-md">
+      <div className="mx-4 w-full max-w-4xl scale-100 transform rounded-lg bg-white shadow-xl transition-all duration-200">
         {/* Header */}
         <div className="border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">

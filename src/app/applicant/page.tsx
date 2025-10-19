@@ -7,6 +7,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AuthGuard } from "@/components/guards/AuthGuard";
+import ApplicantLayout from "@/components/layout/ApplicantLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { publicService, ProgramCycle } from "@/services/public.service";
 
@@ -66,25 +67,16 @@ export default function ApplicantDashboard() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-gray-50">
-        {/* Header */}
-        <div className="bg-white shadow">
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-            <div className="md:flex md:items-center md:justify-between">
-              <div className="min-w-0 flex-1">
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Welcome, {user?.firstName || "Applicant"}
-                </h1>
-                <p className="mt-1 text-sm text-gray-500">
-                  Apply for grants and track your applications
-                </p>
-              </div>
-            </div>
-          </div>
+      <ApplicantLayout>
+        {/* Header Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Welcome, {user?.firstName || "Applicant"}
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Apply for grants and track your applications
+          </p>
         </div>
-
-        {/* Main Content */}
-        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {/* Available Cycles */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -246,8 +238,7 @@ export default function ApplicantDashboard() {
               </p>
             </div>
           </div>
-        </div>
-      </div>
+      </ApplicantLayout>
     </AuthGuard>
   );
 }

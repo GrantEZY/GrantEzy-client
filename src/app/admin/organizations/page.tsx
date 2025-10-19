@@ -171,18 +171,21 @@ function OrganizationsPageContent() {
         const success = await addOrganization(orgData);
         if (success) {
           showToast.success("Organization added successfully!");
-          getOrganizations(); // Refresh the list
+          // No need to call getOrganizations() - the store updates automatically
           return { success: true };
         } else {
-          return { success: false, error: "Failed to add organization" };
+          const errorMsg = "Failed to add organization";
+          showToast.error(errorMsg);
+          return { success: false, error: errorMsg };
         }
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Failed to add organization";
+        showToast.error(errorMessage);
         return { success: false, error: errorMessage };
       }
     },
-    [addOrganization, getOrganizations],
+    [addOrganization],
   );
 
   const handleEditOrganization = useCallback(

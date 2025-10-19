@@ -98,12 +98,12 @@ export function ProgramCyclesModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="bg-opacity-50 absolute inset-0 bg-white backdrop-blur-sm"
+        className="absolute inset-0 bg-white/10 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative z-10 mx-4 flex max-h-[90vh] w-full max-w-6xl flex-col rounded-lg bg-white shadow-xl">
+      <div className="thin-scrollbar relative z-10 mx-4 flex max-h-[90vh] w-full max-w-6xl flex-col rounded-lg bg-white shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-gray-200 p-6">
           <div>

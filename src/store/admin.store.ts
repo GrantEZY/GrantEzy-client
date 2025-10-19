@@ -215,10 +215,24 @@ export const useAdminStore = create<AdminStore>((set) => ({
     try {
       const response = await adminService.addOrganization(data);
 
-      if (response.status === 200) {
-        set({ isLoading: false });
+      // Accept both 200 and 201 as success (201 is "Created")
+      if (response.status === 200 || response.status === 201) {
+        // Construct the new organization from the response
+        const newOrganization: Organization = {
+          id: response.res.id,
+          name: response.res.name,
+          type: response.res.type,
+          createdAt: new Date().toISOString(),
+        };
+        
+        // Add the new organization to the list
+        set((state) => ({
+          organizations: [...state.organizations, newOrganization],
+          isLoading: false,
+        }));
         return true;
       }
+      set({ isLoading: false });
       return false;
     } catch (error) {
       const errorMessage =

@@ -70,8 +70,8 @@ export function UserProfileModal({
   if (!isOpen) return null;
 
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black">
-      <div className="mx-4 max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-md">
+      <div className="thin-scrollbar mx-4 max-h-[90vh] w-full max-w-2xl scale-100 transform overflow-y-auto rounded-lg bg-white p-6 shadow-xl transition-all duration-200">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">User Profile</h2>
 
