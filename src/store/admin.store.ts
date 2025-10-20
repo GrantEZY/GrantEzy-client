@@ -118,13 +118,21 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateUserRole: async (data: UpdateUserRoleRequest) => {
     set({ isLoading: true, error: null });
     try {
+      console.log("Updating user role with data:", data);
       const response = await adminService.updateUserRole(data);
+      console.log("Update user role response:", response);
 
-      // Backend returns 204 for successful update
-      if (response.status === 200 || response.status === 204) {
+      // Backend returns 200, 201, or 204 for successful update
+      if (response.status === 200 || response.status === 201 || response.status === 204) {
         set({ isLoading: false });
         return true;
       }
+      
+      console.warn("Unexpected response status:", response.status);
+      set({ 
+        error: `Unexpected response status: ${response.status}`,
+        isLoading: false 
+      });
       return false;
     } catch (error: unknown) {
       let errorMessage = "Failed to update user role";
@@ -132,16 +140,28 @@ export const useAdminStore = create<AdminStore>((set) => ({
       // Extract detailed error message from API response
       if (error && typeof error === "object" && "response" in error) {
         const apiError = error as {
-          response?: { data?: { message?: string } };
+          response?: { 
+            status?: number;
+            data?: { message?: string; error?: string; statusCode?: number };
+          };
         };
-        if (apiError.response?.data?.message) {
-          errorMessage = apiError.response.data.message;
+        
+        const responseData = apiError.response?.data;
+        const status = apiError.response?.status;
+        
+        if (responseData?.message) {
+          errorMessage = responseData.message;
+        } else if (responseData?.error) {
+          errorMessage = responseData.error;
+        } else if (status) {
+          errorMessage = `HTTP ${status}: ${errorMessage}`;
         }
       } else if (error instanceof Error && error.message) {
         errorMessage = error.message;
       }
 
       console.error("Update user role error:", error);
+      console.error("Error message:", errorMessage);
 
       set({
         error: errorMessage,

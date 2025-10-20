@@ -12,6 +12,7 @@ import { CycleStatus, Cycle } from "@/types/pm.types";
 import { Program } from "@/types/gcv.types";
 
 function CyclesPageContent() {
+  const searchParams = useSearchParams();
   const {
     cycles,
     cyclesPagination,
@@ -24,13 +25,15 @@ function CyclesPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   
-  // Get programId from the first cycle (backend ensures PM only manages one program)
-  const programId = cycles.length > 0 ? cycles[0].programId : null;
+  // Get programId from URL parameters
+  const programId = searchParams.get('programId');
 
   // Load cycles on mount - backend will determine the program from logged-in PM user
   useEffect(() => {
-    loadCycles(1);
-  }, []);
+    if (programId) {
+      loadCycles(1);
+    }
+  }, [programId]);
 
   const loadCycles = async (page: number) => {
     try {
@@ -57,6 +60,10 @@ function CyclesPageContent() {
   };
 
   const handleCreateCycle = () => {
+    if (!programId) {
+      alert('Program ID not found. Please make sure you\'re accessing this page with a valid program ID.');
+      return;
+    }
     setIsCreateModalOpen(true);
   };
 
@@ -103,6 +110,45 @@ function CyclesPageContent() {
         <PMLayout>
           <div className="flex h-64 items-center justify-center">
             <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+          </div>
+        </PMLayout>
+      </AuthGuard>
+    );
+  }
+
+  // Check if programId is missing
+  if (!programId) {
+    return (
+      <AuthGuard>
+        <PMLayout>
+          <div className="flex h-64 items-center justify-center">
+            <div className="rounded-lg bg-yellow-50 p-12 text-center">
+              <svg
+                className="mx-auto h-12 w-12 text-yellow-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                />
+              </svg>
+              <h3 className="mt-2 text-lg font-medium text-yellow-900">
+                Program ID Required
+              </h3>
+              <p className="mt-1 text-yellow-700">
+                Please navigate to this page with a valid program ID parameter.
+              </p>
+              <Link
+                href="/pm"
+                className="mt-4 inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-700"
+              >
+                Go to Dashboard
+              </Link>
+            </div>
           </div>
         </PMLayout>
       </AuthGuard>
@@ -357,6 +403,7 @@ function CyclesPageContent() {
           )}
         </div>
 
+        {/* Create Cycle Modal */}
         {isCreateModalOpen && programId && (
           <CreateCycleModal
             isOpen={isCreateModalOpen}

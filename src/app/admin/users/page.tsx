@@ -45,10 +45,36 @@ export default function AdminUsersPage() {
   const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
 
   // Helper function to format role display
-  const formatRole = (role: string | string[] | undefined): string => {
-    if (!role) return "user";
-    const roleStr = Array.isArray(role) ? role[0] : role;
-    return roleStr?.replace("_", " ").toLowerCase() || "user";
+  const formatRole = (role: string | string[] | undefined): React.ReactNode => {
+    if (!role) return <span className="text-gray-500">No roles</span>;
+    
+    const roles = Array.isArray(role) ? role : [role];
+    
+    if (roles.length === 1) {
+      return (
+        <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+          {roles[0]?.replace(/_/g, " ") || "unknown"}
+        </span>
+      );
+    }
+    
+    return (
+      <div className="flex flex-wrap gap-1">
+        {roles.slice(0, 2).map((r, index) => (
+          <span 
+            key={index} 
+            className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
+          >
+            {r?.replace(/_/g, " ") || "unknown"}
+          </span>
+        ))}
+        {roles.length > 2 && (
+          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+            +{roles.length - 2}
+          </span>
+        )}
+      </div>
+    );
   };
 
   // Load users with current filters
@@ -99,43 +125,21 @@ export default function AdminUsersPage() {
   const handleUpdateUser = async (userData: {
     email: string;
     role: UserRoles;
+    action: 'add' | 'remove';
   }) => {
     if (!selectedUser) return { success: false, error: "No user selected" };
 
-    const currentRole = Array.isArray(selectedUser.role)
-      ? selectedUser.role[0]
-      : selectedUser.role;
-    const newRole = userData.role;
-
     try {
-      if (newRole !== currentRole) {
-        // Add new role
-        const addResult = await updateUser({
-          email: userData.email,
-          type: UpdateRole.ADD_ROLE,
-          role: newRole,
-        });
+      const updateType = userData.action === 'add' ? UpdateRole.ADD_ROLE : UpdateRole.DELETE_ROLE;
+      
+      const result = await updateUser({
+        email: userData.email,
+        type: updateType,
+        role: userData.role,
+      });
 
-        if (!addResult.success) {
-          throw new Error(addResult.error || "Failed to add new role");
-        }
-
-        // Remove old role if it's different and not NORMAL_USER
-        if (
-          currentRole &&
-          currentRole !== UserRoles.NORMAL_USER &&
-          currentRole !== newRole
-        ) {
-          const removeResult = await updateUser({
-            email: userData.email,
-            type: UpdateRole.DELETE_ROLE,
-            role: currentRole as UserRoles,
-          });
-
-          if (!removeResult.success) {
-            console.warn("Failed to remove old role:", removeResult.error);
-          }
-        }
+      if (!result.success) {
+        throw new Error(result.error || `Failed to ${userData.action} role`);
       }
 
       await loadUsers();
