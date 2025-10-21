@@ -176,33 +176,38 @@ export default function ApplicantSidebar() {
 
   return (
     <aside className="flex h-full w-64 flex-col border-r border-[var(--color-border-light)] bg-white shadow-sm">
-      <nav className="flex-1 space-y-1 p-4" role="navigation">
-        {menuItems.map((item, index) => (
-          <SidebarItem key={index} {...item} index={index} />
-        ))}
-      </nav>
+      <div className="flex-1">
+        <nav className="space-y-1 p-4" role="navigation">
+          {menuItems.map((item, index) => (
+            <SidebarItem key={index} {...item} index={index} />
+          ))}
+        </nav>
+      </div>
 
-      <div className="absolute right-4 bottom-4 left-4 space-y-2">
-        <button
-          className="flex w-full items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-red-50)] hover:text-[var(--color-red-700)] focus:ring-2 focus:ring-[var(--color-red-500)] focus:ring-offset-2 focus:outline-none"
-          onClick={handleLogout}
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      {/* User Actions */}
+      <div className="border-t border-[var(--color-gray-200)] p-4">
+        <div className="space-y-1">
+          <button
+            className="flex w-full items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-red-50)] hover:text-[var(--color-red-700)] focus:ring-2 focus:ring-[var(--color-red-500)] focus:ring-offset-2 focus:outline-none"
+            onClick={handleLogout}
           >
-            <path
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-            />
-          </svg>
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+              />
+            </svg>
 
-          <span>Logout</span>
-        </button>
+            <span>Logout</span>
+          </button>
+        </div>
       </div>
     </aside>
   );

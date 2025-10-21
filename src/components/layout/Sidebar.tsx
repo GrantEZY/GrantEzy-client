@@ -325,8 +325,9 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="relative min-h-[calc(100vh-98px)] w-[280px] flex-shrink-0 border-r border-[var(--color-border-light)] bg-[var(--color-white)]">
-      <nav className="p-4">
+    <aside className="flex h-full w-[280px] flex-col flex-shrink-0 border-r border-[var(--color-border-light)] bg-[var(--color-white)]">
+      <div className="flex-1">
+        <nav className="p-4">
         <ul className="space-y-1">
           {menuItems.map((item, idx) => (
             // FIX 2: The <li> wrapper is here. Added className="relative" to it.
@@ -405,9 +406,12 @@ export default function Sidebar() {
             </li>
           ))}
         </ul>
-      </nav>
+        </nav>
+      </div>
 
-      <div className="absolute right-4 bottom-4 left-4 space-y-2">
+      {/* User Actions */}
+      <div className="border-t border-[var(--color-gray-200)] p-4">
+        <div className="space-y-1">
         <a
           className="flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-gray-50)] hover:text-[var(--color-gray-900)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none"
           href="#"
@@ -437,6 +441,7 @@ export default function Sidebar() {
 
           <span>Logout</span>
         </button>
+        </div>
       </div>
     </aside>
   );

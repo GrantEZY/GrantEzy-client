@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { usePm } from "@/hooks/usePm";
 
@@ -10,7 +10,7 @@ interface CreateCycleModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  programId: string;
+  programId?: string; // Optional programId for specific program context
 }
 
 export default function CreateCycleModal({
@@ -19,11 +19,11 @@ export default function CreateCycleModal({
   onSuccess,
   programId,
 }: CreateCycleModalProps) {
-  const { createCycle, isCyclesLoading } = usePm();
+  const { createCycle, isCyclesLoading, cycles } = usePm();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<CreateCycleRequest>({
-    programId,
+    programId: programId || "", // Will be set dynamically if not provided
     round: {
       year: new Date().getFullYear(),
       type: "Spring",
@@ -94,6 +94,19 @@ export default function CreateCycleModal({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Update programId when it becomes available
+  useEffect(() => {
+    if (programId && formData.programId !== programId) {
+      setFormData(prev => ({ ...prev, programId }));
+    } else if (!programId && cycles && cycles.length > 0 && !formData.programId) {
+      // Fallback to first cycle's programId if not provided
+      const fallbackProgramId = cycles[0].programId;
+      if (fallbackProgramId) {
+        setFormData(prev => ({ ...prev, programId: fallbackProgramId }));
+      }
+    }
+  }, [programId, cycles, formData.programId]);
+
   const validateStep = (step: number) => {
     const newErrors: Record<string, string> = {};
 
@@ -134,7 +147,35 @@ export default function CreateCycleModal({
     }
 
     try {
-      const success = await createCycle(formData);
+      // Get programId - either from prop or from existing cycles
+      let targetProgramId = programId;
+      
+      if (!targetProgramId && cycles && cycles.length > 0) {
+        // Extract programId from first cycle (PM can only manage one program)
+        targetProgramId = cycles[0].programId;
+      }
+
+      if (!targetProgramId) {
+        alert("Unable to determine program ID. This might be because:\n\n1. You haven't been assigned to any programs yet\n2. No cycles exist for your program\n3. There's a system error\n\nPlease contact your administrator to ensure you're assigned as a Program Manager for a specific program.");
+        return;
+      }
+
+      // Validate UUID format
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(targetProgramId)) {
+        console.error("Invalid programId format:", targetProgramId);
+        alert(`Invalid program ID format. Expected UUID, got: ${targetProgramId}`);
+        return;
+      }
+
+      console.log("Creating cycle with programId:", targetProgramId);
+      
+      const cycleData = {
+        ...formData,
+        programId: targetProgramId
+      };
+        
+      const success = await createCycle(cycleData);
       if (success) {
         onSuccess();
       }

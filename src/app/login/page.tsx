@@ -20,6 +20,8 @@ const getRoleBasedRedirect = (role: string): string => {
       return "/pm";
     case UserRoles.APPLICANT:
       return "/applicant";
+    case UserRoles.TEAM_MATE:
+      return "/co-applicant";
     default:
       return "/";
   }
@@ -46,6 +48,8 @@ export default function LoginPage() {
       setRole(UserRoles.PROGRAM_MANAGER);
     } else if (redirect === "/applicant") {
       setRole(UserRoles.APPLICANT);
+    } else if (redirect === "/co-applicant") {
+      setRole(UserRoles.TEAM_MATE);
     }
   }, [searchParams]);
 

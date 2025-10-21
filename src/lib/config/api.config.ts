@@ -58,6 +58,12 @@ export const API_CONFIG = {
       GET_USER_APPLICATIONS: "/applicant/get-user-applications",
       GET_APPLICATION_WITH_CYCLE: "/applicant/get-application-details-with-cycle",
     },
+    CO_APPLICANT: {
+      // Co-applicant management
+      GET_APPLICATION_DETAILS: "/co-applicant/get-application-details",
+      GET_TOKEN_DETAILS: "/co-applicant/get-token-details",
+      UPDATE_INVITE_STATUS: "/co-applicant/update-user-invite-status",
+    },
     PUBLIC: {
       // Public endpoints (no auth required)
       GET_ACTIVE_CYCLES: "/public/active-program-cycles",

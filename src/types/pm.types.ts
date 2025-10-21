@@ -6,15 +6,15 @@ import { Program } from "./gcv.types";
 // ============= Enums =============
 
 export enum TRL {
-  TRL_1 = "TRL_1",
-  TRL_2 = "TRL_2",
-  TRL_3 = "TRL_3",
-  TRL_4 = "TRL_4",
-  TRL_5 = "TRL_5",
-  TRL_6 = "TRL_6",
-  TRL_7 = "TRL_7",
-  TRL_8 = "TRL_8",
-  TRL_9 = "TRL_9",
+  TRL_1 = "TRL1",
+  TRL_2 = "TRL2",
+  TRL_3 = "TRL3",
+  TRL_4 = "TRL4",
+  TRL_5 = "TRL5",
+  TRL_6 = "TRL6",
+  TRL_7 = "TRL7",
+  TRL_8 = "TRL8",
+  TRL_9 = "TRL9",
 }
 
 export enum CycleStatus {
@@ -82,7 +82,7 @@ export interface Cycle {
 
 // Create Cycle
 export interface CreateCycleRequest {
-  programId: string;
+  programId: string; // Required - backend expects programId as UUID
   round: ProgramRound;
   budget: Money;
   duration: Duration;

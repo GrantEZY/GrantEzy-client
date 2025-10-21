@@ -175,16 +175,10 @@ export default function PMSidebar() {
       active: pathname.startsWith("/pm/programs"),
     },
     {
-      icon: icons.cycles,
-      label: "Cycles Management",
-      href: "/pm/cycles",
-      active: pathname.startsWith("/pm/cycles"),
-    },
-    {
       icon: icons.analytics,
       label: "Analytics & Reports",
-      href: "/pm/dashboard",
-      active: pathname === "/pm/dashboard",
+      href: "/pm/analytics",
+      active: pathname === "/pm/analytics",
     },
   ];
 

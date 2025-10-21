@@ -4,24 +4,62 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import PMLayout from "@/components/layout/PMLayout";
-import { useGcv } from "@/hooks/useGcv";
 import { usePm } from "@/hooks/usePm";
-import { ProgramStatus } from "@/types/gcv.types";
+import { Program, ProgramStatus } from "@/types/gcv.types";
 
 export default function PMProgramsPage() {
-  const { programs, getPrograms, isProgramsLoading, programsError } = useGcv();
-  const { setSelectedProgramId } = usePm();
+  const { cycles, isCyclesLoading, cyclesError, getProgramCycles } = usePm();
+  const [programs, setPrograms] = useState<(Program & { cycleCount: number })[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Load cycles to extract program information
   useEffect(() => {
-    if (programs.length === 0 && !isProgramsLoading) {
-      getPrograms({ page: 1, numberOfResults: 50 });
+    const loadPrograms = async () => {
+      try {
+        setIsLoading(true);
+        // Fetch cycles to get program information (PMs only see cycles for their assigned programs)
+        await getProgramCycles({ page: 1, numberOfResults: 100 });
+      } catch (error) {
+        console.error("Failed to load programs:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPrograms();
+  }, [getProgramCycles]);
+
+  // Extract unique programs from cycles
+  useEffect(() => {
+    if (cycles && cycles.length > 0) {
+      const uniquePrograms = cycles
+        .filter((cycle) => cycle.program) // Only cycles with program data
+        .reduce((acc, cycle) => {
+          const program = cycle.program!;
+          // Check if program already exists in accumulator
+          const exists = acc.find((p) => p.id === program.id);
+          if (!exists) {
+            // Add cycle count to program
+            const cycleCount = cycles.filter((c) => c.program?.id === program.id).length;
+            acc.push({
+              ...program,
+              cycleCount,
+            });
+          }
+          return acc;
+        }, [] as (Program & { cycleCount: number })[]);
+
+      setPrograms(uniquePrograms);
+    } else if (cycles && cycles.length === 0 && !isCyclesLoading) {
+      // No cycles means no programs assigned
+      setPrograms([]);
     }
-  }, []);
+  }, [cycles, isCyclesLoading]);
 
   const handleSelectProgram = (programId: string) => {
-    setSelectedProgramId(programId);
-    window.location.href = `/pm/cycles?programId=${programId}`;
+    // Navigate to program-specific cycle management page
+    window.location.href = `/pm/programs/${programId}`;
   };
 
   const getStatusBadgeColor = (status?: ProgramStatus) => {
@@ -36,16 +74,19 @@ export default function PMProgramsPage() {
   };
 
   const filteredPrograms = programs.filter((program) =>
-    program.details.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    program.details.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (program.details?.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (program.details?.description || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isProgramsLoading && programs.length === 0) {
+  if (isLoading || isCyclesLoading) {
     return (
       <AuthGuard>
         <PMLayout>
           <div className="flex h-64 items-center justify-center">
-            <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+            <div className="text-center">
+              <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Loading your assigned programs...</p>
+            </div>
           </div>
         </PMLayout>
       </AuthGuard>
@@ -59,10 +100,10 @@ export default function PMProgramsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
-                Select Program to Manage
+                My Assigned Programs
               </h1>
               <p className="mt-2 text-gray-600">
-                Choose a program to manage its cycles and activities
+                Manage the innovation programs assigned to you as Program Manager
               </p>
             </div>
             <Link
@@ -90,7 +131,7 @@ export default function PMProgramsPage() {
             </div>
           </div>
 
-          {programsError && (
+          {cyclesError && (
             <div className="rounded-lg bg-red-50 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
@@ -100,7 +141,7 @@ export default function PMProgramsPage() {
                 </div>
                 <div className="ml-3">
                   <h3 className="text-sm font-medium text-red-800">Error loading programs</h3>
-                  <p className="mt-1 text-sm text-red-700">{programsError}</p>
+                  <p className="mt-1 text-sm text-red-700">{cyclesError}</p>
                 </div>
               </div>
             </div>
@@ -112,10 +153,10 @@ export default function PMProgramsPage() {
                 <path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
               </svg>
               <h3 className="mb-2 text-lg font-medium text-gray-900">
-                {searchTerm ? "No programs found" : "No programs available"}
+                {searchTerm ? "No programs found" : "No Programs Assigned"}
               </h3>
               <p className="mb-4 text-gray-600">
-                {searchTerm ? "Try adjusting your search terms" : "There are no programs available to manage at this time"}
+                {searchTerm ? "Try adjusting your search terms" : "You don't have any programs assigned to you yet. Contact your administrator to get assigned to innovation programs."}
               </p>
               {searchTerm && (
                 <button
@@ -136,32 +177,63 @@ export default function PMProgramsPage() {
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {program.details.name}
-                      </h3>
+                      <div className="flex items-center space-x-2 mb-2">
+                        <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                          <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {program.details?.name || "Innovation Program"}
+                          </h3>
+                          <div className="flex items-center space-x-2">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                              Program Manager
+                            </span>
+                            <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${getStatusBadgeColor(program.status)}`}>
+                              {program.status === ProgramStatus.IN_ACTIVE ? "INACTIVE" : program.status || "DRAFT"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                        {program.details.description}
+                        {program.details?.description || "Program description not available"}
                       </p>
                     </div>
-                    <span className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeColor(program.status)}`}>
-                      {program.status === ProgramStatus.IN_ACTIVE ? "INACTIVE" : program.status || "DRAFT"}
-                    </span>
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-lg font-bold text-gray-900">{program.cycleCount}</div>
+                      <div className="text-xs text-gray-500">Active Cycles</div>
+                    </div>
+                    <div className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div className="text-lg font-bold text-gray-900">{program.minTRL}-{program.maxTRL}</div>
+                      <div className="text-xs text-gray-500">TRL Range</div>
+                    </div>
                   </div>
 
                   <div className="mt-4 space-y-2">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
-                      </svg>
-                      Budget: {program.budget ? 
-                        new Intl.NumberFormat("en-IN", {
-                          style: "currency",
-                          currency: program.budget.currency || "INR",
-                          maximumFractionDigits: 0,
-                        }).format(program.budget.amount) : 
-                        "Not specified"
-                      }
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-500">Budget:</span>
+                      <span className="font-medium text-gray-900">
+                        {program.budget ? 
+                          new Intl.NumberFormat("en-IN", {
+                            style: "currency",
+                            currency: program.budget.currency || "INR",
+                            maximumFractionDigits: 0,
+                          }).format(program.budget.amount) : 
+                          "Not specified"
+                        }
+                      </span>
                     </div>
+                    {program.organization && (
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500">Organization:</span>
+                        <span className="font-medium text-gray-900">{program.organization.name}</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-gray-200">
