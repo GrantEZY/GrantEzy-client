@@ -19,6 +19,7 @@ import RisksAndMilestonesForm from "@/components/applicant/forms/RisksAndMilesto
 import DocumentsForm from "@/components/applicant/forms/DocumentsForm";
 import TeamMembersForm from "@/components/applicant/forms/TeamMembersForm";
 import { ApplicationStep } from "@/types/applicant.types";
+import { ToastProvider } from "@/components/ui/ToastNew";
 
 export default function NewApplicationPage() {
   const searchParams = useSearchParams();
@@ -86,7 +87,8 @@ export default function NewApplicationPage() {
 
   return (
     <AuthGuard>
-      <ApplicantLayout>
+      <ToastProvider>
+        <ApplicantLayout>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -232,7 +234,8 @@ export default function NewApplicationPage() {
               </div>
             </div>
           )}
-      </ApplicantLayout>
+        </ApplicantLayout>
+      </ToastProvider>
     </AuthGuard>
   );
 }

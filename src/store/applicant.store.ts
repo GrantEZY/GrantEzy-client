@@ -384,10 +384,19 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
               isSubmitted: data.isSubmitted,
             },
             successMessage: data.isSubmitted
-              ? "Application submitted successfully!"
+              ? "🎉 Application submitted successfully! Your application has been saved and team invites have been sent."
               : response.message,
             isLoading: false,
           });
+          
+          // If application is submitted, redirect to applications list after a delay
+          if (data.isSubmitted) {
+            setTimeout(() => {
+              if (typeof window !== 'undefined') {
+                window.location.href = '/applicant/applications';
+              }
+            }, 3000);
+          }
           
           get().updateApplicationSteps();
           return true;

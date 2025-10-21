@@ -42,7 +42,8 @@ export class CoApplicantService {
   ): Promise<TokenDetailsResponse> {
     const params = { token, slug };
     
-    return httpClient.get<TokenDetailsResponse>(
+    // Use public get method since this endpoint is used before authentication
+    return httpClient.publicGet<TokenDetailsResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_TOKEN_DETAILS,
       params
     );
@@ -62,7 +63,8 @@ export class CoApplicantService {
   ): Promise<InviteStatusUpdateResponse> {
     const data: UpdateInviteStatusRequest = { token, slug, status };
     
-    return httpClient.patch<InviteStatusUpdateResponse>(
+    // Use public patch method since this endpoint doesn't require authentication
+    return httpClient.publicPatch<InviteStatusUpdateResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.UPDATE_INVITE_STATUS,
       data
     );

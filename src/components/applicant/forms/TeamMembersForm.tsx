@@ -4,11 +4,12 @@
  */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApplicant } from "@/hooks/useApplicant";
+import { showToast } from "@/components/ui/ToastNew";
 
 export default function TeamMembersForm() {
-  const { addTeammates, isLoading, goToPreviousStep, currentApplication } = useApplicant();
+  const { addTeammates, isLoading, goToPreviousStep, currentApplication, successMessage } = useApplicant();
 
   const [emails, setEmails] = useState<string[]>(
     currentApplication?.teamMateInvites?.map((invite) => invite.email) || []
@@ -16,6 +17,15 @@ export default function TeamMembersForm() {
   const [newEmail, setNewEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [hasSubmitted, setHasSubmitted] = useState(false);
+
+  // Show celebration toast when application is successfully submitted
+  useEffect(() => {
+    if (successMessage && successMessage.includes('🎉') && hasSubmitted) {
+      showToast.success(successMessage);
+      setHasSubmitted(false); // Reset to prevent duplicate toasts
+    }
+  }, [successMessage, hasSubmitted]);
 
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,6 +67,12 @@ export default function TeamMembersForm() {
     }
 
     setIsSubmitting(submitApplication);
+    
+    // Track if this is a final submission for toast notification
+    if (submitApplication) {
+      setHasSubmitted(true);
+    }
+    
     await addTeammates(emails, submitApplication);
   };
 

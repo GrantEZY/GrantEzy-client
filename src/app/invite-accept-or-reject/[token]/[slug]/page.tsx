@@ -9,7 +9,9 @@
 import { Suspense } from "react";
 import { CoApplicantInvite } from "@/components/co-applicant";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { InviteStatus } from "@/types/co-applicant.types";
+import { ToastProvider } from "@/components/ui/ToastNew";
 
 interface PageProps {
   params: {
@@ -38,6 +40,7 @@ function InviteLoading() {
 
 function InvitePageContent({ params }: PageProps) {
   const { token, slug } = params;
+  const searchParams = useSearchParams();
   const [inviteStatus, setInviteStatus] = useState<InviteStatus | null>(null);
 
   const handleStatusUpdate = (status: InviteStatus) => {
@@ -76,18 +79,26 @@ function InvitePageContent({ params }: PageProps) {
           
           <p className="text-gray-600 mb-6">
             {isAccepted 
-              ? 'You have successfully joined the team. You can now log in and collaborate on the grant application.'
+              ? 'You have successfully joined the team. You can now log in or create an account to collaborate on the grant application.'
               : 'You have declined the invitation. Thank you for your response.'
             }
           </p>
           
           {isAccepted && (
-            <button
-              onClick={() => window.location.href = '/login?redirect=/co-applicant'}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Go to Login
-            </button>
+            <div className="space-y-3">
+              <button
+                onClick={() => window.location.href = `/co-applicant/register?token=${token}&slug=${slug}`}
+                className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+              >
+                Create Account & Join Team
+              </button>
+              <button
+                onClick={() => window.location.href = `/login?redirect=/co-applicant/dashboard`}
+                className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
+              >
+                I Already Have an Account
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -107,8 +118,10 @@ function InvitePageContent({ params }: PageProps) {
 
 export default function CoApplicantInviteRoute({ params }: PageProps) {
   return (
-    <Suspense fallback={<InviteLoading />}>
-      <InvitePageContent params={params} />
-    </Suspense>
+    <ToastProvider>
+      <Suspense fallback={<InviteLoading />}>
+        <InvitePageContent params={params} />
+      </Suspense>
+    </ToastProvider>
   );
 }
