@@ -115,6 +115,15 @@ export interface GetProgramCyclesResponse {
   };
 }
 
+// Get Assigned Program
+export interface GetAssignedProgramResponse {
+  status: number;
+  message: string;
+  res: {
+    program: Program;
+  };
+}
+
 // Update Cycle
 export interface UpdateCycleRequest {
   id: string;

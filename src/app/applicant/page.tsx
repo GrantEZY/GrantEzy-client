@@ -22,19 +22,36 @@ export default function ApplicantDashboard() {
         setIsLoading(true);
         setError("");
         
-        // Fetch programs from backend
+        // Fetch programs from backend with larger page size to get more programs and cycles
         const response = await publicService.getActiveProgramCycles({
           page: 1,
-          numberOfResults: 100,
+          numberOfResults: 200, // Increased to get more programs
         });
         
-        // DEBUG: Let's see what the main programs API returns
-        console.log("Programs API full response:", response);
-
+        // DEBUG: Let's analyze what the programs API returns
+        console.log("📡 Programs API full response:", response);
+        
         if (response.res && response.res.programs) {
+          console.log(`📊 Found ${response.res.programs.length} programs`);
+          
+          // Debug each program to see how many cycles they have
+          response.res.programs.forEach((program: any, index: number) => {
+            const cycleCount = program.cycles ? program.cycles.length : 0;
+            console.log(`📋 Program ${index + 1}: "${program.details?.name}" has ${cycleCount} cycles`);
+            
+            if (program.cycles && program.cycles.length > 0) {
+              program.cycles.forEach((cycle: any, cycleIndex: number) => {
+                console.log(`  📅 Cycle ${cycleIndex + 1}: Status="${cycle.status}", Slug="${cycle.slug}"`);
+              });
+            }
+          });
+          
           setPrograms(response.res.programs);
+        } else {
+          console.log("❌ No programs found in response");
         }
       } catch (err) {
+        console.error("💥 Failed to fetch programs:", err);
         setError(err instanceof Error ? err.message : "Failed to load programs");
       } finally {
         setIsLoading(false);
@@ -48,22 +65,42 @@ export default function ApplicantDashboard() {
     try {
       setIsLoadingCycles(true);
       
-      // WORKAROUND: Since we can't access PM API, try different approaches to get all cycles
-      console.log("Trying multiple approaches to get all cycles for program:", program.slug);
+      console.log("Fetching all available cycles for program:", program.details?.name);
       
-      // Approach 1: Try the main programs API with specific program filter
       const allCycles: ProgramCycle[] = [];
       
-      try {
-        console.log("Approach 1: Trying programs API with programSlug filter...");
-        const programSpecificResponse = await fetch(`http://localhost:5000/api/v1/public/active-program-cycles?page=1&numberOfResults=100&programSlug=${program.slug}`);
-        const programSpecificData = await programSpecificResponse.json();
-        console.log("Program-specific API response:", programSpecificData);
+      // Strategy 1: Use cycles already loaded with the program
+      if (program.cycles && Array.isArray(program.cycles) && program.cycles.length > 0) {
+        console.log(`✅ Found ${program.cycles.length} cycles in program object`);
+        program.cycles.forEach((cycle: any) => {
+          allCycles.push({
+            ...cycle,
+            program: {
+              id: program.id,
+              name: program.details?.name || "Unnamed Program",
+              description: program.details?.description || "",
+            }
+          });
+        });
+      } else {
+        console.log("📡 No cycles in program object, trying alternative approaches...");
         
-        if (programSpecificData.res?.programs) {
-          programSpecificData.res.programs.forEach((prog: any) => {
-            if (prog.cycles && Array.isArray(prog.cycles)) {
-              prog.cycles.forEach((cycle: any) => {
+        // Strategy 2: Try to get cycles using programSlug filter
+        try {
+          console.log(`📡 Fetching cycles specifically for program slug: ${program.slug}`);
+          const response = await publicService.getActiveProgramCycles({
+            programSlug: program.slug,
+            page: 1,
+            numberOfResults: 50,
+          });
+          
+          console.log("📡 Program-specific cycles response:", response);
+          
+          if (response.res && response.res.programs && response.res.programs.length > 0) {
+            const foundProgram = response.res.programs[0]; // Should be our program
+            if (foundProgram.cycles && foundProgram.cycles.length > 0) {
+              console.log(`✅ Found ${foundProgram.cycles.length} cycles via program-specific API`);
+              foundProgram.cycles.forEach((cycle: any) => {
                 allCycles.push({
                   ...cycle,
                   program: {
@@ -74,74 +111,54 @@ export default function ApplicantDashboard() {
                 });
               });
             }
-          });
-        }
-      } catch (err) {
-        console.log("Approach 1 failed:", err);
-      }
-      
-      // Approach 2: Try the cycle details endpoint (fallback - only gets 1 cycle)
-      if (allCycles.length === 0) {
-        console.log("Approach 2: Fallback to cycle details endpoint...");
-        const cycleResponse = await fetch(`http://localhost:5000/api/v1/public/program-cycle-details?slug=${program.slug}`);
-        const cycleData = await cycleResponse.json();
-        
-        if (cycleData.status === 200 && cycleData.res?.cycle) {
-          const cycle = {
-            ...cycleData.res.cycle,
-            program: {
-              id: program.id,
-              name: program.details?.name || "Unnamed Program",
-              description: program.details?.description || "",
-            }
-          };
-          allCycles.push(cycle);
-        }
-      }
-      
-      // TODO: The backend should provide an endpoint to get ALL cycles for a program
-      // For now, we only get the active cycle, but the PM should be able to see multiple cycles
-      // This is a backend limitation that needs to be addressed
-      
-      // SOLUTION: Use the same PM API approach that works in PM dashboard
-      // This will return ALL cycles for the program, not just the active one
-      try {
-        console.log("Fetching ALL cycles for program using PM API approach...");
-        const pmResponse = await fetch(`http://localhost:5000/api/v1/pm/get-program-cycles?page=1&numberOfResults=100`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`,
-            'Content-Type': 'application/json'
           }
-        });
-        const pmData = await pmResponse.json();
-        
-        // If we get cycles from PM API, use those instead
-        if (pmData.status === 200 && pmData.res?.cycles && Array.isArray(pmData.res.cycles)) {
-          console.log(`✅ PM API found ${pmData.res.cycles.length} cycles for this program`);
-          const pmCycles = pmData.res.cycles.map((cycle: any) => ({
-            ...cycle,
-            program: {
-              id: program.id,
-              name: program.details?.name || "Unnamed Program",
-              description: program.details?.description || "",
-            }
-          }));
-          setProgramCycles(pmCycles);
-          return; // Use PM API data instead (SUCCESS!)
-        } else {
-          console.log("PM API response not successful:", pmData);
+        } catch (programSpecificError) {
+          console.error("❌ Failed to fetch program-specific cycles:", programSpecificError);
         }
-      } catch (pmError) {
-        console.log("PM API failed, falling back to public API:", pmError);
+        
+        // Strategy 3: Fallback to cycle details endpoint (gets at least one cycle)
+        if (allCycles.length === 0) {
+          console.log("📡 Trying cycle details endpoint as final fallback...");
+          try {
+            const cycleDetails = await publicService.getProgramCycleDetails(program.slug);
+            console.log("📡 Cycle details response:", cycleDetails);
+            
+            if (cycleDetails.status === 200 && cycleDetails.res) {
+              console.log("✅ Found 1 cycle via cycle details endpoint");
+              console.log("📋 Raw cycle data:", cycleDetails.res);
+              
+              allCycles.push({
+                ...cycleDetails.res,
+                program: {
+                  id: program.id,
+                  name: program.details?.name || "Unnamed Program", 
+                  description: program.details?.description || "",
+                }
+              });
+            }
+          } catch (detailsError) {
+            console.error("❌ Failed to fetch cycle details:", detailsError);
+          }
+        }
       }
       
-      console.log(`📊 RESULT: Found ${allCycles.length} cycle(s) for program: ${program.details?.name}`);
-      if (allCycles.length === 1) {
-        console.log("⚠️  Note: Only 1 cycle found - this might be due to public API limitations.");
-      }
+      // Log all cycle statuses to understand what we're working with
+      console.log("📊 All cycles found:");
+      allCycles.forEach((cycle, index) => {
+        console.log(`  Cycle ${index + 1}: "${cycle.title}" - Status: "${cycle.status}" - ID: ${cycle.id} - Slug: ${cycle.slug}`);
+      });
+
+      // For now, show ALL cycles regardless of status so user can see them
+      // We can adjust filtering later based on what statuses we actually see
+      console.log(`📊 FINAL RESULT: Showing all ${allCycles.length} cycles found`);
       setProgramCycles(allCycles);
+      
+      if (allCycles.length === 0) {
+        console.log("❌ No cycles found for this program at all");
+      }
+      
     } catch (e) {
-      console.error("Failed to fetch cycles for program:", e);
+      console.error("💥 Failed to fetch cycles for program:", e);
       setProgramCycles([]);
     } finally {
       setIsLoadingCycles(false);
@@ -215,12 +232,16 @@ export default function ApplicantDashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {programs.map((program) => (
-                  <div
-                    key={program.id}
-                    className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                    onClick={() => handleProgramSelect(program)}
-                  >
+                {programs.map((program, index) => {
+                  // Ensure unique key - use id, slug, or fallback to index
+                  const uniqueKey = program.id || program.slug || `program-${index}`;
+                  
+                  return (
+                    <div
+                      key={uniqueKey}
+                      className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleProgramSelect(program)}
+                    >
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900">
@@ -245,7 +266,8 @@ export default function ApplicantDashboard() {
                       </button>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )
           ) : (
@@ -263,13 +285,16 @@ export default function ApplicantDashboard() {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {programCycles.map((cycle) => {
+                {programCycles.map((cycle, index) => {
                   const isActive = isActiveStatus(cycle.status);
                   const startDate = cycle.duration?.startDate || cycle.startDate;
                   const endDate = cycle.duration?.endDate || cycle.endDate;
+                  
+                  // Ensure unique key - use id, slug, or fallback to index
+                  const uniqueKey = cycle.id || cycle.slug || `cycle-${index}`;
 
                   return (
-                    <div key={cycle.id || cycle.slug} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+                    <div key={uniqueKey} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-gray-900">

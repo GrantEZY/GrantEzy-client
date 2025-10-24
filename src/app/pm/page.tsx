@@ -11,21 +11,38 @@ import CreateCycleModal from "@/components/pm/CreateCycleModal";
 
 export default function PMDashboard() {
   const {
+    program,
+    isProgramLoading,
+    programError,
+    getAssignedProgram,
     cycles,
     cyclesPagination,
     isCyclesLoading,
     cyclesError,
+    isProgramAssigned,
     getProgramCycles,
     deleteCycle,
+    clearCycles,
   } = usePm();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-  // Load cycles on mount - backend automatically determines the program from logged-in PM user
+  // Load program and cycles on mount
   useEffect(() => {
-    loadCycles(1);
+    loadProgramAndCycles();
   }, []);
+
+  const loadProgramAndCycles = async () => {
+    try {
+      // First, get the assigned program
+      await getAssignedProgram();
+      // Then load cycles
+      await loadCycles(1);
+    } catch (error) {
+      console.error("Failed to load program and cycles:", error);
+    }
+  };
 
   const loadCycles = async (page: number) => {
     try {
@@ -92,15 +109,24 @@ export default function PMDashboard() {
     }).format(amount);
   };
 
-  // Extract program info from the first cycle (all cycles belong to the same program for a PM)
-  const programInfo = cycles && cycles.length > 0 ? cycles[0].program : null;
+  // Derived states for better readability
+  const isAssignedToProgram = isProgramAssigned === true;
+  const isNotAssigned = isProgramAssigned === false;
+  const isLoading = isProgramLoading || isCyclesLoading;
 
   return (
     <AuthGuard>
       <PMLayout>
         <div className="space-y-6">
-          {/* Program Information Header */}
-          {programInfo ? (
+          {/* Loading State */}
+          {isLoading ? (
+            <div className="rounded-lg bg-gray-50 border border-gray-200 p-6">
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <span className="ml-3 text-gray-600">Loading program details...</span>
+              </div>
+            </div>
+          ) : program ? (
             <div className="rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -114,10 +140,10 @@ export default function PMDashboard() {
                     </div>
                     <div>
                       <h1 className="text-2xl font-bold text-gray-900">
-                        {programInfo.details?.name || "Program Management"}
+                        {program.details?.name || "Program Management"}
                       </h1>
                       <p className="text-gray-600">
-                        {programInfo.details?.description || "Innovation Program Management"}
+                        {program.details?.description || "Innovation Program Management"}
                       </p>
                     </div>
                   </div>
@@ -150,7 +176,7 @@ export default function PMDashboard() {
                   </div>
                   <div>
                     <div className="text-lg font-semibold text-gray-900">
-                      {formatCurrency(programInfo.budget?.amount || 0, programInfo.budget?.currency || "INR")}
+                      {formatCurrency(program.budget?.amount || 0, program.budget?.currency || "INR")}
                     </div>
                     <div className="text-xs text-gray-600">Total Budget</div>
                   </div>
@@ -164,7 +190,7 @@ export default function PMDashboard() {
                   </div>
                   <div>
                     <div className="text-lg font-semibold text-gray-900">
-                      {programInfo.minTRL} - {programInfo.maxTRL}
+                      {program.minTRL} - {program.maxTRL}
                     </div>
                     <div className="text-xs text-gray-600">TRL Range</div>
                   </div>
@@ -178,14 +204,14 @@ export default function PMDashboard() {
                   </div>
                   <div>
                     <div className="text-lg font-semibold text-gray-900">
-                      {programInfo.manager ? `${programInfo.manager.person.firstName} ${programInfo.manager.person.lastName}` : "You"}
+                      {program.manager ? `${program.manager.person.firstName} ${program.manager.person.lastName}` : "You"}
                     </div>
                     <div className="text-xs text-gray-600">Program Manager</div>
                   </div>
                 </div>
               </div>
             </div>
-          ) : !isCyclesLoading && (
+          ) : isNotAssigned && !isLoading ? (
             <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-6">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -199,7 +225,7 @@ export default function PMDashboard() {
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
 
           <div className="flex items-center justify-between">
             <div>

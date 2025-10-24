@@ -8,6 +8,7 @@ import {
   CreateCycleResponse,
   DeleteCycleRequest,
   DeleteCycleResponse,
+  GetAssignedProgramResponse,
   GetProgramCyclesRequest,
   GetProgramCyclesResponse,
   UpdateCycleRequest,
@@ -15,6 +16,17 @@ import {
 } from "../types/pm.types";
 
 export class PMService {
+  // ============= Program Management =============
+
+  /**
+   * Get the program assigned to the current PM
+   */
+  async getAssignedProgram(): Promise<GetAssignedProgramResponse> {
+    return httpClient.get<GetAssignedProgramResponse>(
+      API_CONFIG.ENDPOINTS.PM.GET_ASSIGNED_PROGRAM,
+    );
+  }
+
   // ============= Cycle Management =============
 
   /**

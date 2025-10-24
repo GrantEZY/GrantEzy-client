@@ -5,6 +5,7 @@ import { create } from "zustand";
 
 import { pmService } from "../services/pm.service";
 import { PaginationMeta } from "../types/admin.types";
+import { Program } from "../types/gcv.types";
 import {
   CreateCycleRequest,
   Cycle,
@@ -14,17 +15,29 @@ import {
 } from "../types/pm.types";
 
 interface PMState {
+  // Program state
+  program: Program | null;
+  isProgramLoading: boolean;
+  programError: string | null;
+  
   // Cycles state
   cycles: Cycle[];
   cyclesPagination: PaginationMeta | null;
   isCyclesLoading: boolean;
   cyclesError: string | null;
+  
+  // Program assignment state
+  isProgramAssigned: boolean | null; // null = unknown, true = assigned, false = not assigned
 
   // Current selected program for cycle management
   selectedProgramId: string | null;
 }
 
 interface PMActions {
+  // Program actions
+  getAssignedProgram: () => Promise<void>;
+  clearProgram: () => void;
+  
   // Program selection
   setSelectedProgramId: (programId: string | null) => void;
 
@@ -44,11 +57,71 @@ type PMStore = PMState & PMActions;
 
 export const usePMStore = create<PMStore>((set, get) => ({
   // Initial state
+  program: null,
+  isProgramLoading: false,
+  programError: null,
   cycles: [],
   cyclesPagination: null,
   isCyclesLoading: false,
   cyclesError: null,
+  isProgramAssigned: null, // null = unknown, true = assigned, false = not assigned
   selectedProgramId: null,
+
+  // ============= Program Actions =============
+
+  getAssignedProgram: async () => {
+    set({ isProgramLoading: true, programError: null });
+    try {
+      const response = await pmService.getAssignedProgram();
+
+      if (response.status === 200) {
+        set({
+          program: response.res.program,
+          isProgramLoading: false,
+          programError: null,
+          isProgramAssigned: true,
+        });
+      } else {
+        throw new Error(response.message || "Failed to fetch assigned program");
+      }
+    } catch (error) {
+      let errorMessage = "Failed to fetch assigned program";
+      let isNotAssigned = false;
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = String(error.message);
+        // Check if this is a "not assigned" error (403 with specific message)
+        if (errorMessage.includes("Only Program Manager can access the Program")) {
+          isNotAssigned = true;
+        }
+      }
+
+      set({
+        program: null,
+        isProgramLoading: false,
+        programError: errorMessage,
+        isProgramAssigned: isNotAssigned ? false : null,
+      });
+
+      console.error("Get assigned program error:", error);
+      throw error;
+    }
+  },
+
+  clearProgram: () => {
+    set({
+      program: null,
+      isProgramLoading: false,
+      programError: null,
+      isProgramAssigned: null,
+    });
+  },
 
   // ============= Program Selection =============
 
@@ -124,12 +197,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
           cyclesPagination: pagination,
           isCyclesLoading: false,
           cyclesError: null,
+          isProgramAssigned: true, // If we get cycles successfully, PM is assigned to a program
         });
       } else {
         throw new Error(response.message || "Failed to fetch program cycles");
       }
     } catch (error) {
       let errorMessage = "Failed to fetch program cycles";
+      let isNotAssigned = false;
 
       if (error instanceof Error) {
         errorMessage = error.message;
@@ -139,13 +214,19 @@ export const usePMStore = create<PMStore>((set, get) => ({
         "message" in error
       ) {
         errorMessage = String(error.message);
+        // Check if this is a "not assigned" error (403 with specific message)
+        if (errorMessage.includes("Only Program Manager can access the Program")) {
+          isNotAssigned = true;
+        }
       }
 
       set({
+        program: null,
         cycles: [],
         cyclesPagination: null,
         isCyclesLoading: false,
         cyclesError: errorMessage,
+        isProgramAssigned: isNotAssigned ? false : null, // false if not assigned, null if other error
       });
 
       console.error("Get program cycles error:", error);
@@ -254,10 +335,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
   // Clear all
   clearAll: () => {
     set({
+      program: null,
+      isProgramLoading: false,
+      programError: null,
       cycles: [],
       cyclesPagination: null,
       isCyclesLoading: false,
       cyclesError: null,
+      isProgramAssigned: null,
       selectedProgramId: null,
     });
   },

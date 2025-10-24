@@ -40,6 +40,8 @@ export const API_CONFIG = {
       GET_APPLICATION_DETAILS: "/gcv/get-application-details",
     },
     PM: {
+      // PM Program Management
+      GET_ASSIGNED_PROGRAM: "/pm/get-pm-program",
       // PM Cycle Management
       CREATE_CYCLE: "/pm/create-cycle",
       GET_PROGRAM_CYCLES: "/pm/get-program-cycles",

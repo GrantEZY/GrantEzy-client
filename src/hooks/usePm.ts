@@ -5,14 +5,26 @@
 import { usePMStore } from "../store/pm.store";
 
 export const usePm = () => {
+  // Program state
+  const program = usePMStore((state) => state.program);
+  const isProgramLoading = usePMStore((state) => state.isProgramLoading);
+  const programError = usePMStore((state) => state.programError);
+  
   // Cycles state
   const cycles = usePMStore((state) => state.cycles);
   const cyclesPagination = usePMStore((state) => state.cyclesPagination);
   const isCyclesLoading = usePMStore((state) => state.isCyclesLoading);
   const cyclesError = usePMStore((state) => state.cyclesError);
+  
+  // Program assignment state
+  const isProgramAssigned = usePMStore((state) => state.isProgramAssigned);
 
   // Current selected program
   const selectedProgramId = usePMStore((state) => state.selectedProgramId);
+
+  // Program actions
+  const getAssignedProgram = usePMStore((state) => state.getAssignedProgram);
+  const clearProgram = usePMStore((state) => state.clearProgram);
 
   // Program selection action
   const setSelectedProgramId = usePMStore(
@@ -31,6 +43,13 @@ export const usePm = () => {
   const clearAll = usePMStore((state) => state.clearAll);
 
   return {
+    // Program
+    program,
+    isProgramLoading,
+    programError,
+    getAssignedProgram,
+    clearProgram,
+    
     // Cycles
     cycles,
     cyclesPagination,
@@ -42,6 +61,9 @@ export const usePm = () => {
     deleteCycle,
     clearCycles,
     setCyclesError,
+
+    // Program assignment
+    isProgramAssigned,
 
     // Selected program
     selectedProgramId,
