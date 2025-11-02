@@ -22,6 +22,8 @@ const getRoleBasedRedirect = (role: string): string => {
       return "/applicant";
     case UserRoles.TEAM_MATE:
       return "/co-applicant";
+    case UserRoles.REVIEWER:
+      return "/reviewer";
     default:
       return "/";
   }
@@ -50,6 +52,8 @@ export default function LoginPage() {
       setRole(UserRoles.APPLICANT);
     } else if (redirect === "/co-applicant") {
       setRole(UserRoles.TEAM_MATE);
+    } else if (redirect === "/reviewer") {
+      setRole(UserRoles.REVIEWER);
     }
   }, [searchParams]);
 
@@ -256,6 +260,16 @@ export default function LoginPage() {
                 href="/login?redirect=/applicant"
               >
                 Login as Applicant
+              </Link>
+            </p>
+
+            <p className="mt-2 text-sm text-gray-600">
+              Review Applications?{" "}
+              <Link
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+                href="/login?redirect=/reviewer"
+              >
+                Login as Reviewer
               </Link>
             </p>
           </div>

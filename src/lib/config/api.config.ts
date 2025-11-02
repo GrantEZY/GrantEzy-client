@@ -76,6 +76,14 @@ export const API_CONFIG = {
       GET_TOKEN_DETAILS: "/co-applicant/get-token-details",
       UPDATE_INVITE_STATUS: "/co-applicant/update-user-invite-status",
     },
+    REVIEWER: {
+      // Reviewer Management
+      GET_TOKEN_DETAILS: "/reviewer/get-token-details",
+      UPDATE_INVITE_STATUS: "/reviewer/update-invite-status",
+      SUBMIT_REVIEW: "/reviewer/submit-application-review",
+      GET_USER_REVIEWS: "/reviewer/get-user-reviews",
+      GET_REVIEW_DETAILS: "/reviewer/get-review-details",
+    },
     PUBLIC: {
       // Public endpoints (no auth required)
       GET_ACTIVE_CYCLES: "/public/active-program-cycles",
