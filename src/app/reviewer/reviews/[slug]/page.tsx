@@ -110,6 +110,29 @@ export default function ReviewDetailsPage() {
           </div>
         ) : (
           <div className="space-y-6">
+            {/* Submit Review Button - Show for ASSIGNED reviews without submission */}
+            {currentReview.status === ReviewStatus.ASSIGNED && !currentReview.recommendation && (
+              <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-medium text-indigo-900">
+                      Ready to submit your review?
+                    </h3>
+                    <p className="mt-1 text-sm text-indigo-700">
+                      This review is awaiting your evaluation and recommendation.
+                    </p>
+                  </div>
+                  <button
+                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={() => router.push(`/reviewer/submit-review/${currentReview.applicationId}`)}
+                    type="button"
+                  >
+                    Submit Review
+                  </button>
+                </div>
+              </div>
+            )}
+
             {/* Review Status Card */}
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
               <h2 className="mb-4 text-xl font-semibold text-gray-900">

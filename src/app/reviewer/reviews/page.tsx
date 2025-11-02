@@ -174,12 +174,22 @@ export default function ReviewsPage() {
                         {new Date(review.updatedAt).toLocaleDateString()}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                        <Link
-                          className="text-blue-600 hover:text-blue-700"
-                          href={`/reviewer/reviews/${review.slug}`}
-                        >
-                          View Details
-                        </Link>
+                        <div className="flex items-center justify-end space-x-3">
+                          {review.status === "ASSIGNED" && !review.recommendation && (
+                            <Link
+                              className="text-indigo-600 hover:text-indigo-700"
+                              href={`/reviewer/submit-review/${review.applicationId}`}
+                            >
+                              Submit Review
+                            </Link>
+                          )}
+                          <Link
+                            className="text-blue-600 hover:text-blue-700"
+                            href={`/reviewer/reviews/${review.slug}`}
+                          >
+                            View Details
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ))}

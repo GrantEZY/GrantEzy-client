@@ -360,7 +360,11 @@ export default function PMDashboard() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {cycles.map((cycle: Cycle) => (
-                      <tr key={cycle.id} className="hover:bg-gray-50">
+                      <tr 
+                        key={cycle.id} 
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onClick={() => window.location.href = `/pm/cycles/${cycle.slug}`}
+                      >
                         <td className="whitespace-nowrap px-6 py-4">
                           <div className="text-sm font-medium text-gray-900">
                             Year {cycle.round.year}
@@ -395,12 +399,24 @@ export default function PMDashboard() {
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                          <button
-                            className="text-red-600 hover:text-red-900"
-                            onClick={() => handleDeleteCycle(cycle.id)}
-                          >
-                            Delete
-                          </button>
+                          <div className="flex items-center justify-end space-x-3">
+                            <Link
+                              href={`/pm/cycles/${cycle.slug}`}
+                              className="text-blue-600 hover:text-blue-900"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              View Details
+                            </Link>
+                            <button
+                              className="text-red-600 hover:text-red-900"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteCycle(cycle.id);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))}
