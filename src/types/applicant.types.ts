@@ -282,3 +282,50 @@ export interface ApplicationStepInfo {
   isCompleted: boolean;
   isActive: boolean;
 }
+
+// ============= User Applications List =============
+
+export interface UserApplication {
+  id: string;
+  userId: string;
+  cycleId: string;
+  stepNumber: number;
+  isSubmitted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  basicInfo?: BasicInfo;
+  cycle?: {
+    id: string;
+    slug: string;
+    title: string;
+    startDate: string;
+    endDate: string;
+    program?: {
+      id: string;
+      slug: string;
+      title: string;
+      description: string;
+    };
+  };
+}
+
+export interface GetUserApplicationsResponse {
+  status: number;
+  message: string;
+  res: {
+    applications: UserApplication[];
+  };
+}
+
+export interface GetUserCreatedApplicationDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    application: Application;
+  };
+}
+
+export interface DeleteApplicationResponse {
+  status: number;
+  message: string;
+}

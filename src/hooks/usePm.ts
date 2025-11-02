@@ -16,6 +16,31 @@ export const usePm = () => {
   const isCyclesLoading = usePMStore((state) => state.isCyclesLoading);
   const cyclesError = usePMStore((state) => state.cyclesError);
   
+  // Current cycle details
+  const currentCycle = usePMStore((state) => state.currentCycle);
+  const currentCycleApplications = usePMStore(
+    (state) => state.currentCycleApplications,
+  );
+  const isCycleDetailsLoading = usePMStore(
+    (state) => state.isCycleDetailsLoading,
+  );
+  
+  // Current application
+  const currentApplication = usePMStore((state) => state.currentApplication);
+  const isApplicationLoading = usePMStore(
+    (state) => state.isApplicationLoading,
+  );
+  
+  // Reviews state
+  const reviews = usePMStore((state) => state.reviews);
+  const reviewsPagination = usePMStore((state) => state.reviewsPagination);
+  const isReviewsLoading = usePMStore((state) => state.isReviewsLoading);
+  const reviewsError = usePMStore((state) => state.reviewsError);
+  
+  // Current review
+  const currentReview = usePMStore((state) => state.currentReview);
+  const isReviewLoading = usePMStore((state) => state.isReviewLoading);
+  
   // Program assignment state
   const isProgramAssigned = usePMStore((state) => state.isProgramAssigned);
 
@@ -34,10 +59,27 @@ export const usePm = () => {
   // Cycle actions
   const createCycle = usePMStore((state) => state.createCycle);
   const getProgramCycles = usePMStore((state) => state.getProgramCycles);
+  const getCycleDetails = usePMStore((state) => state.getCycleDetails);
   const updateCycle = usePMStore((state) => state.updateCycle);
   const deleteCycle = usePMStore((state) => state.deleteCycle);
   const clearCycles = usePMStore((state) => state.clearCycles);
   const setCyclesError = usePMStore((state) => state.setCyclesError);
+  
+  // Application actions
+  const getApplicationDetails = usePMStore(
+    (state) => state.getApplicationDetails,
+  );
+  const clearApplication = usePMStore((state) => state.clearApplication);
+  
+  // Reviewer actions
+  const inviteReviewer = usePMStore((state) => state.inviteReviewer);
+  
+  // Review actions
+  const getApplicationReviews = usePMStore(
+    (state) => state.getApplicationReviews,
+  );
+  const getReviewDetails = usePMStore((state) => state.getReviewDetails);
+  const clearReviews = usePMStore((state) => state.clearReviews);
 
   // Clear all
   const clearAll = usePMStore((state) => state.clearAll);
@@ -57,10 +99,36 @@ export const usePm = () => {
     cyclesError,
     createCycle,
     getProgramCycles,
+    getCycleDetails,
     updateCycle,
     deleteCycle,
     clearCycles,
     setCyclesError,
+    
+    // Cycle details
+    currentCycle,
+    currentCycleApplications,
+    isCycleDetailsLoading,
+    
+    // Application
+    currentApplication,
+    isApplicationLoading,
+    getApplicationDetails,
+    clearApplication,
+    
+    // Reviewer
+    inviteReviewer,
+    
+    // Reviews
+    reviews,
+    reviewsPagination,
+    isReviewsLoading,
+    reviewsError,
+    currentReview,
+    isReviewLoading,
+    getApplicationReviews,
+    getReviewDetails,
+    clearReviews,
 
     // Program assignment
     isProgramAssigned,

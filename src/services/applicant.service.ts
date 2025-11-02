@@ -116,6 +116,39 @@ export class ApplicantService {
       `${API_CONFIG.ENDPOINTS.APPLICANT.GET_APPLICATION_WITH_CYCLE}?cycleSlug=${cycleSlug}`,
     );
   }
+
+  /**
+   * Get all applications for the current user
+   * Returns list of all applications (drafts and submitted)
+   */
+  async getUserApplications(): Promise<any> {
+    return httpClient.get<any>(
+      API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_APPLICATIONS,
+    );
+  }
+
+  /**
+   * Get detailed information about a specific application created by user
+   * Used for viewing/editing draft applications
+   */
+  async getUserCreatedApplicationDetails(
+    applicationId: string,
+  ): Promise<any> {
+    return httpClient.get<any>(
+      `${API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_APPLICATION}?applicationId=${applicationId}`,
+    );
+  }
+
+  /**
+   * Delete a draft application
+   * Only draft applications can be deleted, not submitted ones
+   */
+  async deleteApplication(applicationId: string): Promise<any> {
+    return httpClient.delete<any>(
+      API_CONFIG.ENDPOINTS.APPLICANT.DELETE_APPLICATION,
+      { applicationId },
+    );
+  }
 }
 
 export const applicantService = new ApplicantService();

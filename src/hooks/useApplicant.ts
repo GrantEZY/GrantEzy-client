@@ -22,6 +22,8 @@ export const useApplicant = () => {
   );
   const currentStep = useApplicantStore((state) => state.currentStep);
   const applicationSteps = useApplicantStore((state) => state.applicationSteps);
+  const userApplications = useApplicantStore((state) => state.userApplications);
+  const isLoadingApplications = useApplicantStore((state) => state.isLoadingApplications);
   const isLoading = useApplicantStore((state) => state.isLoading);
   const error = useApplicantStore((state) => state.error);
   const successMessage = useApplicantStore((state) => state.successMessage);
@@ -47,6 +49,12 @@ export const useApplicant = () => {
   );
   const addApplicationTeammates = useApplicantStore(
     (state) => state.addApplicationTeammates,
+  );
+  const fetchUserApplications = useApplicantStore(
+    (state) => state.fetchUserApplications,
+  );
+  const deleteUserApplication = useApplicantStore(
+    (state) => state.deleteUserApplication,
   );
   const setCurrentStep = useApplicantStore((state) => state.setCurrentStep);
   const goToNextStep = useApplicantStore((state) => state.goToNextStep);
@@ -179,6 +187,8 @@ export const useApplicant = () => {
     currentApplication,
     currentStep,
     applicationSteps,
+    userApplications,
+    isLoadingApplications,
     isLoading,
     error,
     successMessage,
@@ -198,6 +208,10 @@ export const useApplicant = () => {
     addRisksAndMilestones: handleAddRisksAndMilestones,
     addDocuments: handleAddDocuments,
     addTeammates: handleAddTeammates,
+    
+    // User applications management
+    fetchUserApplications,
+    deleteUserApplication,
     
     // Navigation
     setCurrentStep,

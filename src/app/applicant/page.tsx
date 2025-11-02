@@ -5,10 +5,19 @@ import Link from "next/link";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import ApplicantLayout from "@/components/layout/ApplicantLayout";
 import { useAuth } from "@/hooks/useAuth";
+import { useApplicant } from "@/hooks/useApplicant";
 import { publicService, ProgramCycle } from "@/services/public.service";
 
 export default function ApplicantDashboard() {
   const { user } = useAuth();
+  const { 
+    userApplications, 
+    isLoadingApplications, 
+    fetchUserApplications,
+    deleteUserApplication,
+    error: applicantError 
+  } = useApplicant();
+  
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [programs, setPrograms] = useState<any[]>([]);
@@ -17,41 +26,37 @@ export default function ApplicantDashboard() {
   const [isLoadingCycles, setIsLoadingCycles] = useState(false);
 
   useEffect(() => {
+    // Fetch user applications on component mount
+    fetchUserApplications();
+  }, []);
+
+  useEffect(() => {
     const fetchPrograms = async () => {
       try {
         setIsLoading(true);
         setError("");
         
-        // Fetch programs from backend with larger page size to get more programs and cycles
         const response = await publicService.getActiveProgramCycles({
           page: 1,
-          numberOfResults: 200, // Increased to get more programs
+          numberOfResults: 200,
         });
         
-        // DEBUG: Let's analyze what the programs API returns
-        console.log("📡 Programs API full response:", response);
+        console.log("=== BACKEND RESPONSE DEBUG ===");
+        console.log("Full response:", JSON.stringify(response, null, 2));
+        console.log("Programs array:", response.res?.programs);
         
         if (response.res && response.res.programs) {
-          console.log(`📊 Found ${response.res.programs.length} programs`);
-          
-          // Debug each program to see how many cycles they have
           response.res.programs.forEach((program: any, index: number) => {
-            const cycleCount = program.cycles ? program.cycles.length : 0;
-            console.log(`📋 Program ${index + 1}: "${program.details?.name}" has ${cycleCount} cycles`);
-            
-            if (program.cycles && program.cycles.length > 0) {
-              program.cycles.forEach((cycle: any, cycleIndex: number) => {
-                console.log(`  📅 Cycle ${cycleIndex + 1}: Status="${cycle.status}", Slug="${cycle.slug}"`);
-              });
-            }
+            console.log(`Program ${index + 1}:`, {
+              name: program.details?.name,
+              slug: program.slug,
+              cycles: program.cycles,
+              cyclesCount: program.cycles?.length || 0
+            });
           });
-          
           setPrograms(response.res.programs);
-        } else {
-          console.log("❌ No programs found in response");
         }
       } catch (err) {
-        console.error("💥 Failed to fetch programs:", err);
         setError(err instanceof Error ? err.message : "Failed to load programs");
       } finally {
         setIsLoading(false);
@@ -65,100 +70,35 @@ export default function ApplicantDashboard() {
     try {
       setIsLoadingCycles(true);
       
-      console.log("Fetching all available cycles for program:", program.details?.name);
-      
-      const allCycles: ProgramCycle[] = [];
-      
-      // Strategy 1: Use cycles already loaded with the program
-      if (program.cycles && Array.isArray(program.cycles) && program.cycles.length > 0) {
-        console.log(`✅ Found ${program.cycles.length} cycles in program object`);
-        program.cycles.forEach((cycle: any) => {
-          allCycles.push({
-            ...cycle,
-            program: {
-              id: program.id,
-              name: program.details?.name || "Unnamed Program",
-              description: program.details?.description || "",
-            }
-          });
-        });
-      } else {
-        console.log("📡 No cycles in program object, trying alternative approaches...");
-        
-        // Strategy 2: Try to get cycles using programSlug filter
-        try {
-          console.log(`📡 Fetching cycles specifically for program slug: ${program.slug}`);
-          const response = await publicService.getActiveProgramCycles({
-            programSlug: program.slug,
-            page: 1,
-            numberOfResults: 50,
-          });
-          
-          console.log("📡 Program-specific cycles response:", response);
-          
-          if (response.res && response.res.programs && response.res.programs.length > 0) {
-            const foundProgram = response.res.programs[0]; // Should be our program
-            if (foundProgram.cycles && foundProgram.cycles.length > 0) {
-              console.log(`✅ Found ${foundProgram.cycles.length} cycles via program-specific API`);
-              foundProgram.cycles.forEach((cycle: any) => {
-                allCycles.push({
-                  ...cycle,
-                  program: {
-                    id: program.id,
-                    name: program.details?.name || "Unnamed Program",
-                    description: program.details?.description || "",
-                  }
-                });
-              });
-            }
-          }
-        } catch (programSpecificError) {
-          console.error("❌ Failed to fetch program-specific cycles:", programSpecificError);
-        }
-        
-        // Strategy 3: Fallback to cycle details endpoint (gets at least one cycle)
-        if (allCycles.length === 0) {
-          console.log("📡 Trying cycle details endpoint as final fallback...");
-          try {
-            const cycleDetails = await publicService.getProgramCycleDetails(program.slug);
-            console.log("📡 Cycle details response:", cycleDetails);
-            
-            if (cycleDetails.status === 200 && cycleDetails.res) {
-              console.log("✅ Found 1 cycle via cycle details endpoint");
-              console.log("📋 Raw cycle data:", cycleDetails.res);
-              
-              allCycles.push({
-                ...cycleDetails.res,
-                program: {
-                  id: program.id,
-                  name: program.details?.name || "Unnamed Program", 
-                  description: program.details?.description || "",
-                }
-              });
-            }
-          } catch (detailsError) {
-            console.error("❌ Failed to fetch cycle details:", detailsError);
-          }
-        }
-      }
-      
-      // Log all cycle statuses to understand what we're working with
-      console.log("📊 All cycles found:");
-      allCycles.forEach((cycle, index) => {
-        console.log(`  Cycle ${index + 1}: "${cycle.title}" - Status: "${cycle.status}" - ID: ${cycle.id} - Slug: ${cycle.slug}`);
+      console.log("=== FETCHING CYCLES FOR PROGRAM ===");
+      console.log("Selected program:", {
+        name: program.details?.name,
+        slug: program.slug,
+        hasCycles: !!program.cycles,
+        cyclesCount: program.cycles?.length || 0,
+        cyclesData: program.cycles
       });
+      
+      // Use the cycles array from the program object (now loaded by backend)
+      const cycles = program.cycles || [];
+      
+      console.log("Cycles found:", cycles.length);
+      
+      // Map cycles to include program information
+      const allCycles: ProgramCycle[] = cycles.map((cycle: any) => ({
+        ...cycle,
+        program: {
+          id: program.id,
+          name: program.details?.name || "Unnamed Program", 
+          description: program.details?.description || "",
+        }
+      }));
 
-      // For now, show ALL cycles regardless of status so user can see them
-      // We can adjust filtering later based on what statuses we actually see
-      console.log(`📊 FINAL RESULT: Showing all ${allCycles.length} cycles found`);
+      console.log("Mapped cycles:", allCycles);
       setProgramCycles(allCycles);
       
-      if (allCycles.length === 0) {
-        console.log("❌ No cycles found for this program at all");
-      }
-      
     } catch (e) {
-      console.error("💥 Failed to fetch cycles for program:", e);
+      console.error("Error in fetchProgramCycles:", e);
       setProgramCycles([]);
     } finally {
       setIsLoadingCycles(false);
@@ -282,6 +222,9 @@ export default function ApplicantDashboard() {
                 <p className="mt-1 text-sm text-gray-500">
                   This program currently has no active cycles open for applications.
                 </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Note: The system currently shows only the active cycle per program.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -338,12 +281,101 @@ export default function ApplicantDashboard() {
 
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">My Applications</h2>
-          <div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No Applications Yet</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              You haven't submitted any applications yet. Apply to an open cycle to get started.
-            </p>
-          </div>
+          
+          {isLoadingApplications ? (
+            <div className="rounded-lg border border-gray-200 p-12 text-center">
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              </div>
+              <p className="mt-4 text-sm text-gray-500">Loading your applications...</p>
+            </div>
+          ) : userApplications && userApplications.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {userApplications.map((application) => {
+                const statusColor = application.isSubmitted 
+                  ? "bg-green-100 text-green-800" 
+                  : "bg-yellow-100 text-yellow-800";
+                const statusText = application.isSubmitted ? "Submitted" : "Draft";
+                
+                return (
+                  <div
+                    key={application.id}
+                    className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {application.basicInfo?.title || "Untitled Application"}
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-600">
+                          {application.cycle?.program?.title || "Unknown Program"}
+                        </p>
+                      </div>
+                      <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}>
+                        {statusText}
+                      </span>
+                    </div>
+
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Cycle:</span> {application.cycle?.title || "N/A"}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Step {application.stepNumber} of 7
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex items-center text-xs text-gray-500">
+                      <span>
+                        Created: {new Date(application.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <div className="mt-6 flex gap-2">
+                      {!application.isSubmitted && (
+                        <>
+                          <Link
+                            href={`/applicant/new-application?cycle=${application.cycle?.slug}`}
+                            className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 text-center"
+                          >
+                            Continue
+                          </Link>
+                          <button
+                            onClick={async () => {
+                              if (confirm("Are you sure you want to delete this draft application?")) {
+                                const success = await deleteUserApplication(application.id);
+                                if (success) {
+                                  // Applications list will be updated automatically by the store
+                                }
+                              }
+                            }}
+                            className="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+                      {application.isSubmitted && (
+                        <Link
+                          href={`/applicant/application/${application.id}`}
+                          className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 text-center"
+                        >
+                          View Details
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No Applications Yet</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                You haven't submitted any applications yet. Apply to an open cycle to get started.
+              </p>
+            </div>
+          )}
         </div>
       </ApplicantLayout>
     </AuthGuard>

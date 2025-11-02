@@ -210,3 +210,143 @@ export interface RecentActivity {
   programName?: string;
   cycleName?: string;
 }
+
+// ============= Get Cycle Details =============
+
+export interface GetCycleDetailsRequest {
+  cycleSlug: string;
+}
+
+export interface CycleApplication {
+  id: string;
+  slug: string;
+  applicantId: string;
+  cycleId: string;
+  status: string;
+  stepNumber: number;
+  createdAt: string;
+  updatedAt: string;
+  basicInfo?: {
+    title: string;
+    summary: string;
+    problem: string;
+    solution: string;
+    innovation: string;
+  };
+  applicant?: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+}
+
+export interface GetCycleDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    cycle: Cycle;
+    applications: CycleApplication[];
+  };
+}
+
+// ============= Get Application Details =============
+
+export interface GetPMApplicationDetailsRequest {
+  cycleSlug: string;
+  applicationSlug: string;
+}
+
+export interface GetPMApplicationDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    application: CycleApplication;
+  };
+}
+
+// ============= Invite Reviewer =============
+
+export interface InviteReviewerRequest {
+  cycleSlug: string;
+  applicationSlug: string;
+  reviewerEmail: string;
+}
+
+export interface InviteReviewerResponse {
+  status: number;
+  message: string;
+  res: {
+    inviteId: string;
+    reviewerEmail: string;
+    applicationId: string;
+  };
+}
+
+// ============= Get Application Reviews =============
+
+export interface GetApplicationReviewsRequest {
+  cycleSlug: string;
+  applicationSlug: string;
+  page: number;
+  numberOfResults: number;
+}
+
+export interface Review {
+  id: string;
+  slug: string;
+  reviewerId: string;
+  applicationId: string;
+  status: string;
+  score?: number;
+  comments?: string;
+  submittedAt?: string;
+  createdAt: string;
+  updatedAt: string;
+  reviewer?: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+  };
+}
+
+export interface GetApplicationReviewsResponse {
+  status: number;
+  message: string;
+  res: {
+    reviews: Review[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalResults: number;
+      resultsPerPage: number;
+    };
+  };
+}
+
+// ============= Get Review Details =============
+
+export interface GetReviewDetailsRequest {
+  cycleSlug: string;
+  applicationSlug: string;
+  reviewSlug: string;
+}
+
+export interface ReviewDetails extends Review {
+  detailedFeedback?: {
+    technicalFeasibility?: string;
+    innovation?: string;
+    marketPotential?: string;
+    teamCapability?: string;
+    budgetJustification?: string;
+  };
+}
+
+export interface GetReviewDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    review: ReviewDetails;
+  };
+}

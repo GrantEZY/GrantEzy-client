@@ -15,13 +15,18 @@ import {
   ApplicationStep,
   ApplicationStepInfo,
   CreateApplicationRequest,
+  UserApplication,
 } from "../types/applicant.types";
 
 interface ApplicantState {
-  // Current application state
+  // Current application state (for submission flow)
   currentApplication: Application | null;
   currentStep: ApplicationStep;
   applicationSteps: ApplicationStepInfo[];
+  
+  // User applications list (for dashboard)
+  userApplications: UserApplication[];
+  isLoadingApplications: boolean;
   
   // Loading and error states
   isLoading: boolean;
@@ -65,6 +70,10 @@ interface ApplicantActions {
   
   // Load saved application (draft restoration)
   loadSavedApplication: (cycleSlug: string) => Promise<Application | null>;
+  
+  // User applications management
+  fetchUserApplications: () => Promise<void>;
+  deleteUserApplication: (applicationId: string) => Promise<boolean>;
   
   // Navigation helpers
   setCurrentStep: (step: ApplicationStep) => void;
@@ -139,6 +148,8 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
   currentApplication: null,
   currentStep: ApplicationStep.BASIC_INFO,
   applicationSteps: initialSteps,
+  userApplications: [],
+  isLoadingApplications: false,
   isLoading: false,
   error: null,
   successMessage: null,
@@ -389,11 +400,11 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
             isLoading: false,
           });
           
-          // If application is submitted, redirect to applications list after a delay
+          // If application is submitted, redirect to dashboard after a delay
           if (data.isSubmitted) {
             setTimeout(() => {
               if (typeof window !== 'undefined') {
-                window.location.href = '/applicant/applications';
+                window.location.href = '/applicant';
               }
             }, 3000);
           }
@@ -535,6 +546,61 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       const errorMessage = error?.message || "Failed to load saved application";
       set({ error: errorMessage, isLoading: false });
       return null;
+    }
+  },
+
+  // Fetch user applications for dashboard
+  fetchUserApplications: async () => {
+    set({ isLoadingApplications: true, error: null });
+    try {
+      const response = await applicantService.getUserApplications();
+      
+      if (response.status === 200) {
+        set({
+          userApplications: response.res.applications,
+          isLoadingApplications: false,
+        });
+      } else {
+        set({
+          error: "Failed to fetch applications",
+          isLoadingApplications: false,
+        });
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to fetch applications";
+      set({ error: errorMessage, isLoadingApplications: false });
+    }
+  },
+
+  // Delete a user application (draft only)
+  deleteUserApplication: async (applicationId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await applicantService.deleteApplication(applicationId);
+      
+      if (response.status === 200) {
+        // Remove the deleted application from the list
+        const updatedApplications = get().userApplications.filter(
+          (app) => app.id !== applicationId,
+        );
+        
+        set({
+          userApplications: updatedApplications,
+          isLoading: false,
+          successMessage: "Application deleted successfully",
+        });
+        return true;
+      }
+      
+      set({
+        error: "Failed to delete application",
+        isLoading: false,
+      });
+      return false;
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to delete application";
+      set({ error: errorMessage, isLoading: false });
+      return false;
     }
   },
 }));

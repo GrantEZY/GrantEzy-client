@@ -85,7 +85,6 @@ export interface AddGCVMemberResponse {
 export interface UpdateGCVUserRoleRequest {
   email: string;
   type: UpdateRole;
-  role: UserRoles;
 }
 
 export interface UpdateGCVUserRoleResponse {
@@ -287,6 +286,7 @@ export interface GetGCVCycleDetailsResponse {
 }
 
 export interface GetGCVApplicationDetailsRequest {
+  cycleSlug: string;
   applicationSlug: string;
 }
 

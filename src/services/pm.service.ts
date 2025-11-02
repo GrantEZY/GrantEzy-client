@@ -9,8 +9,18 @@ import {
   DeleteCycleRequest,
   DeleteCycleResponse,
   GetAssignedProgramResponse,
+  GetCycleDetailsRequest,
+  GetCycleDetailsResponse,
+  GetPMApplicationDetailsRequest,
+  GetPMApplicationDetailsResponse,
   GetProgramCyclesRequest,
   GetProgramCyclesResponse,
+  InviteReviewerRequest,
+  InviteReviewerResponse,
+  GetApplicationReviewsRequest,
+  GetApplicationReviewsResponse,
+  GetReviewDetailsRequest,
+  GetReviewDetailsResponse,
   UpdateCycleRequest,
   UpdateCycleResponse,
 } from "../types/pm.types";
@@ -74,6 +84,95 @@ export class PMService {
     return httpClient.delete<DeleteCycleResponse>(
       API_CONFIG.ENDPOINTS.PM.DELETE_CYCLE,
       data,
+    );
+  }
+
+  // ============= Cycle Details & Applications =============
+
+  /**
+   * Get detailed information about a specific cycle including its applications
+   */
+  async getCycleDetails(
+    params: GetCycleDetailsRequest,
+  ): Promise<GetCycleDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      cycleSlug: params.cycleSlug,
+    };
+
+    return httpClient.get<GetCycleDetailsResponse>(
+      API_CONFIG.ENDPOINTS.PM.GET_CYCLE_DETAILS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get detailed information about a specific application
+   * Used by PM to review application before assigning reviewers
+   */
+  async getApplicationDetails(
+    params: GetPMApplicationDetailsRequest,
+  ): Promise<GetPMApplicationDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      cycleSlug: params.cycleSlug,
+      applicationSlug: params.applicationSlug,
+    };
+
+    return httpClient.get<GetPMApplicationDetailsResponse>(
+      API_CONFIG.ENDPOINTS.PM.GET_APPLICATION_DETAILS,
+      queryParams,
+    );
+  }
+
+  // ============= Reviewer Management =============
+
+  /**
+   * Invite a reviewer to review a specific application
+   */
+  async inviteReviewer(
+    data: InviteReviewerRequest,
+  ): Promise<InviteReviewerResponse> {
+    return httpClient.post<InviteReviewerResponse>(
+      API_CONFIG.ENDPOINTS.PM.INVITE_REVIEWER,
+      data,
+    );
+  }
+
+  // ============= Review Management =============
+
+  /**
+   * Get all reviews for a specific application with pagination
+   */
+  async getApplicationReviews(
+    params: GetApplicationReviewsRequest,
+  ): Promise<GetApplicationReviewsResponse> {
+    const queryParams: Record<string, string> = {
+      cycleSlug: params.cycleSlug,
+      applicationSlug: params.applicationSlug,
+      page: params.page.toString(),
+      numberOfResults: params.numberOfResults.toString(),
+    };
+
+    return httpClient.get<GetApplicationReviewsResponse>(
+      API_CONFIG.ENDPOINTS.PM.GET_APPLICATION_REVIEWS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get detailed information about a specific review
+   */
+  async getReviewDetails(
+    params: GetReviewDetailsRequest,
+  ): Promise<GetReviewDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      cycleSlug: params.cycleSlug,
+      applicationSlug: params.applicationSlug,
+      reviewSlug: params.reviewSlug,
+    };
+
+    return httpClient.get<GetReviewDetailsResponse>(
+      API_CONFIG.ENDPOINTS.PM.GET_REVIEW_DETAILS,
+      queryParams,
     );
   }
 }

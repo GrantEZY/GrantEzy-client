@@ -57,6 +57,8 @@ export default function PMDashboard() {
   };
 
   const handleCreateCycle = () => {
+    console.log("Opening create cycle modal. Current program:", program);
+    console.log("Program ID to pass to modal:", program?.id);
     setIsCreateModalOpen(true);
   };
 
@@ -512,6 +514,7 @@ export default function PMDashboard() {
               isOpen={isCreateModalOpen}
               onClose={() => setIsCreateModalOpen(false)}
               onSuccess={handleCreateSuccess}
+              programId={program?.id} // Pass the assigned program ID
             />
           )}
         </div>

@@ -194,18 +194,31 @@ export class GCVService {
   }
 
   /**
-   * Get application details by application slug
+   * Get application details by cycle slug and application slug
    */
   async getApplicationDetails(
     params: GetGCVApplicationDetailsRequest,
   ): Promise<GetGCVApplicationDetailsResponse> {
     const queryParams: Record<string, string> = {
+      cycleSlug: params.cycleSlug,
       applicationSlug: params.applicationSlug,
     };
 
     return httpClient.get<GetGCVApplicationDetailsResponse>(
       API_CONFIG.ENDPOINTS.GCV.GET_APPLICATION_DETAILS,
       queryParams,
+    );
+  }
+
+  /**
+   * Update/Add program manager to a program
+   */
+  async updateProgramManager(
+    data: AddProgramManagerRequest,
+  ): Promise<AddProgramManagerResponse> {
+    return httpClient.patch<AddProgramManagerResponse>(
+      API_CONFIG.ENDPOINTS.GCV.UPDATE_PROGRAM_MANAGER,
+      data,
     );
   }
 }

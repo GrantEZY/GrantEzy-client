@@ -54,7 +54,10 @@ export interface GetActiveCyclesResponse {
 export interface GetCycleDetailsResponse {
   status: number;
   message: string;
-  res: ProgramCycle;
+  res: {
+    program: any;
+    cycle: ProgramCycle;
+  };
 }
 
 export class PublicService {
@@ -63,8 +66,6 @@ export class PublicService {
    */
   async getActiveProgramCycles(
     filters?: {
-      isActive?: boolean;
-      programSlug?: string;
       page?: number;
       numberOfResults?: number;
     }
@@ -74,14 +75,6 @@ export class PublicService {
     // Required pagination parameters
     params.append("page", String(filters?.page ?? 1));
     params.append("numberOfResults", String(filters?.numberOfResults ?? 10));
-    
-    // Optional filters
-    if (filters?.isActive !== undefined) {
-      params.append("isActive", String(filters.isActive));
-    }
-    if (filters?.programSlug) {
-      params.append("programSlug", filters.programSlug);
-    }
 
     const url = `${API_CONFIG.ENDPOINTS.PUBLIC.GET_ACTIVE_CYCLES}?${params.toString()}`;
     return httpClient.get<GetActiveCyclesResponse>(url);

@@ -9,8 +9,16 @@ import { Program } from "../types/gcv.types";
 import {
   CreateCycleRequest,
   Cycle,
+  CycleApplication,
   DeleteCycleRequest,
+  GetApplicationReviewsRequest,
+  GetCycleDetailsRequest,
+  GetPMApplicationDetailsRequest,
   GetProgramCyclesRequest,
+  GetReviewDetailsRequest,
+  InviteReviewerRequest,
+  Review,
+  ReviewDetails,
   UpdateCycleRequest,
 } from "../types/pm.types";
 
@@ -25,6 +33,25 @@ interface PMState {
   cyclesPagination: PaginationMeta | null;
   isCyclesLoading: boolean;
   cyclesError: string | null;
+  
+  // Current cycle details
+  currentCycle: Cycle | null;
+  currentCycleApplications: CycleApplication[];
+  isCycleDetailsLoading: boolean;
+  
+  // Current application details
+  currentApplication: CycleApplication | null;
+  isApplicationLoading: boolean;
+  
+  // Reviews state
+  reviews: Review[];
+  reviewsPagination: PaginationMeta | null;
+  isReviewsLoading: boolean;
+  reviewsError: string | null;
+  
+  // Current review details
+  currentReview: ReviewDetails | null;
+  isReviewLoading: boolean;
   
   // Program assignment state
   isProgramAssigned: boolean | null; // null = unknown, true = assigned, false = not assigned
@@ -44,10 +71,23 @@ interface PMActions {
   // Cycle actions
   createCycle: (data: CreateCycleRequest) => Promise<boolean>;
   getProgramCycles: (params: GetProgramCyclesRequest) => Promise<void>;
+  getCycleDetails: (params: GetCycleDetailsRequest) => Promise<void>;
   updateCycle: (data: UpdateCycleRequest) => Promise<boolean>;
   deleteCycle: (data: DeleteCycleRequest) => Promise<boolean>;
   clearCycles: () => void;
   setCyclesError: (error: string | null) => void;
+  
+  // Application actions
+  getApplicationDetails: (params: GetPMApplicationDetailsRequest) => Promise<void>;
+  clearApplication: () => void;
+  
+  // Reviewer actions
+  inviteReviewer: (data: InviteReviewerRequest) => Promise<boolean>;
+  
+  // Review actions
+  getApplicationReviews: (params: GetApplicationReviewsRequest) => Promise<void>;
+  getReviewDetails: (params: GetReviewDetailsRequest) => Promise<void>;
+  clearReviews: () => void;
 
   // Clear all
   clearAll: () => void;
@@ -64,7 +104,18 @@ export const usePMStore = create<PMStore>((set, get) => ({
   cyclesPagination: null,
   isCyclesLoading: false,
   cyclesError: null,
-  isProgramAssigned: null, // null = unknown, true = assigned, false = not assigned
+  currentCycle: null,
+  currentCycleApplications: [],
+  isCycleDetailsLoading: false,
+  currentApplication: null,
+  isApplicationLoading: false,
+  reviews: [],
+  reviewsPagination: null,
+  isReviewsLoading: false,
+  reviewsError: null,
+  currentReview: null,
+  isReviewLoading: false,
+  isProgramAssigned: null,
   selectedProgramId: null,
 
   // ============= Program Actions =============
@@ -332,6 +383,236 @@ export const usePMStore = create<PMStore>((set, get) => ({
     set({ cyclesError: error });
   },
 
+  // ============= Cycle Details & Applications =============
+
+  getCycleDetails: async (params: GetCycleDetailsRequest) => {
+    set({ isCycleDetailsLoading: true, cyclesError: null });
+    try {
+      const response = await pmService.getCycleDetails(params);
+
+      if (response.status === 200) {
+        set({
+          currentCycle: response.res.cycle,
+          currentCycleApplications: response.res.applications,
+          isCycleDetailsLoading: false,
+          cyclesError: null,
+        });
+      } else {
+        throw new Error(response.message || "Failed to fetch cycle details");
+      }
+    } catch (error) {
+      let errorMessage = "Failed to fetch cycle details";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = String(error.message);
+      }
+
+      set({
+        currentCycle: null,
+        currentCycleApplications: [],
+        isCycleDetailsLoading: false,
+        cyclesError: errorMessage,
+      });
+
+      console.error("Get cycle details error:", error);
+      throw error;
+    }
+  },
+
+  // ============= Application Actions =============
+
+  getApplicationDetails: async (params: GetPMApplicationDetailsRequest) => {
+    set({ isApplicationLoading: true, cyclesError: null });
+    try {
+      const response = await pmService.getApplicationDetails(params);
+
+      if (response.status === 200) {
+        set({
+          currentApplication: response.res.application,
+          isApplicationLoading: false,
+          cyclesError: null,
+        });
+      } else {
+        throw new Error(
+          response.message || "Failed to fetch application details",
+        );
+      }
+    } catch (error) {
+      let errorMessage = "Failed to fetch application details";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = String(error.message);
+      }
+
+      set({
+        currentApplication: null,
+        isApplicationLoading: false,
+        cyclesError: errorMessage,
+      });
+
+      console.error("Get application details error:", error);
+      throw error;
+    }
+  },
+
+  clearApplication: () => {
+    set({
+      currentApplication: null,
+      isApplicationLoading: false,
+    });
+  },
+
+  // ============= Reviewer Actions =============
+
+  inviteReviewer: async (data: InviteReviewerRequest) => {
+    set({ isCyclesLoading: true, cyclesError: null });
+    try {
+      const response = await pmService.inviteReviewer(data);
+
+      if (response.status === 201 || response.status === 200) {
+        set({
+          isCyclesLoading: false,
+          cyclesError: null,
+        });
+        return true;
+      } else {
+        throw new Error(response.message || "Failed to invite reviewer");
+      }
+    } catch (error) {
+      let errorMessage = "Failed to invite reviewer";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = String(error.message);
+      }
+
+      set({
+        isCyclesLoading: false,
+        cyclesError: errorMessage,
+      });
+
+      console.error("Invite reviewer error:", error);
+      return false;
+    }
+  },
+
+  // ============= Review Actions =============
+
+  getApplicationReviews: async (params: GetApplicationReviewsRequest) => {
+    set({ isReviewsLoading: true, reviewsError: null });
+    try {
+      const response = await pmService.getApplicationReviews(params);
+
+      if (response.status === 200) {
+        const { reviews, pagination } = response.res;
+
+        const paginationMeta: PaginationMeta = {
+          page: pagination.currentPage,
+          limit: pagination.resultsPerPage,
+          total: pagination.totalResults,
+          totalPages: pagination.totalPages,
+        };
+
+        set({
+          reviews,
+          reviewsPagination: paginationMeta,
+          isReviewsLoading: false,
+          reviewsError: null,
+        });
+      } else {
+        throw new Error(
+          response.message || "Failed to fetch application reviews",
+        );
+      }
+    } catch (error) {
+      let errorMessage = "Failed to fetch application reviews";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = String(error.message);
+      }
+
+      set({
+        reviews: [],
+        reviewsPagination: null,
+        isReviewsLoading: false,
+        reviewsError: errorMessage,
+      });
+
+      console.error("Get application reviews error:", error);
+      throw error;
+    }
+  },
+
+  getReviewDetails: async (params: GetReviewDetailsRequest) => {
+    set({ isReviewLoading: true, reviewsError: null });
+    try {
+      const response = await pmService.getReviewDetails(params);
+
+      if (response.status === 200) {
+        set({
+          currentReview: response.res.review,
+          isReviewLoading: false,
+          reviewsError: null,
+        });
+      } else {
+        throw new Error(response.message || "Failed to fetch review details");
+      }
+    } catch (error) {
+      let errorMessage = "Failed to fetch review details";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        errorMessage = String(error.message);
+      }
+
+      set({
+        currentReview: null,
+        isReviewLoading: false,
+        reviewsError: errorMessage,
+      });
+
+      console.error("Get review details error:", error);
+      throw error;
+    }
+  },
+
+  clearReviews: () => {
+    set({
+      reviews: [],
+      reviewsPagination: null,
+      reviewsError: null,
+      currentReview: null,
+    });
+  },
+
   // Clear all
   clearAll: () => {
     set({
@@ -342,6 +623,17 @@ export const usePMStore = create<PMStore>((set, get) => ({
       cyclesPagination: null,
       isCyclesLoading: false,
       cyclesError: null,
+      currentCycle: null,
+      currentCycleApplications: [],
+      isCycleDetailsLoading: false,
+      currentApplication: null,
+      isApplicationLoading: false,
+      reviews: [],
+      reviewsPagination: null,
+      isReviewsLoading: false,
+      reviewsError: null,
+      currentReview: null,
+      isReviewLoading: false,
       isProgramAssigned: null,
       selectedProgramId: null,
     });

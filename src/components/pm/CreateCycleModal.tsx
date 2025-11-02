@@ -147,7 +147,7 @@ export default function CreateCycleModal({
     }
 
     try {
-      // Get programId - either from prop or from existing cycles
+      // Get programId - first try prop, then from existing cycles
       let targetProgramId = programId;
       
       if (!targetProgramId && cycles && cycles.length > 0) {
@@ -156,6 +156,7 @@ export default function CreateCycleModal({
       }
 
       if (!targetProgramId) {
+        console.error("No programId available. Props programId:", programId, "Cycles:", cycles);
         alert("Unable to determine program ID. This might be because:\n\n1. You haven't been assigned to any programs yet\n2. No cycles exist for your program\n3. There's a system error\n\nPlease contact your administrator to ensure you're assigned as a Program Manager for a specific program.");
         return;
       }
