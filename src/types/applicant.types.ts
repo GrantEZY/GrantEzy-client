@@ -313,7 +313,29 @@ export interface GetUserApplicationsResponse {
   status: number;
   message: string;
   res: {
-    applications: UserApplication[];
+    myApplications: UserApplication[];
+    linkedApplications: UserApplication[];
+  };
+}
+
+export interface GetApplicationWithCycleDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    cycle: {
+      id: string;
+      name: string;
+      slug: string;
+      description?: string;
+      budget?: {
+        amount: number;
+        currency: string;
+      };
+      startDate?: string;
+      endDate?: string;
+      status?: string;
+    };
+    applicationDetails: Application | null;
   };
 }
 
@@ -328,4 +350,8 @@ export interface GetUserCreatedApplicationDetailsResponse {
 export interface DeleteApplicationResponse {
   status: number;
   message: string;
+  res: {
+    success: boolean;
+    applicationId: string;
+  };
 }

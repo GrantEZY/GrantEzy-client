@@ -11,7 +11,8 @@ import { publicService, ProgramCycle } from "@/services/public.service";
 export default function ApplicantDashboard() {
   const { user } = useAuth();
   const { 
-    userApplications, 
+    myApplications,
+    linkedApplications,
     isLoadingApplications, 
     fetchUserApplications,
     deleteUserApplication,
@@ -279,6 +280,7 @@ export default function ApplicantDashboard() {
           )}
         </div>
 
+        {/* My Applications Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">My Applications</h2>
           
@@ -289,9 +291,9 @@ export default function ApplicantDashboard() {
               </div>
               <p className="mt-4 text-sm text-gray-500">Loading your applications...</p>
             </div>
-          ) : userApplications && userApplications.length > 0 ? (
+          ) : myApplications && myApplications.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {userApplications.map((application) => {
+              {myApplications.map((application: any) => {
                 const statusColor = application.isSubmitted 
                   ? "bg-green-100 text-green-800" 
                   : "bg-yellow-100 text-yellow-800";
@@ -308,7 +310,7 @@ export default function ApplicantDashboard() {
                           {application.basicInfo?.title || "Untitled Application"}
                         </h3>
                         <p className="mt-1 text-sm text-gray-600">
-                          {application.cycle?.program?.title || "Unknown Program"}
+                          {application.cycle?.program?.title || "Program information not available"}
                         </p>
                       </div>
                       <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}>
@@ -318,7 +320,7 @@ export default function ApplicantDashboard() {
 
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">
-                        <span className="font-medium">Cycle:</span> {application.cycle?.title || "N/A"}
+                        <span className="font-medium">Cycle:</span> {application.cycle?.title || "Cycle information not available"}
                       </p>
                       <p className="mt-1 text-sm text-gray-500">
                         Step {application.stepNumber} of 7
@@ -377,6 +379,78 @@ export default function ApplicantDashboard() {
             </div>
           )}
         </div>
+
+        {/* Linked Applications Section - Applications where user is invited as co-applicant */}
+        {linkedApplications && linkedApplications.length > 0 && (
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Applications I'm Collaborating On
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Applications where you've been invited as a co-applicant
+            </p>
+            
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {linkedApplications.map((application: any) => {
+                const statusColor = application.isSubmitted 
+                  ? "bg-green-100 text-green-800" 
+                  : "bg-yellow-100 text-yellow-800";
+                const statusText = application.isSubmitted ? "Submitted" : "Draft";
+                
+                return (
+                  <div
+                    key={application.id}
+                    className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {application.basicInfo?.title || "Untitled Application"}
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-600">
+                          {application.cycle?.program?.title || "Program information not available"}
+                        </p>
+                        <span className="mt-1 inline-flex items-center text-xs text-blue-600">
+                          <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                          </svg>
+                          Co-applicant
+                        </span>
+                      </div>
+                      <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}>
+                        {statusText}
+                      </span>
+                    </div>
+
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">Cycle:</span> {application.cycle?.title || "Cycle information not available"}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Step {application.stepNumber} of 7
+                      </p>
+                    </div>
+
+                    <div className="mt-4 flex items-center text-xs text-gray-500">
+                      <span>
+                        Created: {new Date(application.createdAt).toLocaleDateString()}
+                      </span>
+                    </div>
+
+                    <div className="mt-6">
+                      <Link
+                        href={`/applicant/application/${application.id}`}
+                        className="block w-full rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 text-center"
+                      >
+                        View Details
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </ApplicantLayout>
     </AuthGuard>
   );

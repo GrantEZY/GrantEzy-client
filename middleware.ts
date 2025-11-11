@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define public routes that don't require authentication
-const publicRoutes = ["/login", "/signup"];
+const publicRoutes = [
+  "/login",
+  "/signup",
+  "/co-applicant/invite",
+  "/reviewer/invite",
+];
 
 // Define routes that should redirect to dashboard if already authenticated
 const authRoutes = ["/login", "/signup"];

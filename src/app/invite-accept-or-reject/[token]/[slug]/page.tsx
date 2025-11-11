@@ -14,10 +14,10 @@ import { InviteStatus } from "@/types/co-applicant.types";
 import { ToastProvider } from "@/components/ui/ToastNew";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     token: string;
     slug: string;
-  };
+  }>;
 }
 
 // Loading component for Suspense
@@ -38,7 +38,7 @@ function InviteLoading() {
   );
 }
 
-function InvitePageContent({ params }: PageProps) {
+function InvitePageContent({ params }: { params: { token: string; slug: string } }) {
   const { token, slug } = params;
   const searchParams = useSearchParams();
   const [inviteStatus, setInviteStatus] = useState<InviteStatus | null>(null);
@@ -116,11 +116,13 @@ function InvitePageContent({ params }: PageProps) {
   );
 }
 
-export default function CoApplicantInviteRoute({ params }: PageProps) {
+export default async function CoApplicantInviteRoute({ params }: PageProps) {
+  const resolvedParams = await params;
+  
   return (
     <ToastProvider>
       <Suspense fallback={<InviteLoading />}>
-        <InvitePageContent params={params} />
+        <InvitePageContent params={resolvedParams} />
       </Suspense>
     </ToastProvider>
   );

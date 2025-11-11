@@ -22,7 +22,8 @@ export const useApplicant = () => {
   );
   const currentStep = useApplicantStore((state) => state.currentStep);
   const applicationSteps = useApplicantStore((state) => state.applicationSteps);
-  const userApplications = useApplicantStore((state) => state.userApplications);
+  const myApplications = useApplicantStore((state) => state.myApplications);
+  const linkedApplications = useApplicantStore((state) => state.linkedApplications);
   const isLoadingApplications = useApplicantStore((state) => state.isLoadingApplications);
   const isLoading = useApplicantStore((state) => state.isLoading);
   const error = useApplicantStore((state) => state.error);
@@ -52,6 +53,12 @@ export const useApplicant = () => {
   );
   const fetchUserApplications = useApplicantStore(
     (state) => state.fetchUserApplications,
+  );
+  const fetchApplicationWithCycleDetails = useApplicantStore(
+    (state) => state.fetchApplicationWithCycleDetails,
+  );
+  const fetchUserCreatedApplicationDetails = useApplicantStore(
+    (state) => state.fetchUserCreatedApplicationDetails,
   );
   const deleteUserApplication = useApplicantStore(
     (state) => state.deleteUserApplication,
@@ -187,7 +194,8 @@ export const useApplicant = () => {
     currentApplication,
     currentStep,
     applicationSteps,
-    userApplications,
+    myApplications,
+    linkedApplications,
     isLoadingApplications,
     isLoading,
     error,
@@ -211,6 +219,8 @@ export const useApplicant = () => {
     
     // User applications management
     fetchUserApplications,
+    fetchApplicationWithCycleDetails,
+    fetchUserCreatedApplicationDetails,
     deleteUserApplication,
     
     // Navigation

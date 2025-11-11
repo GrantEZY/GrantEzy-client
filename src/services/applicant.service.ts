@@ -18,6 +18,10 @@ import {
   AddApplicationTechnicalDetailsResponse,
   CreateApplicationRequest,
   CreateApplicationResponse,
+  GetUserApplicationsResponse,
+  GetApplicationWithCycleDetailsResponse,
+  GetUserCreatedApplicationDetailsResponse,
+  DeleteApplicationResponse,
 } from "../types/applicant.types";
 
 export class ApplicantService {
@@ -111,8 +115,8 @@ export class ApplicantService {
    */
   async getApplicationWithCycle(
     cycleSlug: string,
-  ): Promise<any> {
-    return httpClient.get<any>(
+  ): Promise<GetApplicationWithCycleDetailsResponse> {
+    return httpClient.get<GetApplicationWithCycleDetailsResponse>(
       `${API_CONFIG.ENDPOINTS.APPLICANT.GET_APPLICATION_WITH_CYCLE}?cycleSlug=${cycleSlug}`,
     );
   }
@@ -121,8 +125,8 @@ export class ApplicantService {
    * Get all applications for the current user
    * Returns list of all applications (drafts and submitted)
    */
-  async getUserApplications(): Promise<any> {
-    return httpClient.get<any>(
+  async getUserApplications(): Promise<GetUserApplicationsResponse> {
+    return httpClient.get<GetUserApplicationsResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_APPLICATIONS,
     );
   }
@@ -133,8 +137,8 @@ export class ApplicantService {
    */
   async getUserCreatedApplicationDetails(
     applicationId: string,
-  ): Promise<any> {
-    return httpClient.get<any>(
+  ): Promise<GetUserCreatedApplicationDetailsResponse> {
+    return httpClient.get<GetUserCreatedApplicationDetailsResponse>(
       `${API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_APPLICATION}?applicationId=${applicationId}`,
     );
   }
@@ -143,8 +147,8 @@ export class ApplicantService {
    * Delete a draft application
    * Only draft applications can be deleted, not submitted ones
    */
-  async deleteApplication(applicationId: string): Promise<any> {
-    return httpClient.delete<any>(
+  async deleteApplication(applicationId: string): Promise<DeleteApplicationResponse> {
+    return httpClient.delete<DeleteApplicationResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.DELETE_APPLICATION,
       { applicationId },
     );

@@ -25,7 +25,8 @@ interface ApplicantState {
   applicationSteps: ApplicationStepInfo[];
   
   // User applications list (for dashboard)
-  userApplications: UserApplication[];
+  myApplications: UserApplication[];
+  linkedApplications: UserApplication[];
   isLoadingApplications: boolean;
   
   // Loading and error states
@@ -73,6 +74,8 @@ interface ApplicantActions {
   
   // User applications management
   fetchUserApplications: () => Promise<void>;
+  fetchApplicationWithCycleDetails: (cycleSlug: string) => Promise<{ cycle: any; applicationDetails: Application | null } | null>;
+  fetchUserCreatedApplicationDetails: (applicationId: string) => Promise<Application | null>;
   deleteUserApplication: (applicationId: string) => Promise<boolean>;
   
   // Navigation helpers
@@ -148,7 +151,8 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
   currentApplication: null,
   currentStep: ApplicationStep.BASIC_INFO,
   applicationSteps: initialSteps,
-  userApplications: [],
+  myApplications: [],
+  linkedApplications: [],
   isLoadingApplications: false,
   isLoading: false,
   error: null,
@@ -472,7 +476,7 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
     
     const updatedSteps = initialSteps.map((step) => ({
       ...step,
-      isCompleted: step.step < stepNumber,
+      isCompleted: step.step <= stepNumber,
       isActive: step.step === currentStep,
     }));
     
@@ -501,30 +505,24 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       const response = await applicantService.getApplicationWithCycle(cycleSlug);
       
       if (response.status === 200 && response.res.applicationDetails) {
-        const savedApp = response.res.applicationDetails;
+        const savedApp = response.res.applicationDetails as any;
         
-        // Map backend application to frontend Application type
+        // Use the application directly as it comes from backend
         const application: Application = {
           id: savedApp.id,
-          userId: savedApp.applicantId,
+          userId: savedApp.userId || savedApp.applicantId,
           cycleId: savedApp.cycleId,
           stepNumber: savedApp.stepNumber || 1,
-          basicInfo: savedApp.basicInfo ? {
-            title: savedApp.basicInfo.Title,
-            summary: savedApp.basicInfo.Summary,
-            problem: savedApp.basicInfo.Problem,
-            solution: savedApp.basicInfo.Solution,
-            innovation: savedApp.basicInfo.Innovation,
-          } : undefined,
+          basicInfo: savedApp.basicInfo,
           budget: savedApp.budget,
-          technicalSpec: savedApp.technicalSpecs,
+          technicalSpec: savedApp.technicalSpec || savedApp.technicalSpecs,
           marketInfo: savedApp.marketInfo,
           revenueModel: savedApp.revenueModel,
           risks: savedApp.risks,
           milestones: savedApp.milestones,
           documents: savedApp.documents,
           teamMateInvites: savedApp.teamMateInvites,
-          isSubmitted: savedApp.status === "SUBMITTED",
+          isSubmitted: savedApp.isSubmitted || false,
         };
         
         // Set the application and navigate to the correct step
@@ -556,8 +554,20 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       const response = await applicantService.getUserApplications();
       
       if (response.status === 200) {
+        // Log warning if cycle data is missing
+        const myAppsWithoutCycle = response.res.myApplications.filter((app: any) => !app.cycle);
+        const linkedAppsWithoutCycle = response.res.linkedApplications.filter((app: any) => !app.cycle);
+        
+        if (myAppsWithoutCycle.length > 0) {
+          console.warn('[Applicant Store] Some applications are missing cycle data:', myAppsWithoutCycle);
+        }
+        if (linkedAppsWithoutCycle.length > 0) {
+          console.warn('[Applicant Store] Some linked applications are missing cycle data:', linkedAppsWithoutCycle);
+        }
+        
         set({
-          userApplications: response.res.applications,
+          myApplications: response.res.myApplications || [],
+          linkedApplications: response.res.linkedApplications || [],
           isLoadingApplications: false,
         });
       } else {
@@ -579,13 +589,13 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       const response = await applicantService.deleteApplication(applicationId);
       
       if (response.status === 200) {
-        // Remove the deleted application from the list
-        const updatedApplications = get().userApplications.filter(
-          (app) => app.id !== applicationId,
+        // Remove the deleted application from myApplications list
+        const updatedMyApplications = get().myApplications.filter(
+          (app: UserApplication) => app.id !== applicationId,
         );
         
         set({
-          userApplications: updatedApplications,
+          myApplications: updatedMyApplications,
           isLoading: false,
           successMessage: "Application deleted successfully",
         });
@@ -603,4 +613,51 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       return false;
     }
   },
+
+  // Get application with cycle details
+  fetchApplicationWithCycleDetails: async (cycleSlug: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await applicantService.getApplicationWithCycle(cycleSlug);
+      
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return response.res;
+      }
+      
+      set({
+        error: "Failed to fetch application details",
+        isLoading: false,
+      });
+      return null;
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to fetch application details";
+      set({ error: errorMessage, isLoading: false });
+      return null;
+    }
+  },
+
+  // Get user created application details
+  fetchUserCreatedApplicationDetails: async (applicationId: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await applicantService.getUserCreatedApplicationDetails(applicationId);
+      
+      if (response.status === 200) {
+        set({ isLoading: false });
+        return response.res.application;
+      }
+      
+      set({
+        error: "Failed to fetch application details",
+        isLoading: false,
+      });
+      return null;
+    } catch (error: any) {
+      const errorMessage = error?.message || "Failed to fetch application details";
+      set({ error: errorMessage, isLoading: false });
+      return null;
+    }
+  },
+
 }));
