@@ -21,6 +21,7 @@ export default function CoApplicantInvite({
 }: CoApplicantInviteProps) {
   const [hasVerified, setHasVerified] = useState(false);
   const [actionLoading, setActionLoading] = useState<'accept' | 'reject' | null>(null);
+  const [forceShowError, setForceShowError] = useState(false); // Force error to stay
   
   const {
     tokenDetails,
@@ -34,10 +35,25 @@ export default function CoApplicantInvite({
 
   useEffect(() => {
     if (token && slug && !hasVerified) {
+      console.log('[CoApplicantInvite] Verifying token:', { token, slug });
       verifyToken();
       setHasVerified(true);
     }
   }, [token, slug, hasVerified, verifyToken]);
+
+  // Log error when it changes and keep it visible
+  useEffect(() => {
+    if (error) {
+      console.error('[CoApplicantInvite] Error occurred:', error);
+      console.error('[CoApplicantInvite] Token details:', tokenDetails);
+      setForceShowError(true);
+      
+      // Keep error visible for 30 seconds minimum
+      setTimeout(() => {
+        console.log('[CoApplicantInvite] Error still showing after 30s');
+      }, 30000);
+    }
+  }, [error, tokenDetails]);
 
   const handleAccept = async () => {
     setActionLoading('accept');
@@ -59,6 +75,16 @@ export default function CoApplicantInvite({
     }
   };
 
+  // Log render state
+  console.log('[CoApplicantInvite] Render state:', {
+    isLoading,
+    error,
+    forceShowError,
+    hasTokenDetails: !!tokenDetails,
+    hasVerified,
+  });
+
+  // Show loading state during initial delay or actual loading
   if (isLoading) {
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -69,28 +95,83 @@ export default function CoApplicantInvite({
             <div className="h-10 bg-gray-200 rounded w-24"></div>
             <div className="h-10 bg-gray-200 rounded w-24"></div>
           </div>
+          <p className="text-center text-sm text-gray-500 mt-4">
+            Verifying invitation...
+          </p>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  // Force error to stay visible
+  if (error || forceShowError) {
+    // Check if it's an "already accepted" error
+    const isAlreadyAccepted = error?.toLowerCase().includes('already') || 
+                              error?.toLowerCase().includes('accepted') ||
+                              error?.toLowerCase().includes('taken');
+    
     return (
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+            isAlreadyAccepted ? 'bg-yellow-100' : 'bg-red-100'
+          }`}>
+            <svg className={`w-8 h-8 ${isAlreadyAccepted ? 'text-yellow-600' : 'text-red-600'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isAlreadyAccepted ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              )}
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">Invite Invalid</h3>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <button
-            onClick={clearError}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Try Again
-          </button>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            {isAlreadyAccepted ? 'Invitation Already Processed' : 'Invite Invalid'}
+          </h3>
+          <p className={`font-semibold mb-2 ${isAlreadyAccepted ? 'text-yellow-600' : 'text-red-600'}`}>
+            {error}
+          </p>
+          
+          {isAlreadyAccepted ? (
+            <div className="mt-6">
+              <p className="text-gray-600 mb-4">
+                This invitation has already been accepted. Please log in to continue.
+              </p>
+              <div className="space-y-3">
+                <button
+                  onClick={() => window.location.href = `/login?redirect=/co-applicant/dashboard`}
+                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Go to Login
+                </button>
+                <button
+                  onClick={() => window.location.href = `/signup?redirect=/co-applicant/dashboard`}
+                  className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Create New Account
+                </button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="bg-gray-50 p-4 rounded-md mb-4 text-left">
+                <p className="text-sm text-gray-600 mb-2">
+                  <strong>Token:</strong> <code className="bg-gray-200 px-2 py-1 rounded text-xs">{token}</code>
+                </p>
+                <p className="text-sm text-gray-600">
+                  <strong>Slug:</strong> <code className="bg-gray-200 px-2 py-1 rounded text-xs">{slug}</code>
+                </p>
+              </div>
+              <p className="text-xs text-gray-500 mb-4">
+                Please check the browser console (F12) for more detailed error information.
+              </p>
+              <button
+                onClick={clearError}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              >
+                Try Again
+              </button>
+            </>
+          )}
         </div>
       </div>
     );

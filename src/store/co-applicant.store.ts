@@ -48,21 +48,27 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
   getTokenDetails: async (token: string, slug: string) => {
     set({ isLoading: true, error: null });
     try {
+      console.log('[CoApplicantStore] Fetching token details:', { token, slug });
       const response = await coApplicantService.getTokenDetails(token, slug);
+      console.log('[CoApplicantStore] Token details response:', response);
       
       if (response.status === 200) {
+        console.log('[CoApplicantStore] ✅ Token details loaded successfully:', response.res);
         set({
           tokenDetails: response.res,
           isLoading: false,
         });
       } else {
+        const errorMsg = response.message || "Failed to fetch token details";
+        console.error('[CoApplicantStore] ❌ Token details failed:', errorMsg, response);
         set({
-          error: response.message || "Failed to fetch token details",
+          error: errorMsg,
           isLoading: false,
         });
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      console.error('[CoApplicantStore] ❌ Token details error:', errorMessage, error);
       set({
         error: errorMessage,
         isLoading: false,

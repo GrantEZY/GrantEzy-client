@@ -6,12 +6,12 @@
 
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { CoApplicantInvite } from "@/components/co-applicant";
-import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { InviteStatus } from "@/types/co-applicant.types";
 import { ToastProvider } from "@/components/ui/ToastNew";
+import { use } from "react";
 
 interface PageProps {
   params: Promise<{
@@ -42,8 +42,34 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
   const { token, slug } = params;
   const searchParams = useSearchParams();
   const [inviteStatus, setInviteStatus] = useState<InviteStatus | null>(null);
+  const [debugMode, setDebugMode] = useState(true); // Keep in debug mode
+  const [mountTime] = useState(Date.now());
+
+  console.log('[InvitePageContent] Rendering with:', { token, slug, inviteStatus, debugMode });
+
+  // Prevent unmounting
+  useEffect(() => {
+    console.log('[InvitePageContent] Component mounted at:', mountTime);
+    
+    return () => {
+      console.log('[InvitePageContent] Component unmounting after:', Date.now() - mountTime, 'ms');
+    };
+  }, [mountTime]);
+
+  // Auto-redirect to login after 10 seconds if accepted
+  useEffect(() => {
+    if (inviteStatus === InviteStatus.ACCEPTED) {
+      const timer = setTimeout(() => {
+        console.log('[InvitePageContent] Auto-redirecting to login...');
+        window.location.href = `/login?redirect=/co-applicant/dashboard&message=Please login or create an account to continue`;
+      }, 10000); // 10 seconds to read and choose
+      
+      return () => clearTimeout(timer);
+    }
+  }, [inviteStatus]);
 
   const handleStatusUpdate = (status: InviteStatus) => {
+    console.log('[InvitePageContent] Status update:', status);
     setInviteStatus(status);
   };
 
@@ -79,26 +105,40 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
           
           <p className="text-gray-600 mb-6">
             {isAccepted 
-              ? 'You have successfully joined the team. You can now log in or create an account to collaborate on the grant application.'
+              ? 'You have successfully joined the team. Choose an option below to continue.'
               : 'You have declined the invitation. Thank you for your response.'
             }
           </p>
           
           {isAccepted && (
-            <div className="space-y-3">
-              <button
-                onClick={() => window.location.href = `/co-applicant/register?token=${token}&slug=${slug}`}
-                className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
-              >
-                Create Account & Join Team
-              </button>
-              <button
-                onClick={() => window.location.href = `/login?redirect=/co-applicant/dashboard`}
-                className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
-              >
-                I Already Have an Account
-              </button>
-            </div>
+            <>
+              <div className="space-y-3 mb-4">
+                <button
+                  onClick={() => window.location.href = `/signup?redirect=/co-applicant/dashboard`}
+                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Create New Account
+                </button>
+                <button
+                  onClick={() => window.location.href = `/login?redirect=/co-applicant/dashboard`}
+                  className="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
+                >
+                  Login with Existing Account
+                </button>
+              </div>
+              <p className="text-xs text-gray-500">
+                Redirecting to login in 10 seconds...
+              </p>
+            </>
+          )}
+          
+          {!isAccepted && (
+            <button
+              onClick={() => window.location.href = `/`}
+              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
+            >
+              Go to Homepage
+            </button>
           )}
         </div>
       </div>
@@ -116,8 +156,9 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
   );
 }
 
-export default async function CoApplicantInviteRoute({ params }: PageProps) {
-  const resolvedParams = await params;
+export default function CoApplicantInviteRoute({ params }: PageProps) {
+  // Use React's use() hook to unwrap the promise in client component
+  const resolvedParams = use(params);
   
   return (
     <ToastProvider>

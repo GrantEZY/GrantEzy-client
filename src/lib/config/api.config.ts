@@ -89,6 +89,11 @@ export const API_CONFIG = {
       GET_ACTIVE_CYCLES: "/public/active-program-cycles",
       GET_CYCLE_DETAILS: "/public/program-cycle-details",
     },
+    USER: {
+      // User Profile Management
+      GET_PROFILE: "/user/user-profile",
+      UPDATE_PROFILE: "/user/update-profile",
+    },
     HEALTH: "/health",
   },
   HEADERS: {

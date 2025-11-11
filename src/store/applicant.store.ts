@@ -554,15 +554,28 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       const response = await applicantService.getUserApplications();
       
       if (response.status === 200) {
+        console.log('[Applicant Store] Fetched applications:', {
+          myApplications: response.res.myApplications,
+          linkedApplications: response.res.linkedApplications
+        });
+        
         // Log warning if cycle data is missing
         const myAppsWithoutCycle = response.res.myApplications.filter((app: any) => !app.cycle);
         const linkedAppsWithoutCycle = response.res.linkedApplications.filter((app: any) => !app.cycle);
         
         if (myAppsWithoutCycle.length > 0) {
-          console.warn('[Applicant Store] Some applications are missing cycle data:', myAppsWithoutCycle);
+          console.warn('[Applicant Store] ⚠️ Some applications are missing cycle data:', myAppsWithoutCycle);
+          console.warn('[Applicant Store] 💡 Backend fix applied. Please restart the backend server for changes to take effect.');
         }
         if (linkedAppsWithoutCycle.length > 0) {
-          console.warn('[Applicant Store] Some linked applications are missing cycle data:', linkedAppsWithoutCycle);
+          console.warn('[Applicant Store] ⚠️ Some linked applications are missing cycle data:', linkedAppsWithoutCycle);
+          console.warn('[Applicant Store] 💡 Backend fix applied. Please restart the backend server for changes to take effect.');
+        }
+        
+        // Log applications with complete data
+        const myAppsWithCycle = response.res.myApplications.filter((app: any) => app.cycle);
+        if (myAppsWithCycle.length > 0) {
+          console.log('[Applicant Store] ✅ Applications with cycle data loaded successfully:', myAppsWithCycle.length);
         }
         
         set({
