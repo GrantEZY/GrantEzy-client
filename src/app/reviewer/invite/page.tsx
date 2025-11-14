@@ -52,19 +52,22 @@ export default function ReviewerInvitePage() {
         setSuccess(true);
         setInviteAccepted(status === InviteStatus.ACCEPTED);
 
-        // Redirect to reviewer dashboard after a delay
+        // Redirect to login or dashboard after a delay
         setTimeout(() => {
-          router.push("/reviewer");
-        }, 3000);
+          router.push("/login?redirect=/reviewer");
+        }, 10000); // 10 seconds
       } else {
         setError("Failed to update invitation status. Please try again.");
       }
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An error occurred while processing your response"
-      );
+      const errorMessage = err instanceof Error ? err.message : "An error occurred while processing your response";
+      
+      // Check if this is an "already handled" error
+      if (errorMessage.includes("already been handled") || errorMessage.includes("already handled")) {
+        setError("This invitation has already been accepted or declined. If you've already responded, please login to access your reviewer dashboard.");
+      } else {
+        setError(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -143,8 +146,16 @@ export default function ReviewerInvitePage() {
                           fillRule="evenodd"
                         />
                       </svg>
-                      <div className="ml-3">
+                      <div className="ml-3 flex-1">
                         <p className="text-sm text-red-800">{error}</p>
+                        {error.includes("already") && (
+                          <Link
+                            className="mt-2 inline-block text-sm font-medium text-red-600 hover:text-red-700"
+                            href="/login?redirect=/reviewer"
+                          >
+                            Go to Login →
+                          </Link>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -88,6 +88,7 @@ interface PMActions {
   getApplicationReviews: (params: GetApplicationReviewsRequest) => Promise<void>;
   getReviewDetails: (params: GetReviewDetailsRequest) => Promise<void>;
   clearReviews: () => void;
+  clearReview: () => void;
 
   // Clear all
   clearAll: () => void;
@@ -391,9 +392,19 @@ export const usePMStore = create<PMStore>((set, get) => ({
       const response = await pmService.getCycleDetails(params);
 
       if (response.status === 200) {
+        // Extract applications from the cycle object
+        const cycle = response.res.cycle;
+        const applications = (cycle as any).applications || [];
+        
+        console.log('📦 Cycle Details Response:', {
+          cycle: cycle,
+          applicationsCount: applications.length,
+          applications: applications
+        });
+
         set({
-          currentCycle: response.res.cycle,
-          currentCycleApplications: response.res.applications,
+          currentCycle: cycle,
+          currentCycleApplications: applications,
           isCycleDetailsLoading: false,
           cyclesError: null,
         });
@@ -521,13 +532,19 @@ export const usePMStore = create<PMStore>((set, get) => ({
       const response = await pmService.getApplicationReviews(params);
 
       if (response.status === 200) {
-        const { reviews, pagination } = response.res;
+        const { reviews } = response.res;
 
+        console.log('📝 Application Reviews Response:', {
+          reviewsCount: reviews.length,
+          reviews: reviews
+        });
+
+        // Backend doesn't return pagination, so we'll create a simple one based on request params
         const paginationMeta: PaginationMeta = {
-          page: pagination.currentPage,
-          limit: pagination.resultsPerPage,
-          total: pagination.totalResults,
-          totalPages: pagination.totalPages,
+          page: params.page,
+          limit: params.numberOfResults,
+          total: reviews.length,
+          totalPages: Math.ceil(reviews.length / params.numberOfResults),
         };
 
         set({
@@ -610,6 +627,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
       reviewsPagination: null,
       reviewsError: null,
       currentReview: null,
+    });
+  },
+
+  clearReview: () => {
+    set({
+      currentReview: null,
+      isReviewLoading: false,
+      reviewsError: null,
     });
   },
 

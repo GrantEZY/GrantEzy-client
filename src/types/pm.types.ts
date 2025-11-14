@@ -245,8 +245,7 @@ export interface GetCycleDetailsResponse {
   status: number;
   message: string;
   res: {
-    cycle: Cycle;
-    applications: CycleApplication[];
+    cycle: Cycle; // Note: Backend returns applications nested inside cycle.applications
   };
 }
 
@@ -268,17 +267,15 @@ export interface GetPMApplicationDetailsResponse {
 // ============= Invite Reviewer =============
 
 export interface InviteReviewerRequest {
-  cycleSlug: string;
-  applicationSlug: string;
-  reviewerEmail: string;
+  applicationId: string; // UUID of the application
+  email: string; // Email of the reviewer to invite
 }
 
 export interface InviteReviewerResponse {
   status: number;
   message: string;
   res: {
-    inviteId: string;
-    reviewerEmail: string;
+    email: string;
     applicationId: string;
   };
 }
@@ -303,11 +300,29 @@ export interface Review {
   submittedAt?: string;
   createdAt: string;
   updatedAt: string;
+  recommendation?: string;
+  suggestedBudget?: {
+    amount: number;
+    currency: string;
+  };
+  scores?: {
+    technical: number;
+    market: number;
+    financial: number;
+    team: number;
+    innovation: number;
+  };
   reviewer?: {
     id: string;
     email: string;
     firstName: string;
     lastName: string;
+  };
+  application?: {
+    id: string;
+    slug: string;
+    title?: string;
+    status: string;
   };
 }
 
@@ -315,13 +330,9 @@ export interface GetApplicationReviewsResponse {
   status: number;
   message: string;
   res: {
+    application: CycleApplication;
     reviews: Review[];
-    pagination: {
-      currentPage: number;
-      totalPages: number;
-      totalResults: number;
-      resultsPerPage: number;
-    };
+    // Note: Backend does not return pagination metadata
   };
 }
 

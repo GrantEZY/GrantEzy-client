@@ -8,8 +8,6 @@ interface InviteReviewerModalProps {
   onClose: () => void;
   applicationId: string;
   applicationTitle?: string;
-  cycleSlug: string;
-  applicationSlug: string;
 }
 
 export default function InviteReviewerModal({
@@ -17,8 +15,6 @@ export default function InviteReviewerModal({
   onClose,
   applicationId,
   applicationTitle,
-  cycleSlug,
-  applicationSlug,
 }: InviteReviewerModalProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,9 +39,8 @@ export default function InviteReviewerModal({
 
     try {
       const result = await inviteReviewer({
-        cycleSlug,
-        applicationSlug,
-        reviewerEmail: email,
+        applicationId,
+        email,
       });
 
       if (result) {

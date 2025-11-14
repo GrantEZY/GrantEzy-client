@@ -13,9 +13,7 @@ export enum InviteStatus {
 
 export enum ReviewStatus {
   UNASSIGNED = "UNASSIGNED",
-  ASSIGNED = "ASSIGNED",
   IN_PROGRESS = "IN_PROGRESS",
-  SUBMITTED = "SUBMITTED",
   COMPLETED = "COMPLETED",
 }
 

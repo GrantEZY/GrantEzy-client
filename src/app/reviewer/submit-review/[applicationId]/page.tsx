@@ -24,12 +24,6 @@ export default function SubmitReviewPage() {
       try {
         // Fetch user reviews to get the application title
         await getUserReviews({ page: 1, numberOfResults: 100 });
-
-        // Find the review with matching applicationId from the store
-        const review = reviews.find((r) => r.applicationId === applicationId);
-        if (review && review.application?.title) {
-          setApplicationTitle(review.application.title);
-        }
       } catch (err) {
         setError(
           err instanceof Error
@@ -44,7 +38,16 @@ export default function SubmitReviewPage() {
     if (applicationId) {
       fetchReviewData();
     }
-  }, [applicationId, getUserReviews, reviews]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applicationId]); // Only depend on applicationId
+
+  // Separate effect to update title when reviews change
+  useEffect(() => {
+    const review = reviews.find((r) => r.applicationId === applicationId);
+    if (review && review.application?.title) {
+      setApplicationTitle(review.application.title);
+    }
+  }, [reviews, applicationId]);
 
   const handleSuccess = () => {
     router.push("/reviewer/reviews");

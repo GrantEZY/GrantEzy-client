@@ -254,6 +254,7 @@ export default function ReviewSubmissionForm({
                 : "border-gray-300"
             }`}
             id="technical"
+            name="technical"
             max="100"
             min="0"
             onChange={(e) => handleScoreChange("technical", e.target.value)}
@@ -282,6 +283,7 @@ export default function ReviewSubmissionForm({
                 : "border-gray-300"
             }`}
             id="market"
+            name="market"
             max="100"
             min="0"
             onChange={(e) => handleScoreChange("market", e.target.value)}
@@ -310,6 +312,7 @@ export default function ReviewSubmissionForm({
                 : "border-gray-300"
             }`}
             id="financial"
+            name="financial"
             max="100"
             min="0"
             onChange={(e) => handleScoreChange("financial", e.target.value)}
@@ -338,6 +341,7 @@ export default function ReviewSubmissionForm({
                 : "border-gray-300"
             }`}
             id="team"
+            name="team"
             max="100"
             min="0"
             onChange={(e) => handleScoreChange("team", e.target.value)}
@@ -366,6 +370,7 @@ export default function ReviewSubmissionForm({
                 : "border-gray-300"
             }`}
             id="innovation"
+            name="innovation"
             max="100"
             min="0"
             onChange={(e) => handleScoreChange("innovation", e.target.value)}
@@ -395,6 +400,7 @@ export default function ReviewSubmissionForm({
               : "border-gray-300"
           }`}
           id="recommendation"
+          name="recommendation"
           onChange={(e) => {
             setRecommendation(e.target.value as Recommendation);
             if (errors.recommendation) {
@@ -429,6 +435,7 @@ export default function ReviewSubmissionForm({
                 : "border-gray-300"
             }`}
             id="suggestedBudget"
+            name="suggestedBudget"
             min="0"
             onChange={(e) => {
               setSuggestedBudget((prev) => ({ ...prev, amount: e.target.value }));
@@ -443,6 +450,8 @@ export default function ReviewSubmissionForm({
           />
           <select
             className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500"
+            id="currency"
+            name="currency"
             onChange={(e) =>
               setSuggestedBudget((prev) => ({ ...prev, currency: e.target.value }))
             }

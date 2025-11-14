@@ -80,6 +80,7 @@ export const usePm = () => {
   );
   const getReviewDetails = usePMStore((state) => state.getReviewDetails);
   const clearReviews = usePMStore((state) => state.clearReviews);
+  const clearReview = usePMStore((state) => state.clearReview);
 
   // Clear all
   const clearAll = usePMStore((state) => state.clearAll);
@@ -126,9 +127,11 @@ export const usePm = () => {
     reviewsError,
     currentReview,
     isReviewLoading,
+    reviewError: reviewsError,
     getApplicationReviews,
     getReviewDetails,
     clearReviews,
+    clearReview,
 
     // Program assignment
     isProgramAssigned,
