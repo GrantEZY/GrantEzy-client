@@ -153,6 +153,37 @@ export class ApplicantService {
       { applicationId },
     );
   }
+
+  // ============= Project Management =============
+
+  /**
+   * Get all projects created by the user
+   */
+  async getUserProjects(page: number, numberOfResults: number) {
+    const queryParams: Record<string, string> = {
+      page: page.toString(),
+      numberOfResults: numberOfResults.toString(),
+    };
+
+    return httpClient.get(
+      API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_PROJECTS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get project details by application slug
+   */
+  async getProjectDetails(applicationSlug: string) {
+    const queryParams: Record<string, string> = {
+      applicationSlug,
+    };
+
+    return httpClient.get(
+      API_CONFIG.ENDPOINTS.APPLICANT.GET_PROJECT_DETAILS,
+      queryParams,
+    );
+  }
 }
 
 export const applicantService = new ApplicantService();

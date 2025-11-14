@@ -95,6 +95,37 @@ export class CoApplicantService {
   ): Promise<InviteStatusUpdateResponse> {
     return this.updateInviteStatus(token, slug, InviteStatus.REJECTED);
   }
+
+  // ============= Project Management =============
+
+  /**
+   * Get all projects linked to the user (as co-applicant)
+   */
+  async getUserLinkedProjects(page: number, numberOfResults: number) {
+    const queryParams: Record<string, string> = {
+      page: page.toString(),
+      numberOfResults: numberOfResults.toString(),
+    };
+
+    return httpClient.get(
+      API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_USER_LINKED_PROJECTS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get project details by application slug (for co-applicants)
+   */
+  async getProjectDetails(applicationSlug: string) {
+    const queryParams: Record<string, string> = {
+      applicationSlug,
+    };
+
+    return httpClient.get(
+      API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_PROJECT_DETAILS,
+      queryParams,
+    );
+  }
 }
 
 // Export singleton instance
