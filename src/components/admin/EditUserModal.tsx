@@ -10,6 +10,7 @@ interface EditUserModalProps {
   onSubmit: (userData: {
     email: string;
     role: UserRoles;
+    action: 'add' | 'remove';
   }) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
   user?: {
@@ -34,10 +35,16 @@ export function EditUserModal({
   isLoading,
   user,
 }: EditUserModalProps) {
-  const [formData, setFormData] = useState<{ email: string; role: UserRoles }>({
+  const [formData, setFormData] = useState<{ 
+    email: string; 
+    role: UserRoles; 
+    action: 'add' | 'remove';
+  }>({
     email: "",
     role: UserRoles.APPLICANT,
+    action: 'add',
   });
+  const [currentRoles, setCurrentRoles] = useState<UserRoles[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -45,28 +52,31 @@ export function EditUserModal({
       // Extract email from user object (handle both flat and nested structure)
       const userEmail = user.contact?.email || user.email || "";
 
-      // Extract role (handle both single role and array of roles)
-      let userRole: UserRoles = UserRoles.APPLICANT; // Default fallback
+      // Extract roles (handle both single role and array of roles)
+      let userRoles: UserRoles[] = [];
 
       if (Array.isArray(user.role)) {
-        // Filter out any invalid roles and take the first valid one
-        const validRoles = user.role.filter((role) =>
+        // Filter out any invalid roles
+        userRoles = user.role.filter((role) =>
           Object.values(UserRoles).includes(role as UserRoles),
-        );
-        userRole =
-          validRoles.length > 0
-            ? (validRoles[0] as UserRoles)
-            : UserRoles.APPLICANT;
+        ) as UserRoles[];
       } else if (
         user.role &&
         Object.values(UserRoles).includes(user.role as UserRoles)
       ) {
-        userRole = user.role as UserRoles;
+        userRoles = [user.role as UserRoles];
       }
 
+      // If no valid roles found, default to NORMAL_USER
+      if (userRoles.length === 0) {
+        userRoles = [UserRoles.NORMAL_USER];
+      }
+
+      setCurrentRoles(userRoles);
       setFormData({
         email: userEmail,
-        role: userRole,
+        role: UserRoles.APPLICANT, // Default selection for adding new role
+        action: 'add',
       });
       setErrors({}); // Clear any previous errors
     }
@@ -85,19 +95,33 @@ export function EditUserModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleRoleAction = async (role: UserRoles, action: 'add' | 'remove') => {
     if (!validateForm()) {
       return;
     }
 
-    const result = await onSubmit(formData);
+    const result = await onSubmit({
+      email: formData.email,
+      role: role,
+      action: action,
+    });
 
     if (result.success) {
+      // Update current roles based on the action
+      if (action === 'add') {
+        setCurrentRoles(prev => [...prev, role]);
+      } else if (action === 'remove') {
+        setCurrentRoles(prev => prev.filter(r => r !== role));
+      }
       setErrors({});
-      onClose();
+    } else {
+      setErrors({ submit: result.error || 'Failed to update role' });
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // This form now uses handleRoleAction for individual role management
   };
 
   const handleChange = (field: keyof typeof formData, value: string) => {
@@ -149,45 +173,82 @@ export function EditUserModal({
 
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Current Role
+              Current Roles
             </label>
 
-            <div className="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2 text-gray-600">
-              {Array.isArray(user?.role)
-                ? user.role.join(", ")
-                : user?.role || "N/A"}
+            <div className="w-full rounded-md border border-gray-300 bg-gray-50 px-3 py-2">
+              {currentRoles.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {currentRoles.map((role) => (
+                    <span
+                      key={role}
+                      className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
+                    >
+                      {role.replace(/_/g, " ")}
+                      {currentRoles.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRoleAction(role, 'remove')}
+                          className="ml-1 h-4 w-4 rounded-full hover:bg-blue-200 flex items-center justify-center"
+                          disabled={isLoading}
+                        >
+                          ×
+                        </button>
+                      )}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <span className="text-gray-500">No roles assigned</span>
+              )}
             </div>
 
             <p className="mt-1 text-xs text-gray-500">
-              This is the user&apos;s current role(s)
+              Current roles assigned to this user. Click × to remove a role (minimum 1 role required).
             </p>
           </div>
 
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              New Role
+              Manage Roles
             </label>
 
-            <select
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-              onChange={(e) =>
-                handleChange("role", e.target.value as UserRoles)
-              }
-              value={formData.role}
-            >
-              {Object.values(UserRoles).map((role) => (
-                <option key={role} value={role}>
-                  {role.replace(/_/g, " ")}
-                </option>
-              ))}
-            </select>
+            <div className="flex gap-2">
+              <select
+                className="flex-1 rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
+                onChange={(e) =>
+                  handleChange("role", e.target.value as UserRoles)
+                }
+                value={formData.role}
+              >
+                {Object.values(UserRoles).map((role) => (
+                  <option key={role} value={role}>
+                    {role.replace(/_/g, " ")}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                type="button"
+                onClick={() => handleRoleAction(formData.role, 'add')}
+                disabled={isLoading || currentRoles.includes(formData.role)}
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+              >
+                Add Role
+              </button>
+            </div>
 
             <p className="mt-1 text-xs text-gray-500">
-              Select the new role for this user. The system will handle the role
-              change automatically.
+              Select a role and click "Add Role" to assign it to the user.
             </p>
           </div>
         </form>
+
+        {errors.submit && (
+          <div className="mx-6 mb-4 rounded-md bg-red-50 p-4">
+            <div className="text-sm text-red-700">{errors.submit}</div>
+          </div>
+        )}
 
         <div className="flex justify-end space-x-3 border-t border-gray-200 px-6 py-4">
           <button
@@ -196,15 +257,7 @@ export function EditUserModal({
             onClick={onClose}
             type="button"
           >
-            Cancel
-          </button>
-
-          <button
-            className="rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={isLoading}
-            onClick={handleSubmit}
-          >
-            {isLoading ? "Updating..." : "Update Role"}
+            {isLoading ? "Updating..." : "Close"}
           </button>
         </div>
       </div>

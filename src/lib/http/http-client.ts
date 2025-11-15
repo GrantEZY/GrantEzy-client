@@ -22,6 +22,13 @@ export class HttpClient {
     };
   }
 
+  private getPublicHeaders(): HeadersInit {
+    return {
+      ...API_CONFIG.HEADERS,
+      // Explicitly no Authorization header for public endpoints
+    };
+  }
+
   private handleAuthError(): void {
     if (typeof window !== "undefined") {
       // Clear auth data
@@ -226,6 +233,47 @@ export class HttpClient {
 
     const response = await makeRequest();
     return this.handleResponse<T>(response, makeRequest);
+  }
+
+  // Public methods that don't send authentication headers
+  async publicGet<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+    const url = new URL(getApiUrl(endpoint));
+
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.append(key, value);
+      });
+    }
+
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: this.getPublicHeaders(),
+      credentials: "include",
+    });
+
+    return this.handleResponse<T>(response);
+  }
+
+  async publicPost<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(getApiUrl(endpoint), {
+      method: "POST",
+      headers: this.getPublicHeaders(),
+      credentials: "include",
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    return this.handleResponse<T>(response);
+  }
+
+  async publicPatch<T>(endpoint: string, data?: unknown): Promise<T> {
+    const response = await fetch(getApiUrl(endpoint), {
+      method: "PATCH",
+      headers: this.getPublicHeaders(),
+      credentials: "include",
+      body: data ? JSON.stringify(data) : undefined,
+    });
+
+    return this.handleResponse<T>(response);
   }
 }
 

@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define public routes that don't require authentication
-const publicRoutes = ["/login", "/signup"];
+const publicRoutes = [
+  "/login",
+  "/signup",
+  "/co-applicant/invite",
+  "/reviewer/invite",
+  "/invite-accept-or-reject",
+];
 
 // Define routes that should redirect to dashboard if already authenticated
 const authRoutes = ["/login", "/signup"];
@@ -31,12 +37,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  // Check if current pathname matches any public route (exact match or starts with)
+  const isPublicRoute = publicRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+
   // If user is trying to access protected routes and is not authenticated
-  if (
-    !publicRoutes.includes(pathname) &&
-    !isAuthenticated &&
-    pathname !== "/"
-  ) {
+  if (!isPublicRoute && !isAuthenticated && pathname !== "/") {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);

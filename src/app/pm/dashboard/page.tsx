@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+
 import Link from "next/link";
+
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import PMLayout from "@/components/layout/PMLayout";
-import { usePm } from "@/hooks/usePm";
+
 import { useGcv } from "@/hooks/useGcv";
-import { CycleStatus } from "@/types/pm.types";
+import { usePm } from "@/hooks/usePm";
+
 import { Program } from "@/types/gcv.types";
+import { CycleStatus } from "@/types/pm.types";
 
 export default function PMDashboardPage() {
-  const { cycles, selectedProgramId, setSelectedProgramId } = usePm();
+  const { cycles, selectedProgramId } = usePm();
   const { programs, getPrograms, isProgramsLoading } = useGcv();
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
@@ -32,21 +36,33 @@ export default function PMDashboardPage() {
   // Calculate metrics
   const metrics = useMemo(() => {
     const totalCycles = cycles.length;
-    const activeCycles = cycles.filter(cycle => cycle.status === CycleStatus.ACTIVE).length;
-    const completedCycles = cycles.filter(cycle => cycle.status === CycleStatus.COMPLETED).length;
-    const draftCycles = cycles.filter(cycle => cycle.status === CycleStatus.DRAFT).length;
-    
-    const totalBudget = cycles.reduce((sum, cycle) => sum + (cycle.budget?.amount || 0), 0);
+    const activeCycles = cycles.filter(
+      (cycle) => cycle.status === CycleStatus.ACTIVE,
+    ).length;
+    const completedCycles = cycles.filter(
+      (cycle) => cycle.status === CycleStatus.COMPLETED,
+    ).length;
+    const draftCycles = cycles.filter(
+      (cycle) => cycle.status === CycleStatus.DRAFT,
+    ).length;
+
+    const totalBudget = cycles.reduce(
+      (sum, cycle) => sum + (cycle.budget?.amount || 0),
+      0,
+    );
     const activeBudget = cycles
-      .filter(cycle => cycle.status === CycleStatus.ACTIVE)
+      .filter((cycle) => cycle.status === CycleStatus.ACTIVE)
       .reduce((sum, cycle) => sum + (cycle.budget?.amount || 0), 0);
 
     // Upcoming deadlines (cycles ending in next 30 days)
     const now = new Date();
-    const upcomingDeadlines = cycles.filter(cycle => {
-      if (!cycle.duration?.endDate || cycle.status === CycleStatus.COMPLETED) return false;
+    const upcomingDeadlines = cycles.filter((cycle) => {
+      if (!cycle.duration?.endDate || cycle.status === CycleStatus.COMPLETED)
+        return false;
       const endDate = new Date(cycle.duration.endDate);
-      const daysUntilEnd = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+      const daysUntilEnd = Math.ceil(
+        (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+      );
       return daysUntilEnd <= 30 && daysUntilEnd > 0;
     }).length;
 
@@ -85,7 +101,10 @@ export default function PMDashboardPage() {
   };
 
   const recentCycles = cycles
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    )
     .slice(0, 5);
 
   return (
@@ -99,10 +118,9 @@ export default function PMDashboardPage() {
                 Program Manager Analytics
               </h1>
               <p className="mt-2 text-gray-600">
-                {selectedProgram 
+                {selectedProgram
                   ? `Analytics for ${selectedProgram.details.name}`
-                  : "Overview of your cycle management activities"
-                }
+                  : "Overview of your cycle management activities"}
               </p>
             </div>
             <div className="flex space-x-3">
@@ -149,9 +167,7 @@ export default function PMDashboardPage() {
                   <p className="text-3xl font-bold text-gray-900">
                     {metrics.totalCycles}
                   </p>
-                  <p className="text-sm text-gray-500">
-                    All funding cycles
-                  </p>
+                  <p className="text-sm text-gray-500">All funding cycles</p>
                 </div>
               </div>
             </div>
@@ -180,9 +196,7 @@ export default function PMDashboardPage() {
                   <p className="text-3xl font-bold text-gray-900">
                     {metrics.activeCycles}
                   </p>
-                  <p className="text-sm text-green-600">
-                    Currently running
-                  </p>
+                  <p className="text-sm text-green-600">Currently running</p>
                 </div>
               </div>
             </div>
@@ -211,9 +225,7 @@ export default function PMDashboardPage() {
                   <p className="text-3xl font-bold text-gray-900">
                     {formatCurrency(metrics.totalBudget)}
                   </p>
-                  <p className="text-sm text-purple-600">
-                    All cycles combined
-                  </p>
+                  <p className="text-sm text-purple-600">All cycles combined</p>
                 </div>
               </div>
             </div>
@@ -242,9 +254,7 @@ export default function PMDashboardPage() {
                   <p className="text-3xl font-bold text-gray-900">
                     {metrics.upcomingDeadlines}
                   </p>
-                  <p className="text-sm text-orange-600">
-                    Next 30 days
-                  </p>
+                  <p className="text-sm text-orange-600">Next 30 days</p>
                 </div>
               </div>
             </div>
@@ -253,16 +263,18 @@ export default function PMDashboardPage() {
           {/* Status Distribution */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <div className="rounded-lg bg-white p-6 shadow">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="mb-4 text-lg font-medium text-gray-900">
                 Cycle Status Distribution
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-green-100 text-green-800">
+                    <span className="inline-flex rounded-full bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
                       ACTIVE
                     </span>
-                    <span className="ml-2 text-sm text-gray-600">Active Cycles</span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      Active Cycles
+                    </span>
                   </div>
                   <span className="text-sm font-medium text-gray-900">
                     {metrics.activeCycles}
@@ -270,10 +282,12 @@ export default function PMDashboardPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-blue-100 text-blue-800">
+                    <span className="inline-flex rounded-full bg-blue-100 px-2 py-1 text-xs font-semibold text-blue-800">
                       COMPLETED
                     </span>
-                    <span className="ml-2 text-sm text-gray-600">Completed Cycles</span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      Completed Cycles
+                    </span>
                   </div>
                   <span className="text-sm font-medium text-gray-900">
                     {metrics.completedCycles}
@@ -281,10 +295,12 @@ export default function PMDashboardPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
-                    <span className="inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-gray-100 text-gray-800">
+                    <span className="inline-flex rounded-full bg-gray-100 px-2 py-1 text-xs font-semibold text-gray-800">
                       DRAFT
                     </span>
-                    <span className="ml-2 text-sm text-gray-600">Draft Cycles</span>
+                    <span className="ml-2 text-sm text-gray-600">
+                      Draft Cycles
+                    </span>
                   </div>
                   <span className="text-sm font-medium text-gray-900">
                     {metrics.draftCycles}
@@ -294,7 +310,7 @@ export default function PMDashboardPage() {
             </div>
 
             <div className="rounded-lg bg-white p-6 shadow">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="mb-4 text-lg font-medium text-gray-900">
                 Budget Overview
               </h3>
               <div className="space-y-3">
@@ -305,18 +321,23 @@ export default function PMDashboardPage() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Active Cycles Budget</span>
+                  <span className="text-sm text-gray-600">
+                    Active Cycles Budget
+                  </span>
                   <span className="text-sm font-medium text-green-600">
                     {formatCurrency(metrics.activeBudget)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Average per Cycle</span>
+                  <span className="text-sm text-gray-600">
+                    Average per Cycle
+                  </span>
                   <span className="text-sm font-medium text-gray-900">
-                    {metrics.totalCycles > 0 
-                      ? formatCurrency(Math.round(metrics.totalBudget / metrics.totalCycles))
-                      : formatCurrency(0)
-                    }
+                    {metrics.totalCycles > 0
+                      ? formatCurrency(
+                          Math.round(metrics.totalBudget / metrics.totalCycles),
+                        )
+                      : formatCurrency(0)}
                   </span>
                 </div>
               </div>
@@ -325,7 +346,7 @@ export default function PMDashboardPage() {
 
           {/* Recent Cycles */}
           <div className="rounded-lg bg-white shadow">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="border-b border-gray-200 px-6 py-4">
               <h3 className="text-lg font-medium text-gray-900">
                 Recent Cycles
               </h3>
@@ -346,14 +367,13 @@ export default function PMDashboardPage() {
                       strokeWidth={2}
                     />
                   </svg>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">
+                  <h4 className="mb-2 text-lg font-medium text-gray-900">
                     No cycles yet
                   </h4>
-                  <p className="text-gray-600 mb-4">
-                    {selectedProgram 
+                  <p className="mb-4 text-gray-600">
+                    {selectedProgram
                       ? "Create your first cycle for this program"
-                      : "Select a program to start managing cycles"
-                    }
+                      : "Select a program to start managing cycles"}
                   </p>
                   {selectedProgramId ? (
                     <Link
@@ -375,16 +395,16 @@ export default function PMDashboardPage() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Round
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Budget
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Status
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                      <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                         Duration
                       </th>
                     </tr>
@@ -392,7 +412,7 @@ export default function PMDashboardPage() {
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {recentCycles.map((cycle) => (
                       <tr key={cycle.id} className="hover:bg-gray-50">
-                        <td className="whitespace-nowrap px-6 py-4">
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-gray-900">
                             Year {cycle.round.year}
                           </div>
@@ -400,27 +420,36 @@ export default function PMDashboardPage() {
                             {cycle.round.type}
                           </div>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4">
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {formatCurrency(cycle.budget.amount, cycle.budget.currency)}
+                            {formatCurrency(
+                              cycle.budget.amount,
+                              cycle.budget.currency,
+                            )}
                           </div>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4">
+                        <td className="px-6 py-4 whitespace-nowrap">
                           <span
-                            className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${getStatusBadgeColor(
-                              cycle.status
+                            className={`inline-flex rounded-full px-2 text-xs leading-5 font-semibold ${getStatusBadgeColor(
+                              cycle.status,
                             )}`}
                           >
                             {cycle.status || "DRAFT"}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                          {cycle.duration.startDate 
-                            ? new Date(cycle.duration.startDate).toLocaleDateString()
-                            : "Not set"
-                          }
+                        <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                          {cycle.duration.startDate
+                            ? new Date(
+                                cycle.duration.startDate,
+                              ).toLocaleDateString()
+                            : "Not set"}
                           {cycle.duration.endDate && (
-                            <div>to {new Date(cycle.duration.endDate).toLocaleDateString()}</div>
+                            <div>
+                              to{" "}
+                              {new Date(
+                                cycle.duration.endDate,
+                              ).toLocaleDateString()}
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -432,8 +461,8 @@ export default function PMDashboardPage() {
           </div>
 
           {/* Quick Actions */}
-          <div className="rounded-lg bg-blue-50 border border-blue-200 p-6">
-            <h3 className="text-lg font-medium text-blue-900 mb-4">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
+            <h3 className="mb-4 text-lg font-medium text-blue-900">
               Quick Actions
             </h3>
             <div className="flex flex-wrap gap-3">
@@ -457,27 +486,25 @@ export default function PMDashboardPage() {
                 Browse Programs
               </Link>
               {selectedProgramId && (
-                <>
-                  <Link
-                    href={`/pm/cycles?programId=${selectedProgramId}`}
-                    className="inline-flex items-center rounded-md border border-blue-300 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                <Link
+                  href={`/pm/cycles?programId=${selectedProgramId}`}
+                  className="inline-flex items-center rounded-md border border-blue-300 bg-white px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50"
+                >
+                  <svg
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <svg
-                      className="mr-2 h-4 w-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                      />
-                    </svg>
-                    Manage Cycles
-                  </Link>
-                </>
+                    <path
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
+                  </svg>
+                  Manage Cycles
+                </Link>
               )}
               <Link
                 href="/gcv/programs"

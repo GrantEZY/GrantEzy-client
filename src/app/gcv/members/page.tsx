@@ -70,7 +70,6 @@ export default function GCVMembersPage() {
       email: member.contact?.email || member.email,
       type,
     };
-    console.log("Update GCV role request:", requestData);
 
     try {
       const success = await updateGCVUserRole(requestData);

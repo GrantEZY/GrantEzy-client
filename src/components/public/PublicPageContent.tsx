@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useEffect } from "react";
 import {
   FaBolt,
   FaBullseye,
@@ -9,7 +10,8 @@ import {
   FaRocket,
 } from "react-icons/fa";
 
-import { leadership, openCalls, successStories, team } from "@/constants";
+import { leadership, successStories, team } from "@/constants";
+import { usePublicStore } from "@/store/public.store";
 
 import { Marquee } from "@/components/magicui/marquee";
 
@@ -517,23 +519,22 @@ function TeamSection() {
 }
 
 function OpenCallsSection() {
-  const getProjectColors = (color: string) => {
-    switch (color) {
-      case "blue":
-        return {
-          bg: "from-[var(--color-blue-50)] to-[var(--color-blue-100)]",
-          border: "border-[var(--color-blue-200)]",
-          icon: "text-[var(--color-blue-600)]",
-          accent: "bg-[var(--color-blue-500)]",
-        };
-      case "green":
+  const { activeCycles, loading, error, fetchActiveCycles } = usePublicStore();
+
+  useEffect(() => {
+    fetchActiveCycles({ isActive: true });
+  }, [fetchActiveCycles]);
+
+  const getProjectColors = (status: string) => {
+    switch (status) {
+      case "OPEN":
         return {
           bg: "from-[var(--color-green-50)] to-[var(--color-green-100)]",
           border: "border-[var(--color-green-200)]",
           icon: "text-[var(--color-green-600)]",
           accent: "bg-[var(--color-green-500)]",
         };
-      case "red":
+      case "CLOSED":
         return {
           bg: "from-[var(--color-red-50)] to-[var(--color-red-100)]",
           border: "border-[var(--color-red-200)]",
@@ -542,13 +543,75 @@ function OpenCallsSection() {
         };
       default:
         return {
-          bg: "from-[var(--color-gray-50)] to-[var(--color-gray-100)]",
-          border: "border-[var(--color-gray-200)]",
-          icon: "text-[var(--color-gray-600)]",
-          accent: "bg-[var(--color-gray-500)]",
+          bg: "from-[var(--color-blue-50)] to-[var(--color-blue-100)]",
+          border: "border-[var(--color-blue-200)]",
+          icon: "text-[var(--color-blue-600)]",
+          accent: "bg-[var(--color-blue-500)]",
         };
     }
   };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const getStatusBadgeStyle = (status: string) => {
+    switch (status) {
+      case "OPEN":
+        return "border border-green-200 bg-green-100 text-green-700";
+      case "CLOSED":
+        return "border border-red-200 bg-red-100 text-red-700";
+      default:
+        return "border border-blue-200 bg-blue-100 text-blue-700";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "OPEN":
+        return "Open for Applications";
+      case "CLOSED":
+        return "Applications Closed";
+      default:
+        return "Coming Soon";
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="relative bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] py-24">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-20 text-center">
+            <h2 className="mb-6 text-4xl font-bold text-[var(--color-gray-900)] md:text-5xl">
+              Open Opportunities
+            </h2>
+            <div className="flex justify-center">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="relative bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] py-24">
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="mb-20 text-center">
+            <h2 className="mb-6 text-4xl font-bold text-[var(--color-gray-900)] md:text-5xl">
+              Open Opportunities
+            </h2>
+            <div className="text-red-600">Failed to load opportunities. Please try again later.</div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative bg-gradient-to-br from-[var(--color-gray-50)] to-[var(--color-blue-50)] py-24">
@@ -565,127 +628,130 @@ function OpenCallsSection() {
           </p>
         </div>
 
-        {/* Calls Grid */}
-        <div className="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-3">
-          {openCalls.map((call, index) => {
-            const colors = getProjectColors(call.color);
-            return (
-              <div
-                className="group relative flex h-full transform flex-col overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
-                key={index}
-              >
-                {/* Gradient Background */}
+        {/* Cycles Grid */}
+        {activeCycles.length > 0 ? (
+          <div className="mb-16 grid grid-cols-1 gap-8 lg:grid-cols-3">
+            {activeCycles.map((cycle) => {
+              const colors = getProjectColors(cycle.status);
+              return (
                 <div
-                  className={`absolute inset-0 bg-gradient-to-br ${colors.bg} opacity-50 transition-opacity duration-300 group-hover:opacity-70`}
-                ></div>
+                  className="group relative flex h-full transform flex-col overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+                  key={cycle.id}
+                >
+                  {/* Gradient Background */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${colors.bg} opacity-50 transition-opacity duration-300 group-hover:opacity-70`}
+                  ></div>
 
-                {/* Accent Line */}
-                <div
-                  className={`absolute top-0 right-0 left-0 h-1 ${colors.accent}`}
-                ></div>
+                  {/* Accent Line */}
+                  <div
+                    className={`absolute top-0 right-0 left-0 h-1 ${colors.accent}`}
+                  ></div>
 
-                {/* Content */}
-                <div className="relative flex h-full flex-col p-8">
-                  {/* Header */}
-                  <div className="mb-6 flex items-center justify-between">
-                    <div
-                      className={`${colors.icon} transition-transform duration-300 group-hover:scale-110`}
-                    >
-                      {getIcon(call.icon)}
-                    </div>
-
-                    <span
-                      className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                        call.status === "Open"
-                          ? "border border-green-200 bg-green-100 text-green-700"
-                          : call.status === "Coming Soon"
-                            ? "border border-yellow-200 bg-yellow-100 text-yellow-700"
-                            : "border border-blue-200 bg-blue-100 text-blue-700"
-                      }`}
-                    >
-                      {call.status}
-                    </span>
-                  </div>
-
-                  {/* Title & Description */}
-                  <div className="flex-grow">
-                    <h3 className="mb-4 text-2xl font-bold text-[var(--color-gray-900)] transition-colors duration-300 group-hover:text-[var(--color-blue-700)]">
-                      {call.title}
-                    </h3>
-
-                    <p className="mb-6 leading-relaxed text-[var(--color-gray-600)]">
-                      {call.description}
-                    </p>
-
-                    {/* Impact Metrics */}
-                    <div className="mb-6 grid grid-cols-2 gap-4">
-                      <div className="rounded-lg bg-white/50 p-3 text-center">
-                        <div className="text-lg font-bold text-[var(--color-gray-900)]">
-                          {call.funding}
-                        </div>
-
-                        <div className="text-xs text-[var(--color-gray-600)]">
-                          Funding
-                        </div>
+                  {/* Content */}
+                  <div className="relative flex h-full flex-col p-8">
+                    {/* Header */}
+                    <div className="mb-6 flex items-center justify-between">
+                      <div
+                        className={`${colors.icon} transition-transform duration-300 group-hover:scale-110`}
+                      >
+                        <FaRocket className="h-6 w-6" />
                       </div>
 
-                      <div className="rounded-lg bg-white/50 p-3 text-center">
-                        <div className="text-lg font-bold text-[var(--color-gray-900)]">
-                          {call.timeline}
-                        </div>
-
-                        <div className="text-xs text-[var(--color-gray-600)]">
-                          Duration
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Impact Badge */}
-                    <div className="mb-6">
-                      <div className="inline-flex items-center rounded-full border border-[var(--color-blue-200)] bg-[var(--color-blue-50)] px-3 py-2">
-                        <div className="mr-2 h-2 w-2 rounded-full bg-[var(--color-blue-500)]"></div>
-
-                        <span className="text-sm font-medium text-[var(--color-blue-700)]">
-                          {call.impact}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Tags */}
-                    <div className="mb-6 flex flex-wrap gap-2">
-                      {call.tags.map((tag, tagIndex) => (
-                        <span
-                          className="rounded-full border border-[var(--color-gray-200)] bg-white/70 px-3 py-1 text-xs font-medium text-[var(--color-gray-700)]"
-                          key={tagIndex}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* CTA Button - Always at bottom */}
-                  <div className="mt-auto">
-                    <button
-                      className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${
-                        call.status === "Open"
-                          ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
-                          : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
-                      }`}
-                      disabled={call.status !== "Open"}
-                    >
-                      <span>
-                        {call.status === "Open" ? "Apply Now" : "Opening Soon"}
+                      <span
+                        className={`rounded-full px-4 py-2 text-sm font-semibold ${getStatusBadgeStyle(cycle.status)}`}
+                      >
+                        {getStatusText(cycle.status)}
                       </span>
+                    </div>
 
-                      <FaExternalLinkAlt className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                    </button>
+                    {/* Title & Description */}
+                    <div className="flex-grow">
+                      <h3 className="mb-2 text-xl font-bold text-[var(--color-gray-900)] transition-colors duration-300 group-hover:text-[var(--color-blue-700)]">
+                        {cycle.title || cycle.program?.name || "Innovation Program"}
+                      </h3>
+
+                      <p className="mb-4 text-sm text-[var(--color-blue-600)] font-semibold">
+                        {cycle.program?.name}
+                      </p>
+
+                      <p className="mb-6 leading-relaxed text-[var(--color-gray-600)]">
+                        {cycle.description || cycle.program?.description || "Join our innovation program to accelerate your startup journey."}
+                      </p>
+
+                      {/* Dates */}
+                      <div className="mb-6 grid grid-cols-1 gap-4">
+                        <div className="rounded-lg bg-white/50 p-3">
+                          <div className="text-sm font-semibold text-[var(--color-gray-900)]">
+                            Application Period
+                          </div>
+                          <div className="text-xs text-[var(--color-gray-600)]">
+                            {formatDate(cycle.startDate)} - {formatDate(cycle.endDate)}
+                          </div>
+                        </div>
+
+                        {cycle.budget && (
+                          <div className="rounded-lg bg-white/50 p-3">
+                            <div className="text-lg font-bold text-[var(--color-gray-900)]">
+                              {cycle.budget.currency} {cycle.budget.amount.toLocaleString()}
+                            </div>
+                            <div className="text-xs text-[var(--color-gray-600)]">
+                              Funding Available
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Round Info */}
+                      {cycle.round && (
+                        <div className="mb-6">
+                          <div className="inline-flex items-center rounded-full border border-[var(--color-blue-200)] bg-[var(--color-blue-50)] px-3 py-2">
+                            <div className="mr-2 h-2 w-2 rounded-full bg-[var(--color-blue-500)]"></div>
+                            <span className="text-sm font-medium text-[var(--color-blue-700)]">
+                              {cycle.round.year} - {cycle.round.type}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* CTA Button - Always at bottom */}
+                    <div className="mt-auto">
+                      <button
+                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${
+                          cycle.status === "OPEN"
+                            ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
+                            : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
+                        }`}
+                        disabled={cycle.status !== "OPEN"}
+                      >
+                        <span>
+                          {cycle.status === "OPEN" ? "Apply Now" : "Applications Closed"}
+                        </span>
+
+                        {cycle.status === "OPEN" && (
+                          <FaExternalLinkAlt className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="mb-16 text-center">
+            <div className="rounded-2xl bg-white p-12 shadow-lg">
+              <div className="text-6xl mb-6">🚀</div>
+              <h3 className="mb-4 text-2xl font-bold text-[var(--color-gray-900)]">
+                No Active Opportunities
+              </h3>
+              <p className="text-[var(--color-gray-600)]">
+                New funding opportunities will be announced soon. Stay tuned!
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Call to Action */}
         <div className="text-center">

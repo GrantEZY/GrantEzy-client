@@ -88,11 +88,7 @@ function NotificationBell() {
 }
 
 export default function Header() {
-  const { user, isAuthenticated, logout } = useAuth();
-
-  const handleLogout = async () => {
-    await logout();
-  };
+  const { user, isAuthenticated } = useAuth();
 
   // Get user initials
   const getUserInitials = () => {

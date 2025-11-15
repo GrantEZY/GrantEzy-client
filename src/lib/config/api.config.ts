@@ -34,13 +34,65 @@ export const API_CONFIG = {
       UPDATE_PROGRAM: "/gcv/update-program",
       DELETE_PROGRAM: "/gcv/delete-program",
       ADD_PROGRAM_MANAGER: "/gcv/add-program-manager",
+      UPDATE_PROGRAM_MANAGER: "/gcv/update-program-manager",
+      // GCV Program Cycles
+      GET_PROGRAM_CYCLES: "/gcv/get-program-cycles",
+      GET_CYCLE_DETAILS: "/gcv/get-cycle-details",
+      GET_APPLICATION_DETAILS: "/gcv/get-cycle-application-details",
     },
     PM: {
+      // PM Program Management
+      GET_ASSIGNED_PROGRAM: "/pm/get-pm-program",
       // PM Cycle Management
       CREATE_CYCLE: "/pm/create-cycle",
       GET_PROGRAM_CYCLES: "/pm/get-program-cycles",
+      GET_CYCLE_DETAILS: "/pm/get-cycle-details",
       UPDATE_CYCLE_DETAILS: "/pm/update-cycle-details",
       DELETE_CYCLE: "/pm/delete-program-cycle",
+      // PM Application & Review Management
+      GET_APPLICATION_DETAILS: "/pm/get-application-details",
+      INVITE_REVIEWER: "/pm/invite-application-reviewer",
+      GET_APPLICATION_REVIEWS: "/pm/get-application-reviews",
+      GET_REVIEW_DETAILS: "/pm/get-application-review-details",
+    },
+    APPLICANT: {
+      // Application Submission Steps
+      CREATE_APPLICATION: "/applicant/create-application",
+      ADD_BUDGET: "/applicant/add-application-budget",
+      ADD_TECHNICAL_DETAILS: "/applicant/add-application-technical-details",
+      ADD_REVENUE_STREAM: "/applicant/add-application-revenue-stream",
+      ADD_RISKS_MILESTONES: "/applicant/add-application-risks-and-milestones",
+      ADD_DOCUMENTS: "/applicant/add-application-documents",
+      ADD_TEAMMATES: "/applicant/add-application-teammates",
+      // Application Management
+      GET_USER_APPLICATIONS: "/applicant/get-user-applications",
+      GET_APPLICATION_WITH_CYCLE: "/applicant/get-application-details-with-cycle",
+      GET_USER_CREATED_APPLICATION: "/applicant/get-user-created-applications",
+      DELETE_APPLICATION: "/applicant/delete-user-application",
+    },
+    CO_APPLICANT: {
+      // Co-applicant management
+      GET_APPLICATION_DETAILS: "/co-applicant/get-application-details",
+      GET_TOKEN_DETAILS: "/co-applicant/get-token-details",
+      UPDATE_INVITE_STATUS: "/co-applicant/update-user-invite-status",
+    },
+    REVIEWER: {
+      // Reviewer Management
+      GET_TOKEN_DETAILS: "/reviewer/get-token-details",
+      UPDATE_INVITE_STATUS: "/reviewer/update-invite-status",
+      SUBMIT_REVIEW: "/reviewer/submit-application-review",
+      GET_USER_REVIEWS: "/reviewer/get-user-reviews",
+      GET_REVIEW_DETAILS: "/reviewer/get-review-details",
+    },
+    PUBLIC: {
+      // Public endpoints (no auth required)
+      GET_ACTIVE_CYCLES: "/public/active-program-cycles",
+      GET_CYCLE_DETAILS: "/public/program-cycle-details",
+    },
+    USER: {
+      // User Profile Management
+      GET_PROFILE: "/user/user-profile",
+      UPDATE_PROFILE: "/user/update-profile",
     },
     HEALTH: "/health",
   },

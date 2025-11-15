@@ -128,7 +128,6 @@ export function ProgramModal({
         minTRL: formData.minTRL,
         maxTRL: formData.maxTRL,
       };
-      console.log("Create program request:", JSON.stringify(data, null, 2));
       await onSubmit(data);
     } else if (program) {
       const data: UpdateProgramRequest = {
@@ -151,7 +150,6 @@ export function ProgramModal({
         minTRL: formData.minTRL,
         maxTRL: formData.maxTRL,
       };
-      console.log("Update program request:", JSON.stringify(data, null, 2));
       await onSubmit(data);
     }
 
@@ -180,7 +178,7 @@ export function ProgramModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/10 backdrop-blur-md p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/10 p-4 backdrop-blur-md">
       <div className="my-8 w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
@@ -208,7 +206,7 @@ export function ProgramModal({
           </button>
         </div>
 
-        <form className="max-h-[70vh] overflow-y-auto" onSubmit={handleSubmit}>
+        <form className="thin-scrollbar max-h-[70vh] overflow-y-auto" onSubmit={handleSubmit}>
           <div className="space-y-4">
             {/* Organization Section */}
             {mode === "create" && (

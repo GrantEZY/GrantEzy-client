@@ -17,6 +17,17 @@ export const useGcv = () => {
   const isProgramsLoading = useGCVStore((state) => state.isProgramsLoading);
   const programsError = useGCVStore((state) => state.programsError);
 
+  // Program Cycles state
+  const programCycles = useGCVStore((state) => state.programCycles);
+  const programCyclesPagination = useGCVStore(
+    (state) => state.programCyclesPagination,
+  );
+  const isProgramCyclesLoading = useGCVStore(
+    (state) => state.isProgramCyclesLoading,
+  );
+  const programCyclesError = useGCVStore((state) => state.programCyclesError);
+  const selectedCycle = useGCVStore((state) => state.selectedCycle);
+
   // GCV Member actions
   const getAllGCVMembers = useGCVStore((state) => state.getAllGCVMembers);
   const addGCVMember = useGCVStore((state) => state.addGCVMember);
@@ -32,6 +43,18 @@ export const useGcv = () => {
   const addProgramManager = useGCVStore((state) => state.addProgramManager);
   const clearPrograms = useGCVStore((state) => state.clearPrograms);
   const setProgramsError = useGCVStore((state) => state.setProgramsError);
+
+  // Program Cycles actions
+  const getProgramCycles = useGCVStore((state) => state.getProgramCycles);
+  const getCycleDetails = useGCVStore((state) => state.getCycleDetails);
+  const getApplicationDetails = useGCVStore(
+    (state) => state.getApplicationDetails,
+  );
+  const clearProgramCycles = useGCVStore((state) => state.clearProgramCycles);
+  const setProgramCyclesError = useGCVStore(
+    (state) => state.setProgramCyclesError,
+  );
+  const setSelectedCycle = useGCVStore((state) => state.setSelectedCycle);
 
   // Clear all
   const clearAll = useGCVStore((state) => state.clearAll);
@@ -60,6 +83,19 @@ export const useGcv = () => {
     addProgramManager,
     clearPrograms,
     setProgramsError,
+
+    // Program Cycles
+    programCycles,
+    programCyclesPagination,
+    isProgramCyclesLoading,
+    programCyclesError,
+    selectedCycle,
+    getProgramCycles,
+    getCycleDetails,
+    getApplicationDetails,
+    clearProgramCycles,
+    setProgramCyclesError,
+    setSelectedCycle,
 
     // Utility
     clearAll,

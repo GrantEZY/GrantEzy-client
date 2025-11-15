@@ -12,11 +12,15 @@ import {
   GCVMember,
   GetAllGCVMembersRequest,
   GetAllProgramsRequest,
+  GetGCVApplicationDetailsRequest,
+  GetGCVCycleDetailsRequest,
+  GetGCVProgramCyclesRequest,
   PaginationMeta,
   Program,
   UpdateGCVUserRoleRequest,
   UpdateProgramRequest,
 } from "../types/gcv.types";
+import { Cycle } from "../types/pm.types";
 
 interface GCVState {
   // GCV Members state
@@ -30,6 +34,13 @@ interface GCVState {
   programsPagination: PaginationMeta | null;
   isProgramsLoading: boolean;
   programsError: string | null;
+
+  // Program Cycles state
+  programCycles: Cycle[];
+  programCyclesPagination: PaginationMeta | null;
+  isProgramCyclesLoading: boolean;
+  programCyclesError: string | null;
+  selectedCycle: Cycle | null;
 }
 
 interface GCVActions {
@@ -49,6 +60,16 @@ interface GCVActions {
   clearPrograms: () => void;
   setProgramsError: (error: string | null) => void;
 
+  // Program Cycles actions
+  getProgramCycles: (params: GetGCVProgramCyclesRequest) => Promise<void>;
+  getCycleDetails: (params: GetGCVCycleDetailsRequest) => Promise<void>;
+  getApplicationDetails: (
+    params: GetGCVApplicationDetailsRequest,
+  ) => Promise<void>;
+  clearProgramCycles: () => void;
+  setProgramCyclesError: (error: string | null) => void;
+  setSelectedCycle: (cycle: Cycle | null) => void;
+
   // Clear all
   clearAll: () => void;
 }
@@ -66,6 +87,12 @@ export const useGCVStore = create<GCVStore>((set) => ({
   programsPagination: null,
   isProgramsLoading: false,
   programsError: null,
+
+  programCycles: [],
+  programCyclesPagination: null,
+  isProgramCyclesLoading: false,
+  programCyclesError: null,
+  selectedCycle: null,
 
   // ============= GCV Member Actions =============
 
@@ -224,9 +251,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
   getPrograms: async (params: GetAllProgramsRequest) => {
     set({ isProgramsLoading: true, programsError: null, programs: [] });
     try {
-      console.log("[GCV Store] Fetching programs with params:", params);
       const response = await gcvService.getPrograms(params);
-      console.log("[GCV Store] Get programs response:", response);
 
       if (response.status === 200) {
         // Create pagination metadata from the response
@@ -240,11 +265,6 @@ export const useGCVStore = create<GCVStore>((set) => ({
           totalPages: Math.ceil(totalPrograms / pageSize),
         };
 
-        console.log(
-          "[GCV Store] Setting programs:",
-          response.res.programs.length,
-          "programs",
-        );
         set({
           programs: response.res.programs,
           programsPagination: pagination,
@@ -266,20 +286,13 @@ export const useGCVStore = create<GCVStore>((set) => ({
   updateProgram: async (data: UpdateProgramRequest) => {
     set({ isProgramsLoading: true, programsError: null });
     try {
-      console.log("[GCV Store] Updating program:", data);
       const response = await gcvService.updateProgram(data);
-      console.log("[GCV Store] Update program response:", response);
 
       // Backend returns 200 for successful update
       if (response.status === 200) {
         set({ isProgramsLoading: false });
-        console.log("[GCV Store] Program updated successfully");
         return true;
       }
-      console.warn(
-        "[GCV Store] Update returned non-200 status:",
-        response.status,
-      );
       return false;
     } catch (error: unknown) {
       let errorMessage = "Failed to update program";
@@ -310,20 +323,13 @@ export const useGCVStore = create<GCVStore>((set) => ({
   deleteProgram: async (data: DeleteProgramRequest) => {
     set({ isProgramsLoading: true, programsError: null });
     try {
-      console.log("[GCV Store] Deleting program:", data);
       const response = await gcvService.deleteProgram(data);
-      console.log("[GCV Store] Delete program response:", response);
 
       // Backend returns 200 for successful deletion
       if (response.status === 200 && response.res.success) {
         set({ isProgramsLoading: false });
-        console.log("[GCV Store] Program deleted successfully");
         return true;
       }
-      console.warn(
-        "[GCV Store] Delete returned non-success response:",
-        response,
-      );
       return false;
     } catch (error: unknown) {
       let errorMessage = "Failed to delete program";
@@ -400,6 +406,152 @@ export const useGCVStore = create<GCVStore>((set) => ({
     set({ programsError: error });
   },
 
+  // ============= Program Cycles Actions =============
+
+  getProgramCycles: async (params: GetGCVProgramCyclesRequest) => {
+    set({
+      isProgramCyclesLoading: true,
+      programCyclesError: null,
+      programCycles: [],
+    });
+    try {
+      const response = await gcvService.getProgramCycles(params);
+
+      if (response.status === 200) {
+        // Create pagination metadata from the response
+        const totalCycles = response.res.totalNumberOfCycles || 0;
+        const pageSize = params.numberOfResults || 10;
+
+        const pagination: PaginationMeta = {
+          page: params.page || 1,
+          limit: pageSize,
+          total: totalCycles,
+          totalPages: Math.ceil(totalCycles / pageSize),
+        };
+
+        set({
+          programCycles: response.res.cycles,
+          programCyclesPagination: pagination,
+          isProgramCyclesLoading: false,
+        });
+      } else {
+        throw new Error(response.message || "Failed to fetch program cycles");
+      }
+    } catch (error: unknown) {
+      let errorMessage = "Failed to fetch program cycles";
+
+      if (error && typeof error === "object" && "response" in error) {
+        const apiError = error as {
+          response?: { data?: { message?: string } };
+        };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
+
+      console.error("Get program cycles error:", error);
+
+      set({
+        programCyclesError: errorMessage,
+        isProgramCyclesLoading: false,
+        programCycles: [],
+      });
+    }
+  },
+
+  getCycleDetails: async (params: GetGCVCycleDetailsRequest) => {
+    set({ isProgramCyclesLoading: true, programCyclesError: null });
+    try {
+      const response = await gcvService.getCycleDetails(params);
+
+      if (response.status === 200) {
+        set({
+          selectedCycle: response.res.cycle,
+          isProgramCyclesLoading: false,
+        });
+      } else {
+        throw new Error(response.message || "Failed to fetch cycle details");
+      }
+    } catch (error: unknown) {
+      let errorMessage = "Failed to fetch cycle details";
+
+      if (error && typeof error === "object" && "response" in error) {
+        const apiError = error as {
+          response?: { data?: { message?: string } };
+        };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
+
+      console.error("Get cycle details error:", error);
+
+      set({
+        programCyclesError: errorMessage,
+        isProgramCyclesLoading: false,
+      });
+    }
+  },
+
+  getApplicationDetails: async (params: GetGCVApplicationDetailsRequest) => {
+    set({ isProgramCyclesLoading: true, programCyclesError: null });
+    try {
+      const response = await gcvService.getApplicationDetails(params);
+
+      if (response.status === 200) {
+        set({
+          isProgramCyclesLoading: false,
+        });
+        // We can store the application details in a new state property if needed
+      } else {
+        throw new Error(
+          response.message || "Failed to fetch application details",
+        );
+      }
+    } catch (error: unknown) {
+      let errorMessage = "Failed to fetch application details";
+
+      if (error && typeof error === "object" && "response" in error) {
+        const apiError = error as {
+          response?: { data?: { message?: string } };
+        };
+        if (apiError.response?.data?.message) {
+          errorMessage = apiError.response.data.message;
+        }
+      } else if (error instanceof Error && error.message) {
+        errorMessage = error.message;
+      }
+
+      console.error("Get application details error:", error);
+
+      set({
+        programCyclesError: errorMessage,
+        isProgramCyclesLoading: false,
+      });
+    }
+  },
+
+  clearProgramCycles: () => {
+    set({
+      programCycles: [],
+      programCyclesPagination: null,
+      programCyclesError: null,
+      selectedCycle: null,
+    });
+  },
+
+  setProgramCyclesError: (error: string | null) => {
+    set({ programCyclesError: error });
+  },
+
+  setSelectedCycle: (cycle: Cycle | null) => {
+    set({ selectedCycle: cycle });
+  },
+
   // ============= Clear All =============
 
   clearAll: () => {
@@ -412,6 +564,11 @@ export const useGCVStore = create<GCVStore>((set) => ({
       programsPagination: null,
       isProgramsLoading: false,
       programsError: null,
+      programCycles: [],
+      programCyclesPagination: null,
+      isProgramCyclesLoading: false,
+      programCyclesError: null,
+      selectedCycle: null,
     });
   },
 }));
