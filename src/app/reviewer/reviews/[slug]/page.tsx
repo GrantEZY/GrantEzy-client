@@ -32,13 +32,12 @@ export default function ReviewDetailsPage() {
 
   const getStatusBadgeClass = (status: ReviewStatus) => {
     switch (status) {
-      case ReviewStatus.SUBMITTED:
       case ReviewStatus.COMPLETED:
         return "bg-green-100 text-green-800";
       case ReviewStatus.IN_PROGRESS:
         return "bg-orange-100 text-orange-800";
-      case ReviewStatus.ASSIGNED:
-        return "bg-yellow-100 text-yellow-800";
+      case ReviewStatus.UNASSIGNED:
+        return "bg-gray-100 text-gray-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
@@ -111,7 +110,7 @@ export default function ReviewDetailsPage() {
         ) : (
           <div className="space-y-6">
             {/* Submit Review Button - Show for ASSIGNED reviews without submission */}
-            {currentReview.status === ReviewStatus.ASSIGNED && !currentReview.recommendation && (
+            {currentReview.status === ReviewStatus.UNASSIGNED && !currentReview.recommendation && (
               <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4">
                 <div className="flex items-center justify-between">
                   <div>

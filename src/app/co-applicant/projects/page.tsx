@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { AuthGuard } from "@/components/guards/AuthGuard";
+import CoApplicantLayout from "@/components/layout/CoApplicantLayout";
 import { coApplicantService } from "@/services/co-applicant.service";
 import { Project } from "@/types/project.types";
-import CoApplicantLayout from "@/components/layout/CoApplicantLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, DollarSign, FolderOpen } from "lucide-react";
-import Link from "next/link";
 
 export default function CoApplicantProjectsPage() {
   const router = useRouter();
@@ -47,54 +44,42 @@ export default function CoApplicantProjectsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return "bg-green-500";
+        return "bg-green-100 text-green-800";
       case "COMPLETED":
-        return "bg-blue-500";
+        return "bg-blue-100 text-blue-800";
       case "ON_HOLD":
-        return "bg-yellow-500";
+        return "bg-yellow-100 text-yellow-800";
       case "CANCELLED":
-        return "bg-red-500";
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-500";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  const formatCurrency = (amount: number | undefined | null) => {
-    if (!amount) return "₹0.00";
-    return `₹${amount.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
-
-  const formatDate = (dateString: Date | string | undefined | null) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-IN", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
-  const calculateProjectBudget = (project: Project): number => {
-    const budget = project.allocatedBudget;
+  const calculateBudgetTotal = (budget: any) => {
     if (!budget) return 0;
 
     let total = 0;
 
-    // Sum ManPower
-    if (budget.ManPower) {
-      total += budget.ManPower.reduce((sum: number, item: any) => sum + (item.Budget?.totalAmount || 0), 0);
+    if (budget.ManPower && Array.isArray(budget.ManPower)) {
+      total += budget.ManPower.reduce(
+        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        0
+      );
+    }
+    if (budget.Equipment && Array.isArray(budget.Equipment)) {
+      total += budget.Equipment.reduce(
+        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        0
+      );
+    }
+    if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
+      total += budget.OtherCosts.reduce(
+        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        0
+      );
     }
 
-    // Sum Equipment
-    if (budget.Equipment) {
-      total += budget.Equipment.reduce((sum: number, item: any) => sum + (item.Budget?.totalAmount || 0), 0);
-    }
-
-    // Sum OtherCosts
-    if (budget.OtherCosts) {
-      total += budget.OtherCosts.reduce((sum: number, item: any) => sum + (item.Budget?.totalAmount || 0), 0);
-    }
-
-    // Add single items with type checking
     if (budget.Consumables && 'Budget' in budget.Consumables) {
       total += (budget.Consumables as any).Budget?.totalAmount || 0;
     }
@@ -111,164 +96,177 @@ export default function CoApplicantProjectsPage() {
     return total;
   };
 
-  const calculateDuration = (project: Project): string => {
-    const duration = project.plannedDuration;
-    if (!duration?.startDate || !duration?.endDate) return "N/A";
-
-    const startDate = new Date(duration.startDate);
-    const endDate = new Date(duration.endDate);
-    const diffTime = Math.abs(endDate.getTime() - startDate.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const months = Math.floor(diffDays / 30);
-    const days = diffDays % 30;
-
-    return months > 0 
-      ? `${months} month${months > 1 ? 's' : ''} ${days} day${days !== 1 ? 's' : ''}`
-      : `${days} day${days !== 1 ? 's' : ''}`;
-  };
-
-  if (isLoading) {
-    return (
-      <CoApplicantLayout>
-        <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
-          <div className="text-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading your linked projects...</p>
-          </div>
-        </div>
-      </CoApplicantLayout>
-    );
-  }
-
-  if (error) {
-    return (
-      <CoApplicantLayout>
-        <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
-          <div className="text-center">
-            <p className="text-destructive">{error}</p>
-            <Button onClick={() => loadProjects()} className="mt-4">
-              Try Again
-            </Button>
-          </div>
-        </div>
-      </CoApplicantLayout>
-    );
-  }
-
   return (
-    <CoApplicantLayout>
-      <div className="space-y-6 p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+    <AuthGuard>
+      <CoApplicantLayout>
+        <div className="space-y-6 p-6">
+          {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold">Linked Projects</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-bold text-gray-900">Linked Projects</h1>
+            <p className="mt-2 text-gray-600">
               View projects where you are a co-applicant
             </p>
           </div>
-        </div>
 
-        {/* Projects List */}
-        {projects.length === 0 ? (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <FolderOpen className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No Linked Projects</h3>
-              <p className="text-muted-foreground text-center max-w-md">
-                You are not currently linked to any projects as a co-applicant.
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Linked Projects ({projects.length})</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="border-b">
-                    <tr className="text-left">
-                      <th className="pb-3 font-medium">Project ID</th>
-                      <th className="pb-3 font-medium">Status</th>
-                      <th className="pb-3 font-medium text-right">Budget</th>
-                      <th className="pb-3 font-medium">Duration</th>
-                      <th className="pb-3 font-medium">Start Date</th>
-                      <th className="pb-3 font-medium">End Date</th>
-                      <th className="pb-3 font-medium text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {projects.map((project) => (
-                      <tr key={project.id} className="border-b last:border-0">
-                        <td className="py-4">
-                          <span className="font-mono text-sm">
-                            {project.id.slice(0, 8)}...
-                          </span>
-                        </td>
-                        <td className="py-4">
-                          <Badge className={getStatusColor(project.status)}>
-                            {project.status}
-                          </Badge>
-                        </td>
-                        <td className="py-4 text-right font-medium">
-                          {formatCurrency(calculateProjectBudget(project))}
-                        </td>
-                        <td className="py-4">
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                            <span className="text-sm">{calculateDuration(project)}</span>
-                          </div>
-                        </td>
-                        <td className="py-4 text-sm">
-                          {formatDate(project.plannedDuration?.startDate)}
-                        </td>
-                        <td className="py-4 text-sm">
-                          {formatDate(project.plannedDuration?.endDate)}
-                        </td>
-                        <td className="py-4 text-right">
-                          <Link href={`/co-applicant/projects/${project.slug}`}>
-                            <Button variant="outline" size="sm">
-                              View Details
-                            </Button>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+          {/* Loading State */}
+          {isLoading && (
+            <div className="flex h-64 items-center justify-center rounded-lg border border-gray-200 bg-white">
+              <div className="text-center">
+                <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                <p className="mt-4 text-sm text-gray-600">Loading linked projects...</p>
               </div>
+            </div>
+          )}
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between mt-6 pt-6 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    Page {currentPage} of {totalPages}
+          {/* Error State */}
+          {error && !isLoading && (
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4">
+              <div className="flex">
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">Error loading projects</h3>
+                  <p className="mt-2 text-sm text-red-700">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Projects List */}
+          {!isLoading && !error && (
+            <>
+              {projects.length === 0 ? (
+                <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+                  <svg
+                    className="mx-auto h-12 w-12 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
+                  </svg>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No Linked Projects</h3>
+                  <p className="mt-1 text-sm text-gray-500">
+                    You are not currently linked to any projects as a co-applicant.
                   </p>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </Button>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
+                  <div className="border-b border-gray-200 px-6 py-4">
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      Your Linked Projects ({projects.length})
+                    </h2>
                   </div>
+
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Project Title
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Status
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Budget
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Duration
+                          </th>
+                          <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                            Actions
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200 bg-white">
+                        {projects.map((project) => (
+                          <tr key={project.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {project.application?.basicInfo?.title ||
+                                  project.application?.title ||
+                                  "Untitled Project"}
+                              </div>
+                              <div className="mt-1 text-sm text-gray-500">
+                                ID: {project.id.substring(0, 8)}...
+                              </div>
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              <span
+                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.status)}`}
+                              >
+                                {project.status}
+                              </span>
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
+                              INR {calculateBudgetTotal(project.allocatedBudget).toLocaleString()}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                              {project.plannedDuration?.startDate && project.plannedDuration?.endDate
+                                ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
+                                : "Not set"}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                              <Link
+                                className="text-blue-600 hover:text-blue-700"
+                                href={`/co-applicant/projects/${project.application?.slug || project.slug}`}
+                              >
+                                View Details
+                              </Link>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="border-t border-gray-200 px-6 py-4">
+                      <div className="flex items-center justify-between">
+                        <button
+                          onClick={() => setCurrentPage(currentPage - 1)}
+                          disabled={currentPage === 1}
+                          className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                          type="button"
+                        >
+                          Previous
+                        </button>
+                        <span className="text-sm text-gray-700">
+                          Page {currentPage} of {totalPages}
+                        </span>
+                        <button
+                          onClick={() => setCurrentPage(currentPage + 1)}
+                          disabled={currentPage === totalPages}
+                          className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                          type="button"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </CoApplicantLayout>
+            </>
+          )}
+        </div>
+      </CoApplicantLayout>
+    </AuthGuard>
   );
 }

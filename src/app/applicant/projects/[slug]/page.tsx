@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { AuthGuard } from "@/components/guards/AuthGuard";
+import ApplicantLayout from "@/components/layout/ApplicantLayout";
 import { applicantService } from "@/services/applicant.service";
 import { Project } from "@/types/project.types";
-import ApplicantLayout from "@/components/layout/ApplicantLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, DollarSign, FileText, Users } from "lucide-react";
-import Link from "next/link";
 
 export default function ApplicantProjectDetailsPage() {
   const params = useParams();
@@ -48,15 +45,15 @@ export default function ApplicantProjectDetailsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "ACTIVE":
-        return "bg-green-500";
+        return "bg-green-100 text-green-800";
       case "COMPLETED":
-        return "bg-blue-500";
+        return "bg-blue-100 text-blue-800";
       case "ON_HOLD":
-        return "bg-yellow-500";
+        return "bg-yellow-100 text-yellow-800";
       case "CANCELLED":
-        return "bg-red-500";
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-500";
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -80,33 +77,29 @@ export default function ApplicantProjectDetailsPage() {
 
     let total = 0;
 
-    // Sum ManPower
     if (budget.ManPower) {
       total += budget.ManPower.reduce((sum: number, item: any) => sum + (item.Budget?.totalAmount || 0), 0);
     }
 
-    // Sum Equipment
     if (budget.Equipment) {
       total += budget.Equipment.reduce((sum: number, item: any) => sum + (item.Budget?.totalAmount || 0), 0);
     }
 
-    // Sum OtherCosts
     if (budget.OtherCosts) {
       total += budget.OtherCosts.reduce((sum: number, item: any) => sum + (item.Budget?.totalAmount || 0), 0);
     }
 
-    // Add single items
-    if (budget.Consumables && 'totalAmount' in budget.Consumables) {
-      total += (budget.Consumables as any).totalAmount || 0;
+    if (budget.Consumables && 'Budget' in budget.Consumables) {
+      total += (budget.Consumables as any).Budget?.totalAmount || 0;
     }
-    if (budget.Travel && 'totalAmount' in budget.Travel) {
-      total += (budget.Travel as any).totalAmount || 0;
+    if (budget.Travel && 'Budget' in budget.Travel) {
+      total += (budget.Travel as any).Budget?.totalAmount || 0;
     }
-    if (budget.Contigency && 'totalAmount' in budget.Contigency) {
-      total += (budget.Contigency as any).totalAmount || 0;
+    if (budget.Contigency && 'Budget' in budget.Contigency) {
+      total += (budget.Contigency as any).Budget?.totalAmount || 0;
     }
-    if (budget.Overhead && 'totalAmount' in budget.Overhead) {
-      total += (budget.Overhead as any).totalAmount || 0;
+    if (budget.Overhead && 'Budget' in budget.Overhead) {
+      total += (budget.Overhead as any).Budget?.totalAmount || 0;
     }
 
     return total;
@@ -125,29 +118,36 @@ export default function ApplicantProjectDetailsPage() {
 
   if (isLoading) {
     return (
-      <ApplicantLayout>
-        <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
-          <div className="text-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto"></div>
-            <p className="mt-4 text-muted-foreground">Loading project details...</p>
+      <AuthGuard>
+        <ApplicantLayout>
+          <div className="flex h-96 items-center justify-center">
+            <div className="text-center">
+              <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+              <p className="mt-4 text-sm text-gray-600">Loading project details...</p>
+            </div>
           </div>
-        </div>
-      </ApplicantLayout>
+        </ApplicantLayout>
+      </AuthGuard>
     );
   }
 
   if (error || !project) {
     return (
-      <ApplicantLayout>
-        <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
-          <div className="text-center">
-            <p className="text-destructive">{error || "Project not found"}</p>
-            <Button onClick={() => router.push("/applicant/projects")} className="mt-4">
-              Back to Projects
-            </Button>
+      <AuthGuard>
+        <ApplicantLayout>
+          <div className="flex h-96 items-center justify-center">
+            <div className="text-center">
+              <p className="text-red-600">{error || "Project not found"}</p>
+              <Link
+                href="/applicant/projects"
+                className="mt-4 inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                Back to Projects
+              </Link>
+            </div>
           </div>
-        </div>
-      </ApplicantLayout>
+        </ApplicantLayout>
+      </AuthGuard>
     );
   }
 
@@ -155,282 +155,259 @@ export default function ApplicantProjectDetailsPage() {
   const duration = calculateDuration(project.plannedDuration?.startDate, project.plannedDuration?.endDate);
 
   return (
-    <ApplicantLayout>
-      <div className="space-y-6 p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => router.push("/applicant/projects")}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <div>
-              <h1 className="text-3xl font-bold">Project Details</h1>
-              <p className="text-muted-foreground">View your project information</p>
+    <AuthGuard>
+      <ApplicantLayout>
+        <div className="space-y-6 p-6">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => router.push("/applicant/projects")}
+                className="rounded-md p-2 hover:bg-gray-100"
+                type="button"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M10 19l-7-7m0 0l7-7m-7 7h18" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
+              </button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Project Details</h1>
+                <p className="text-gray-600">View your project information</p>
+              </div>
+            </div>
+            <span className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getStatusColor(project.status)}`}>
+              {project.status}
+            </span>
+          </div>
+
+          {/* Key Metrics */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">Total Budget</p>
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
+              </div>
+              <p className="mt-2 text-2xl font-bold text-gray-900">{formatCurrency(totalBudget)}</p>
+            </div>
+
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">Duration</p>
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
+              </div>
+              <p className="mt-2 text-2xl font-bold text-gray-900">{duration}</p>
+            </div>
+
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">Project ID</p>
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
+              </div>
+              <p className="mt-2 text-xl font-bold text-gray-900 truncate">{project.id.slice(0, 8)}...</p>
             </div>
           </div>
-          <Badge className={getStatusColor(project.status)}>
-            {project.status}
-          </Badge>
-        </div>
 
-        {/* Key Metrics */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{formatCurrency(totalBudget)}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Duration</CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{duration}</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Project ID</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold truncate">{project.id.slice(0, 8)}...</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Timeline */}
-        {project.plannedDuration && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
+          {/* Timeline */}
+          {project.plannedDuration && (
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
                 Project Timeline
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 <div>
-                  <p className="text-sm text-muted-foreground">Start Date</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-sm text-gray-600">Start Date</p>
+                  <p className="text-lg font-semibold text-gray-900">
                     {formatDate(project.plannedDuration.startDate)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground">End Date</p>
-                  <p className="text-lg font-semibold">
+                  <p className="text-sm text-gray-600">End Date</p>
+                  <p className="text-lg font-semibold text-gray-900">
                     {formatDate(project.plannedDuration.endDate)}
                   </p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
+          )}
 
-        {/* Budget Breakdown */}
-        {project.allocatedBudget && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5" />
+          {/* Budget Breakdown */}
+          {project.allocatedBudget && (
+            <div className="rounded-lg border border-gray-200 bg-white p-6">
+              <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
                 Budget Breakdown
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* ManPower */}
-              {project.allocatedBudget.ManPower && project.allocatedBudget.ManPower.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">ManPower</h3>
-                  <div className="rounded-md border overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-muted">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-sm font-medium">Reason</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Quantity</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Rate</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {project.allocatedBudget.ManPower.map((item: any, index: number) => (
-                          <tr key={index} className="border-t">
-                            <td className="px-4 py-2 text-sm">{item.BudgetReason}</td>
-                            <td className="px-4 py-2 text-sm text-right">{item.Budget?.quantity}</td>
-                            <td className="px-4 py-2 text-sm text-right">{formatCurrency(item.Budget?.rate)}</td>
-                            <td className="px-4 py-2 text-sm text-right font-medium">
-                              {formatCurrency(item.Budget?.totalAmount)}
-                            </td>
+              </h2>
+              <div className="space-y-6">
+                {/* ManPower */}
+                {project.allocatedBudget.ManPower && project.allocatedBudget.ManPower.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">ManPower</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">Reason</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Quantity</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Rate</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Total</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allocatedBudget.ManPower.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">{item.BudgetReason}</td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">{item.Budget?.quantity}</td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">{formatCurrency(item.Budget?.rate)}</td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.totalAmount)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Equipment */}
+                {project.allocatedBudget.Equipment && project.allocatedBudget.Equipment.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">Equipment</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">Reason</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Quantity</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Rate</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allocatedBudget.Equipment.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">{item.BudgetReason}</td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">{item.Budget?.quantity}</td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">{formatCurrency(item.Budget?.rate)}</td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.totalAmount)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* OtherCosts */}
+                {project.allocatedBudget.OtherCosts && project.allocatedBudget.OtherCosts.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">Other Costs</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">Reason</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Quantity</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Rate</th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allocatedBudget.OtherCosts.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">{item.BudgetReason}</td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">{item.Budget?.quantity}</td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">{formatCurrency(item.Budget?.rate)}</td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.totalAmount)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Additional Costs */}
+                <div>
+                  <h3 className="mb-3 text-base font-semibold text-gray-900">Additional Costs</h3>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    {project.allocatedBudget.Consumables && (
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <p className="text-sm text-gray-600">Consumables</p>
+                        <p className="mt-1 text-xl font-bold text-gray-900">
+                          {formatCurrency((project.allocatedBudget.Consumables as any).Budget?.totalAmount)}
+                        </p>
+                      </div>
+                    )}
+                    {project.allocatedBudget.Travel && (
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <p className="text-sm text-gray-600">Travel</p>
+                        <p className="mt-1 text-xl font-bold text-gray-900">
+                          {formatCurrency((project.allocatedBudget.Travel as any).Budget?.totalAmount)}
+                        </p>
+                      </div>
+                    )}
+                    {project.allocatedBudget.Contigency && (
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <p className="text-sm text-gray-600">Contingency</p>
+                        <p className="mt-1 text-xl font-bold text-gray-900">
+                          {formatCurrency((project.allocatedBudget.Contigency as any).Budget?.totalAmount)}
+                        </p>
+                      </div>
+                    )}
+                    {project.allocatedBudget.Overhead && (
+                      <div className="rounded-lg border border-gray-200 p-4">
+                        <p className="text-sm text-gray-600">Overhead</p>
+                        <p className="mt-1 text-xl font-bold text-gray-900">
+                          {formatCurrency((project.allocatedBudget.Overhead as any).Budget?.totalAmount)}
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
-              )}
 
-              {/* Equipment */}
-              {project.allocatedBudget.Equipment && project.allocatedBudget.Equipment.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Equipment</h3>
-                  <div className="rounded-md border overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-muted">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-sm font-medium">Reason</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Quantity</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Rate</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {project.allocatedBudget.Equipment.map((item: any, index: number) => (
-                          <tr key={index} className="border-t">
-                            <td className="px-4 py-2 text-sm">{item.BudgetReason}</td>
-                            <td className="px-4 py-2 text-sm text-right">{item.Budget?.quantity}</td>
-                            <td className="px-4 py-2 text-sm text-right">{formatCurrency(item.Budget?.rate)}</td>
-                            <td className="px-4 py-2 text-sm text-right font-medium">
-                              {formatCurrency(item.Budget?.totalAmount)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                {/* Total */}
+                <div className="flex items-center justify-between border-t pt-4">
+                  <span className="text-lg font-semibold text-gray-900">Total Budget</span>
+                  <span className="text-2xl font-bold text-blue-600">
+                    {formatCurrency(totalBudget)}
+                  </span>
                 </div>
-              )}
-
-              {/* OtherCosts */}
-              {project.allocatedBudget.OtherCosts && project.allocatedBudget.OtherCosts.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Other Costs</h3>
-                  <div className="rounded-md border overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-muted">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-sm font-medium">Reason</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Quantity</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Rate</th>
-                          <th className="px-4 py-2 text-right text-sm font-medium">Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {project.allocatedBudget.OtherCosts.map((item: any, index: number) => (
-                          <tr key={index} className="border-t">
-                            <td className="px-4 py-2 text-sm">{item.BudgetReason}</td>
-                            <td className="px-4 py-2 text-sm text-right">{item.Budget?.quantity}</td>
-                            <td className="px-4 py-2 text-sm text-right">{formatCurrency(item.Budget?.rate)}</td>
-                            <td className="px-4 py-2 text-sm text-right font-medium">
-                              {formatCurrency(item.Budget?.totalAmount)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-
-              {/* Additional Costs */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Additional Costs</h3>
-                <div className="grid gap-3 md:grid-cols-2">
-                  {project.allocatedBudget.Consumables && (
-                    <div className="rounded-lg border p-4">
-                      <p className="text-sm text-muted-foreground">Consumables</p>
-                      <p className="text-xl font-bold">
-                        {formatCurrency((project.allocatedBudget.Consumables as any).Budget?.totalAmount)}
-                      </p>
-                    </div>
-                  )}
-                  {project.allocatedBudget.Travel && (
-                    <div className="rounded-lg border p-4">
-                      <p className="text-sm text-muted-foreground">Travel</p>
-                      <p className="text-xl font-bold">
-                        {formatCurrency((project.allocatedBudget.Travel as any).Budget?.totalAmount)}
-                      </p>
-                    </div>
-                  )}
-                  {project.allocatedBudget.Contigency && (
-                    <div className="rounded-lg border p-4">
-                      <p className="text-sm text-muted-foreground">Contingency</p>
-                      <p className="text-xl font-bold">
-                        {formatCurrency((project.allocatedBudget.Contigency as any).Budget?.totalAmount)}
-                      </p>
-                    </div>
-                  )}
-                  {project.allocatedBudget.Overhead && (
-                    <div className="rounded-lg border p-4">
-                      <p className="text-sm text-muted-foreground">Overhead</p>
-                      <p className="text-xl font-bold">
-                        {formatCurrency((project.allocatedBudget.Overhead as any).Budget?.totalAmount)}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Total */}
-              <div className="flex items-center justify-between border-t pt-4">
-                <span className="text-lg font-semibold">Total Budget</span>
-                <span className="text-2xl font-bold text-primary">
-                  {formatCurrency(totalBudget)}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Associated Application */}
-        {project.applicationId && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
-                Associated Application
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-2">Application ID</p>
-              <p className="font-mono text-sm mb-4">{project.applicationId}</p>
-              <Link href={`/applicant/applications`}>
-                <Button variant="outline" size="sm">
-                  View Application
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Metadata */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Metadata</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-3 md:grid-cols-2">
-              <div>
-                <p className="text-sm text-muted-foreground">Created At</p>
-                <p className="font-medium">{formatDate(project.createdAt)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Last Updated</p>
-                <p className="font-medium">{formatDate(project.updatedAt)}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </ApplicantLayout>
+          )}
+
+          {/* Metadata */}
+          <div className="rounded-lg border border-gray-200 bg-white p-6">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Metadata</h2>
+            <div className="grid gap-3 md:grid-cols-2">
+              <div>
+                <p className="text-sm text-gray-600">Created At</p>
+                <p className="font-medium text-gray-900">{formatDate(project.createdAt)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Last Updated</p>
+                <p className="font-medium text-gray-900">{formatDate(project.updatedAt)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ApplicantLayout>
+    </AuthGuard>
   );
 }
