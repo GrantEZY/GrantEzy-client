@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { useGcv } from "@/hooks/useGcv";
+import { useGcv } from '@/hooks/useGcv';
 
-import { Program } from "@/types/gcv.types";
-import { Cycle, CycleStatus } from "@/types/pm.types";
+import { Program } from '@/types/gcv.types';
+import { Cycle, CycleStatus } from '@/types/pm.types';
 
-import { CycleDetailsModal } from "./CycleDetailsModal";
+import { CycleDetailsModal } from './CycleDetailsModal';
 
 interface ProgramCyclesModalProps {
   isOpen: boolean;
@@ -15,11 +15,7 @@ interface ProgramCyclesModalProps {
   program: Program | null;
 }
 
-export function ProgramCyclesModal({
-  isOpen,
-  onClose,
-  program,
-}: ProgramCyclesModalProps) {
+export function ProgramCyclesModal({ isOpen, onClose, program }: ProgramCyclesModalProps) {
   const {
     programCycles,
     programCyclesPagination,
@@ -44,7 +40,7 @@ export function ProgramCyclesModal({
         numberOfResults: pageSize,
       });
     },
-    [program, getProgramCycles],
+    [program, getProgramCycles]
   );
 
   useEffect(() => {
@@ -64,15 +60,15 @@ export function ProgramCyclesModal({
   const getStatusColor = (status?: CycleStatus) => {
     switch (status) {
       case CycleStatus.ACTIVE:
-        return "bg-green-100 text-green-800";
+        return 'bg-green-100 text-green-800';
       case CycleStatus.INACTIVE:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
       case CycleStatus.DRAFT:
-        return "bg-yellow-100 text-yellow-800";
+        return 'bg-yellow-100 text-yellow-800';
       case CycleStatus.COMPLETED:
-        return "bg-blue-100 text-blue-800";
+        return 'bg-blue-100 text-blue-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -86,9 +82,9 @@ export function ProgramCyclesModal({
   };
 
   const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency || "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency || 'USD',
     }).format(amount);
   };
 
@@ -97,10 +93,7 @@ export function ProgramCyclesModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-white/10 backdrop-blur-md"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-white/10 backdrop-blur-md" onClick={onClose} />
 
       {/* Modal */}
       <div className="thin-scrollbar relative z-10 mx-4 flex max-h-[90vh] w-full max-w-6xl flex-col rounded-lg bg-white shadow-xl">
@@ -118,12 +111,7 @@ export function ProgramCyclesModal({
             onClick={onClose}
             className="p-2 text-gray-400 transition-colors hover:text-gray-600"
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -143,9 +131,7 @@ export function ProgramCyclesModal({
           ) : programCyclesError ? (
             <div className="flex h-64 items-center justify-center">
               <div className="text-center">
-                <div className="mb-2 text-lg font-medium text-red-500">
-                  Error Loading Cycles
-                </div>
+                <div className="mb-2 text-lg font-medium text-red-500">Error Loading Cycles</div>
                 <p className="text-gray-600">{programCyclesError}</p>
               </div>
             </div>
@@ -165,12 +151,8 @@ export function ProgramCyclesModal({
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-                <div className="mb-2 text-lg font-medium text-gray-500">
-                  No Cycles Found
-                </div>
-                <p className="text-gray-400">
-                  This program doesn&apos;t have any cycles yet.
-                </p>
+                <div className="mb-2 text-lg font-medium text-gray-500">No Cycles Found</div>
+                <p className="text-gray-400">This program doesn&apos;t have any cycles yet.</p>
               </div>
             </div>
           ) : (
@@ -220,14 +202,9 @@ export function ProgramCyclesModal({
                           </svg>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            Budget
-                          </div>
+                          <div className="text-sm font-medium text-gray-900">Budget</div>
                           <div className="text-sm text-gray-600">
-                            {formatCurrency(
-                              cycle.budget.amount,
-                              cycle.budget.currency,
-                            )}
+                            {formatCurrency(cycle.budget.amount, cycle.budget.currency)}
                           </div>
                         </div>
                       </div>
@@ -250,13 +227,10 @@ export function ProgramCyclesModal({
                           </svg>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            Duration
-                          </div>
+                          <div className="text-sm font-medium text-gray-900">Duration</div>
                           <div className="text-sm text-gray-600">
                             {formatDate(cycle.duration.startDate)}
-                            {cycle.duration.endDate &&
-                              ` - ${formatDate(cycle.duration.endDate)}`}
+                            {cycle.duration.endDate && ` - ${formatDate(cycle.duration.endDate)}`}
                           </div>
                         </div>
                       </div>
@@ -277,9 +251,7 @@ export function ProgramCyclesModal({
                               d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
                             />
                           </svg>
-                          <div className="text-sm font-medium text-gray-900">
-                            TRL Criteria
-                          </div>
+                          <div className="text-sm font-medium text-gray-900">TRL Criteria</div>
                         </div>
                         <div className="grid grid-cols-3 gap-2">
                           {Object.entries(cycle.trlCriteria)
@@ -297,8 +269,7 @@ export function ProgramCyclesModal({
                         </div>
                         {Object.keys(cycle.trlCriteria).length > 6 && (
                           <div className="text-center text-xs text-gray-500">
-                            +{Object.keys(cycle.trlCriteria).length - 6} more
-                            TRL levels
+                            +{Object.keys(cycle.trlCriteria).length - 6} more TRL levels
                           </div>
                         )}
                       </div>
@@ -319,9 +290,7 @@ export function ProgramCyclesModal({
                               d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
                             />
                           </svg>
-                          <div className="text-sm font-medium text-gray-900">
-                            Scoring Weights
-                          </div>
+                          <div className="text-sm font-medium text-gray-900">Scoring Weights</div>
                         </div>
                         <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="flex justify-between">
@@ -368,148 +337,120 @@ export function ProgramCyclesModal({
               </div>
 
               {/* Pagination */}
-              {programCyclesPagination &&
-                programCyclesPagination.totalPages > 1 && (
-                  <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-                    <div className="flex flex-1 justify-between sm:hidden">
-                      <button
-                        onClick={() =>
-                          handlePageChange(Math.max(1, currentPage - 1))
-                        }
-                        disabled={currentPage === 1}
-                        className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        Previous
-                      </button>
-                      <button
-                        onClick={() =>
-                          handlePageChange(
-                            Math.min(
-                              programCyclesPagination.totalPages,
-                              currentPage + 1,
-                            ),
-                          )
-                        }
-                        disabled={
-                          currentPage === programCyclesPagination.totalPages
-                        }
-                        className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        Next
-                      </button>
+              {programCyclesPagination && programCyclesPagination.totalPages > 1 && (
+                <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+                  <div className="flex flex-1 justify-between sm:hidden">
+                    <button
+                      onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                      disabled={currentPage === 1}
+                      className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={() =>
+                        handlePageChange(
+                          Math.min(programCyclesPagination.totalPages, currentPage + 1)
+                        )
+                      }
+                      disabled={currentPage === programCyclesPagination.totalPages}
+                      className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                  <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <div>
+                      <p className="text-sm text-gray-700">
+                        Showing{' '}
+                        <span className="font-medium">{(currentPage - 1) * pageSize + 1}</span> to{' '}
+                        <span className="font-medium">
+                          {Math.min(currentPage * pageSize, programCyclesPagination.total)}
+                        </span>{' '}
+                        of <span className="font-medium">{programCyclesPagination.total}</span>{' '}
+                        cycles
+                      </p>
                     </div>
-                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                      <div>
-                        <p className="text-sm text-gray-700">
-                          Showing{" "}
-                          <span className="font-medium">
-                            {(currentPage - 1) * pageSize + 1}
-                          </span>{" "}
-                          to{" "}
-                          <span className="font-medium">
-                            {Math.min(
-                              currentPage * pageSize,
-                              programCyclesPagination.total,
-                            )}
-                          </span>{" "}
-                          of{" "}
-                          <span className="font-medium">
-                            {programCyclesPagination.total}
-                          </span>{" "}
-                          cycles
-                        </p>
-                      </div>
-                      <div>
-                        <nav
-                          className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-                          aria-label="Pagination"
+                    <div>
+                      <nav
+                        className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+                        aria-label="Pagination"
+                      >
+                        <button
+                          onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                          disabled={currentPage === 1}
+                          className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
                         >
-                          <button
-                            onClick={() =>
-                              handlePageChange(Math.max(1, currentPage - 1))
-                            }
-                            disabled={currentPage === 1}
-                            className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                          <span className="sr-only">Previous</span>
+                          <svg
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
                           >
-                            <span className="sr-only">Previous</span>
-                            <svg
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </button>
+                            <path
+                              fillRule="evenodd"
+                              d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
 
-                          {Array.from(
-                            { length: programCyclesPagination.totalPages },
-                            (_, i) => i + 1,
+                        {Array.from({ length: programCyclesPagination.totalPages }, (_, i) => i + 1)
+                          .filter(
+                            (page) =>
+                              page === 1 ||
+                              page === programCyclesPagination.totalPages ||
+                              (page >= currentPage - 1 && page <= currentPage + 1)
                           )
-                            .filter(
-                              (page) =>
-                                page === 1 ||
-                                page === programCyclesPagination.totalPages ||
-                                (page >= currentPage - 1 &&
-                                  page <= currentPage + 1),
-                            )
-                            .map((page, idx, arr) => (
-                              <div key={page} className="flex items-center">
-                                {idx > 0 && arr[idx - 1] !== page - 1 && (
-                                  <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-gray-300 ring-inset focus:outline-offset-0">
-                                    ...
-                                  </span>
-                                )}
-                                <button
-                                  onClick={() => handlePageChange(page)}
-                                  className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
-                                    currentPage === page
-                                      ? "z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                                      : "text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                                  }`}
-                                >
-                                  {page}
-                                </button>
-                              </div>
-                            ))}
+                          .map((page, idx, arr) => (
+                            <div key={page} className="flex items-center">
+                              {idx > 0 && arr[idx - 1] !== page - 1 && (
+                                <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-gray-300 ring-inset focus:outline-offset-0">
+                                  ...
+                                </span>
+                              )}
+                              <button
+                                onClick={() => handlePageChange(page)}
+                                className={`relative inline-flex items-center px-4 py-2 text-sm font-semibold ${
+                                  currentPage === page
+                                    ? 'z-10 bg-blue-600 text-white focus:z-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+                                    : 'text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+                                }`}
+                              >
+                                {page}
+                              </button>
+                            </div>
+                          ))}
 
-                          <button
-                            onClick={() =>
-                              handlePageChange(
-                                Math.min(
-                                  programCyclesPagination.totalPages,
-                                  currentPage + 1,
-                                ),
-                              )
-                            }
-                            disabled={
-                              currentPage === programCyclesPagination.totalPages
-                            }
-                            className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                        <button
+                          onClick={() =>
+                            handlePageChange(
+                              Math.min(programCyclesPagination.totalPages, currentPage + 1)
+                            )
+                          }
+                          disabled={currentPage === programCyclesPagination.totalPages}
+                          className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <span className="sr-only">Next</span>
+                          <svg
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
                           >
-                            <span className="sr-only">Next</span>
-                            <svg
-                              className="h-5 w-5"
-                              viewBox="0 0 20 20"
-                              fill="currentColor"
-                              aria-hidden="true"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                          </button>
-                        </nav>
-                      </div>
+                            <path
+                              fillRule="evenodd"
+                              d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </nav>
                     </div>
                   </div>
-                )}
+                </div>
+              )}
             </div>
           )}
         </div>

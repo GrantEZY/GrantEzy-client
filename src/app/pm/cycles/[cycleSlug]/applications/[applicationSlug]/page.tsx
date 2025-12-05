@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import PMLayout from "@/components/layout/PMLayout";
-import InviteReviewerModal from "@/components/pm/InviteReviewerModal";
-import { usePm } from "@/hooks/usePm";
-import { ReviewStatus } from "@/types/reviewer.types";
+import { useEffect, useState, useMemo } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import PMLayout from '@/components/layout/PMLayout';
+import InviteReviewerModal from '@/components/pm/InviteReviewerModal';
+import { usePm } from '@/hooks/usePm';
+import { ReviewStatus } from '@/types/reviewer.types';
 
 export default function ApplicationDetailsPage() {
   const params = useParams();
@@ -27,8 +27,8 @@ export default function ApplicationDetailsPage() {
   } = usePm();
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
-  const [statusFilter, setStatusFilter] = useState<string>("ALL");
-  const [recommendationFilter, setRecommendationFilter] = useState<string>("ALL");
+  const [statusFilter, setStatusFilter] = useState<string>('ALL');
+  const [recommendationFilter, setRecommendationFilter] = useState<string>('ALL');
 
   useEffect(() => {
     if (cycleSlug && applicationSlug) {
@@ -47,7 +47,7 @@ export default function ApplicationDetailsPage() {
       reviews: reviews?.length || 0,
       pendingInvites: pendingInvites?.length || 0,
       pendingInvitesData: pendingInvites,
-      isLoading: isReviewsLoading
+      isLoading: isReviewsLoading,
     });
   }, [reviews, pendingInvites, isReviewsLoading]);
 
@@ -57,46 +57,62 @@ export default function ApplicationDetailsPage() {
       return null;
     }
 
-    const completedReviews = reviews.filter((r: any) =>
-      r.status === ReviewStatus.COMPLETED || (r.recommendation && r.scores)
+    const completedReviews = reviews.filter(
+      (r: any) => r.status === ReviewStatus.COMPLETED || (r.recommendation && r.scores)
     );
 
     const totalReviews = reviews.length;
     const completedCount = completedReviews.length;
-    const inProgressCount = reviews.filter((r: any) =>
-      r.status === ReviewStatus.IN_PROGRESS && !r.recommendation
+    const inProgressCount = reviews.filter(
+      (r: any) => r.status === ReviewStatus.IN_PROGRESS && !r.recommendation
     ).length;
 
     // Calculate average scores
-    const scoresSum = completedReviews.reduce((acc: any, review: any) => {
-      if (review.scores) {
-        return {
-          technical: acc.technical + (review.scores.technical || 0),
-          market: acc.market + (review.scores.market || 0),
-          financial: acc.financial + (review.scores.financial || 0),
-          team: acc.team + (review.scores.team || 0),
-          innovation: acc.innovation + (review.scores.innovation || 0),
-        };
-      }
-      return acc;
-    }, { technical: 0, market: 0, financial: 0, team: 0, innovation: 0 });
+    const scoresSum = completedReviews.reduce(
+      (acc: any, review: any) => {
+        if (review.scores) {
+          return {
+            technical: acc.technical + (review.scores.technical || 0),
+            market: acc.market + (review.scores.market || 0),
+            financial: acc.financial + (review.scores.financial || 0),
+            team: acc.team + (review.scores.team || 0),
+            innovation: acc.innovation + (review.scores.innovation || 0),
+          };
+        }
+        return acc;
+      },
+      { technical: 0, market: 0, financial: 0, team: 0, innovation: 0 }
+    );
 
-    const avgScores = completedCount > 0 ? {
-      technical: (scoresSum.technical / completedCount).toFixed(1),
-      market: (scoresSum.market / completedCount).toFixed(1),
-      financial: (scoresSum.financial / completedCount).toFixed(1),
-      team: (scoresSum.team / completedCount).toFixed(1),
-      innovation: (scoresSum.innovation / completedCount).toFixed(1),
-      overall: ((scoresSum.technical + scoresSum.market + scoresSum.financial + scoresSum.team + scoresSum.innovation) / (completedCount * 5)).toFixed(1),
-    } : null;
+    const avgScores =
+      completedCount > 0
+        ? {
+            technical: (scoresSum.technical / completedCount).toFixed(1),
+            market: (scoresSum.market / completedCount).toFixed(1),
+            financial: (scoresSum.financial / completedCount).toFixed(1),
+            team: (scoresSum.team / completedCount).toFixed(1),
+            innovation: (scoresSum.innovation / completedCount).toFixed(1),
+            overall: (
+              (scoresSum.technical +
+                scoresSum.market +
+                scoresSum.financial +
+                scoresSum.team +
+                scoresSum.innovation) /
+              (completedCount * 5)
+            ).toFixed(1),
+          }
+        : null;
 
     // Calculate recommendation distribution
-    const recommendations = completedReviews.reduce((acc: any, review: any) => {
-      if (review.recommendation) {
-        acc[review.recommendation] = (acc[review.recommendation] || 0) + 1;
-      }
-      return acc;
-    }, {} as Record<string, number>);
+    const recommendations = completedReviews.reduce(
+      (acc: any, review: any) => {
+        if (review.recommendation) {
+          acc[review.recommendation] = (acc[review.recommendation] || 0) + 1;
+        }
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
     return {
       totalReviews,
@@ -113,11 +129,16 @@ export default function ApplicationDetailsPage() {
     if (!reviews) return [];
 
     return reviews.filter((review: any) => {
-      const statusMatch = statusFilter === "ALL" ||
-        (statusFilter === "COMPLETED" && (review.status === ReviewStatus.COMPLETED || (review.recommendation && review.scores))) ||
-        (statusFilter === "IN_PROGRESS" && review.status === ReviewStatus.IN_PROGRESS && !review.recommendation);
+      const statusMatch =
+        statusFilter === 'ALL' ||
+        (statusFilter === 'COMPLETED' &&
+          (review.status === ReviewStatus.COMPLETED || (review.recommendation && review.scores))) ||
+        (statusFilter === 'IN_PROGRESS' &&
+          review.status === ReviewStatus.IN_PROGRESS &&
+          !review.recommendation);
 
-      const recommendationMatch = recommendationFilter === "ALL" || review.recommendation === recommendationFilter;
+      const recommendationMatch =
+        recommendationFilter === 'ALL' || review.recommendation === recommendationFilter;
 
       return statusMatch && recommendationMatch;
     });
@@ -125,31 +146,31 @@ export default function ApplicationDetailsPage() {
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
-      case "SUBMITTED":
-        return "bg-blue-100 text-blue-800";
-      case "UNDER_REVIEW":
-        return "bg-yellow-100 text-yellow-800";
-      case "APPROVED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      case "REVISION_REQUESTED":
-        return "bg-orange-100 text-orange-800";
+      case 'SUBMITTED':
+        return 'bg-blue-100 text-blue-800';
+      case 'UNDER_REVIEW':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'APPROVED':
+        return 'bg-green-100 text-green-800';
+      case 'REJECTED':
+        return 'bg-red-100 text-red-800';
+      case 'REVISION_REQUESTED':
+        return 'bg-orange-100 text-orange-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getRecommendationBadgeClass = (recommendation: string) => {
     switch (recommendation) {
-      case "APPROVE":
-        return "bg-green-100 text-green-800";
-      case "REJECT":
-        return "bg-red-100 text-red-800";
-      case "REVISE":
-        return "bg-yellow-100 text-yellow-800";
+      case 'APPROVE':
+        return 'bg-green-100 text-green-800';
+      case 'REJECT':
+        return 'bg-red-100 text-red-800';
+      case 'REVISE':
+        return 'bg-yellow-100 text-yellow-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -164,12 +185,7 @@ export default function ApplicationDetailsPage() {
               onClick={() => router.push(`/pm/cycles/${cycleSlug}`)}
               type="button"
             >
-              <svg
-                className="mr-2 h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                   strokeLinecap="round"
@@ -182,8 +198,7 @@ export default function ApplicationDetailsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900">
-                  {currentApplication?.basicInfo?.title ||
-                    "Application Details"}
+                  {currentApplication?.basicInfo?.title || 'Application Details'}
                 </h1>
                 <p className="mt-2 text-gray-600">
                   Review application details and manage reviewers
@@ -194,12 +209,7 @@ export default function ApplicationDetailsPage() {
                 onClick={() => setIsInviteModalOpen(true)}
                 type="button"
               >
-                <svg
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
                     strokeLinecap="round"
@@ -217,9 +227,7 @@ export default function ApplicationDetailsPage() {
             <div className="flex h-64 items-center justify-center rounded-lg border border-gray-200 bg-white">
               <div className="text-center">
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-sm text-gray-600">
-                  Loading application details...
-                </p>
+                <p className="mt-4 text-sm text-gray-600">Loading application details...</p>
               </div>
             </div>
           )}
@@ -229,9 +237,7 @@ export default function ApplicationDetailsPage() {
             <>
               {/* Status Card */}
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  Application Status
-                </h2>
+                <h2 className="mb-4 text-lg font-semibold text-gray-900">Application Status</h2>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                   <div>
                     <p className="text-sm font-medium text-gray-600">Status</p>
@@ -242,23 +248,15 @@ export default function ApplicationDetailsPage() {
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Submitted On
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">Submitted On</p>
                     <p className="mt-1 text-sm text-gray-900">
-                      {new Date(
-                        currentApplication.createdAt,
-                      ).toLocaleDateString()}
+                      {new Date(currentApplication.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">
-                      Last Updated
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">Last Updated</p>
                     <p className="mt-1 text-sm text-gray-900">
-                      {new Date(
-                        currentApplication.updatedAt,
-                      ).toLocaleDateString()}
+                      {new Date(currentApplication.updatedAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -274,7 +272,7 @@ export default function ApplicationDetailsPage() {
                     <div>
                       <p className="text-sm font-medium text-gray-600">Name</p>
                       <p className="mt-1 text-sm text-gray-900">
-                        {currentApplication.applicant.firstName}{" "}
+                        {currentApplication.applicant.firstName}{' '}
                         {currentApplication.applicant.lastName}
                       </p>
                     </div>
@@ -291,38 +289,28 @@ export default function ApplicationDetailsPage() {
               {/* Basic Information */}
               {currentApplication.basicInfo && (
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                  <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                    Project Overview
-                  </h2>
+                  <h2 className="mb-4 text-lg font-semibold text-gray-900">Project Overview</h2>
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-600">
-                        Summary
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-600">Summary</h3>
                       <p className="mt-1 text-sm text-gray-900">
                         {currentApplication.basicInfo.summary}
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-600">
-                        Problem Statement
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-600">Problem Statement</h3>
                       <p className="mt-1 text-sm text-gray-900">
                         {currentApplication.basicInfo.problem}
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-600">
-                        Proposed Solution
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-600">Proposed Solution</h3>
                       <p className="mt-1 text-sm text-gray-900">
                         {currentApplication.basicInfo.solution}
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-gray-600">
-                        Innovation
-                      </h3>
+                      <h3 className="text-sm font-medium text-gray-600">Innovation</h3>
                       <p className="mt-1 text-sm text-gray-900">
                         {currentApplication.basicInfo.innovation}
                       </p>
@@ -342,50 +330,72 @@ export default function ApplicationDetailsPage() {
                       {/* Summary Stats */}
                       <div className="bg-white rounded-lg p-4 shadow-sm">
                         <p className="text-sm font-medium text-gray-600">Total Reviews</p>
-                        <p className="text-2xl font-bold text-gray-900 mt-1">{reviewAnalytics.totalReviews}</p>
+                        <p className="text-2xl font-bold text-gray-900 mt-1">
+                          {reviewAnalytics.totalReviews}
+                        </p>
                       </div>
                       <div className="bg-white rounded-lg p-4 shadow-sm">
                         <p className="text-sm font-medium text-gray-600">Completed</p>
-                        <p className="text-2xl font-bold text-green-600 mt-1">{reviewAnalytics.completedCount}</p>
+                        <p className="text-2xl font-bold text-green-600 mt-1">
+                          {reviewAnalytics.completedCount}
+                        </p>
                       </div>
                       <div className="bg-white rounded-lg p-4 shadow-sm">
                         <p className="text-sm font-medium text-gray-600">In Progress</p>
-                        <p className="text-2xl font-bold text-orange-600 mt-1">{reviewAnalytics.inProgressCount}</p>
+                        <p className="text-2xl font-bold text-orange-600 mt-1">
+                          {reviewAnalytics.inProgressCount}
+                        </p>
                       </div>
                       <div className="bg-white rounded-lg p-4 shadow-sm">
                         <p className="text-sm font-medium text-gray-600">Completion Rate</p>
-                        <p className="text-2xl font-bold text-blue-600 mt-1">{reviewAnalytics.completionRate}%</p>
+                        <p className="text-2xl font-bold text-blue-600 mt-1">
+                          {reviewAnalytics.completionRate}%
+                        </p>
                       </div>
                     </div>
 
                     {/* Average Scores */}
                     {reviewAnalytics.avgScores && (
                       <div className="bg-white rounded-lg p-4 shadow-sm mb-4">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Average Scores (out of 100)</h4>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                          Average Scores (out of 100)
+                        </h4>
                         <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
                           <div>
                             <p className="text-xs text-gray-600">Technical</p>
-                            <p className="text-lg font-bold text-blue-600">{reviewAnalytics.avgScores.technical}</p>
+                            <p className="text-lg font-bold text-blue-600">
+                              {reviewAnalytics.avgScores.technical}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">Market</p>
-                            <p className="text-lg font-bold text-green-600">{reviewAnalytics.avgScores.market}</p>
+                            <p className="text-lg font-bold text-green-600">
+                              {reviewAnalytics.avgScores.market}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">Financial</p>
-                            <p className="text-lg font-bold text-purple-600">{reviewAnalytics.avgScores.financial}</p>
+                            <p className="text-lg font-bold text-purple-600">
+                              {reviewAnalytics.avgScores.financial}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">Team</p>
-                            <p className="text-lg font-bold text-orange-600">{reviewAnalytics.avgScores.team}</p>
+                            <p className="text-lg font-bold text-orange-600">
+                              {reviewAnalytics.avgScores.team}
+                            </p>
                           </div>
                           <div>
                             <p className="text-xs text-gray-600">Innovation</p>
-                            <p className="text-lg font-bold text-pink-600">{reviewAnalytics.avgScores.innovation}</p>
+                            <p className="text-lg font-bold text-pink-600">
+                              {reviewAnalytics.avgScores.innovation}
+                            </p>
                           </div>
                           <div className="border-l-2 border-gray-200 pl-3">
                             <p className="text-xs text-gray-600 font-semibold">Overall</p>
-                            <p className="text-xl font-bold text-indigo-600">{reviewAnalytics.avgScores.overall}</p>
+                            <p className="text-xl font-bold text-indigo-600">
+                              {reviewAnalytics.avgScores.overall}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -394,7 +404,9 @@ export default function ApplicationDetailsPage() {
                     {/* Recommendation Distribution */}
                     {Object.keys(reviewAnalytics.recommendations).length > 0 && (
                       <div className="bg-white rounded-lg p-4 shadow-sm">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-3">Recommendations</h4>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                          Recommendations
+                        </h4>
                         <div className="flex flex-wrap gap-3">
                           {reviewAnalytics.recommendations.APPROVE && (
                             <div className="flex items-center space-x-2">
@@ -430,9 +442,7 @@ export default function ApplicationDetailsPage() {
                     <p className="text-sm text-blue-700">
                       Pending Invites Count: {pendingInvites?.length || 0}
                     </p>
-                    <p className="text-sm text-blue-700">
-                      Reviews Count: {reviews?.length || 0}
-                    </p>
+                    <p className="text-sm text-blue-700">Reviews Count: {reviews?.length || 0}</p>
                     <p className="text-sm text-blue-700">
                       Is Loading: {isReviewsLoading ? 'Yes' : 'No'}
                     </p>
@@ -481,7 +491,7 @@ export default function ApplicationDetailsPage() {
                             </div>
                             <div className="flex items-center space-x-3">
                               <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
-                                {invite.status === "SENT" ? "⏳ Pending" : invite.status}
+                                {invite.status === 'SENT' ? '⏳ Pending' : invite.status}
                               </span>
                             </div>
                           </div>
@@ -534,8 +544,10 @@ export default function ApplicationDetailsPage() {
                   ) : filteredReviews && filteredReviews.length > 0 ? (
                     <div className="divide-y divide-gray-200">
                       {filteredReviews.map((review: any) => {
-                        const isCompleted = review.status === ReviewStatus.COMPLETED || (review.recommendation && review.scores);
-                        const displayStatus = isCompleted ? "COMPLETED" : "IN_PROGRESS";
+                        const isCompleted =
+                          review.status === ReviewStatus.COMPLETED ||
+                          (review.recommendation && review.scores);
+                        const displayStatus = isCompleted ? 'COMPLETED' : 'IN_PROGRESS';
 
                         return (
                           <div key={review.id} className="p-6">
@@ -543,15 +555,17 @@ export default function ApplicationDetailsPage() {
                               <div className="flex-1">
                                 <div className="flex items-center space-x-3 mb-2">
                                   <p className="text-sm font-medium text-gray-900">
-                                    {review.reviewer?.email || review.reviewer?.firstName && review.reviewer?.lastName
+                                    {review.reviewer?.email ||
+                                    (review.reviewer?.firstName && review.reviewer?.lastName)
                                       ? `${review.reviewer.firstName} ${review.reviewer.lastName}`
-                                      : "Anonymous Reviewer"}
+                                      : 'Anonymous Reviewer'}
                                   </p>
                                   <span
-                                    className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${displayStatus === "COMPLETED"
-                                      ? "bg-green-100 text-green-800"
-                                      : "bg-orange-100 text-orange-800"
-                                      }`}
+                                    className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                                      displayStatus === 'COMPLETED'
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-orange-100 text-orange-800'
+                                    }`}
                                   >
                                     {displayStatus}
                                   </span>
@@ -569,23 +583,33 @@ export default function ApplicationDetailsPage() {
                                   <div className="mt-3 grid grid-cols-5 gap-2">
                                     <div className="bg-blue-50 rounded px-2 py-1">
                                       <p className="text-xs text-gray-600">Technical</p>
-                                      <p className="text-sm font-semibold text-blue-700">{review.scores.technical}</p>
+                                      <p className="text-sm font-semibold text-blue-700">
+                                        {review.scores.technical}
+                                      </p>
                                     </div>
                                     <div className="bg-green-50 rounded px-2 py-1">
                                       <p className="text-xs text-gray-600">Market</p>
-                                      <p className="text-sm font-semibold text-green-700">{review.scores.market}</p>
+                                      <p className="text-sm font-semibold text-green-700">
+                                        {review.scores.market}
+                                      </p>
                                     </div>
                                     <div className="bg-purple-50 rounded px-2 py-1">
                                       <p className="text-xs text-gray-600">Financial</p>
-                                      <p className="text-sm font-semibold text-purple-700">{review.scores.financial}</p>
+                                      <p className="text-sm font-semibold text-purple-700">
+                                        {review.scores.financial}
+                                      </p>
                                     </div>
                                     <div className="bg-orange-50 rounded px-2 py-1">
                                       <p className="text-xs text-gray-600">Team</p>
-                                      <p className="text-sm font-semibold text-orange-700">{review.scores.team}</p>
+                                      <p className="text-sm font-semibold text-orange-700">
+                                        {review.scores.team}
+                                      </p>
                                     </div>
                                     <div className="bg-pink-50 rounded px-2 py-1">
                                       <p className="text-xs text-gray-600">Innovation</p>
-                                      <p className="text-sm font-semibold text-pink-700">{review.scores.innovation}</p>
+                                      <p className="text-sm font-semibold text-pink-700">
+                                        {review.scores.innovation}
+                                      </p>
                                     </div>
                                   </div>
                                 )}
@@ -595,7 +619,8 @@ export default function ApplicationDetailsPage() {
                                   <div className="mt-3">
                                     <p className="text-xs text-gray-500">Suggested Budget</p>
                                     <p className="text-sm font-semibold text-gray-900">
-                                      {review.suggestedBudget.currency} {review.suggestedBudget.amount.toLocaleString()}
+                                      {review.suggestedBudget.currency}{' '}
+                                      {review.suggestedBudget.amount.toLocaleString()}
                                     </p>
                                   </div>
                                 )}
@@ -643,8 +668,8 @@ export default function ApplicationDetailsPage() {
                       <button
                         className="mt-4 text-sm text-blue-600 hover:text-blue-700"
                         onClick={() => {
-                          setStatusFilter("ALL");
-                          setRecommendationFilter("ALL");
+                          setStatusFilter('ALL');
+                          setRecommendationFilter('ALL');
                         }}
                         type="button"
                       >
@@ -666,9 +691,7 @@ export default function ApplicationDetailsPage() {
                           strokeWidth={2}
                         />
                       </svg>
-                      <h3 className="mt-2 text-sm font-medium text-gray-900">
-                        No Reviews Yet
-                      </h3>
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">No Reviews Yet</h3>
                       <p className="mt-1 text-sm text-gray-500">
                         Invite reviewers to start the review process.
                       </p>
@@ -704,12 +727,9 @@ export default function ApplicationDetailsPage() {
                   strokeWidth={2}
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
-                Application Not Found
-              </h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">Application Not Found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                The application you're looking for doesn't exist or you don't
-                have access to it.
+                The application you're looking for doesn't exist or you don't have access to it.
               </p>
               <div className="mt-6">
                 <Link
@@ -736,7 +756,7 @@ export default function ApplicationDetailsPage() {
                 cycleSlug,
                 applicationSlug,
                 page: 1,
-                numberOfResults: 50
+                numberOfResults: 50,
               });
             }}
           />

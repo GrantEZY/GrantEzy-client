@@ -3,7 +3,7 @@
  * Handles file uploads to Cloudinary CDN
  */
 
-import { CLOUDINARY_CONFIG, getCloudinaryUrl } from "../lib/config/cloudinary.config";
+import { CLOUDINARY_CONFIG, getCloudinaryUrl } from '../lib/config/cloudinary.config';
 
 export interface CloudinaryUploadResult {
   secure_url: string;
@@ -17,7 +17,7 @@ export interface CloudinaryUploadResult {
 
 export interface UploadOptions {
   folder?: string;
-  resourceType?: "image" | "raw" | "video" | "auto";
+  resourceType?: 'image' | 'raw' | 'video' | 'auto';
   publicId?: string;
   tags?: string[];
   context?: Record<string, string>;
@@ -35,50 +35,52 @@ export const uploadToCloudinary = async (
 ): Promise<CloudinaryUploadResult> => {
   try {
     const formData = new FormData();
-    
+
     // Add file
-    formData.append("file", file);
-    
+    formData.append('file', file);
+
     // Add upload preset (required for unsigned uploads)
-    formData.append("upload_preset", CLOUDINARY_CONFIG.UPLOAD_PRESET);
-    
+    formData.append('upload_preset', CLOUDINARY_CONFIG.UPLOAD_PRESET);
+
     // Add optional parameters
     if (options.folder) {
-      formData.append("folder", options.folder);
+      formData.append('folder', options.folder);
     }
-    
+
     if (options.publicId) {
-      formData.append("public_id", options.publicId);
+      formData.append('public_id', options.publicId);
     }
-    
+
     if (options.tags && options.tags.length > 0) {
-      formData.append("tags", options.tags.join(","));
+      formData.append('tags', options.tags.join(','));
     }
-    
+
     if (options.context) {
-      formData.append("context", Object.entries(options.context)
-        .map(([key, value]) => `${key}=${value}`)
-        .join("|")
+      formData.append(
+        'context',
+        Object.entries(options.context)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('|')
       );
     }
-    
+
     // Set resource type
-    formData.append("resource_type", options.resourceType || "auto");
-    
+    formData.append('resource_type', options.resourceType || 'auto');
+
     const response = await fetch(getCloudinaryUrl(), {
-      method: "POST",
+      method: 'POST',
       body: formData,
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error?.message || "Upload failed");
+      throw new Error(error.error?.message || 'Upload failed');
     }
-    
+
     const result: CloudinaryUploadResult = await response.json();
     return result;
   } catch (error) {
-    console.error("Cloudinary upload error:", error);
+    console.error('Cloudinary upload error:', error);
     throw error;
   }
 };
@@ -115,16 +117,16 @@ export const validateFile = (
       error: `File size exceeds maximum allowed size of ${maxSize / (1024 * 1024)}MB`,
     };
   }
-  
+
   // Check file format
-  const fileExtension = file.name.split(".").pop()?.toLowerCase();
+  const fileExtension = file.name.split('.').pop()?.toLowerCase();
   if (!fileExtension || !allowedFormats.includes(fileExtension)) {
     return {
       valid: false,
-      error: `File format .${fileExtension} is not allowed. Allowed formats: ${allowedFormats.join(", ")}`,
+      error: `File format .${fileExtension} is not allowed. Allowed formats: ${allowedFormats.join(', ')}`,
     };
   }
-  
+
   return { valid: true };
 };
 
@@ -147,19 +149,19 @@ export const formatFileSize = (bytes: number): string => {
  * @returns MIME type string
  */
 export const getMimeType = (filename: string): string => {
-  const ext = filename.split(".").pop()?.toLowerCase() || "";
+  const ext = filename.split('.').pop()?.toLowerCase() || '';
   const mimeTypes: Record<string, string> = {
-    pdf: "application/pdf",
-    doc: "application/msword",
-    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    txt: "text/plain",
-    jpg: "image/jpeg",
-    jpeg: "image/jpeg",
-    png: "image/png",
-    gif: "image/gif",
-    webp: "image/webp",
+    pdf: 'application/pdf',
+    doc: 'application/msword',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    txt: 'text/plain',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    png: 'image/png',
+    gif: 'image/gif',
+    webp: 'image/webp',
   };
-  return mimeTypes[ext] || "application/octet-stream";
+  return mimeTypes[ext] || 'application/octet-stream';
 };
 
 /**
@@ -175,7 +177,7 @@ export const getViewableUrl = (url: string): string => {
 
   // Check if it's a PDF or document
   const isPdf = url.toLowerCase().includes('.pdf') || url.includes('/image/upload/');
-  
+
   if (isPdf) {
     // Add fl_attachment:false to prevent download and ensure inline viewing
     // Add pg_1 to show first page for PDFs
@@ -184,7 +186,7 @@ export const getViewableUrl = (url: string): string => {
       return `${urlParts[0]}/upload/fl_attachment:false/${urlParts[1]}`;
     }
   }
-  
+
   return url;
 };
 
@@ -202,6 +204,6 @@ export const getThumbnailUrl = (url: string, width = 200, height = 200): string 
   if (urlParts.length === 2) {
     return `${urlParts[0]}/upload/w_${width},h_${height},c_fill,f_jpg,pg_1/${urlParts[1]}`;
   }
-  
+
   return url;
 };

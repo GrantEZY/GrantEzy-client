@@ -2,7 +2,7 @@
  * Custom hook for applicant store
  * Provides easy access to applicant state and actions
  */
-import { useApplicantStore } from "../store/applicant.store";
+import { useApplicantStore } from '../store/applicant.store';
 import {
   AddApplicationBudgetRequest,
   AddApplicationDocumentsRequest,
@@ -11,82 +11,52 @@ import {
   AddApplicationTechnicalDetailsRequest,
   ApplicationStep,
   CreateApplicationRequest,
-} from "../types/applicant.types";
+} from '../types/applicant.types';
 
 export const useApplicant = () => {
   // State selectors
-  const currentApplication = useApplicantStore(
-    (state) => state.currentApplication,
-  );
+  const currentApplication = useApplicantStore((state) => state.currentApplication);
   const currentStep = useApplicantStore((state) => state.currentStep);
   const applicationSteps = useApplicantStore((state) => state.applicationSteps);
   const myApplications = useApplicantStore((state) => state.myApplications);
-  const linkedApplications = useApplicantStore(
-    (state) => state.linkedApplications,
-  );
-  const isLoadingApplications = useApplicantStore(
-    (state) => state.isLoadingApplications,
-  );
+  const linkedApplications = useApplicantStore((state) => state.linkedApplications);
+  const isLoadingApplications = useApplicantStore((state) => state.isLoadingApplications);
   const isLoading = useApplicantStore((state) => state.isLoading);
   const error = useApplicantStore((state) => state.error);
   const successMessage = useApplicantStore((state) => state.successMessage);
 
   // Action selectors
-  const createApplication = useApplicantStore(
-    (state) => state.createApplication,
-  );
-  const addApplicationBudget = useApplicantStore(
-    (state) => state.addApplicationBudget,
-  );
+  const createApplication = useApplicantStore((state) => state.createApplication);
+  const addApplicationBudget = useApplicantStore((state) => state.addApplicationBudget);
   const addApplicationTechnicalDetails = useApplicantStore(
-    (state) => state.addApplicationTechnicalDetails,
+    (state) => state.addApplicationTechnicalDetails
   );
   const addApplicationRevenueStream = useApplicantStore(
-    (state) => state.addApplicationRevenueStream,
+    (state) => state.addApplicationRevenueStream
   );
   const addApplicationRisksAndMilestones = useApplicantStore(
-    (state) => state.addApplicationRisksAndMilestones,
+    (state) => state.addApplicationRisksAndMilestones
   );
-  const addApplicationDocuments = useApplicantStore(
-    (state) => state.addApplicationDocuments,
-  );
-  const addApplicationTeammates = useApplicantStore(
-    (state) => state.addApplicationTeammates,
-  );
-  const fetchUserApplications = useApplicantStore(
-    (state) => state.fetchUserApplications,
-  );
+  const addApplicationDocuments = useApplicantStore((state) => state.addApplicationDocuments);
+  const addApplicationTeammates = useApplicantStore((state) => state.addApplicationTeammates);
+  const fetchUserApplications = useApplicantStore((state) => state.fetchUserApplications);
   const fetchApplicationWithCycleDetails = useApplicantStore(
-    (state) => state.fetchApplicationWithCycleDetails,
+    (state) => state.fetchApplicationWithCycleDetails
   );
   const fetchUserCreatedApplicationDetails = useApplicantStore(
-    (state) => state.fetchUserCreatedApplicationDetails,
+    (state) => state.fetchUserCreatedApplicationDetails
   );
-  const deleteUserApplication = useApplicantStore(
-    (state) => state.deleteUserApplication,
-  );
+  const deleteUserApplication = useApplicantStore((state) => state.deleteUserApplication);
   const setCurrentStep = useApplicantStore((state) => state.setCurrentStep);
   const goToNextStep = useApplicantStore((state) => state.goToNextStep);
   const goToPreviousStep = useApplicantStore((state) => state.goToPreviousStep);
-  const canNavigateToStep = useApplicantStore(
-    (state) => state.canNavigateToStep,
-  );
-  const setCurrentApplication = useApplicantStore(
-    (state) => state.setCurrentApplication,
-  );
-  const updateApplicationSteps = useApplicantStore(
-    (state) => state.updateApplicationSteps,
-  );
+  const canNavigateToStep = useApplicantStore((state) => state.canNavigateToStep);
+  const setCurrentApplication = useApplicantStore((state) => state.setCurrentApplication);
+  const updateApplicationSteps = useApplicantStore((state) => state.updateApplicationSteps);
   const clearError = useApplicantStore((state) => state.clearError);
-  const clearSuccessMessage = useApplicantStore(
-    (state) => state.clearSuccessMessage,
-  );
-  const resetApplicationState = useApplicantStore(
-    (state) => state.resetApplicationState,
-  );
-  const loadSavedApplication = useApplicantStore(
-    (state) => state.loadSavedApplication,
-  );
+  const clearSuccessMessage = useApplicantStore((state) => state.clearSuccessMessage);
+  const resetApplicationState = useApplicantStore((state) => state.resetApplicationState);
+  const loadSavedApplication = useApplicantStore((state) => state.loadSavedApplication);
 
   // Computed values
   const isFirstStep = currentStep === ApplicationStep.BASIC_INFO;
@@ -115,11 +85,9 @@ export const useApplicant = () => {
     return await createApplication(data);
   };
 
-  const handleAddBudget = async (
-    budget: AddApplicationBudgetRequest["budget"],
-  ) => {
+  const handleAddBudget = async (budget: AddApplicationBudgetRequest['budget']) => {
     if (!applicationId) {
-      throw new Error("No active application");
+      throw new Error('No active application');
     }
     return await addApplicationBudget({
       applicationId,
@@ -128,11 +96,11 @@ export const useApplicant = () => {
   };
 
   const handleAddTechnicalDetails = async (
-    technicalSpec: AddApplicationTechnicalDetailsRequest["technicalSpec"],
-    marketInfo: AddApplicationTechnicalDetailsRequest["marketInfo"],
+    technicalSpec: AddApplicationTechnicalDetailsRequest['technicalSpec'],
+    marketInfo: AddApplicationTechnicalDetailsRequest['marketInfo']
   ) => {
     if (!applicationId) {
-      throw new Error("No active application");
+      throw new Error('No active application');
     }
     return await addApplicationTechnicalDetails({
       applicationId,
@@ -142,10 +110,10 @@ export const useApplicant = () => {
   };
 
   const handleAddRevenueStream = async (
-    revenueModel: AddApplicationRevenueStreamRequest["revenueModel"],
+    revenueModel: AddApplicationRevenueStreamRequest['revenueModel']
   ) => {
     if (!applicationId) {
-      throw new Error("No active application");
+      throw new Error('No active application');
     }
     return await addApplicationRevenueStream({
       applicationId,
@@ -154,11 +122,11 @@ export const useApplicant = () => {
   };
 
   const handleAddRisksAndMilestones = async (
-    risks: AddApplicationRisksAndMilestonesRequest["risks"],
-    milestones: AddApplicationRisksAndMilestonesRequest["milestones"],
+    risks: AddApplicationRisksAndMilestonesRequest['risks'],
+    milestones: AddApplicationRisksAndMilestonesRequest['milestones']
   ) => {
     if (!applicationId) {
-      throw new Error("No active application");
+      throw new Error('No active application');
     }
     return await addApplicationRisksAndMilestones({
       applicationId,
@@ -168,10 +136,10 @@ export const useApplicant = () => {
   };
 
   const handleAddDocuments = async (
-    documents: Omit<AddApplicationDocumentsRequest, "applicationId">,
+    documents: Omit<AddApplicationDocumentsRequest, 'applicationId'>
   ) => {
     if (!applicationId) {
-      throw new Error("No active application");
+      throw new Error('No active application');
     }
     return await addApplicationDocuments({
       applicationId,
@@ -179,12 +147,9 @@ export const useApplicant = () => {
     });
   };
 
-  const handleAddTeammates = async (
-    emails: string[],
-    isSubmitted: boolean = false,
-  ) => {
+  const handleAddTeammates = async (emails: string[], isSubmitted: boolean = false) => {
     if (!applicationId) {
-      throw new Error("No active application");
+      throw new Error('No active application');
     }
     return await addApplicationTeammates({
       applicationId,

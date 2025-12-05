@@ -6,10 +6,10 @@
 // ============= Enums =============
 
 export enum ProjectStatus {
-  ACTIVE = "ACTIVE",
-  COMPLETED = "COMPLETED",
-  ON_HOLD = "ON_HOLD",
-  CANCELLED = "CANCELLED",
+  ACTIVE = 'ACTIVE',
+  COMPLETED = 'COMPLETED',
+  ON_HOLD = 'ON_HOLD',
+  CANCELLED = 'CANCELLED',
 }
 
 // ============= Basic Types =============

@@ -1,17 +1,17 @@
 /**
  * Co-applicant service for handling co-applicant related API calls
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   CoApplicantApplicationResponse,
   InviteStatus,
   InviteStatusUpdateResponse,
   TokenDetailsResponse,
   UpdateInviteStatusRequest,
-} from "../types/co-applicant.types";
-import { GetUserLinkedProjectsResponse } from "../types/co-applicant.types";
-import { GetProjectDetailsResponse } from "../types/project.types";
+} from '../types/co-applicant.types';
+import { GetUserLinkedProjectsResponse } from '../types/co-applicant.types';
+import { GetProjectDetailsResponse } from '../types/project.types';
 
 export class CoApplicantService {
   /**
@@ -19,14 +19,12 @@ export class CoApplicantService {
    * @param applicationId - UUID of the application
    * @returns Promise<CoApplicantApplicationResponse>
    */
-  async getApplicationDetails(
-    applicationId: string,
-  ): Promise<CoApplicantApplicationResponse> {
+  async getApplicationDetails(applicationId: string): Promise<CoApplicantApplicationResponse> {
     const params = { applicationId };
 
     return httpClient.get<CoApplicantApplicationResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_APPLICATION_DETAILS,
-      params,
+      params
     );
   }
 
@@ -36,16 +34,13 @@ export class CoApplicantService {
    * @param slug - Verification slug
    * @returns Promise<TokenDetailsResponse>
    */
-  async getTokenDetails(
-    token: string,
-    slug: string,
-  ): Promise<TokenDetailsResponse> {
+  async getTokenDetails(token: string, slug: string): Promise<TokenDetailsResponse> {
     const params = { token, slug };
 
     // Use public get method since this endpoint is used before authentication
     return httpClient.publicGet<TokenDetailsResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_TOKEN_DETAILS,
-      params,
+      params
     );
   }
 
@@ -59,14 +54,14 @@ export class CoApplicantService {
   async updateInviteStatus(
     token: string,
     slug: string,
-    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED,
+    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED
   ): Promise<InviteStatusUpdateResponse> {
     const data: UpdateInviteStatusRequest = { token, slug, status };
 
     // Use public patch method since this endpoint doesn't require authentication
     return httpClient.publicPatch<InviteStatusUpdateResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.UPDATE_INVITE_STATUS,
-      data,
+      data
     );
   }
 
@@ -76,10 +71,7 @@ export class CoApplicantService {
    * @param slug - Verification slug
    * @returns Promise<InviteStatusUpdateResponse>
    */
-  async acceptInvite(
-    token: string,
-    slug: string,
-  ): Promise<InviteStatusUpdateResponse> {
+  async acceptInvite(token: string, slug: string): Promise<InviteStatusUpdateResponse> {
     return this.updateInviteStatus(token, slug, InviteStatus.ACCEPTED);
   }
 
@@ -89,10 +81,7 @@ export class CoApplicantService {
    * @param slug - Verification slug
    * @returns Promise<InviteStatusUpdateResponse>
    */
-  async rejectInvite(
-    token: string,
-    slug: string,
-  ): Promise<InviteStatusUpdateResponse> {
+  async rejectInvite(token: string, slug: string): Promise<InviteStatusUpdateResponse> {
     return this.updateInviteStatus(token, slug, InviteStatus.REJECTED);
   }
 
@@ -103,7 +92,7 @@ export class CoApplicantService {
    */
   async getUserLinkedProjects(
     page: number,
-    numberOfResults: number,
+    numberOfResults: number
   ): Promise<GetUserLinkedProjectsResponse> {
     const queryParams: Record<string, string> = {
       page: page.toString(),
@@ -112,23 +101,21 @@ export class CoApplicantService {
 
     return httpClient.get<GetUserLinkedProjectsResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_USER_LINKED_PROJECTS,
-      queryParams,
+      queryParams
     );
   }
 
   /**
    * Get project details by application slug (for co-applicants)
    */
-  async getProjectDetails(
-    applicationSlug: string,
-  ): Promise<GetProjectDetailsResponse> {
+  async getProjectDetails(applicationSlug: string): Promise<GetProjectDetailsResponse> {
     const queryParams: Record<string, string> = {
       applicationSlug,
     };
 
     return httpClient.get<GetProjectDetailsResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_PROJECT_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 }

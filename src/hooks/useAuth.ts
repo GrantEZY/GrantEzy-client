@@ -2,8 +2,8 @@
  * Custom hooks for authentication
  */
 
-import { useAuthStore } from "../store/auth.store";
-import { LoginRequest, RegisterRequest } from "../types/auth.types";
+import { useAuthStore } from '../store/auth.store';
+import { LoginRequest, RegisterRequest } from '../types/auth.types';
 
 export const useAuth = () => {
   const store = useAuthStore();
@@ -29,7 +29,7 @@ export const useAuth = () => {
       const currentUser = useAuthStore.getState().user;
       return { success: true, user: currentUser };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Login failed";
+      const message = error instanceof Error ? error.message : 'Login failed';
       return { success: false, error: message };
     }
   };
@@ -39,8 +39,7 @@ export const useAuth = () => {
       await register(userData);
       return { success: true };
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Registration failed";
+      const message = error instanceof Error ? error.message : 'Registration failed';
       return { success: false, error: message };
     }
   };
@@ -50,7 +49,7 @@ export const useAuth = () => {
       await logout();
       return { success: true };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Logout failed";
+      const message = error instanceof Error ? error.message : 'Logout failed';
       return { success: false, error: message };
     }
   };
@@ -60,8 +59,7 @@ export const useAuth = () => {
       const success = await refreshToken();
       return { success };
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Token refresh failed";
+      const message = error instanceof Error ? error.message : 'Token refresh failed';
       return { success: false, error: message };
     }
   };

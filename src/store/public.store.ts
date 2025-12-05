@@ -1,9 +1,9 @@
 /**
  * Public store for managing publicly available data
  */
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { ProgramCycle, publicService } from "@/services/public.service";
+import { ProgramCycle, publicService } from '@/services/public.service';
 
 interface PublicState {
   activeCycles: ProgramCycle[];
@@ -39,10 +39,10 @@ export const usePublicStore = create<PublicState>((set, _get) => ({
             ...cycle,
             program: {
               id: program.id,
-              name: program.details?.name || "Unknown Program",
-              description: program.details?.description || "",
+              name: program.details?.name || 'Unknown Program',
+              description: program.details?.description || '',
             },
-          })),
+          }))
         );
 
         set({
@@ -50,12 +50,12 @@ export const usePublicStore = create<PublicState>((set, _get) => ({
           loading: false,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch active cycles");
+        throw new Error(response.message || 'Failed to fetch active cycles');
       }
     } catch (error: any) {
-      console.error("Error fetching active cycles:", error);
+      console.error('Error fetching active cycles:', error);
       set({
-        error: error?.message || "Failed to fetch active cycles",
+        error: error?.message || 'Failed to fetch active cycles',
         loading: false,
       });
     }

@@ -1,9 +1,9 @@
 /**
  * GCV (Grant Committee View) store using Zustand for GCV-related state management
  */
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { gcvService } from "../services/gcv.service";
+import { gcvService } from '../services/gcv.service';
 import {
   AddGCVMemberRequest,
   AddProgramManagerRequest,
@@ -19,8 +19,8 @@ import {
   Program,
   UpdateGCVUserRoleRequest,
   UpdateProgramRequest,
-} from "../types/gcv.types";
-import { Cycle } from "../types/pm.types";
+} from '../types/gcv.types';
+import { Cycle } from '../types/pm.types';
 
 interface GCVState {
   // GCV Members state
@@ -63,9 +63,7 @@ interface GCVActions {
   // Program Cycles actions
   getProgramCycles: (params: GetGCVProgramCyclesRequest) => Promise<void>;
   getCycleDetails: (params: GetGCVCycleDetailsRequest) => Promise<void>;
-  getApplicationDetails: (
-    params: GetGCVApplicationDetailsRequest,
-  ) => Promise<void>;
+  getApplicationDetails: (params: GetGCVApplicationDetailsRequest) => Promise<void>;
   clearProgramCycles: () => void;
   setProgramCyclesError: (error: string | null) => void;
   setSelectedCycle: (cycle: Cycle | null) => void;
@@ -117,18 +115,17 @@ export const useGCVStore = create<GCVStore>((set) => ({
           members: response.res.users.map((member) => ({
             ...member,
             // Ensure email is always available at the top level for compatibility
-            email: member.contact?.email || member.email || "N/A",
+            email: member.contact?.email || member.email || 'N/A',
             // Ensure names are available at the top level for compatibility
-            firstName: member.person?.firstName || member.firstName || "N/A",
-            lastName: member.person?.lastName || member.lastName || "",
+            firstName: member.person?.firstName || member.firstName || 'N/A',
+            lastName: member.person?.lastName || member.lastName || '',
           })),
           membersPagination: pagination,
           isMembersLoading: false,
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to fetch GCV members";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch GCV members';
       set({
         membersError: errorMessage,
         isMembersLoading: false,
@@ -149,8 +146,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
       }
       return false;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to add GCV member";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add GCV member';
       set({
         membersError: errorMessage,
         isMembersLoading: false,
@@ -172,10 +168,10 @@ export const useGCVStore = create<GCVStore>((set) => ({
       }
       return false;
     } catch (error: unknown) {
-      let errorMessage = "Failed to update GCV user role";
+      let errorMessage = 'Failed to update GCV user role';
 
       // Extract detailed error message from API response
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -186,7 +182,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Update GCV user role error:", error);
+      console.error('Update GCV user role error:', error);
 
       set({
         membersError: errorMessage,
@@ -223,10 +219,10 @@ export const useGCVStore = create<GCVStore>((set) => ({
       }
       return false;
     } catch (error: unknown) {
-      let errorMessage = "Failed to create program";
+      let errorMessage = 'Failed to create program';
 
       // Extract detailed error message from API response
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -237,7 +233,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Create program error:", error);
+      console.error('Create program error:', error);
 
       set({
         programsError: errorMessage,
@@ -272,9 +268,8 @@ export const useGCVStore = create<GCVStore>((set) => ({
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to fetch programs";
-      console.error("[GCV Store] Fetch programs error:", error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch programs';
+      console.error('[GCV Store] Fetch programs error:', error);
       set({
         programsError: errorMessage,
         isProgramsLoading: false,
@@ -295,10 +290,10 @@ export const useGCVStore = create<GCVStore>((set) => ({
       }
       return false;
     } catch (error: unknown) {
-      let errorMessage = "Failed to update program";
+      let errorMessage = 'Failed to update program';
 
       // Extract detailed error message from API response
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -309,7 +304,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Update program error:", error);
+      console.error('Update program error:', error);
 
       set({
         programsError: errorMessage,
@@ -332,10 +327,10 @@ export const useGCVStore = create<GCVStore>((set) => ({
       }
       return false;
     } catch (error: unknown) {
-      let errorMessage = "Failed to delete program";
+      let errorMessage = 'Failed to delete program';
 
       // Extract detailed error message from API response
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -346,7 +341,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Delete program error:", error);
+      console.error('Delete program error:', error);
 
       set({
         programsError: errorMessage,
@@ -369,10 +364,10 @@ export const useGCVStore = create<GCVStore>((set) => ({
       }
       return false;
     } catch (error: unknown) {
-      let errorMessage = "Failed to add program manager";
+      let errorMessage = 'Failed to add program manager';
 
       // Extract detailed error message from API response
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -383,7 +378,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Add program manager error:", error);
+      console.error('Add program manager error:', error);
 
       set({
         programsError: errorMessage,
@@ -435,12 +430,12 @@ export const useGCVStore = create<GCVStore>((set) => ({
           isProgramCyclesLoading: false,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch program cycles");
+        throw new Error(response.message || 'Failed to fetch program cycles');
       }
     } catch (error: unknown) {
-      let errorMessage = "Failed to fetch program cycles";
+      let errorMessage = 'Failed to fetch program cycles';
 
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -451,7 +446,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Get program cycles error:", error);
+      console.error('Get program cycles error:', error);
 
       set({
         programCyclesError: errorMessage,
@@ -472,12 +467,12 @@ export const useGCVStore = create<GCVStore>((set) => ({
           isProgramCyclesLoading: false,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch cycle details");
+        throw new Error(response.message || 'Failed to fetch cycle details');
       }
     } catch (error: unknown) {
-      let errorMessage = "Failed to fetch cycle details";
+      let errorMessage = 'Failed to fetch cycle details';
 
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -488,7 +483,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Get cycle details error:", error);
+      console.error('Get cycle details error:', error);
 
       set({
         programCyclesError: errorMessage,
@@ -508,14 +503,12 @@ export const useGCVStore = create<GCVStore>((set) => ({
         });
         // We can store the application details in a new state property if needed
       } else {
-        throw new Error(
-          response.message || "Failed to fetch application details",
-        );
+        throw new Error(response.message || 'Failed to fetch application details');
       }
     } catch (error: unknown) {
-      let errorMessage = "Failed to fetch application details";
+      let errorMessage = 'Failed to fetch application details';
 
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
           response?: { data?: { message?: string } };
         };
@@ -526,7 +519,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Get application details error:", error);
+      console.error('Get application details error:', error);
 
       set({
         programCyclesError: errorMessage,

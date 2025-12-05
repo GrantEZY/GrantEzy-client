@@ -3,12 +3,12 @@
  * Reusable component for uploading files with drag-and-drop support
  */
 
-"use client";
+'use client';
 
-import React, { useState, useRef } from "react";
-import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
-import { CLOUDINARY_CONFIG } from "@/lib/config/cloudinary.config";
-import { getViewableUrl } from "@/utils/cloudinary.util";
+import React, { useState, useRef } from 'react';
+import { useCloudinaryUpload } from '@/hooks/useCloudinaryUpload';
+import { CLOUDINARY_CONFIG } from '@/lib/config/cloudinary.config';
+import { getViewableUrl } from '@/utils/cloudinary.util';
 
 export interface FileUploadProps {
   /**
@@ -81,14 +81,14 @@ export interface FileUploadProps {
 export const FileUpload: React.FC<FileUploadProps> = ({
   onUploadSuccess,
   onUploadError,
-  label = "Upload File",
+  label = 'Upload File',
   description,
   allowedFormats = CLOUDINARY_CONFIG.ALLOWED_FORMATS.DOCUMENTS,
   maxSizeMB = 10,
   folder = CLOUDINARY_CONFIG.FOLDERS.APPLICATION_DOCUMENTS,
   accept,
   required = false,
-  className = "",
+  className = '',
   showPreview = true,
   existingFileUrl,
 }) => {
@@ -97,23 +97,22 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const [uploadedFile, setUploadedFile] = useState<{
     url: string;
     fileName: string;
-  } | null>(existingFileUrl ? { url: existingFileUrl, fileName: "Existing file" } : null);
+  } | null>(existingFileUrl ? { url: existingFileUrl, fileName: 'Existing file' } : null);
 
-  const { uploadFile, uploading, error, formatFileSize, getMimeType } =
-    useCloudinaryUpload();
+  const { uploadFile, uploading, error, formatFileSize, getMimeType } = useCloudinaryUpload();
 
   const handleFileSelect = async (file: File) => {
     try {
       const result = await uploadFile(file, {
         folder,
-        resourceType: "auto",
-        tags: ["application_document"],
+        resourceType: 'auto',
+        tags: ['application_document'],
       });
 
       if (result) {
         // Use getViewableUrl to ensure PDFs open inline instead of downloading
         const viewableUrl = getViewableUrl(result.secure_url);
-        
+
         const uploadData = {
           url: viewableUrl,
           publicId: result.public_id,
@@ -130,7 +129,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         onUploadSuccess(uploadData);
       }
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Upload failed";
+      const errorMsg = err instanceof Error ? err.message : 'Upload failed';
       if (onUploadError) {
         onUploadError(errorMsg);
       }
@@ -167,13 +166,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const handleRemove = () => {
     setUploadedFile(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      fileInputRef.current.value = '';
     }
   };
 
   const getAcceptAttribute = () => {
     if (accept) return accept;
-    return allowedFormats.map((format) => `.${format}`).join(",");
+    return allowedFormats.map((format) => `.${format}`).join(',');
   };
 
   return (
@@ -187,18 +186,14 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       )}
 
       {/* Description */}
-      {description && (
-        <p className="text-sm text-gray-500">{description}</p>
-      )}
+      {description && <p className="text-sm text-gray-500">{description}</p>}
 
       {/* Upload Area */}
       {!uploadedFile ? (
         <div
           className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-            isDragging
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-300 hover:border-gray-400"
-          } ${uploading ? "opacity-50 pointer-events-none" : ""}`}
+            isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+          } ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
@@ -240,12 +235,10 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                 >
                   Choose File
                 </button>
-                <p className="mt-2 text-xs text-gray-500">
-                  or drag and drop here
-                </p>
+                <p className="mt-2 text-xs text-gray-500">or drag and drop here</p>
               </div>
               <p className="mt-2 text-xs text-gray-500">
-                {allowedFormats.join(", ").toUpperCase()} up to {maxSizeMB}MB
+                {allowedFormats.join(', ').toUpperCase()} up to {maxSizeMB}MB
               </p>
             </>
           )}
@@ -269,9 +262,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                   />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {uploadedFile.fileName}
-                  </p>
+                  <p className="text-sm font-medium text-gray-900">{uploadedFile.fileName}</p>
                   <p className="text-xs text-gray-500">Uploaded successfully</p>
                 </div>
               </div>
@@ -291,11 +282,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {error && (
         <div className="rounded-md bg-red-50 p-3">
           <div className="flex">
-            <svg
-              className="h-5 w-5 text-red-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
+            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fillRule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"

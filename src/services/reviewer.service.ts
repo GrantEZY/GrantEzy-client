@@ -1,8 +1,8 @@
 /**
  * Reviewer service for handling reviewer-related API calls
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   GetTokenDetailsRequest,
   GetTokenDetailsResponse,
@@ -14,7 +14,7 @@ import {
   GetUserReviewsResponse,
   GetReviewDetailsRequest,
   GetReviewDetailsResponse,
-} from "../types/reviewer.types";
+} from '../types/reviewer.types';
 
 export class ReviewerService {
   // ============= Invite Management =============
@@ -24,9 +24,7 @@ export class ReviewerService {
    * Used to verify invitation token before accepting/rejecting
    * This is a public endpoint - no authentication required
    */
-  async getTokenDetails(
-    params: GetTokenDetailsRequest,
-  ): Promise<GetTokenDetailsResponse> {
+  async getTokenDetails(params: GetTokenDetailsRequest): Promise<GetTokenDetailsResponse> {
     const queryParams: Record<string, string> = {
       token: params.token,
       slug: params.slug,
@@ -34,7 +32,7 @@ export class ReviewerService {
 
     return httpClient.publicGet<GetTokenDetailsResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.GET_TOKEN_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 
@@ -42,12 +40,10 @@ export class ReviewerService {
    * Update reviewer invite status (accept or reject)
    * This is a public endpoint - no authentication required
    */
-  async updateInviteStatus(
-    data: UpdateInviteStatusRequest,
-  ): Promise<UpdateInviteStatusResponse> {
+  async updateInviteStatus(data: UpdateInviteStatusRequest): Promise<UpdateInviteStatusResponse> {
     return httpClient.publicPatch<UpdateInviteStatusResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.UPDATE_INVITE_STATUS,
-      data,
+      data
     );
   }
 
@@ -56,21 +52,14 @@ export class ReviewerService {
   /**
    * Submit a review for an application
    */
-  async submitReview(
-    data: SubmitReviewRequest,
-  ): Promise<SubmitReviewResponse> {
-    return httpClient.post<SubmitReviewResponse>(
-      API_CONFIG.ENDPOINTS.REVIEWER.SUBMIT_REVIEW,
-      data,
-    );
+  async submitReview(data: SubmitReviewRequest): Promise<SubmitReviewResponse> {
+    return httpClient.post<SubmitReviewResponse>(API_CONFIG.ENDPOINTS.REVIEWER.SUBMIT_REVIEW, data);
   }
 
   /**
    * Get all reviews submitted by the current reviewer with pagination
    */
-  async getUserReviews(
-    params: GetUserReviewsRequest,
-  ): Promise<GetUserReviewsResponse> {
+  async getUserReviews(params: GetUserReviewsRequest): Promise<GetUserReviewsResponse> {
     const queryParams: Record<string, string> = {
       page: params.page.toString(),
       numberOfResults: params.numberOfResults.toString(),
@@ -78,23 +67,21 @@ export class ReviewerService {
 
     return httpClient.get<GetUserReviewsResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.GET_USER_REVIEWS,
-      queryParams,
+      queryParams
     );
   }
 
   /**
    * Get detailed information about a specific review
    */
-  async getReviewDetails(
-    params: GetReviewDetailsRequest,
-  ): Promise<GetReviewDetailsResponse> {
+  async getReviewDetails(params: GetReviewDetailsRequest): Promise<GetReviewDetailsResponse> {
     const queryParams: Record<string, string> = {
       reviewSlug: params.reviewSlug,
     };
 
     return httpClient.get<GetReviewDetailsResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.GET_REVIEW_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 }

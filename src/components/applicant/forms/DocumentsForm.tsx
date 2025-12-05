@@ -3,13 +3,13 @@
  * Collects: 6 required documents + optional otherDocuments[]
  * Uploads files to Cloudinary before saving to database
  */
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useApplicant } from "@/hooks/useApplicant";
-import { Document } from "@/types/applicant.types";
-import { FileUpload } from "@/components/ui/FileUpload";
-import { CLOUDINARY_CONFIG } from "@/lib/config/cloudinary.config";
+import { useState } from 'react';
+import { useApplicant } from '@/hooks/useApplicant';
+import { Document } from '@/types/applicant.types';
+import { FileUpload } from '@/components/ui/FileUpload';
+import { CLOUDINARY_CONFIG } from '@/lib/config/cloudinary.config';
 
 interface DocumentUpload {
   endorsementLetter: Document | null;
@@ -23,34 +23,34 @@ interface DocumentUpload {
 
 const REQUIRED_DOCUMENTS = [
   {
-    key: "endorsementLetter" as const,
-    label: "Endorsement Letter",
-    description: "Letter signed by the head of institution",
+    key: 'endorsementLetter' as const,
+    label: 'Endorsement Letter',
+    description: 'Letter signed by the head of institution',
   },
   {
-    key: "plagiarismUndertaking" as const,
-    label: "Plagiarism Undertaking",
-    description: "Signed undertaking against plagiarism",
+    key: 'plagiarismUndertaking' as const,
+    label: 'Plagiarism Undertaking',
+    description: 'Signed undertaking against plagiarism',
   },
   {
-    key: "ageProof" as const,
-    label: "Age Proof",
-    description: "Valid age proof document",
+    key: 'ageProof' as const,
+    label: 'Age Proof',
+    description: 'Valid age proof document',
   },
   {
-    key: "aadhar" as const,
-    label: "Aadhar Card",
-    description: "Scanned copy of Aadhar card",
+    key: 'aadhar' as const,
+    label: 'Aadhar Card',
+    description: 'Scanned copy of Aadhar card',
   },
   {
-    key: "piCertificate" as const,
-    label: "PI Certificate",
-    description: "Principal Investigator certificate",
+    key: 'piCertificate' as const,
+    label: 'PI Certificate',
+    description: 'Principal Investigator certificate',
   },
   {
-    key: "coPiCertificate" as const,
-    label: "Co-PI Certificate",
-    description: "Co-Principal Investigator certificate",
+    key: 'coPiCertificate' as const,
+    label: 'Co-PI Certificate',
+    description: 'Co-Principal Investigator certificate',
   },
 ];
 
@@ -71,7 +71,7 @@ export default function DocumentsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDocumentUpload = (
-    field: keyof Omit<DocumentUpload, "otherDocuments">,
+    field: keyof Omit<DocumentUpload, 'otherDocuments'>,
     uploadResult: {
       url: string;
       publicId: string;
@@ -82,7 +82,7 @@ export default function DocumentsForm() {
   ) => {
     const document: Document = {
       title: REQUIRED_DOCUMENTS.find((d) => d.key === field)?.label || field,
-      description: REQUIRED_DOCUMENTS.find((d) => d.key === field)?.description || "",
+      description: REQUIRED_DOCUMENTS.find((d) => d.key === field)?.description || '',
       fileName: uploadResult.fileName,
       fileSize: uploadResult.fileSize,
       mimeType: uploadResult.mimeType,
@@ -94,7 +94,7 @@ export default function DocumentsForm() {
     };
 
     setDocuments((prev) => ({ ...prev, [field]: document }));
-    setErrors((prev) => ({ ...prev, [field]: "" }));
+    setErrors((prev) => ({ ...prev, [field]: '' }));
   };
 
   const handleOtherDocumentUpload = (uploadResult: {
@@ -106,7 +106,7 @@ export default function DocumentsForm() {
   }) => {
     const document: Document = {
       title: uploadResult.fileName,
-      description: "Additional document",
+      description: 'Additional document',
       fileName: uploadResult.fileName,
       fileSize: uploadResult.fileSize,
       mimeType: uploadResult.mimeType,
@@ -145,7 +145,7 @@ export default function DocumentsForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -164,15 +164,13 @@ export default function DocumentsForm() {
     };
 
     const success = await addDocuments(documentsToSubmit);
-    
+
     if (!success) {
       setIsSubmitting(false);
     }
   };
 
-  const allRequiredDocsUploaded = REQUIRED_DOCUMENTS.every(
-    (doc) => documents[doc.key] !== null
-  );
+  const allRequiredDocsUploaded = REQUIRED_DOCUMENTS.every((doc) => documents[doc.key] !== null);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -200,9 +198,7 @@ export default function DocumentsForm() {
               maxSizeMB={10}
               showPreview={true}
             />
-            {errors[doc.key] && (
-              <p className="mt-2 text-sm text-red-600">{errors[doc.key]}</p>
-            )}
+            {errors[doc.key] && <p className="mt-2 text-sm text-red-600">{errors[doc.key]}</p>}
           </div>
         ))}
       </div>
@@ -211,7 +207,7 @@ export default function DocumentsForm() {
       <div className="rounded-lg border border-gray-200 p-6 space-y-4">
         <div>
           <h3 className="text-lg font-medium text-gray-900">
-            Additional Documents{" "}
+            Additional Documents{' '}
             <span className="text-sm font-normal text-gray-500">(Optional)</span>
           </h3>
           <p className="mt-1 text-sm text-gray-600">
@@ -278,14 +274,20 @@ export default function DocumentsForm() {
           className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </button>
 
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-600">
-            {REQUIRED_DOCUMENTS.filter((doc) => documents[doc.key]).length} / {REQUIRED_DOCUMENTS.length} required
+            {REQUIRED_DOCUMENTS.filter((doc) => documents[doc.key]).length} /{' '}
+            {REQUIRED_DOCUMENTS.length} required
           </span>
           <button
             type="submit"
@@ -294,9 +296,24 @@ export default function DocumentsForm() {
           >
             {isLoading || isSubmitting ? (
               <>
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
                 </svg>
                 Saving...
               </>
@@ -304,7 +321,12 @@ export default function DocumentsForm() {
               <>
                 Continue
                 <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </>
             )}
@@ -315,8 +337,16 @@ export default function DocumentsForm() {
       {/* Help Section */}
       <div className="rounded-md bg-blue-50 p-4">
         <div className="flex">
-          <svg className="h-5 w-5 text-blue-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd"/>
+          <svg
+            className="h-5 w-5 text-blue-400 flex-shrink-0"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clipRule="evenodd"
+            />
           </svg>
           <div className="ml-3">
             <h3 className="text-sm font-medium text-blue-800">Upload Guidelines</h3>

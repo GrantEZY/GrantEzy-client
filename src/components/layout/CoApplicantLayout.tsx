@@ -2,9 +2,9 @@
  * Co-Applicant Layout Component
  * Provides consistent layout structure for Co-Applicant pages
  */
-import React from "react";
+import React from 'react';
 
-import Header from "./Header";
+import Header from './Header';
 
 interface CoApplicantLayoutProps {
   children: React.ReactNode;

@@ -1,32 +1,32 @@
 /**
  * GCV (Grant Committee View) related types
  */
-import { OrganisationType } from "./admin.types";
-import { UserRoles } from "./auth.types";
+import { OrganisationType } from './admin.types';
+import { UserRoles } from './auth.types';
 
 // ============= Enums =============
 
 export enum UpdateRole {
-  ADD_ROLE = "ADD_ROLE",
-  DELETE_ROLE = "DELETE_ROLE",
+  ADD_ROLE = 'ADD_ROLE',
+  DELETE_ROLE = 'DELETE_ROLE',
 }
 
 export enum ProgramStatus {
-  ACTIVE = "ACTIVE",
-  IN_ACTIVE = "INACTIVE",
-  ARCHIVED = "ARCHIVED",
+  ACTIVE = 'ACTIVE',
+  IN_ACTIVE = 'INACTIVE',
+  ARCHIVED = 'ARCHIVED',
 }
 
 export enum TRL {
-  TRL1 = "TRL1",
-  TRL2 = "TRL2", 
-  TRL3 = "TRL3",
-  TRL4 = "TRL4",
-  TRL5 = "TRL5",
-  TRL6 = "TRL6",
-  TRL7 = "TRL7",
-  TRL8 = "TRL8",
-  TRL9 = "TRL9",
+  TRL1 = 'TRL1',
+  TRL2 = 'TRL2',
+  TRL3 = 'TRL3',
+  TRL4 = 'TRL4',
+  TRL5 = 'TRL5',
+  TRL6 = 'TRL6',
+  TRL7 = 'TRL7',
+  TRL8 = 'TRL8',
+  TRL9 = 'TRL9',
 }
 
 // ============= GCV Member Types =============
@@ -268,7 +268,7 @@ export interface GetGCVProgramCyclesResponse {
   status: number;
   message: string;
   res: {
-    cycles: import("./pm.types").Cycle[];
+    cycles: import('./pm.types').Cycle[];
     totalNumberOfCycles: number;
   };
 }
@@ -281,7 +281,7 @@ export interface GetGCVCycleDetailsResponse {
   status: number;
   message: string;
   res: {
-    cycle: import("./pm.types").Cycle;
+    cycle: import('./pm.types').Cycle;
   };
 }
 

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from 'react';
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter } from 'next/navigation';
 
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from '@/store/auth.store';
 
 interface AuthGuardProps {
   children: ReactNode;

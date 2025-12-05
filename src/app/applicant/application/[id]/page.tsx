@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ApplicantLayout from "@/components/layout/ApplicantLayout";
-import { applicantService } from "@/services/applicant.service";
-import { Application } from "@/types/applicant.types";
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ApplicantLayout from '@/components/layout/ApplicantLayout';
+import { applicantService } from '@/services/applicant.service';
+import { Application } from '@/types/applicant.types';
 
 export default function ApplicationDetailsPage() {
   const params = useParams();
@@ -15,27 +15,23 @@ export default function ApplicationDetailsPage() {
 
   const [application, setApplication] = useState<Application | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchApplicationDetails = async () => {
       try {
         setIsLoading(true);
-        setError("");
+        setError('');
 
-        const response = await applicantService.getUserCreatedApplicationDetails(
-          applicationId,
-        );
+        const response = await applicantService.getUserCreatedApplicationDetails(applicationId);
 
         if (response.status === 200 && response.res.application) {
           setApplication(response.res.application);
         } else {
-          setError("Application not found");
+          setError('Application not found');
         }
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to load application",
-        );
+        setError(err instanceof Error ? err.message : 'Failed to load application');
       } finally {
         setIsLoading(false);
       }
@@ -67,9 +63,7 @@ export default function ApplicationDetailsPage() {
         <ApplicantLayout>
           <div className="rounded-lg border border-red-200 bg-red-50 p-6">
             <h3 className="text-lg font-medium text-red-900">Error</h3>
-            <p className="mt-2 text-sm text-red-700">
-              {error || "Application not found"}
-            </p>
+            <p className="mt-2 text-sm text-red-700">{error || 'Application not found'}</p>
             <Link
               href="/applicant"
               className="mt-4 inline-block rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
@@ -83,18 +77,18 @@ export default function ApplicationDetailsPage() {
   }
 
   const formatDate = (date: string | undefined) => {
-    if (!date) return "N/A";
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
   const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: currency || "USD",
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: currency || 'USD',
     }).format(amount);
   };
 
@@ -105,11 +99,9 @@ export default function ApplicationDetailsPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Application Details
-              </h1>
+              <h1 className="text-3xl font-bold text-gray-900">Application Details</h1>
               <p className="mt-2 text-gray-600">
-                {application.isSubmitted ? "Submitted" : "Draft"} Application
+                {application.isSubmitted ? 'Submitted' : 'Draft'} Application
               </p>
             </div>
             <Link
@@ -123,12 +115,13 @@ export default function ApplicationDetailsPage() {
           {/* Status Badge */}
           <div className="mt-4">
             <span
-              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${application.isSubmitted
-                ? "bg-green-100 text-green-800"
-                : "bg-yellow-100 text-yellow-800"
-                }`}
+              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                application.isSubmitted
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800'
+              }`}
             >
-              {application.isSubmitted ? "Submitted" : "Draft"}
+              {application.isSubmitted ? 'Submitted' : 'Draft'}
             </span>
             <span className="ml-3 text-sm text-gray-500">
               Last updated: {formatDate(application.updatedAt)}
@@ -139,39 +132,27 @@ export default function ApplicationDetailsPage() {
         {/* Basic Information */}
         {application.basicInfo && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Basic Information
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Basic Information</h2>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Title</h3>
-                <p className="mt-1 text-base text-gray-900">
-                  {application.basicInfo.title}
-                </p>
+                <p className="mt-1 text-base text-gray-900">{application.basicInfo.title}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Summary</h3>
-                <p className="mt-1 text-base text-gray-900">
-                  {application.basicInfo.summary}
-                </p>
+                <p className="mt-1 text-base text-gray-900">{application.basicInfo.summary}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Problem Statement</h3>
-                <p className="mt-1 text-base text-gray-900">
-                  {application.basicInfo.problem}
-                </p>
+                <p className="mt-1 text-base text-gray-900">{application.basicInfo.problem}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Proposed Solution</h3>
-                <p className="mt-1 text-base text-gray-900">
-                  {application.basicInfo.solution}
-                </p>
+                <p className="mt-1 text-base text-gray-900">{application.basicInfo.solution}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Innovation</h3>
-                <p className="mt-1 text-base text-gray-900">
-                  {application.basicInfo.innovation}
-                </p>
+                <p className="mt-1 text-base text-gray-900">{application.basicInfo.innovation}</p>
               </div>
             </div>
           </div>
@@ -180,9 +161,7 @@ export default function ApplicationDetailsPage() {
         {/* Budget Details */}
         {application.budget && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Budget Details
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Budget Details</h2>
             <div className="space-y-6">
               {/* ManPower */}
               {application.budget.ManPower && application.budget.ManPower.length > 0 && (
@@ -252,7 +231,7 @@ export default function ApplicationDetailsPage() {
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Consumables.Budget.amount,
-                        application.budget.Consumables.Budget.currency,
+                        application.budget.Consumables.Budget.currency
                       )}
                     </p>
                   </div>
@@ -263,7 +242,7 @@ export default function ApplicationDetailsPage() {
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Travel.Budget.amount,
-                        application.budget.Travel.Budget.currency,
+                        application.budget.Travel.Budget.currency
                       )}
                     </p>
                   </div>
@@ -274,7 +253,7 @@ export default function ApplicationDetailsPage() {
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Contigency.Budget.amount,
-                        application.budget.Contigency.Budget.currency,
+                        application.budget.Contigency.Budget.currency
                       )}
                     </p>
                   </div>
@@ -285,7 +264,7 @@ export default function ApplicationDetailsPage() {
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Overhead.Budget.amount,
-                        application.budget.Overhead.Budget.currency,
+                        application.budget.Overhead.Budget.currency
                       )}
                     </p>
                   </div>
@@ -298,9 +277,7 @@ export default function ApplicationDetailsPage() {
         {/* Technical Specifications */}
         {application.technicalSpec && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Technical Specifications
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Technical Specifications</h2>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Description</h3>
@@ -334,9 +311,7 @@ export default function ApplicationDetailsPage() {
         {/* Market Information */}
         {application.marketInfo && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Market Analysis
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Market Analysis</h2>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">
@@ -347,25 +322,19 @@ export default function ApplicationDetailsPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
-                  Serviceable Market (SAM)
-                </h3>
+                <h3 className="text-sm font-medium text-gray-500">Serviceable Market (SAM)</h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.marketInfo.serviceableMarket}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
-                  Obtainable Market (SOM)
-                </h3>
+                <h3 className="text-sm font-medium text-gray-500">Obtainable Market (SOM)</h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.marketInfo.obtainableMarket}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">
-                  Competitor Analysis
-                </h3>
+                <h3 className="text-sm font-medium text-gray-500">Competitor Analysis</h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.marketInfo.competitorAnalysis}
                 </p>
@@ -377,9 +346,7 @@ export default function ApplicationDetailsPage() {
         {/* Revenue Model */}
         {application.revenueModel && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              Revenue Model
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Revenue Model</h2>
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Primary Revenue Stream</h3>
@@ -396,9 +363,7 @@ export default function ApplicationDetailsPage() {
               {application.revenueModel.secondaryStreams &&
                 application.revenueModel.secondaryStreams.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium text-gray-500">
-                      Secondary Revenue Streams
-                    </h3>
+                    <h3 className="text-sm font-medium text-gray-500">Secondary Revenue Streams</h3>
                     <div className="mt-2 space-y-2">
                       {application.revenueModel.secondaryStreams.map((stream, index) => (
                         <div key={index} className="p-3 bg-gray-50 rounded">
@@ -413,9 +378,7 @@ export default function ApplicationDetailsPage() {
                 )}
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Pricing Strategy</h3>
-                <p className="mt-1 text-base text-gray-900">
-                  {application.revenueModel.pricing}
-                </p>
+                <p className="mt-1 text-base text-gray-900">{application.revenueModel.pricing}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Unit Economics</h3>
@@ -437,18 +400,17 @@ export default function ApplicationDetailsPage() {
                 {application.risks.map((risk, index) => (
                   <div key={index} className="p-3 bg-gray-50 rounded">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-gray-900">
-                        Risk #{index + 1}
-                      </span>
+                      <span className="text-sm font-medium text-gray-900">Risk #{index + 1}</span>
                       <span
-                        className={`text-xs font-semibold px-2 py-1 rounded ${risk.impact === "CRITICAL"
-                          ? "bg-red-100 text-red-800"
-                          : risk.impact === "HIGH"
-                            ? "bg-orange-100 text-orange-800"
-                            : risk.impact === "MEDIUM"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-green-100 text-green-800"
-                          }`}
+                        className={`text-xs font-semibold px-2 py-1 rounded ${
+                          risk.impact === 'CRITICAL'
+                            ? 'bg-red-100 text-red-800'
+                            : risk.impact === 'HIGH'
+                              ? 'bg-orange-100 text-orange-800'
+                              : risk.impact === 'MEDIUM'
+                                ? 'bg-yellow-100 text-yellow-800'
+                                : 'bg-green-100 text-green-800'
+                        }`}
                       >
                         {risk.impact}
                       </span>
@@ -470,12 +432,8 @@ export default function ApplicationDetailsPage() {
               <div className="space-y-3">
                 {application.milestones.map((milestone, index) => (
                   <div key={index} className="p-3 bg-gray-50 rounded">
-                    <p className="text-sm font-medium text-gray-900">
-                      {milestone.title}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-600">
-                      {milestone.description}
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">{milestone.title}</p>
+                    <p className="mt-1 text-xs text-gray-600">{milestone.description}</p>
                     <p className="mt-2 text-xs text-gray-500">
                       Due: {formatDate(milestone.dueDate)}
                     </p>
@@ -511,9 +469,7 @@ export default function ApplicationDetailsPage() {
               )}
               {application.documents.plagiarismUndertaking && (
                 <div className="p-3 bg-gray-50 rounded">
-                  <p className="text-sm font-medium text-gray-900">
-                    Plagiarism Undertaking
-                  </p>
+                  <p className="text-sm font-medium text-gray-900">Plagiarism Undertaking</p>
                   <p className="mt-1 text-xs text-gray-600">
                     {application.documents.plagiarismUndertaking.fileName}
                   </p>
@@ -567,12 +523,13 @@ export default function ApplicationDetailsPage() {
                 >
                   <span className="text-sm text-gray-900">{invite.email}</span>
                   <span
-                    className={`text-xs font-semibold px-2 py-1 rounded ${invite.status === "ACCEPTED"
-                      ? "bg-green-100 text-green-800"
-                      : invite.status === "PENDING"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                      }`}
+                    className={`text-xs font-semibold px-2 py-1 rounded ${
+                      invite.status === 'ACCEPTED'
+                        ? 'bg-green-100 text-green-800'
+                        : invite.status === 'PENDING'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
+                    }`}
                   >
                     {invite.status}
                   </span>

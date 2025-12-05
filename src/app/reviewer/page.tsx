@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ReviewerLayout from "@/components/layout/ReviewerLayout";
-import { useAuth } from "@/hooks/useAuth";
-import { useReviewer } from "@/hooks/useReviewer";
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ReviewerLayout from '@/components/layout/ReviewerLayout';
+import { useAuth } from '@/hooks/useAuth';
+import { useReviewer } from '@/hooks/useReviewer';
 
 export default function ReviewerDashboard() {
   const { user } = useAuth();
@@ -20,9 +20,9 @@ export default function ReviewerDashboard() {
   // Calculate statistics
   // Note: Backend uses IN_PROGRESS for newly assigned reviews, not ASSIGNED
   const stats = {
-    completed: reviews.filter((r) => r.status === "COMPLETED").length,
-    submitted: reviews.filter((r) => r.status === "COMPLETED").length, // Same as completed in backend
-    assigned: reviews.filter((r) => r.status === "IN_PROGRESS" && !r.recommendation).length, // IN_PROGRESS without recommendation = waiting for review
+    completed: reviews.filter((r) => r.status === 'COMPLETED').length,
+    submitted: reviews.filter((r) => r.status === 'COMPLETED').length, // Same as completed in backend
+    assigned: reviews.filter((r) => r.status === 'IN_PROGRESS' && !r.recommendation).length, // IN_PROGRESS without recommendation = waiting for review
     total: reviews.length, // Total number of all reviews
   };
 
@@ -31,7 +31,7 @@ export default function ReviewerDashboard() {
       <ReviewerLayout>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, {user?.firstName || "Reviewer"}
+            Welcome, {user?.firstName || 'Reviewer'}
           </h1>
           <p className="mt-2 text-gray-600">
             Review grant applications and provide your expert assessment
@@ -42,11 +42,7 @@ export default function ReviewerDashboard() {
         {reviewsError && (
           <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
             <div className="flex">
-              <svg
-                className="h-5 w-5 text-red-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+              <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   clipRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -54,9 +50,7 @@ export default function ReviewerDashboard() {
                 />
               </svg>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">
-                  Error Loading Reviews
-                </h3>
+                <h3 className="text-sm font-medium text-red-800">Error Loading Reviews</h3>
                 <p className="mt-1 text-sm text-red-700">{reviewsError}</p>
               </div>
             </div>
@@ -69,9 +63,7 @@ export default function ReviewerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Assigned</p>
-                <p className="mt-2 text-3xl font-semibold text-gray-900">
-                  {stats.assigned}
-                </p>
+                <p className="mt-2 text-3xl font-semibold text-gray-900">{stats.assigned}</p>
                 <p className="mt-1 text-xs text-gray-500">Waiting for your review</p>
               </div>
               <div className="rounded-full bg-yellow-100 p-3">
@@ -96,9 +88,7 @@ export default function ReviewerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Submitted</p>
-                <p className="mt-2 text-3xl font-semibold text-gray-900">
-                  {stats.submitted}
-                </p>
+                <p className="mt-2 text-3xl font-semibold text-gray-900">{stats.submitted}</p>
                 <p className="mt-1 text-xs text-gray-500">Under evaluation</p>
               </div>
               <div className="rounded-full bg-blue-100 p-3">
@@ -123,9 +113,7 @@ export default function ReviewerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Completed</p>
-                <p className="mt-2 text-3xl font-semibold text-gray-900">
-                  {stats.completed}
-                </p>
+                <p className="mt-2 text-3xl font-semibold text-gray-900">{stats.completed}</p>
                 <p className="mt-1 text-xs text-gray-500">Reviews finalized</p>
               </div>
               <div className="rounded-full bg-green-100 p-3">
@@ -214,51 +202,53 @@ export default function ReviewerDashboard() {
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         <span
-                          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${review.status === "COMPLETED"
-                              ? "bg-green-100 text-green-800"
-                              : review.status === "IN_PROGRESS"
+                          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                            review.status === 'COMPLETED'
+                              ? 'bg-green-100 text-green-800'
+                              : review.status === 'IN_PROGRESS'
                                 ? review.recommendation
-                                  ? "bg-blue-100 text-blue-800" // Has recommendation = submitted
-                                  : "bg-yellow-100 text-yellow-800" // No recommendation = assigned/pending
-                                : "bg-gray-100 text-gray-800"
-                            }`}
+                                  ? 'bg-blue-100 text-blue-800' // Has recommendation = submitted
+                                  : 'bg-yellow-100 text-yellow-800' // No recommendation = assigned/pending
+                                : 'bg-gray-100 text-gray-800'
+                          }`}
                         >
-                          {review.status === "IN_PROGRESS" && !review.recommendation
-                            ? "ASSIGNED"
-                            : review.status === "IN_PROGRESS" && review.recommendation
-                              ? "SUBMITTED"
+                          {review.status === 'IN_PROGRESS' && !review.recommendation
+                            ? 'ASSIGNED'
+                            : review.status === 'IN_PROGRESS' && review.recommendation
+                              ? 'SUBMITTED'
                               : review.status}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                        {review.recommendation || "Pending"}
+                        {review.recommendation || 'Pending'}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                         {new Date(review.updatedAt).toLocaleDateString()}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-3">
-                          {(review.status as string) === "IN_PROGRESS" && !review.recommendation && (
-                            <Link
-                              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
-                              href={`/reviewer/submit-review/${review.applicationId}`}
-                            >
-                              <svg
-                                className="mr-2 h-4 w-4"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
+                          {(review.status as string) === 'IN_PROGRESS' &&
+                            !review.recommendation && (
+                              <Link
+                                className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+                                href={`/reviewer/submit-review/${review.applicationId}`}
                               >
-                                <path
-                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                />
-                              </svg>
-                              Submit Review
-                            </Link>
-                          )}
+                                <svg
+                                  className="mr-2 h-4 w-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                  />
+                                </svg>
+                                Submit Review
+                              </Link>
+                            )}
                           <Link
                             className="text-blue-600 hover:text-blue-700"
                             href={`/reviewer/reviews/${review.slug}`}

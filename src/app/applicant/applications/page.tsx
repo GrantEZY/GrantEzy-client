@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ApplicantLayout from "@/components/layout/ApplicantLayout";
-import { useApplicant } from "@/hooks/useApplicant";
-import { UserApplication } from "@/types/applicant.types";
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ApplicantLayout from '@/components/layout/ApplicantLayout';
+import { useApplicant } from '@/hooks/useApplicant';
+import { UserApplication } from '@/types/applicant.types';
 
 export default function MyApplicationsPage() {
   const router = useRouter();
-  const { 
+  const {
     myApplications,
     linkedApplications,
-    isLoadingApplications, 
+    isLoadingApplications,
     fetchUserApplications,
-    error 
+    error,
   } = useApplicant();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function MyApplicationsPage() {
       // If it's a draft, open in edit mode
       const cycleSlug = application.cycle?.slug;
       if (!cycleSlug) {
-        console.error("Application missing cycle slug:", application);
+        console.error('Application missing cycle slug:', application);
         // Fallback: try to use the application ID to fetch details
         router.push(`/applicant/application/${application.id}`);
         return;
@@ -65,9 +65,7 @@ export default function MyApplicationsPage() {
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold text-gray-900">My Applications</h1>
-            <p className="mt-2 text-gray-600">
-              View and manage all your applications
-            </p>
+            <p className="mt-2 text-gray-600">View and manage all your applications</p>
           </div>
 
           {/* Error Display */}
@@ -121,10 +119,11 @@ export default function MyApplicationsPage() {
                     </svg>
                     <h3 className="mt-4 text-sm font-medium text-gray-900">No Applications Yet</h3>
                     <p className="mt-2 text-sm text-gray-500">
-                      You haven't created any applications yet. Go to Available Cycles to start a new application.
+                      You haven't created any applications yet. Go to Available Cycles to start a
+                      new application.
                     </p>
                     <button
-                      onClick={() => router.push("/applicant/cycles")}
+                      onClick={() => router.push('/applicant/cycles')}
                       className="mt-4 inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                     >
                       Browse Cycles
@@ -134,7 +133,7 @@ export default function MyApplicationsPage() {
                   <div className="space-y-3">
                     {myApplications.map((application) => {
                       const progress = getProgressPercentage(application.stepNumber || 0);
-                      
+
                       return (
                         <div
                           key={application.id}
@@ -145,22 +144,24 @@ export default function MyApplicationsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700">
-                                  {application.basicDetails?.title || "Untitled Application"}
+                                  {application.basicDetails?.title || 'Untitled Application'}
                                 </h3>
                                 {getStatusBadge(application)}
                               </div>
-                              
+
                               <div className="space-y-2 text-sm text-gray-600">
                                 <p>
-                                  <span className="font-medium">Program:</span>{" "}
-                                  {application.cycle?.program?.details?.name || "Unknown Program"}
+                                  <span className="font-medium">Program:</span>{' '}
+                                  {application.cycle?.program?.details?.name || 'Unknown Program'}
                                 </p>
                                 <p>
-                                  <span className="font-medium">Cycle:</span>{" "}
-                                  {application.cycle?.round ? `${application.cycle.round.type} ${application.cycle.round.year}` : "Unknown Cycle"}
+                                  <span className="font-medium">Cycle:</span>{' '}
+                                  {application.cycle?.round
+                                    ? `${application.cycle.round.type} ${application.cycle.round.year}`
+                                    : 'Unknown Cycle'}
                                 </p>
                                 <p>
-                                  <span className="font-medium">Created:</span>{" "}
+                                  <span className="font-medium">Created:</span>{' '}
                                   {new Date(application.createdAt).toLocaleDateString()}
                                 </p>
                               </div>
@@ -221,7 +222,7 @@ export default function MyApplicationsPage() {
                   <div className="space-y-3">
                     {linkedApplications.map((application) => {
                       const progress = getProgressPercentage(application.stepNumber || 0);
-                      
+
                       return (
                         <div
                           key={application.id}
@@ -232,28 +233,34 @@ export default function MyApplicationsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700">
-                                  {application.basicDetails?.title || "Untitled Application"}
+                                  {application.basicDetails?.title || 'Untitled Application'}
                                 </h3>
                                 {getStatusBadge(application)}
                                 <span className="inline-flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-                                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                  <svg
+                                    className="w-3 h-3 mr-1"
+                                    fill="currentColor"
+                                    viewBox="0 0 20 20"
+                                  >
                                     <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                                   </svg>
                                   Co-applicant
                                 </span>
                               </div>
-                              
+
                               <div className="space-y-2 text-sm text-gray-600">
                                 <p>
-                                  <span className="font-medium">Program:</span>{" "}
-                                  {application.cycle?.program?.details?.name || "Unknown Program"}
+                                  <span className="font-medium">Program:</span>{' '}
+                                  {application.cycle?.program?.details?.name || 'Unknown Program'}
                                 </p>
                                 <p>
-                                  <span className="font-medium">Cycle:</span>{" "}
-                                  {application.cycle?.round ? `${application.cycle.round.type} ${application.cycle.round.year}` : "Unknown Cycle"}
+                                  <span className="font-medium">Cycle:</span>{' '}
+                                  {application.cycle?.round
+                                    ? `${application.cycle.round.type} ${application.cycle.round.year}`
+                                    : 'Unknown Cycle'}
                                 </p>
                                 <p>
-                                  <span className="font-medium">Created:</span>{" "}
+                                  <span className="font-medium">Created:</span>{' '}
                                   {new Date(application.createdAt).toLocaleDateString()}
                                 </p>
                               </div>

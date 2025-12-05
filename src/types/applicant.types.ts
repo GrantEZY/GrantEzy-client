@@ -5,21 +5,21 @@
 // ============= Enums =============
 
 export enum RiskImpact {
-  LOW = "LOW",
-  MEDIUM = "MEDIUM",
-  HIGH = "HIGH",
-  CRITICAL = "CRITICAL",
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
 }
 
 export enum RevenueStreamType {
-  SUBSCRIPTION = "SUBSCRIPTION",
-  LICENSE = "LICENSE",
-  USAGE_BASED = "USAGE_BASED",
-  DIRECT_SALES = "DIRECT_SALES",
-  FREEMIUM = "FREEMIUM",
-  MARKETPLACE = "MARKETPLACE",
-  ADVERTISING = "ADVERTISING",
-  CONSULTING = "CONSULTING",
+  SUBSCRIPTION = 'SUBSCRIPTION',
+  LICENSE = 'LICENSE',
+  USAGE_BASED = 'USAGE_BASED',
+  DIRECT_SALES = 'DIRECT_SALES',
+  FREEMIUM = 'FREEMIUM',
+  MARKETPLACE = 'MARKETPLACE',
+  ADVERTISING = 'ADVERTISING',
+  CONSULTING = 'CONSULTING',
 }
 
 // ============= Common Types =============
@@ -293,7 +293,7 @@ export interface UserApplication {
   isSubmitted: boolean;
   createdAt: string;
   updatedAt: string;
-  basicDetails?: BasicInfo;  // Changed from basicInfo to match backend
+  basicDetails?: BasicInfo; // Changed from basicInfo to match backend
   cycle?: {
     id: string;
     slug: string;

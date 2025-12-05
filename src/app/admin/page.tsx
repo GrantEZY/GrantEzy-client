@@ -1,13 +1,12 @@
-import { Metadata } from "next";
+import { Metadata } from 'next';
 
-import RoleSelectionMenu from "@/components/admin/RoleSelectionMenu";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import AdminLayout from "@/components/layout/AdminLayout";
+import RoleSelectionMenu from '@/components/admin/RoleSelectionMenu';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import AdminLayout from '@/components/layout/AdminLayout';
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard - GrantEzy",
-  description:
-    "Administrative dashboard for managing startups and entrepreneurs in residence",
+  title: 'Admin Dashboard - GrantEzy',
+  description: 'Administrative dashboard for managing startups and entrepreneurs in residence',
 };
 
 export default function AdminPage() {

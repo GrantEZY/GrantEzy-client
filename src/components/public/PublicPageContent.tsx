@@ -1,19 +1,14 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import {
-  FaBullseye,
-  FaExternalLinkAlt,
-  FaEye,
-  FaRocket,
-} from "react-icons/fa";
+import React, { useEffect } from 'react';
+import { FaBullseye, FaExternalLinkAlt, FaEye, FaRocket } from 'react-icons/fa';
 
-import { leadership, successStories, team } from "@/constants";
-import { usePublicStore } from "@/store/public.store";
+import { leadership, successStories, team } from '@/constants';
+import { usePublicStore } from '@/store/public.store';
 
-import { Marquee } from "@/components/magicui/marquee";
+import { Marquee } from '@/components/magicui/marquee';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
 // Icon mapping function
 // commented out as it is not used currently
@@ -48,9 +43,8 @@ function HeroSection() {
 
           {/* Subtitle */}
           <p className="mx-auto max-w-4xl px-4 text-base leading-relaxed text-[var(--color-gray-600)] sm:text-lg md:text-xl lg:text-2xl">
-            Transforming groundbreaking ideas into impactful ventures through
-            comprehensive support, mentorship, and funding opportunities at IIIT
-            Sri City.
+            Transforming groundbreaking ideas into impactful ventures through comprehensive support,
+            mentorship, and funding opportunities at IIIT Sri City.
           </p>
 
           {/* CTA Buttons */}
@@ -96,9 +90,7 @@ function HeroSection() {
                 89+
               </div>
 
-              <div className="text-xs text-[var(--color-gray-600)] sm:text-sm">
-                Projects Funded
-              </div>
+              <div className="text-xs text-[var(--color-gray-600)] sm:text-sm">Projects Funded</div>
             </div>
 
             <div className="text-center">
@@ -106,9 +98,7 @@ function HeroSection() {
                 24
               </div>
 
-              <div className="text-xs text-[var(--color-gray-600)] sm:text-sm">
-                Active Startups
-              </div>
+              <div className="text-xs text-[var(--color-gray-600)] sm:text-sm">Active Startups</div>
             </div>
 
             <div className="text-center">
@@ -116,9 +106,7 @@ function HeroSection() {
                 100%
               </div>
 
-              <div className="text-xs text-[var(--color-gray-600)] sm:text-sm">
-                Success Rate
-              </div>
+              <div className="text-xs text-[var(--color-gray-600)] sm:text-sm">Success Rate</div>
             </div>
           </div>
         </div>
@@ -138,8 +126,8 @@ function MissionVisionSection() {
           </h2>
 
           <p className="mx-auto max-w-3xl px-4 text-lg text-[var(--color-gray-600)] sm:text-xl">
-            Guided by a clear mission and ambitious vision, we are shaping the
-            future of innovation and entrepreneurship.
+            Guided by a clear mission and ambitious vision, we are shaping the future of innovation
+            and entrepreneurship.
           </p>
         </div>
 
@@ -161,11 +149,10 @@ function MissionVisionSection() {
 
               <div className="flex-grow">
                 <p className="mb-6 text-base leading-relaxed text-[var(--color-gray-700)] sm:mb-8 sm:text-lg">
-                  To create a thriving ecosystem that nurtures innovative ideas,
-                  provides comprehensive support to aspiring entrepreneurs, and
-                  bridges the gap between academic research and real-world
-                  applications through strategic partnerships and funding
-                  opportunities.
+                  To create a thriving ecosystem that nurtures innovative ideas, provides
+                  comprehensive support to aspiring entrepreneurs, and bridges the gap between
+                  academic research and real-world applications through strategic partnerships and
+                  funding opportunities.
                 </p>
 
                 {/* Mission Points */}
@@ -173,25 +160,19 @@ function MissionVisionSection() {
                   <div className="flex items-center text-[var(--color-gray-600)]">
                     <div className="mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-indigo-500"></div>
 
-                    <span className="text-sm sm:text-base">
-                      Foster innovation culture
-                    </span>
+                    <span className="text-sm sm:text-base">Foster innovation culture</span>
                   </div>
 
                   <div className="flex items-center text-[var(--color-gray-600)]">
                     <div className="mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-indigo-500"></div>
 
-                    <span className="text-sm sm:text-base">
-                      Bridge academia & industry
-                    </span>
+                    <span className="text-sm sm:text-base">Bridge academia & industry</span>
                   </div>
 
                   <div className="flex items-center text-[var(--color-gray-600)]">
                     <div className="mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-indigo-500"></div>
 
-                    <span className="text-sm sm:text-base">
-                      Enable sustainable growth
-                    </span>
+                    <span className="text-sm sm:text-base">Enable sustainable growth</span>
                   </div>
                 </div>
               </div>
@@ -215,10 +196,9 @@ function MissionVisionSection() {
 
               <div className="flex-grow">
                 <p className="mb-6 text-base leading-relaxed text-[var(--color-gray-700)] sm:mb-8 sm:text-lg">
-                  To be recognized as a leading innovation hub in India,
-                  producing world-class entrepreneurs and startups that create
-                  significant societal impact while contributing to the
-                  nation&apos;s economic growth and technological advancement.
+                  To be recognized as a leading innovation hub in India, producing world-class
+                  entrepreneurs and startups that create significant societal impact while
+                  contributing to the nation&apos;s economic growth and technological advancement.
                 </p>
 
                 {/* Vision Points */}
@@ -226,25 +206,19 @@ function MissionVisionSection() {
                   <div className="flex items-center text-[var(--color-gray-600)]">
                     <div className="mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500"></div>
 
-                    <span className="text-sm sm:text-base">
-                      Leading innovation hub
-                    </span>
+                    <span className="text-sm sm:text-base">Leading innovation hub</span>
                   </div>
 
                   <div className="flex items-center text-[var(--color-gray-600)]">
                     <div className="mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500"></div>
 
-                    <span className="text-sm sm:text-base">
-                      World-class entrepreneurs
-                    </span>
+                    <span className="text-sm sm:text-base">World-class entrepreneurs</span>
                   </div>
 
                   <div className="flex items-center text-[var(--color-gray-600)]">
                     <div className="mr-3 h-2 w-2 flex-shrink-0 rounded-full bg-emerald-500"></div>
 
-                    <span className="text-sm sm:text-base">
-                      Societal impact
-                    </span>
+                    <span className="text-sm sm:text-base">Societal impact</span>
                   </div>
                 </div>
               </div>
@@ -278,34 +252,24 @@ function FeaturedProjectsSection() {
     return (
       <figure
         className={cn(
-          "relative h-full w-80 cursor-pointer overflow-hidden rounded-xl p-6",
+          'relative h-full w-80 cursor-pointer overflow-hidden rounded-xl p-6',
           // light styles
-          "border-[var(--color-gray-200)] bg-[var(--color-white)] hover:bg-[var(--color-gray-50)]",
+          'border-[var(--color-gray-200)] bg-[var(--color-white)] hover:bg-[var(--color-gray-50)]'
         )}
       >
         <div className="flex flex-row items-center gap-3">
-          <img
-            alt=""
-            className="rounded-full"
-            height="40"
-            src={img}
-            width="40"
-          />
+          <img alt="" className="rounded-full" height="40" src={img} width="40" />
 
           <div className="flex flex-col">
             <figcaption className="text-base font-bold text-[var(--color-black)]">
               {name}
             </figcaption>
 
-            <p className="text-sm font-medium text-[var(--color-gray-600)]">
-              {username}
-            </p>
+            <p className="text-sm font-medium text-[var(--color-gray-600)]">{username}</p>
           </div>
         </div>
 
-        <blockquote className="mt-4 text-base leading-relaxed">
-          {body}
-        </blockquote>
+        <blockquote className="mt-4 text-base leading-relaxed">{body}</blockquote>
       </figure>
     );
   };
@@ -320,8 +284,8 @@ function FeaturedProjectsSection() {
           </h2>
 
           <p className="mx-auto max-w-3xl px-4 text-lg text-[var(--color-gray-600)] sm:text-xl">
-            Hear from our innovators who transformed ideas into impactful
-            ventures through our comprehensive support ecosystem.
+            Hear from our innovators who transformed ideas into impactful ventures through our
+            comprehensive support ecosystem.
           </p>
         </div>
 
@@ -359,8 +323,8 @@ function TeamSection() {
           </h2>
 
           <p className="mx-auto max-w-3xl px-4 text-lg text-[var(--color-gray-600)] sm:text-xl">
-            A dedicated team of visionaries, researchers, and industry experts
-            committed to fostering innovation and entrepreneurship.
+            A dedicated team of visionaries, researchers, and industry experts committed to
+            fostering innovation and entrepreneurship.
           </p>
         </div>
 
@@ -385,9 +349,9 @@ function TeamSection() {
                     <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-[var(--color-white)] bg-[var(--color-white)] shadow-lg">
                       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-blue-100)] to-[var(--color-blue-200)] text-2xl font-bold text-[var(--color-blue-600)]">
                         {leader.name
-                          .split(" ")
+                          .split(' ')
                           .map((n) => n[0])
-                          .join("")}
+                          .join('')}
                       </div>
                     </div>
                   </div>
@@ -431,11 +395,7 @@ function TeamSection() {
                       className="flex items-center text-[var(--color-gray-600)] transition-colors duration-200 hover:text-[var(--color-blue-600)]"
                       href={`mailto:${leader.email}`}
                     >
-                      <svg
-                        className="mr-2 h-4 w-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
+                      <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
 
                         <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
@@ -448,11 +408,7 @@ function TeamSection() {
                       className="flex items-center text-[var(--color-gray-600)] transition-colors duration-200 hover:text-[var(--color-blue-600)]"
                       href={leader.linkedin}
                     >
-                      <svg
-                        className="mr-2 h-4 w-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
+                      <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           clipRule="evenodd"
                           d="M16.338 16.338H13.67V12.16c0-.995-.017-2.277-1.387-2.277-1.39 0-1.601 1.086-1.601 2.207v4.248H8.014v-8.59h2.559v1.174h.037c.356-.675 1.227-1.387 2.526-1.387 2.703 0 3.203 1.778 3.203 4.092v4.711zM5.005 6.575a1.548 1.548 0 11-.003-3.096 1.548 1.548 0 01.003 3.096zm-1.337 9.763H6.34v-8.59H3.667v8.59zM17.668 1H2.328C1.595 1 1 1.581 1 2.298v15.403C1 18.418 1.595 19 2.328 19h15.34c.734 0 1.332-.582 1.332-1.299V2.298C19 1.581 18.402 1 17.668 1z"
@@ -485,9 +441,9 @@ function TeamSection() {
                 <div className="relative mb-6">
                   <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-blue-100)] to-[var(--color-blue-200)] text-xl font-bold text-[var(--color-blue-600)] transition-transform duration-300 group-hover:scale-110">
                     {member.name
-                      .split(" ")
+                      .split(' ')
                       .map((n) => n[0])
-                      .join("")}
+                      .join('')}
                   </div>
 
                   <div className="absolute top-0 right-0 h-6 w-6 rounded-full bg-[var(--color-blue-500)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
@@ -498,9 +454,7 @@ function TeamSection() {
                   {member.name}
                 </h4>
 
-                <p className="mb-3 font-semibold text-[var(--color-blue-600)]">
-                  {member.position}
-                </p>
+                <p className="mb-3 font-semibold text-[var(--color-blue-600)]">{member.position}</p>
 
                 {/* Department Badge */}
                 <div className="inline-flex items-center rounded-full bg-[var(--color-gray-100)] px-3 py-1 text-sm text-[var(--color-gray-600)]">
@@ -526,57 +480,57 @@ function OpenCallsSection() {
 
   const getProjectColors = (status: string) => {
     switch (status) {
-      case "OPEN":
+      case 'OPEN':
         return {
-          bg: "from-[var(--color-green-50)] to-[var(--color-green-100)]",
-          border: "border-[var(--color-green-200)]",
-          icon: "text-[var(--color-green-600)]",
-          accent: "bg-[var(--color-green-500)]",
+          bg: 'from-[var(--color-green-50)] to-[var(--color-green-100)]',
+          border: 'border-[var(--color-green-200)]',
+          icon: 'text-[var(--color-green-600)]',
+          accent: 'bg-[var(--color-green-500)]',
         };
-      case "CLOSED":
+      case 'CLOSED':
         return {
-          bg: "from-[var(--color-red-50)] to-[var(--color-red-100)]",
-          border: "border-[var(--color-red-200)]",
-          icon: "text-[var(--color-red-600)]",
-          accent: "bg-[var(--color-red-500)]",
+          bg: 'from-[var(--color-red-50)] to-[var(--color-red-100)]',
+          border: 'border-[var(--color-red-200)]',
+          icon: 'text-[var(--color-red-600)]',
+          accent: 'bg-[var(--color-red-500)]',
         };
       default:
         return {
-          bg: "from-[var(--color-blue-50)] to-[var(--color-blue-100)]",
-          border: "border-[var(--color-blue-200)]",
-          icon: "text-[var(--color-blue-600)]",
-          accent: "bg-[var(--color-blue-500)]",
+          bg: 'from-[var(--color-blue-50)] to-[var(--color-blue-100)]',
+          border: 'border-[var(--color-blue-200)]',
+          icon: 'text-[var(--color-blue-600)]',
+          accent: 'bg-[var(--color-blue-500)]',
         };
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
   const getStatusBadgeStyle = (status: string) => {
     switch (status) {
-      case "OPEN":
-        return "border border-green-200 bg-green-100 text-green-700";
-      case "CLOSED":
-        return "border border-red-200 bg-red-100 text-red-700";
+      case 'OPEN':
+        return 'border border-green-200 bg-green-100 text-green-700';
+      case 'CLOSED':
+        return 'border border-red-200 bg-red-100 text-red-700';
       default:
-        return "border border-blue-200 bg-blue-100 text-blue-700";
+        return 'border border-blue-200 bg-blue-100 text-blue-700';
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "OPEN":
-        return "Open for Applications";
-      case "CLOSED":
-        return "Applications Closed";
+      case 'OPEN':
+        return 'Open for Applications';
+      case 'CLOSED':
+        return 'Applications Closed';
       default:
-        return "Coming Soon";
+        return 'Coming Soon';
     }
   };
 
@@ -605,7 +559,9 @@ function OpenCallsSection() {
             <h2 className="mb-6 text-4xl font-bold text-[var(--color-gray-900)] md:text-5xl">
               Open Opportunities
             </h2>
-            <div className="text-red-600">Failed to load opportunities. Please try again later.</div>
+            <div className="text-red-600">
+              Failed to load opportunities. Please try again later.
+            </div>
           </div>
         </div>
       </section>
@@ -622,8 +578,8 @@ function OpenCallsSection() {
           </h2>
 
           <p className="mx-auto max-w-3xl text-xl text-[var(--color-gray-600)]">
-            Discover funding opportunities and programs designed to accelerate
-            your innovation journey and transform ideas into impact.
+            Discover funding opportunities and programs designed to accelerate your innovation
+            journey and transform ideas into impact.
           </p>
         </div>
 
@@ -643,9 +599,7 @@ function OpenCallsSection() {
                   ></div>
 
                   {/* Accent Line */}
-                  <div
-                    className={`absolute top-0 right-0 left-0 h-1 ${colors.accent}`}
-                  ></div>
+                  <div className={`absolute top-0 right-0 left-0 h-1 ${colors.accent}`}></div>
 
                   {/* Content */}
                   <div className="relative flex h-full flex-col p-8">
@@ -667,7 +621,7 @@ function OpenCallsSection() {
                     {/* Title & Description */}
                     <div className="flex-grow">
                       <h3 className="mb-2 text-xl font-bold text-[var(--color-gray-900)] transition-colors duration-300 group-hover:text-[var(--color-blue-700)]">
-                        {cycle.title || cycle.program?.name || "Innovation Program"}
+                        {cycle.title || cycle.program?.name || 'Innovation Program'}
                       </h3>
 
                       <p className="mb-4 text-sm text-[var(--color-blue-600)] font-semibold">
@@ -675,7 +629,9 @@ function OpenCallsSection() {
                       </p>
 
                       <p className="mb-6 leading-relaxed text-[var(--color-gray-600)]">
-                        {cycle.description || cycle.program?.description || "Join our innovation program to accelerate your startup journey."}
+                        {cycle.description ||
+                          cycle.program?.description ||
+                          'Join our innovation program to accelerate your startup journey.'}
                       </p>
 
                       {/* Dates */}
@@ -717,17 +673,16 @@ function OpenCallsSection() {
                     {/* CTA Button - Always at bottom */}
                     <div className="mt-auto">
                       <button
-                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${cycle.status === "OPEN"
-                          ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
-                          : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
-                          }`}
-                        disabled={cycle.status !== "OPEN"}
+                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${
+                          cycle.status === 'OPEN'
+                            ? 'bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]'
+                            : 'cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]'
+                        }`}
+                        disabled={cycle.status !== 'OPEN'}
                       >
-                        <span>
-                          {cycle.status === "OPEN" ? "Apply Now" : "Applications Closed"}
-                        </span>
+                        <span>{cycle.status === 'OPEN' ? 'Apply Now' : 'Applications Closed'}</span>
 
-                        {cycle.status === "OPEN" && (
+                        {cycle.status === 'OPEN' && (
                           <FaExternalLinkAlt className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                         )}
                       </button>
@@ -755,8 +710,8 @@ function OpenCallsSection() {
         <div className="text-center">
           <div className="inline-flex items-center rounded-xl border border-[var(--color-gray-200)] bg-white px-8 py-4 shadow-lg">
             <div className="mr-4 text-[var(--color-gray-700)]">
-              <strong>Have questions?</strong> Our team is here to help guide
-              you through the application process.
+              <strong>Have questions?</strong> Our team is here to help guide you through the
+              application process.
             </div>
 
             <button className="rounded-lg bg-[var(--color-blue-600)] px-6 py-2 font-semibold text-white transition-colors duration-200 hover:bg-[var(--color-blue-700)]">

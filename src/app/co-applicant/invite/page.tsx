@@ -3,8 +3,8 @@
  * URL: /co-applicant/invite?token=xxx&slug=xxx
  */
 
-import { Suspense } from "react";
-import { CoApplicantInvitePage } from "@/components/co-applicant";
+import { Suspense } from 'react';
+import { CoApplicantInvitePage } from '@/components/co-applicant';
 
 // Loading component for Suspense
 function InviteLoading() {

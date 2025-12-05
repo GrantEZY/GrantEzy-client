@@ -1,39 +1,30 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import PMLayout from "@/components/layout/PMLayout";
-import { usePm } from "@/hooks/usePm";
-import { useProjectManagement } from "@/hooks/useProjectManagement";
-import CreateProjectModal from "@/components/pm/CreateProjectModal";
-import CycleCriteriaManagement from "@/components/pm/CycleCriteriaManagement";
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import PMLayout from '@/components/layout/PMLayout';
+import { usePm } from '@/hooks/usePm';
+import { useProjectManagement } from '@/hooks/useProjectManagement';
+import CreateProjectModal from '@/components/pm/CreateProjectModal';
+import CycleCriteriaManagement from '@/components/pm/CycleCriteriaManagement';
 
 export default function CycleDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const cycleSlug = params.cycleSlug as string;
 
-  const [activeTab, setActiveTab] = useState<"applications" | "projects" | "criteria">(
-    "applications"
+  const [activeTab, setActiveTab] = useState<'applications' | 'projects' | 'criteria'>(
+    'applications'
   );
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
 
-  const {
-    currentCycle,
-    currentCycleApplications,
-    isCycleDetailsLoading,
-    getCycleDetails,
-  } = usePm();
+  const { currentCycle, currentCycleApplications, isCycleDetailsLoading, getCycleDetails } =
+    usePm();
 
-  const {
-    projects,
-    projectsPagination,
-    isProjectsLoading,
-    getCycleProjects,
-    clearProjects,
-  } = useProjectManagement();
+  const { projects, projectsPagination, isProjectsLoading, getCycleProjects, clearProjects } =
+    useProjectManagement();
 
   useEffect(() => {
     if (cycleSlug) {
@@ -49,15 +40,15 @@ export default function CycleDetailsPage() {
     if (currentCycleApplications) {
       console.log('🔍 Applications in cycle:', {
         total: currentCycleApplications.length,
-        approved: currentCycleApplications.filter(app => app.status === 'APPROVED').length,
-        statuses: currentCycleApplications.map(app => ({ id: app.id, status: app.status }))
+        approved: currentCycleApplications.filter((app) => app.status === 'APPROVED').length,
+        statuses: currentCycleApplications.map((app) => ({ id: app.id, status: app.status })),
       });
     }
   }, [currentCycleApplications]);
 
   // Load projects when Projects tab is active
   useEffect(() => {
-    if (activeTab === "projects" && cycleSlug) {
+    if (activeTab === 'projects' && cycleSlug) {
       getCycleProjects({
         cycleSlug,
         page: 1,
@@ -68,46 +59,52 @@ export default function CycleDetailsPage() {
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
-      case "SUBMITTED":
-        return "bg-blue-100 text-blue-800";
-      case "UNDER_REVIEW":
-        return "bg-yellow-100 text-yellow-800";
-      case "APPROVED":
-        return "bg-green-100 text-green-800";
-      case "REJECTED":
-        return "bg-red-100 text-red-800";
-      case "REVISION_REQUESTED":
-        return "bg-orange-100 text-orange-800";
+      case 'SUBMITTED':
+        return 'bg-blue-100 text-blue-800';
+      case 'UNDER_REVIEW':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'APPROVED':
+        return 'bg-green-100 text-green-800';
+      case 'REJECTED':
+        return 'bg-red-100 text-red-800';
+      case 'REVISION_REQUESTED':
+        return 'bg-orange-100 text-orange-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const calculateProjectBudget = (budget: any) => {
     if (!budget) return 0;
-    
+
     let total = 0;
-    
+
     // Sum array items (ManPower, Equipment, OtherCosts)
     if (budget.ManPower && Array.isArray(budget.ManPower)) {
-      total += budget.ManPower.reduce((sum: number, item: any) => 
-        sum + (item.Budget?.amount || 0), 0);
+      total += budget.ManPower.reduce(
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
+        0
+      );
     }
     if (budget.Equipment && Array.isArray(budget.Equipment)) {
-      total += budget.Equipment.reduce((sum: number, item: any) => 
-        sum + (item.Budget?.amount || 0), 0);
+      total += budget.Equipment.reduce(
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
+        0
+      );
     }
     if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
-      total += budget.OtherCosts.reduce((sum: number, item: any) => 
-        sum + (item.Budget?.amount || 0), 0);
+      total += budget.OtherCosts.reduce(
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
+        0
+      );
     }
-    
+
     // Add single budget items
     total += budget.Consumables?.Budget?.amount || 0;
     total += budget.Travel?.Budget?.amount || 0;
     total += budget.Contigency?.Budget?.amount || 0;
     total += budget.Overhead?.Budget?.amount || 0;
-    
+
     return total;
   };
 
@@ -122,12 +119,7 @@ export default function CycleDetailsPage() {
               onClick={() => router.back()}
               type="button"
             >
-              <svg
-                className="mr-2 h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                   strokeLinecap="round"
@@ -140,7 +132,7 @@ export default function CycleDetailsPage() {
             <h1 className="text-3xl font-bold text-gray-900">
               {currentCycle
                 ? `${currentCycle.round.type} ${currentCycle.round.year}`
-                : "Cycle Details"}
+                : 'Cycle Details'}
             </h1>
             <p className="mt-2 text-gray-600">
               View and manage applications for this funding cycle
@@ -150,37 +142,33 @@ export default function CycleDetailsPage() {
           {/* Cycle Info Card */}
           {currentCycle && (
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                Cycle Information
-              </h2>
+              <h2 className="mb-4 text-lg font-semibold text-gray-900">Cycle Information</h2>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
                   <p className="text-sm font-medium text-gray-600">Budget</p>
                   <p className="mt-1 text-lg font-semibold text-gray-900">
-                    {currentCycle.budget?.currency || "INR"}{" "}
-                    {currentCycle.budget?.amount?.toLocaleString() || "0"}
+                    {currentCycle.budget?.currency || 'INR'}{' '}
+                    {currentCycle.budget?.amount?.toLocaleString() || '0'}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Status</p>
                   <span
-                    className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getStatusBadgeClass(currentCycle.status || "DRAFT")}`}
+                    className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getStatusBadgeClass(currentCycle.status || 'DRAFT')}`}
                   >
-                    {currentCycle.status || "DRAFT"}
+                    {currentCycle.status || 'DRAFT'}
                   </span>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Duration</p>
                   <p className="mt-1 text-sm text-gray-900">
                     {currentCycle.duration?.startDate
-                      ? new Date(
-                          currentCycle.duration.startDate,
-                        ).toLocaleDateString()
-                      : "Not set"}{" "}
-                    -{" "}
+                      ? new Date(currentCycle.duration.startDate).toLocaleDateString()
+                      : 'Not set'}{' '}
+                    -{' '}
                     {currentCycle.duration?.endDate
                       ? new Date(currentCycle.duration.endDate).toLocaleDateString()
-                      : "Not set"}
+                      : 'Not set'}
                   </p>
                 </div>
               </div>
@@ -191,11 +179,11 @@ export default function CycleDetailsPage() {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8" aria-label="Tabs">
               <button
-                onClick={() => setActiveTab("applications")}
+                onClick={() => setActiveTab('applications')}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
-                  activeTab === "applications"
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  activeTab === 'applications'
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
                 type="button"
               >
@@ -207,11 +195,11 @@ export default function CycleDetailsPage() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab("projects")}
+                onClick={() => setActiveTab('projects')}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
-                  activeTab === "projects"
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  activeTab === 'projects'
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
                 type="button"
               >
@@ -223,11 +211,11 @@ export default function CycleDetailsPage() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab("criteria")}
+                onClick={() => setActiveTab('criteria')}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
-                  activeTab === "criteria"
-                    ? "border-blue-600 text-blue-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                  activeTab === 'criteria'
+                    ? 'border-blue-600 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
                 type="button"
               >
@@ -241,15 +229,13 @@ export default function CycleDetailsPage() {
             <div className="flex h-64 items-center justify-center rounded-lg border border-gray-200 bg-white">
               <div className="text-center">
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-sm text-gray-600">
-                  Loading cycle details...
-                </p>
+                <p className="mt-4 text-sm text-gray-600">Loading cycle details...</p>
               </div>
             </div>
           )}
 
           {/* Applications Tab Content */}
-          {activeTab === "applications" && !isCycleDetailsLoading && currentCycleApplications && (
+          {activeTab === 'applications' && !isCycleDetailsLoading && currentCycleApplications && (
             <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
               <div className="border-b border-gray-200 px-6 py-4">
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -272,9 +258,7 @@ export default function CycleDetailsPage() {
                       strokeWidth={2}
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">
-                    No Applications
-                  </h3>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No Applications</h3>
                   <p className="mt-1 text-sm text-gray-500">
                     No applications have been submitted for this cycle yet.
                   </p>
@@ -303,23 +287,20 @@ export default function CycleDetailsPage() {
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
                       {currentCycleApplications.map((application) => (
-                        <tr
-                          key={application.id}
-                          className="hover:bg-gray-50"
-                        >
+                        <tr key={application.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {application.basicInfo?.title || "Untitled Application"}
+                              {application.basicInfo?.title || 'Untitled Application'}
                             </div>
                             {application.basicInfo?.summary && (
                               <div className="mt-1 text-sm text-gray-500">
                                 {application.basicInfo.summary.substring(0, 100)}
-                                {application.basicInfo.summary.length > 100 && "..."}
+                                {application.basicInfo.summary.length > 100 && '...'}
                               </div>
                             )}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {application.applicant?.email || "N/A"}
+                            {application.applicant?.email || 'N/A'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
@@ -331,7 +312,7 @@ export default function CycleDetailsPage() {
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {application.createdAt
                               ? new Date(application.createdAt).toLocaleDateString()
-                              : "N/A"}
+                              : 'N/A'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <Link
@@ -351,7 +332,7 @@ export default function CycleDetailsPage() {
           )}
 
           {/* Projects Tab Content */}
-          {activeTab === "projects" && (
+          {activeTab === 'projects' && (
             <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
               <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
                 <h2 className="text-lg font-semibold text-gray-900">
@@ -403,11 +384,10 @@ export default function CycleDetailsPage() {
                       strokeWidth={2}
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">
-                    No Projects
-                  </h3>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No Projects</h3>
                   <p className="mt-1 text-sm text-gray-500">
-                    No projects have been created for this cycle yet. Create a project from an approved application.
+                    No projects have been created for this cycle yet. Create a project from an
+                    approved application.
                   </p>
                   <div className="mt-6">
                     <button
@@ -448,9 +428,9 @@ export default function CycleDetailsPage() {
                         <tr key={project.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {project.application?.basicInfo?.title || 
-                               project.application?.title || 
-                               "Untitled Project"}
+                              {project.application?.basicInfo?.title ||
+                                project.application?.title ||
+                                'Untitled Project'}
                             </div>
                             {project.application && (
                               <div className="mt-1 text-sm text-gray-500">
@@ -461,13 +441,13 @@ export default function CycleDetailsPage() {
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
                               className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                                project.status === "ACTIVE"
-                                  ? "bg-green-100 text-green-800"
-                                  : project.status === "COMPLETED"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : project.status === "ON_HOLD"
-                                      ? "bg-yellow-100 text-yellow-800"
-                                      : "bg-red-100 text-red-800"
+                                project.status === 'ACTIVE'
+                                  ? 'bg-green-100 text-green-800'
+                                  : project.status === 'COMPLETED'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : project.status === 'ON_HOLD'
+                                      ? 'bg-yellow-100 text-yellow-800'
+                                      : 'bg-red-100 text-red-800'
                               }`}
                             >
                               {project.status}
@@ -479,7 +459,7 @@ export default function CycleDetailsPage() {
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                             {project.plannedDuration?.startDate && project.plannedDuration?.endDate
                               ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
-                              : "Not set"}
+                              : 'Not set'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <Link
@@ -499,7 +479,7 @@ export default function CycleDetailsPage() {
           )}
 
           {/* Assessment Criteria Tab Content */}
-          {activeTab === "criteria" && currentCycle && (
+          {activeTab === 'criteria' && currentCycle && (
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
               <CycleCriteriaManagement cycleSlug={cycleSlug} cycleId={currentCycle.id} />
             </div>
@@ -522,7 +502,7 @@ export default function CycleDetailsPage() {
               }}
               cycleSlug={cycleSlug}
               approvedApplications={
-                currentCycleApplications?.filter((app) => app.status === "APPROVED") || []
+                currentCycleApplications?.filter((app) => app.status === 'APPROVED') || []
               }
             />
           )}
@@ -543,12 +523,9 @@ export default function CycleDetailsPage() {
                   strokeWidth={2}
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
-                Cycle Not Found
-              </h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">Cycle Not Found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                The cycle you're looking for doesn't exist or you don't have
-                access to it.
+                The cycle you're looking for doesn't exist or you don't have access to it.
               </p>
               <div className="mt-6">
                 <Link

@@ -2,12 +2,12 @@
  * Storage utilities for managing localStorage
  * Note: Cookies are managed by backend (httpOnly refreshToken as "jwtToken")
  */
-import { STORAGE_KEYS } from "../lib/config/api.config";
-import { AuthTokens, User } from "../types/auth.types";
+import { STORAGE_KEYS } from '../lib/config/api.config';
+import { AuthTokens, User } from '../types/auth.types';
 
 export class StorageUtil {
   private isClient(): boolean {
-    return typeof window !== "undefined";
+    return typeof window !== 'undefined';
   }
 
   // Token management (localStorage only)

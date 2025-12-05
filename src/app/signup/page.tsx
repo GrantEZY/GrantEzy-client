@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
 
-import { UserCommitmentStatus } from "@/types/auth.types";
+import { UserCommitmentStatus } from '@/types/auth.types';
 
 export default function SignupPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [commitment, setCommitment] = useState(UserCommitmentStatus.FULL_TIME);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
   const { register } = useAuth();
@@ -28,19 +28,19 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
     setSuccess(false);
 
     // Validate passwords match
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       setIsLoading(false);
       return;
     }
 
     // Validate password length
     if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+      setError('Password must be at least 6 characters long');
       setIsLoading(false);
       return;
     }
@@ -58,13 +58,13 @@ export default function SignupPage() {
         setSuccess(true);
         // Redirect to login page after 2 seconds
         setTimeout(() => {
-          router.push("/login");
+          router.push('/login');
         }, 2000);
       } else {
-        setError(result.error || "Registration failed");
+        setError(result.error || 'Registration failed');
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError('An unexpected error occurred');
     } finally {
       setIsLoading(false);
     }
@@ -87,11 +87,7 @@ export default function SignupPage() {
           <div className="rounded-md bg-green-50 p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-green-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     clipRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -101,9 +97,7 @@ export default function SignupPage() {
               </div>
 
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-green-800">
-                  Registration Successful!
-                </h3>
+                <h3 className="text-sm font-medium text-green-800">Registration Successful!</h3>
 
                 <div className="mt-2 text-sm text-green-700">
                   Your account has been created. Redirecting to login page...
@@ -194,15 +188,13 @@ export default function SignupPage() {
                   className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm"
                   id="commitment"
                   name="commitment"
-                  onChange={(e) =>
-                    setCommitment(e.target.value as UserCommitmentStatus)
-                  }
+                  onChange={(e) => setCommitment(e.target.value as UserCommitmentStatus)}
                   required
                   value={commitment}
                 >
                   {Object.values(UserCommitmentStatus).map((status) => (
                     <option key={status} value={status}>
-                      {status.replace(/_/g, " ")}
+                      {status.replace(/_/g, ' ')}
                     </option>
                   ))}
                 </select>
@@ -210,10 +202,7 @@ export default function SignupPage() {
 
               {/* Password */}
               <div>
-                <label
-                  className="mb-1 block text-sm font-medium text-gray-700"
-                  htmlFor="password"
-                >
+                <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="password">
                   Password
                 </label>
 
@@ -226,7 +215,7 @@ export default function SignupPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Password (min. 6 characters)"
                     required
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     value={password}
                   />
 
@@ -236,13 +225,38 @@ export default function SignupPage() {
                     type="button"
                   >
                     {showPassword ? (
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                        />
                       </svg>
                     ) : (
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
                       </svg>
                     )}
                   </button>
@@ -267,7 +281,7 @@ export default function SignupPage() {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm password"
                     required
-                    type={showConfirmPassword ? "text" : "password"}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                   />
 
@@ -277,13 +291,38 @@ export default function SignupPage() {
                     type="button"
                   >
                     {showConfirmPassword ? (
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                        />
                       </svg>
                     ) : (
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <svg
+                        className="h-5 w-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
                       </svg>
                     )}
                   </button>
@@ -295,11 +334,7 @@ export default function SignupPage() {
               <div className="rounded-md bg-red-50 p-4">
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <svg
-                      className="h-5 w-5 text-red-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         clipRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -309,9 +344,7 @@ export default function SignupPage() {
                   </div>
 
                   <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
-                      Registration Failed
-                    </h3>
+                    <h3 className="text-sm font-medium text-red-800">Registration Failed</h3>
 
                     <div className="mt-2 text-sm text-red-700">{error}</div>
                   </div>
@@ -325,17 +358,14 @@ export default function SignupPage() {
                 disabled={isLoading}
                 type="submit"
               >
-                {isLoading ? "Creating Account..." : "Create Account"}
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </button>
             </div>
 
             <div className="text-center">
               <p className="text-sm text-gray-600">
-                Already have an account?{" "}
-                <Link
-                  className="font-medium text-blue-600 hover:text-blue-500"
-                  href="/login"
-                >
+                Already have an account?{' '}
+                <Link className="font-medium text-blue-600 hover:text-blue-500" href="/login">
                   Sign in here
                 </Link>
               </p>

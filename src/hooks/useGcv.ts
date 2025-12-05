@@ -2,7 +2,7 @@
  * Custom hook for GCV (Grant Committee View) store
  * Provides easy access to GCV state and actions
  */
-import { useGCVStore } from "../store/gcv.store";
+import { useGCVStore } from '../store/gcv.store';
 
 export const useGcv = () => {
   // GCV Members state
@@ -19,12 +19,8 @@ export const useGcv = () => {
 
   // Program Cycles state
   const programCycles = useGCVStore((state) => state.programCycles);
-  const programCyclesPagination = useGCVStore(
-    (state) => state.programCyclesPagination,
-  );
-  const isProgramCyclesLoading = useGCVStore(
-    (state) => state.isProgramCyclesLoading,
-  );
+  const programCyclesPagination = useGCVStore((state) => state.programCyclesPagination);
+  const isProgramCyclesLoading = useGCVStore((state) => state.isProgramCyclesLoading);
   const programCyclesError = useGCVStore((state) => state.programCyclesError);
   const selectedCycle = useGCVStore((state) => state.selectedCycle);
 
@@ -47,13 +43,9 @@ export const useGcv = () => {
   // Program Cycles actions
   const getProgramCycles = useGCVStore((state) => state.getProgramCycles);
   const getCycleDetails = useGCVStore((state) => state.getCycleDetails);
-  const getApplicationDetails = useGCVStore(
-    (state) => state.getApplicationDetails,
-  );
+  const getApplicationDetails = useGCVStore((state) => state.getApplicationDetails);
   const clearProgramCycles = useGCVStore((state) => state.clearProgramCycles);
-  const setProgramCyclesError = useGCVStore(
-    (state) => state.setProgramCyclesError,
-  );
+  const setProgramCyclesError = useGCVStore((state) => state.setProgramCyclesError);
   const setSelectedCycle = useGCVStore((state) => state.setSelectedCycle);
 
   // Clear all

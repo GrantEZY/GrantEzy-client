@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-import { contactInfo, copyrightText, footerLinks, navItems } from "@/constants";
+import { contactInfo, copyrightText, footerLinks, navItems } from '@/constants';
 
-import DarkModeToggle from "@/components/ui/DarkModeToggle";
-import { Navbar, NavBody, NavItems } from "@/components/ui/resizable-navbar";
+import DarkModeToggle from '@/components/ui/DarkModeToggle';
+import { Navbar, NavBody, NavItems } from '@/components/ui/resizable-navbar';
 
 interface PublicHeaderProps {
   onNavigate?: (section: string) => void;
@@ -25,8 +25,8 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
       setIsScrolled(window.scrollY > 100);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Transform navItems to match the expected format
@@ -41,8 +41,8 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
       <div
         className={`transition-all duration-300 ease-in-out ${
           isScrolled
-            ? "pointer-events-none -translate-y-full opacity-0"
-            : "translate-y-0 opacity-100"
+            ? 'pointer-events-none -translate-y-full opacity-0'
+            : 'translate-y-0 opacity-100'
         }`}
       >
         <header className="sticky top-0 z-40 border-b border-[var(--color-gray-200)] bg-[var(--color-white)] px-4 py-4 sm:px-6">
@@ -92,14 +92,14 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
 
               <button
                 className="rounded-lg border border-[var(--color-blue-600)] px-4 py-2 text-sm font-medium text-[var(--color-gray-900)] transition-colors duration-200 hover:bg-[var(--color-blue-50)] lg:px-6 lg:text-base"
-                onClick={() => router.push("/signup")}
+                onClick={() => router.push('/signup')}
               >
                 Sign Up
               </button>
 
               <button
                 className="rounded-lg bg-[var(--color-blue-600)] px-4 py-2 text-sm font-medium text-[var(--color-white)] transition-colors duration-200 hover:bg-[var(--color-blue-700)] lg:px-6 lg:text-base"
-                onClick={() => router.push("/login")}
+                onClick={() => router.push('/login')}
               >
                 Login
               </button>
@@ -151,7 +151,7 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
                   <button
                     className="rounded-lg border border-[var(--color-blue-600)] px-4 py-2 text-center font-medium text-[var(--color-gray-900)] transition-colors duration-200 hover:bg-[var(--color-blue-50)]"
                     onClick={() => {
-                      router.push("/signup");
+                      router.push('/signup');
                       setIsMobileMenuOpen(false);
                     }}
                   >
@@ -161,7 +161,7 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
                   <button
                     className="rounded-lg bg-[var(--color-blue-600)] px-4 py-2 text-center font-medium text-[var(--color-white)] transition-colors duration-200 hover:bg-[var(--color-blue-700)]"
                     onClick={() => {
-                      router.push("/login");
+                      router.push('/login');
                       setIsMobileMenuOpen(false);
                     }}
                   >
@@ -191,9 +191,7 @@ function PublicHeader({ onNavigate }: PublicHeaderProps) {
                 />
 
                 <div className="flex flex-col">
-                  <h1 className="text-sm leading-tight font-semibold text-black">
-                    IIIT Sri City
-                  </h1>
+                  <h1 className="text-sm leading-tight font-semibold text-black">IIIT Sri City</h1>
                 </div>
               </div>
 
@@ -229,9 +227,7 @@ function PublicFooter() {
               />
 
               <div>
-                <h3 className="text-base font-semibold sm:text-lg">
-                  IIIT Sri City
-                </h3>
+                <h3 className="text-base font-semibold sm:text-lg">IIIT Sri City</h3>
 
                 <p className="text-xs text-[var(--color-gray-400)] sm:text-sm">
                   Innovation & Entrepreneurship
@@ -240,17 +236,14 @@ function PublicFooter() {
             </div>
 
             <p className="max-w-md text-sm leading-relaxed text-[var(--color-gray-400)]">
-              Fostering innovation and entrepreneurship through comprehensive
-              support for startups, mentorship programs, and research
-              initiatives.
+              Fostering innovation and entrepreneurship through comprehensive support for startups,
+              mentorship programs, and research initiatives.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">
-              Quick Links
-            </h4>
+            <h4 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Quick Links</h4>
 
             <ul className="space-y-2 text-sm">
               {footerLinks.map((link, index) => (
@@ -268,9 +261,7 @@ function PublicFooter() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">
-              Contact
-            </h4>
+            <h4 className="mb-3 text-base font-semibold sm:mb-4 sm:text-lg">Contact</h4>
 
             <div className="space-y-2 text-sm text-[var(--color-gray-400)]">
               <p>{contactInfo.address.line1}</p>
@@ -285,9 +276,7 @@ function PublicFooter() {
         </div>
 
         <div className="mt-6 border-t border-[var(--color-gray-700)] pt-6 text-center sm:mt-8 sm:pt-8">
-          <p className="text-xs text-[var(--color-gray-400)] sm:text-sm">
-            {copyrightText}
-          </p>
+          <p className="text-xs text-[var(--color-gray-400)] sm:text-sm">{copyrightText}</p>
         </div>
       </div>
     </footer>
@@ -299,10 +288,7 @@ interface PublicLayoutProps {
   onNavigate?: (section: string) => void;
 }
 
-export default function PublicLayout({
-  children,
-  onNavigate,
-}: PublicLayoutProps) {
+export default function PublicLayout({ children, onNavigate }: PublicLayoutProps) {
   return (
     <div className="flex min-h-screen flex-col bg-[var(--color-white)]">
       <PublicHeader onNavigate={onNavigate} />

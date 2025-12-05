@@ -1,21 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import GCVLayout from "@/components/layout/GCVLayout";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import GCVLayout from '@/components/layout/GCVLayout';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-import { useGcv } from "@/hooks/useGcv";
+import { useGcv } from '@/hooks/useGcv';
 
-import { UserRoles } from "@/types/auth.types";
-import { ProgramStatus } from "@/types/gcv.types";
+import { UserRoles } from '@/types/auth.types';
+import { ProgramStatus } from '@/types/gcv.types';
 
 export default function GCVDashboard() {
   const {
@@ -54,10 +50,10 @@ export default function GCVDashboard() {
               <p className="text-sm text-gray-500">Last updated</p>
 
               <p className="text-sm font-medium text-gray-900">
-                {new Date().toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
+                {new Date().toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
                 })}
               </p>
             </div>
@@ -68,12 +64,10 @@ export default function GCVDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Committee Members
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Committee Members</p>
 
                   <p className="mt-1 text-2xl font-bold text-gray-900">
-                    {isMembersLoading ? "..." : members.length}
+                    {isMembersLoading ? '...' : members.length}
                   </p>
                 </div>
 
@@ -105,12 +99,10 @@ export default function GCVDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Total Programs
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Total Programs</p>
 
                   <p className="mt-1 text-2xl font-bold text-gray-900">
-                    {isProgramsLoading ? "..." : programsPagination?.total || 0}
+                    {isProgramsLoading ? '...' : programsPagination?.total || 0}
                   </p>
                 </div>
 
@@ -142,14 +134,12 @@ export default function GCVDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Active Programs
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Active Programs</p>
 
                   <p className="mt-1 text-2xl font-bold text-gray-900">
                     {isProgramsLoading
-                      ? "..."
-                      : programs.filter((p) => p.status === "ACTIVE").length}
+                      ? '...'
+                      : programs.filter((p) => p.status === 'ACTIVE').length}
                   </p>
                 </div>
 
@@ -174,14 +164,10 @@ export default function GCVDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Managed Programs
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Managed Programs</p>
 
                   <p className="mt-1 text-2xl font-bold text-gray-900">
-                    {isProgramsLoading
-                      ? "..."
-                      : programs.filter((p) => p.managerId).length}
+                    {isProgramsLoading ? '...' : programs.filter((p) => p.managerId).length}
                   </p>
                 </div>
 
@@ -210,14 +196,9 @@ export default function GCVDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white">
               <div className="border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Recent Members
-                  </h2>
+                  <h2 className="text-lg font-semibold text-gray-900">Recent Members</h2>
 
-                  <Link
-                    className="text-sm text-blue-600 hover:text-blue-700"
-                    href="/gcv/members"
-                  >
+                  <Link className="text-sm text-blue-600 hover:text-blue-700" href="/gcv/members">
                     View all
                   </Link>
                 </div>
@@ -229,9 +210,7 @@ export default function GCVDashboard() {
                     <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-500"></div>
                   </div>
                 ) : members.length === 0 ? (
-                  <p className="py-8 text-center text-gray-500">
-                    No members found
-                  </p>
+                  <p className="py-8 text-center text-gray-500">No members found</p>
                 ) : (
                   <div className="space-y-3">
                     {members.slice(0, 5).map((member) => (
@@ -243,26 +222,20 @@ export default function GCVDashboard() {
                           <span className="text-sm font-semibold text-blue-700">
                             {member.person?.firstName?.charAt(0) ||
                               member.firstName?.charAt(0) ||
-                              "?"}
+                              '?'}
 
-                            {member.person?.lastName?.charAt(0) ||
-                              member.lastName?.charAt(0) ||
-                              ""}
+                            {member.person?.lastName?.charAt(0) || member.lastName?.charAt(0) || ''}
                           </span>
                         </div>
 
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-gray-900">
-                            {member.person?.firstName ||
-                              member.firstName ||
-                              "Unknown"}{" "}
-                            {member.person?.lastName || member.lastName || ""}
+                            {member.person?.firstName || member.firstName || 'Unknown'}{' '}
+                            {member.person?.lastName || member.lastName || ''}
                           </p>
 
                           <p className="truncate text-xs text-gray-500">
-                            {member.contact?.email ||
-                              member.email ||
-                              "No email"}
+                            {member.contact?.email || member.email || 'No email'}
                           </p>
                         </div>
 
@@ -272,7 +245,7 @@ export default function GCVDashboard() {
                               className="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
                               key={role}
                             >
-                              {role.replace("_", " ").toLowerCase()}
+                              {role.replace('_', ' ').toLowerCase()}
                             </span>
                           ))}
 
@@ -284,17 +257,14 @@ export default function GCVDashboard() {
                                 </button>
                               </PopoverTrigger>
 
-                              <PopoverContent
-                                align="end"
-                                className="w-auto p-2"
-                              >
+                              <PopoverContent align="end" className="w-auto p-2">
                                 <div className="flex flex-col gap-1">
                                   {member.role.slice(2).map((role, index) => (
                                     <span
                                       className="inline-flex w-fit items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800"
                                       key={index}
                                     >
-                                      {role.replace("_", " ").toLowerCase()}
+                                      {role.replace('_', ' ').toLowerCase()}
                                     </span>
                                   ))}
                                 </div>
@@ -313,9 +283,7 @@ export default function GCVDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white">
               <div className="border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    Recent Programs
-                  </h2>
+                  <h2 className="text-lg font-semibold text-gray-900">Recent Programs</h2>
 
                   <Link
                     className="text-sm text-green-600 hover:text-green-700"
@@ -332,9 +300,7 @@ export default function GCVDashboard() {
                     <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-green-500"></div>
                   </div>
                 ) : programs.length === 0 ? (
-                  <p className="py-8 text-center text-gray-500">
-                    No programs found
-                  </p>
+                  <p className="py-8 text-center text-gray-500">No programs found</p>
                 ) : (
                   <div className="space-y-3">
                     {programs.slice(0, 5).map((program) => (
@@ -364,8 +330,7 @@ export default function GCVDashboard() {
                           </p>
 
                           <p className="truncate text-xs text-gray-500">
-                            {program.details.category} •{" "}
-                            {program.budget.currency}{" "}
+                            {program.details.category} • {program.budget.currency}{' '}
                             {program.budget.amount.toLocaleString()}
                           </p>
                         </div>
@@ -374,10 +339,10 @@ export default function GCVDashboard() {
                           <span
                             className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
                               program.status === ProgramStatus.ACTIVE
-                                ? "bg-emerald-100 text-emerald-800"
+                                ? 'bg-emerald-100 text-emerald-800'
                                 : program.status === ProgramStatus.IN_ACTIVE
-                                  ? "bg-gray-100 text-gray-800"
-                                  : "bg-amber-100 text-amber-800"
+                                  ? 'bg-gray-100 text-gray-800'
+                                  : 'bg-amber-100 text-amber-800'
                             }`}
                           >
                             {program.status}
@@ -385,8 +350,7 @@ export default function GCVDashboard() {
 
                           {program.manager && (
                             <span className="text-xs text-gray-500">
-                              {program.manager.person.firstName}{" "}
-                              {program.manager.person.lastName}
+                              {program.manager.person.firstName} {program.manager.person.lastName}
                             </span>
                           )}
                         </div>

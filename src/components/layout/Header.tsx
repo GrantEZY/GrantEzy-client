@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import Image from "next/image";
+import Image from 'next/image';
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
 
 interface UserInfoProps {
   name: string;
@@ -18,15 +18,11 @@ function UserInfo({ name, greeting, initials }: UserInfoProps) {
           {name}
         </div>
 
-        <div className="font-inter text-xs text-[var(--color-gray-500)]">
-          {greeting}
-        </div>
+        <div className="font-inter text-xs text-[var(--color-gray-500)]">{greeting}</div>
       </div>
 
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-blue-500)]">
-        <span className="text-sm font-medium text-[var(--color-white)]">
-          {initials}
-        </span>
+        <span className="text-sm font-medium text-[var(--color-white)]">{initials}</span>
       </div>
     </div>
   );
@@ -38,7 +34,7 @@ function SearchBar() {
       <input
         className="font-inter h-[55px] w-[400px] rounded-[30px] border-0 bg-[var(--color-background-light)] px-6 py-4 pr-12 text-base focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none"
         placeholder="Search"
-        style={{ boxShadow: "0px 1px 4px 0px rgba(0,0,0,0.25)" }}
+        style={{ boxShadow: '0px 1px 4px 0px rgba(0,0,0,0.25)' }}
         type="text"
       />
 
@@ -66,12 +62,7 @@ function NotificationBell() {
       aria-label="Notifications"
       className="relative rounded-lg p-2 text-[var(--color-gray-600)] transition-colors hover:text-[var(--color-gray-800)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none"
     >
-      <svg
-        className="h-6 w-6"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
+      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
           d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
           strokeLinecap="round"
@@ -95,7 +86,7 @@ export default function Header() {
     if (user?.firstName && user?.lastName) {
       return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
     }
-    return "U";
+    return 'U';
   };
 
   // Get user display name
@@ -103,7 +94,7 @@ export default function Header() {
     if (user?.firstName) {
       return user.firstName;
     }
-    return "User";
+    return 'User';
   };
   return (
     <header className="h-[98px] w-full border-b border-[var(--color-border-gray)] bg-[var(--color-white)] px-6 py-4">

@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import AdminLayout from "@/components/layout/AdminLayout";
-import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import AdminLayout from '@/components/layout/AdminLayout';
+import { showToast, ToastProvider } from '@/components/ui/ToastNew';
 
-import { useAdmin } from "@/hooks/useAdmin";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from '@/hooks/useAdmin';
+import { useAuth } from '@/hooks/useAuth';
 
-import { AdminUser } from "@/types/admin.types";
-import { UserRoles } from "@/types/auth.types";
+import { AdminUser } from '@/types/admin.types';
+import { UserRoles } from '@/types/auth.types';
 
 export default function AdminStartupsPage() {
   const { user, isAuthenticated } = useAuth();
@@ -19,8 +19,8 @@ export default function AdminStartupsPage() {
   // State for filters and pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [selectedStatus, setSelectedStatus] = useState<string>("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Load startup-related users
   const loadStartups = useCallback(async () => {
@@ -42,8 +42,8 @@ export default function AdminStartupsPage() {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     const fullName =
-      `${startup.person?.firstName || startup.firstName || ""} ${startup.person?.lastName || startup.lastName || ""}`.toLowerCase();
-    const email = (startup.contact?.email || startup.email || "").toLowerCase();
+      `${startup.person?.firstName || startup.firstName || ''} ${startup.person?.lastName || startup.lastName || ''}`.toLowerCase();
+    const email = (startup.contact?.email || startup.email || '').toLowerCase();
     return fullName.includes(searchLower) || email.includes(searchLower);
   });
 
@@ -58,22 +58,20 @@ export default function AdminStartupsPage() {
   // Handle actions
   const handleApprove = async (startup: AdminUser) => {
     showToast.success(
-      `Approved startup application for ${startup.person?.firstName || startup.firstName}`,
+      `Approved startup application for ${startup.person?.firstName || startup.firstName}`
     );
     // TODO: Implement actual approval logic
   };
 
   const handleReject = async (startup: AdminUser) => {
     showToast.error(
-      `Rejected startup application for ${startup.person?.firstName || startup.firstName}`,
+      `Rejected startup application for ${startup.person?.firstName || startup.firstName}`
     );
     // TODO: Implement actual rejection logic
   };
 
   const handleReview = (startup: AdminUser) => {
-    showToast.info(
-      `Opening detailed review for ${startup.person?.firstName || startup.firstName}`,
-    );
+    showToast.info(`Opening detailed review for ${startup.person?.firstName || startup.firstName}`);
     // TODO: Implement detailed review modal
   };
 
@@ -84,13 +82,9 @@ export default function AdminStartupsPage() {
         <AdminLayout>
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <h2 className="mb-2 text-xl font-semibold text-gray-900">
-                Access Denied
-              </h2>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">Access Denied</h2>
 
-              <p className="text-gray-600">
-                You need admin privileges to access this page.
-              </p>
+              <p className="text-gray-600">You need admin privileges to access this page.</p>
             </div>
           </div>
         </AdminLayout>
@@ -106,9 +100,7 @@ export default function AdminStartupsPage() {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                  Startup Management
-                </h1>
+                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Startup Management</h1>
 
                 <p className="text-sm text-gray-600 sm:text-base">
                   Manage startup applications and team members
@@ -118,9 +110,7 @@ export default function AdminStartupsPage() {
               <div className="flex flex-col gap-2 sm:flex-row">
                 <button
                   className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none"
-                  onClick={() =>
-                    showToast.info("Bulk approval feature coming soon")
-                  }
+                  onClick={() => showToast.info('Bulk approval feature coming soon')}
                 >
                   <svg
                     className="mr-2 h-4 w-4"
@@ -140,9 +130,7 @@ export default function AdminStartupsPage() {
 
                 <button
                   className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
-                  onClick={() =>
-                    showToast.info("Add startup feature coming soon")
-                  }
+                  onClick={() => showToast.info('Add startup feature coming soon')}
                 >
                   <svg
                     className="mr-2 h-4 w-4"
@@ -183,13 +171,9 @@ export default function AdminStartupsPage() {
                   </div>
 
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">
-                      Total Applications
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">Total Applications</p>
 
-                    <p className="text-2xl font-bold text-gray-900">
-                      {stats.total}
-                    </p>
+                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
                   </div>
                 </div>
               </div>
@@ -213,13 +197,9 @@ export default function AdminStartupsPage() {
                   </div>
 
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">
-                      Pending Review
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">Pending Review</p>
 
-                    <p className="text-2xl font-bold text-gray-900">
-                      {stats.pending}
-                    </p>
+                    <p className="text-2xl font-bold text-gray-900">{stats.pending}</p>
                   </div>
                 </div>
               </div>
@@ -243,13 +223,9 @@ export default function AdminStartupsPage() {
                   </div>
 
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">
-                      Approved
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">Approved</p>
 
-                    <p className="text-2xl font-bold text-gray-900">
-                      {stats.approved}
-                    </p>
+                    <p className="text-2xl font-bold text-gray-900">{stats.approved}</p>
                   </div>
                 </div>
               </div>
@@ -273,13 +249,9 @@ export default function AdminStartupsPage() {
                   </div>
 
                   <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-600">
-                      Rejected
-                    </p>
+                    <p className="text-sm font-medium text-gray-600">Rejected</p>
 
-                    <p className="text-2xl font-bold text-gray-900">
-                      {stats.rejected}
-                    </p>
+                    <p className="text-2xl font-bold text-gray-900">{stats.rejected}</p>
                   </div>
                 </div>
               </div>
@@ -378,16 +350,13 @@ export default function AdminStartupsPage() {
 
               {/* Stats */}
               <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-600">
-                <span>
-                  Total: {pagination?.total || filteredStartups.length}{" "}
-                  applications
-                </span>
+                <span>Total: {pagination?.total || filteredStartups.length} applications</span>
 
                 <span>•</span>
 
                 <span>Showing: {filteredStartups.length} results</span>
 
-                {selectedStatus !== "all" && (
+                {selectedStatus !== 'all' && (
                   <>
                     <span>•</span>
 
@@ -406,9 +375,7 @@ export default function AdminStartupsPage() {
                     <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
                   </div>
                 ) : filteredStartups.length === 0 ? (
-                  <div className="p-6 text-center text-gray-500">
-                    No startup applications found
-                  </div>
+                  <div className="p-6 text-center text-gray-500">No startup applications found</div>
                 ) : (
                   <div className="divide-y divide-gray-200">
                     {filteredStartups.map((startup) => (
@@ -419,28 +386,22 @@ export default function AdminStartupsPage() {
                               <span className="text-sm font-semibold text-blue-700">
                                 {startup.person?.firstName?.charAt(0) ||
                                   startup.firstName?.charAt(0) ||
-                                  "?"}
+                                  '?'}
 
                                 {startup.person?.lastName?.charAt(0) ||
                                   startup.lastName?.charAt(0) ||
-                                  ""}
+                                  ''}
                               </span>
                             </div>
 
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-medium text-gray-900">
-                                {startup.person?.firstName ||
-                                  startup.firstName ||
-                                  "Unknown"}{" "}
-                                {startup.person?.lastName ||
-                                  startup.lastName ||
-                                  ""}
+                                {startup.person?.firstName || startup.firstName || 'Unknown'}{' '}
+                                {startup.person?.lastName || startup.lastName || ''}
                               </p>
 
                               <p className="truncate text-sm text-gray-500">
-                                {startup.contact?.email ||
-                                  startup.email ||
-                                  "No email"}
+                                {startup.contact?.email || startup.email || 'No email'}
                               </p>
                             </div>
                           </div>
@@ -514,10 +475,7 @@ export default function AdminStartupsPage() {
                       </tr>
                     ) : filteredStartups.length === 0 ? (
                       <tr>
-                        <td
-                          className="px-6 py-12 text-center text-gray-500"
-                          colSpan={4}
-                        >
+                        <td className="px-6 py-12 text-center text-gray-500" colSpan={4}>
                           No startup applications found
                         </td>
                       </tr>
@@ -530,28 +488,22 @@ export default function AdminStartupsPage() {
                                 <span className="text-sm font-semibold text-blue-700">
                                   {startup.person?.firstName?.charAt(0) ||
                                     startup.firstName?.charAt(0) ||
-                                    "?"}
+                                    '?'}
 
                                   {startup.person?.lastName?.charAt(0) ||
                                     startup.lastName?.charAt(0) ||
-                                    ""}
+                                    ''}
                                 </span>
                               </div>
 
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {startup.person?.firstName ||
-                                    startup.firstName ||
-                                    "Unknown"}{" "}
-                                  {startup.person?.lastName ||
-                                    startup.lastName ||
-                                    ""}
+                                  {startup.person?.firstName || startup.firstName || 'Unknown'}{' '}
+                                  {startup.person?.lastName || startup.lastName || ''}
                                 </div>
 
                                 <div className="text-sm text-gray-500">
-                                  {startup.contact?.email ||
-                                    startup.email ||
-                                    "No email"}
+                                  {startup.contact?.email || startup.email || 'No email'}
                                 </div>
                               </div>
                             </div>
@@ -566,7 +518,7 @@ export default function AdminStartupsPage() {
                           <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
                             {startup.createdAt
                               ? new Date(startup.createdAt).toLocaleDateString()
-                              : "N/A"}
+                              : 'N/A'}
                           </td>
 
                           <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
@@ -614,11 +566,7 @@ export default function AdminStartupsPage() {
                   <button
                     className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={currentPage >= pagination.totalPages}
-                    onClick={() =>
-                      setCurrentPage(
-                        Math.min(pagination.totalPages, currentPage + 1),
-                      )
-                    }
+                    onClick={() => setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))}
                   >
                     Next
                   </button>
@@ -627,11 +575,8 @@ export default function AdminStartupsPage() {
                 <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-gray-700">
-                      Showing page{" "}
-                      <span className="font-medium">{currentPage}</span> of{" "}
-                      <span className="font-medium">
-                        {pagination.totalPages}
-                      </span>
+                      Showing page <span className="font-medium">{currentPage}</span> of{' '}
+                      <span className="font-medium">{pagination.totalPages}</span>
                     </p>
                   </div>
 
@@ -640,17 +585,11 @@ export default function AdminStartupsPage() {
                       <button
                         className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={currentPage <= 1}
-                        onClick={() =>
-                          setCurrentPage(Math.max(1, currentPage - 1))
-                        }
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       >
                         <span className="sr-only">Previous</span>
 
-                        <svg
-                          className="h-5 w-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
+                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                           <path
                             clipRule="evenodd"
                             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -667,18 +606,12 @@ export default function AdminStartupsPage() {
                         className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={currentPage >= pagination.totalPages}
                         onClick={() =>
-                          setCurrentPage(
-                            Math.min(pagination.totalPages, currentPage + 1),
-                          )
+                          setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))
                         }
                       >
                         <span className="sr-only">Next</span>
 
-                        <svg
-                          className="h-5 w-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
+                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                           <path
                             clipRule="evenodd"
                             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"

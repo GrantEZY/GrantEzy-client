@@ -2,9 +2,9 @@
  * Application Progress Bar Component
  * Shows overall progress percentage
  */
-"use client";
+'use client';
 
-import { ApplicationStep } from "@/types/applicant.types";
+import { ApplicationStep } from '@/types/applicant.types';
 
 interface ApplicationProgressProps {
   currentStep: ApplicationStep;
@@ -23,9 +23,7 @@ export default function ApplicationProgress({
         <span className="text-sm font-medium text-gray-700">
           Step {currentStep} of {totalSteps}
         </span>
-        <span className="text-sm font-medium text-gray-700">
-          {percentage}% Complete
-        </span>
+        <span className="text-sm font-medium text-gray-700">{percentage}% Complete</span>
       </div>
       <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
         <div

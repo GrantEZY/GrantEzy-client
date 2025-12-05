@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
-import Header from "./Header";
-import PMSidebar from "./PMSidebar.tsx";
+import Header from './Header';
+import PMSidebar from './PMSidebar.tsx';
 
 interface PMLayoutProps {
   children: ReactNode;

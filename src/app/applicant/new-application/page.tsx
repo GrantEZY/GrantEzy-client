@@ -2,29 +2,29 @@
  * Multi-step Application Form - Main Page
  * Handles the 7-stage application submission process
  */
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ApplicantLayout from "@/components/layout/ApplicantLayout";
-import { useApplicant } from "@/hooks/useApplicant";
-import ApplicationStepper from "@/components/applicant/ApplicationStepper";
-import ApplicationProgress from "@/components/applicant/ApplicationProgress";
-import BasicInfoForm from "@/components/applicant/forms/BasicInfoForm";
-import BudgetForm from "@/components/applicant/forms/BudgetForm";
-import TechnicalDetailsForm from "@/components/applicant/forms/TechnicalDetailsForm";
-import RevenueModelForm from "@/components/applicant/forms/RevenueModelForm";
-import RisksAndMilestonesForm from "@/components/applicant/forms/RisksAndMilestonesForm";
-import DocumentsForm from "@/components/applicant/forms/DocumentsForm";
-import TeamMembersForm from "@/components/applicant/forms/TeamMembersForm";
-import { ApplicationStep } from "@/types/applicant.types";
-import { ToastProvider } from "@/components/ui/ToastNew";
+import { useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ApplicantLayout from '@/components/layout/ApplicantLayout';
+import { useApplicant } from '@/hooks/useApplicant';
+import ApplicationStepper from '@/components/applicant/ApplicationStepper';
+import ApplicationProgress from '@/components/applicant/ApplicationProgress';
+import BasicInfoForm from '@/components/applicant/forms/BasicInfoForm';
+import BudgetForm from '@/components/applicant/forms/BudgetForm';
+import TechnicalDetailsForm from '@/components/applicant/forms/TechnicalDetailsForm';
+import RevenueModelForm from '@/components/applicant/forms/RevenueModelForm';
+import RisksAndMilestonesForm from '@/components/applicant/forms/RisksAndMilestonesForm';
+import DocumentsForm from '@/components/applicant/forms/DocumentsForm';
+import TeamMembersForm from '@/components/applicant/forms/TeamMembersForm';
+import { ApplicationStep } from '@/types/applicant.types';
+import { ToastProvider } from '@/components/ui/ToastNew';
 
 export default function NewApplicationPage() {
   const searchParams = useSearchParams();
-  const cycleSlug = searchParams.get("cycleSlug");
-  
+  const cycleSlug = searchParams.get('cycleSlug');
+
   const {
     currentStep,
     applicationSteps,
@@ -47,7 +47,7 @@ export default function NewApplicationPage() {
   useEffect(() => {
     if (!cycleSlug) {
       // Redirect to cycles list if no cycleSlug provided
-      window.location.href = "/applicant/cycles";
+      window.location.href = '/applicant/cycles';
     }
   }, [cycleSlug]);
 
@@ -89,15 +89,11 @@ export default function NewApplicationPage() {
     <AuthGuard>
       <ToastProvider>
         <ApplicantLayout>
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            New Application
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Complete all 7 steps to submit your application
-          </p>
-        </div>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">New Application</h1>
+            <p className="mt-2 text-gray-600">Complete all 7 steps to submit your application</p>
+          </div>
 
           {/* Progress Bar */}
           <ApplicationProgress
@@ -111,11 +107,7 @@ export default function NewApplicationPage() {
             <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-red-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -127,10 +119,7 @@ export default function NewApplicationPage() {
                   <h3 className="text-sm font-medium text-red-800">Error</h3>
                   <p className="mt-1 text-sm text-red-700">{error}</p>
                 </div>
-                <button
-                  onClick={clearError}
-                  className="ml-auto flex-shrink-0"
-                >
+                <button onClick={clearError} className="ml-auto flex-shrink-0">
                   <svg
                     className="h-5 w-5 text-red-400 hover:text-red-600"
                     fill="currentColor"
@@ -152,11 +141,7 @@ export default function NewApplicationPage() {
             <div className="mb-6 rounded-lg bg-green-50 border border-green-200 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-green-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -165,14 +150,9 @@ export default function NewApplicationPage() {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-green-800">
-                    {successMessage}
-                  </p>
+                  <p className="text-sm font-medium text-green-800">{successMessage}</p>
                 </div>
-                <button
-                  onClick={clearSuccessMessage}
-                  className="ml-auto flex-shrink-0"
-                >
+                <button onClick={clearSuccessMessage} className="ml-auto flex-shrink-0">
                   <svg
                     className="h-5 w-5 text-green-400 hover:text-green-600"
                     fill="currentColor"
@@ -192,10 +172,7 @@ export default function NewApplicationPage() {
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
             {/* Stepper Sidebar */}
             <div className="lg:col-span-3">
-              <ApplicationStepper
-                steps={applicationSteps}
-                currentStep={currentStep}
-              />
+              <ApplicationStepper steps={applicationSteps} currentStep={currentStep} />
             </div>
 
             {/* Form Content */}
@@ -222,9 +199,7 @@ export default function NewApplicationPage() {
                   />
                 </svg>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-blue-800">
-                    Application in Progress
-                  </h3>
+                  <h3 className="text-sm font-medium text-blue-800">Application in Progress</h3>
                   <p className="mt-1 text-sm text-blue-700">
                     Application ID: {currentApplication.id}
                     <br />

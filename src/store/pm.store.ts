@@ -1,11 +1,11 @@
 /**
  * PM (Program Manager) store using Zustand for PM-related state management
  */
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { pmService } from "../services/pm.service";
-import { PaginationMeta } from "../types/admin.types";
-import { Program } from "../types/gcv.types";
+import { pmService } from '../services/pm.service';
+import { PaginationMeta } from '../types/admin.types';
+import { Program } from '../types/gcv.types';
 import {
   CreateCycleRequest,
   Cycle,
@@ -21,7 +21,7 @@ import {
   Review,
   ReviewDetails,
   UpdateCycleRequest,
-} from "../types/pm.types";
+} from '../types/pm.types';
 
 interface PMState {
   // Program state
@@ -80,18 +80,14 @@ interface PMActions {
   setCyclesError: (error: string | null) => void;
 
   // Application actions
-  getApplicationDetails: (
-    params: GetPMApplicationDetailsRequest,
-  ) => Promise<void>;
+  getApplicationDetails: (params: GetPMApplicationDetailsRequest) => Promise<void>;
   clearApplication: () => void;
 
   // Reviewer actions
   inviteReviewer: (data: InviteReviewerRequest) => Promise<boolean>;
 
   // Review actions
-  getApplicationReviews: (
-    params: GetApplicationReviewsRequest,
-  ) => Promise<void>;
+  getApplicationReviews: (params: GetApplicationReviewsRequest) => Promise<void>;
   getReviewDetails: (params: GetReviewDetailsRequest) => Promise<void>;
   clearReviews: () => void;
   clearReview: () => void;
@@ -141,24 +137,18 @@ export const usePMStore = create<PMStore>((set, get) => ({
           isProgramAssigned: true,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch assigned program");
+        throw new Error(response.message || 'Failed to fetch assigned program');
       }
     } catch (error) {
-      let errorMessage = "Failed to fetch assigned program";
+      let errorMessage = 'Failed to fetch assigned program';
       let isNotAssigned = false;
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
         // Check if this is a "not assigned" error (403 with specific message)
-        if (
-          errorMessage.includes("Only Program Manager can access the Program")
-        ) {
+        if (errorMessage.includes('Only Program Manager can access the Program')) {
           isNotAssigned = true;
         }
       }
@@ -170,7 +160,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         isProgramAssigned: isNotAssigned ? false : null,
       });
 
-      console.error("Get assigned program error:", error);
+      console.error('Get assigned program error:', error);
       throw error;
     }
   },
@@ -212,18 +202,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
         return true;
       } else {
-        throw new Error(response.message || "Failed to create cycle");
+        throw new Error(response.message || 'Failed to create cycle');
       }
     } catch (error) {
-      let errorMessage = "Failed to create cycle";
+      let errorMessage = 'Failed to create cycle';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -232,7 +218,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         cyclesError: errorMessage,
       });
 
-      console.error("Create cycle error:", error);
+      console.error('Create cycle error:', error);
       return false;
     }
   },
@@ -261,24 +247,18 @@ export const usePMStore = create<PMStore>((set, get) => ({
           isProgramAssigned: true, // If we get cycles successfully, PM is assigned to a program
         });
       } else {
-        throw new Error(response.message || "Failed to fetch program cycles");
+        throw new Error(response.message || 'Failed to fetch program cycles');
       }
     } catch (error) {
-      let errorMessage = "Failed to fetch program cycles";
+      let errorMessage = 'Failed to fetch program cycles';
       let isNotAssigned = false;
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
         // Check if this is a "not assigned" error (403 with specific message)
-        if (
-          errorMessage.includes("Only Program Manager can access the Program")
-        ) {
+        if (errorMessage.includes('Only Program Manager can access the Program')) {
           isNotAssigned = true;
         }
       }
@@ -292,7 +272,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         isProgramAssigned: isNotAssigned ? false : null, // false if not assigned, null if other error
       });
 
-      console.error("Get program cycles error:", error);
+      console.error('Get program cycles error:', error);
       throw error;
     }
   },
@@ -308,26 +288,20 @@ export const usePMStore = create<PMStore>((set, get) => ({
         // Update the cycle in the local state
         const { cycles } = get();
         const updatedCycles = cycles.map((cycle) =>
-          cycle.id === data.id
-            ? { ...cycle, ...data, updatedAt: new Date().toISOString() }
-            : cycle,
+          cycle.id === data.id ? { ...cycle, ...data, updatedAt: new Date().toISOString() } : cycle
         );
 
         set({ cycles: updatedCycles });
         return true;
       } else {
-        throw new Error(response.message || "Failed to update cycle");
+        throw new Error(response.message || 'Failed to update cycle');
       }
     } catch (error) {
-      let errorMessage = "Failed to update cycle";
+      let errorMessage = 'Failed to update cycle';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -336,7 +310,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         cyclesError: errorMessage,
       });
 
-      console.error("Update cycle error:", error);
+      console.error('Update cycle error:', error);
       return false;
     }
   },
@@ -351,25 +325,19 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
         // Remove the cycle from local state
         const { cycles } = get();
-        const updatedCycles = cycles.filter(
-          (cycle) => cycle.id !== data.cycleId,
-        );
+        const updatedCycles = cycles.filter((cycle) => cycle.id !== data.cycleId);
 
         set({ cycles: updatedCycles });
         return true;
       } else {
-        throw new Error(response.message || "Failed to delete cycle");
+        throw new Error(response.message || 'Failed to delete cycle');
       }
     } catch (error) {
-      let errorMessage = "Failed to delete cycle";
+      let errorMessage = 'Failed to delete cycle';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -378,7 +346,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         cyclesError: errorMessage,
       });
 
-      console.error("Delete cycle error:", error);
+      console.error('Delete cycle error:', error);
       return false;
     }
   },
@@ -407,7 +375,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         const { cycle } = response.res;
         const applications = (cycle as any).applications || [];
 
-        console.log("📦 Cycle Details Response:", {
+        console.log('📦 Cycle Details Response:', {
           cycle: cycle,
           applicationsCount: applications.length,
           applications: applications,
@@ -420,18 +388,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
           cyclesError: null,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch cycle details");
+        throw new Error(response.message || 'Failed to fetch cycle details');
       }
     } catch (error) {
-      let errorMessage = "Failed to fetch cycle details";
+      let errorMessage = 'Failed to fetch cycle details';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -442,7 +406,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         cyclesError: errorMessage,
       });
 
-      console.error("Get cycle details error:", error);
+      console.error('Get cycle details error:', error);
       throw error;
     }
   },
@@ -461,20 +425,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
           cyclesError: null,
         });
       } else {
-        throw new Error(
-          response.message || "Failed to fetch application details",
-        );
+        throw new Error(response.message || 'Failed to fetch application details');
       }
     } catch (error) {
-      let errorMessage = "Failed to fetch application details";
+      let errorMessage = 'Failed to fetch application details';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -484,7 +442,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         cyclesError: errorMessage,
       });
 
-      console.error("Get application details error:", error);
+      console.error('Get application details error:', error);
       throw error;
     }
   },
@@ -510,18 +468,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
         });
         return true;
       } else {
-        throw new Error(response.message || "Failed to invite reviewer");
+        throw new Error(response.message || 'Failed to invite reviewer');
       }
     } catch (error) {
-      let errorMessage = "Failed to invite reviewer";
+      let errorMessage = 'Failed to invite reviewer';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -530,7 +484,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         cyclesError: errorMessage,
       });
 
-      console.error("Invite reviewer error:", error);
+      console.error('Invite reviewer error:', error);
       return false;
     }
   },
@@ -545,7 +499,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
       if (response.status === 200) {
         const { reviews, pendingInvites } = response.res;
 
-        console.log("📝 Application Reviews Response:", {
+        console.log('📝 Application Reviews Response:', {
           reviewsCount: reviews.length,
           pendingInvitesCount: pendingInvites?.length || 0,
           reviews: reviews,
@@ -568,20 +522,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
           reviewsError: null,
         });
       } else {
-        throw new Error(
-          response.message || "Failed to fetch application reviews",
-        );
+        throw new Error(response.message || 'Failed to fetch application reviews');
       }
     } catch (error) {
-      let errorMessage = "Failed to fetch application reviews";
+      let errorMessage = 'Failed to fetch application reviews';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -592,7 +540,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         reviewsError: errorMessage,
       });
 
-      console.error("Get application reviews error:", error);
+      console.error('Get application reviews error:', error);
       throw error;
     }
   },
@@ -609,18 +557,14 @@ export const usePMStore = create<PMStore>((set, get) => ({
           reviewsError: null,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch review details");
+        throw new Error(response.message || 'Failed to fetch review details');
       }
     } catch (error) {
-      let errorMessage = "Failed to fetch review details";
+      let errorMessage = 'Failed to fetch review details';
 
       if (error instanceof Error) {
         errorMessage = error.message;
-      } else if (
-        typeof error === "object" &&
-        error !== null &&
-        "message" in error
-      ) {
+      } else if (typeof error === 'object' && error !== null && 'message' in error) {
         errorMessage = String(error.message);
       }
 
@@ -630,7 +574,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
         reviewsError: errorMessage,
       });
 
-      console.error("Get review details error:", error);
+      console.error('Get review details error:', error);
       throw error;
     }
   },

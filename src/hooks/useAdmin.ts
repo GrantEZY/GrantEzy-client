@@ -1,16 +1,16 @@
 /**
  * Custom hooks for admin functionality
  */
-import { useCallback } from "react";
+import { useCallback } from 'react';
 
-import { useAdminStore } from "../store/admin.store";
+import { useAdminStore } from '../store/admin.store';
 import {
   AddUserRequest,
   DeleteUserRequest,
   GetAllUsersRequest,
   UpdateUserRoleRequest,
-} from "../types/admin.types";
-import { UserRoles } from "../types/auth.types";
+} from '../types/admin.types';
+import { UserRoles } from '../types/auth.types';
 
 export const useAdmin = () => {
   const {
@@ -34,12 +34,11 @@ export const useAdmin = () => {
         await getAllUsers(params);
         return { success: true };
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to fetch users";
+        const message = error instanceof Error ? error.message : 'Failed to fetch users';
         return { success: false, error: message };
       }
     },
-    [getAllUsers],
+    [getAllUsers]
   );
 
   const fetchUsersWithDefaults = useCallback(
@@ -52,7 +51,7 @@ export const useAdmin = () => {
 
       return fetchUsers(defaultParams);
     },
-    [fetchUsers],
+    [fetchUsers]
   );
 
   const fetchUsersByRole = useCallback(
@@ -63,7 +62,7 @@ export const useAdmin = () => {
         filter: { role },
       });
     },
-    [fetchUsers],
+    [fetchUsers]
   );
 
   const refreshUsers = useCallback(async () => {
@@ -82,12 +81,11 @@ export const useAdmin = () => {
         const success = await addUser(userData);
         return { success };
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to create user";
+        const message = error instanceof Error ? error.message : 'Failed to create user';
         return { success: false, error: message };
       }
     },
-    [addUser],
+    [addUser]
   );
 
   const updateUser = useCallback(
@@ -99,17 +97,16 @@ export const useAdmin = () => {
           const storeError = useAdminStore.getState().error;
           return {
             success: false,
-            error: storeError || "Failed to update user",
+            error: storeError || 'Failed to update user',
           };
         }
         return { success };
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to update user";
+        const message = error instanceof Error ? error.message : 'Failed to update user';
         return { success: false, error: message };
       }
     },
-    [updateUserRole],
+    [updateUserRole]
   );
 
   const removeUser = useCallback(
@@ -118,12 +115,11 @@ export const useAdmin = () => {
         const success = await deleteUser(userData);
         return { success };
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Failed to delete user";
+        const message = error instanceof Error ? error.message : 'Failed to delete user';
         return { success: false, error: message };
       }
     },
-    [deleteUser],
+    [deleteUser]
   );
 
   const fetchOrganizations = useCallback(async () => {
@@ -131,10 +127,7 @@ export const useAdmin = () => {
       await getOrganizations();
       return { success: true };
     } catch (error) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Failed to fetch organizations";
+      const message = error instanceof Error ? error.message : 'Failed to fetch organizations';
       return { success: false, error: message };
     }
   }, [getOrganizations]);

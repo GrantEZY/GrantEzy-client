@@ -2,11 +2,11 @@
  * Application Details View for Co-Applicants
  * Shows application details, teammates, and pending invites
  */
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useCoApplicantApplication } from "@/hooks/useCoApplicant";
-import { TeamMate, TeamMateInvite } from "@/types/co-applicant.types";
+import { useEffect } from 'react';
+import { useCoApplicantApplication } from '@/hooks/useCoApplicant';
+import { TeamMate, TeamMateInvite } from '@/types/co-applicant.types';
 
 interface ApplicationDetailsViewProps {
   applicationId: string;
@@ -32,9 +32,17 @@ export default function ApplicationDetailsView({
   }, [applicationId, fetchApplication]);
 
   const renderTeamMate = (teammate: TeamMate) => (
-    <div key={teammate.personId} className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg border border-green-200">
+    <div
+      key={teammate.personId}
+      className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg border border-green-200"
+    >
       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          className="w-4 h-4 text-green-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
         </svg>
       </div>
@@ -42,26 +50,35 @@ export default function ApplicationDetailsView({
         <p className="font-medium text-gray-900">{teammate.name}</p>
         <p className="text-sm text-gray-600">{teammate.role}</p>
       </div>
-      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-        Joined
-      </span>
+      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Joined</span>
     </div>
   );
 
   const renderInvite = (invite: TeamMateInvite) => (
-    <div key={invite.email} className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+    <div
+      key={invite.email}
+      className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200"
+    >
       <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-        <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <svg
+          className="w-4 h-4 text-yellow-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
         </svg>
       </div>
       <div className="flex-1">
         <p className="font-medium text-gray-900">{invite.email}</p>
         <p className="text-sm text-gray-600">{invite.inviteAs}</p>
       </div>
-      <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-        Pending
-      </span>
+      <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">Pending</span>
     </div>
   );
 
@@ -90,8 +107,18 @@ export default function ApplicationDetailsView({
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="text-center">
             <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-8 h-8 text-red-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Error Loading Application</h3>
@@ -139,7 +166,12 @@ export default function ApplicationDetailsView({
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
             </svg>
             <span>Back</span>
           </button>
@@ -149,9 +181,7 @@ export default function ApplicationDetailsView({
       <div className="bg-white rounded-lg shadow-md p-6">
         {/* Application Info */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            {applicationDetails.title}
-          </h2>
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">{applicationDetails.title}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="font-medium text-gray-600">Application ID:</span>
@@ -167,15 +197,23 @@ export default function ApplicationDetailsView({
         {/* Team Members */}
         <div className="mb-8">
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            <svg
+              className="w-5 h-5 text-green-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+              />
             </svg>
             <span>Team Members ({applicationDetails.teammates.length})</span>
           </h3>
           {applicationDetails.teammates.length > 0 ? (
-            <div className="space-y-3">
-              {applicationDetails.teammates.map(renderTeamMate)}
-            </div>
+            <div className="space-y-3">{applicationDetails.teammates.map(renderTeamMate)}</div>
           ) : (
             <p className="text-gray-500 italic">No team members yet</p>
           )}
@@ -184,15 +222,23 @@ export default function ApplicationDetailsView({
         {/* Pending Invites */}
         <div>
           <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-5 h-5 text-yellow-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <span>Pending Invitations ({applicationDetails.teamMateInvites.length})</span>
           </h3>
           {applicationDetails.teamMateInvites.length > 0 ? (
-            <div className="space-y-3">
-              {applicationDetails.teamMateInvites.map(renderInvite)}
-            </div>
+            <div className="space-y-3">{applicationDetails.teamMateInvites.map(renderInvite)}</div>
           ) : (
             <p className="text-gray-500 italic">No pending invitations</p>
           )}

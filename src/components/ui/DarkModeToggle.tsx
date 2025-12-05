@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import { useTheme } from "@/components/providers/ThemeProvider";
+import { useTheme } from '@/components/providers/ThemeProvider';
 
 const DarkModeToggle = () => {
   const { theme, setTheme, mounted } = useTheme();
@@ -13,10 +13,10 @@ const DarkModeToggle = () => {
     return null;
   }
 
-  const isDark = theme === "dark";
+  const isDark = theme === 'dark';
 
   const handleToggle = () => {
-    setTheme(isDark ? "light" : "dark");
+    setTheme(isDark ? 'light' : 'dark');
   };
 
   return (
@@ -38,12 +38,7 @@ const DarkModeToggle = () => {
           </svg>
         </span>
 
-        <input
-          checked={isDark}
-          className="input"
-          onChange={handleToggle}
-          type="checkbox"
-        />
+        <input checked={isDark} className="input" onChange={handleToggle} type="checkbox" />
 
         <span className="slider" />
       </label>
@@ -80,7 +75,7 @@ const StyledWrapper = styled.div`
 
   .slider:before {
     position: absolute;
-    content: "";
+    content: '';
     height: 30px;
     width: 30px;
     border-radius: 20px;

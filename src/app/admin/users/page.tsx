@@ -1,42 +1,30 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { AddUserModal } from "@/components/admin/AddUserModal";
-import { DeleteUserModal } from "@/components/admin/DeleteUserModal";
-import { EditUserModal } from "@/components/admin/EditUserModal";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import AdminLayout from "@/components/layout/AdminLayout";
-import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+import { AddUserModal } from '@/components/admin/AddUserModal';
+import { DeleteUserModal } from '@/components/admin/DeleteUserModal';
+import { EditUserModal } from '@/components/admin/EditUserModal';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import AdminLayout from '@/components/layout/AdminLayout';
+import { showToast, ToastProvider } from '@/components/ui/ToastNew';
 
-import { useAdmin } from "@/hooks/useAdmin";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdmin } from '@/hooks/useAdmin';
+import { useAuth } from '@/hooks/useAuth';
 
-import {
-  AddUserRequest,
-  AdminUser,
-  DeleteUserRequest,
-  UpdateRole,
-} from "@/types/admin.types";
-import { UserRoles } from "@/types/auth.types";
+import { AddUserRequest, AdminUser, DeleteUserRequest, UpdateRole } from '@/types/admin.types';
+import { UserRoles } from '@/types/auth.types';
 
 export default function AdminUsersPage() {
   const { user, isAuthenticated } = useAuth();
-  const {
-    users,
-    pagination,
-    isLoading,
-    fetchUsers,
-    createUser,
-    updateUser,
-    removeUser,
-  } = useAdmin();
+  const { users, pagination, isLoading, fetchUsers, createUser, updateUser, removeUser } =
+    useAdmin();
 
   // State for filters and pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [selectedRole, setSelectedRole] = useState<string>("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -47,25 +35,25 @@ export default function AdminUsersPage() {
   // Helper function to format role display
   const formatRole = (role: string | string[] | undefined): React.ReactNode => {
     if (!role) return <span className="text-gray-500">No roles</span>;
-    
+
     const roles = Array.isArray(role) ? role : [role];
-    
+
     if (roles.length === 1) {
       return (
         <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-          {roles[0]?.replace(/_/g, " ") || "unknown"}
+          {roles[0]?.replace(/_/g, ' ') || 'unknown'}
         </span>
       );
     }
-    
+
     return (
       <div className="flex flex-wrap gap-1">
         {roles.slice(0, 2).map((r, index) => (
-          <span 
-            key={index} 
+          <span
+            key={index}
             className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
           >
-            {r?.replace(/_/g, " ") || "unknown"}
+            {r?.replace(/_/g, ' ') || 'unknown'}
           </span>
         ))}
         {roles.length > 2 && (
@@ -79,8 +67,7 @@ export default function AdminUsersPage() {
 
   // Load users with current filters
   const loadUsers = useCallback(async () => {
-    const roleFilter =
-      selectedRole === "all" ? undefined : (selectedRole as UserRoles);
+    const roleFilter = selectedRole === 'all' ? undefined : (selectedRole as UserRoles);
     await fetchUsers({
       page: currentPage,
       numberOfResults: pageSize,
@@ -99,8 +86,8 @@ export default function AdminUsersPage() {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     const fullName =
-      `${user.person?.firstName || user.firstName || ""} ${user.person?.lastName || user.lastName || ""}`.toLowerCase();
-    const email = (user.contact?.email || user.email || "").toLowerCase();
+      `${user.person?.firstName || user.firstName || ''} ${user.person?.lastName || user.lastName || ''}`.toLowerCase();
+    const email = (user.contact?.email || user.email || '').toLowerCase();
     return fullName.includes(searchLower) || email.includes(searchLower);
   });
 
@@ -109,10 +96,10 @@ export default function AdminUsersPage() {
     const result = await createUser(userData);
     if (result.success) {
       await loadUsers();
-      showToast.success("User added successfully!");
+      showToast.success('User added successfully!');
       setIsAddModalOpen(false);
     } else {
-      showToast.error(result.error || "Failed to add user");
+      showToast.error(result.error || 'Failed to add user');
     }
     return result;
   };
@@ -127,11 +114,11 @@ export default function AdminUsersPage() {
     role: UserRoles;
     action: 'add' | 'remove';
   }) => {
-    if (!selectedUser) return { success: false, error: "No user selected" };
+    if (!selectedUser) return { success: false, error: 'No user selected' };
 
     try {
       const updateType = userData.action === 'add' ? UpdateRole.ADD_ROLE : UpdateRole.DELETE_ROLE;
-      
+
       const result = await updateUser({
         email: userData.email,
         type: updateType,
@@ -143,13 +130,12 @@ export default function AdminUsersPage() {
       }
 
       await loadUsers();
-      showToast.success("User updated successfully!");
+      showToast.success('User updated successfully!');
       setIsEditModalOpen(false);
       setSelectedUser(null);
       return { success: true };
     } catch (error) {
-      const errorMsg =
-        error instanceof Error ? error.message : "Failed to update user";
+      const errorMsg = error instanceof Error ? error.message : 'Failed to update user';
       showToast.error(errorMsg);
       return { success: false, error: errorMsg };
     }
@@ -164,11 +150,11 @@ export default function AdminUsersPage() {
     const result = await removeUser(userData);
     if (result.success) {
       await loadUsers();
-      showToast.success("User deleted successfully!");
+      showToast.success('User deleted successfully!');
       setIsDeleteModalOpen(false);
       setSelectedUser(null);
     } else {
-      showToast.error(result.error || "Failed to delete user");
+      showToast.error(result.error || 'Failed to delete user');
     }
     return result;
   };
@@ -180,13 +166,9 @@ export default function AdminUsersPage() {
         <AdminLayout>
           <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <h2 className="mb-2 text-xl font-semibold text-gray-900">
-                Access Denied
-              </h2>
+              <h2 className="mb-2 text-xl font-semibold text-gray-900">Access Denied</h2>
 
-              <p className="text-gray-600">
-                You need admin privileges to access this page.
-              </p>
+              <p className="text-gray-600">You need admin privileges to access this page.</p>
             </div>
           </div>
         </AdminLayout>
@@ -202,9 +184,7 @@ export default function AdminUsersPage() {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                  Users Management
-                </h1>
+                <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Users Management</h1>
 
                 <p className="text-sm text-gray-600 sm:text-base">
                   Manage user accounts and permissions
@@ -215,12 +195,7 @@ export default function AdminUsersPage() {
                 className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                 onClick={() => setIsAddModalOpen(true)}
               >
-                <svg
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                     strokeLinecap="round"
@@ -292,13 +267,9 @@ export default function AdminUsersPage() {
 
                     <option value={UserRoles.DIRECTOR}>Director</option>
 
-                    <option value={UserRoles.PROGRAM_MANAGER}>
-                      Program Manager
-                    </option>
+                    <option value={UserRoles.PROGRAM_MANAGER}>Program Manager</option>
 
-                    <option value={UserRoles.COMMITTEE_MEMBER}>
-                      Committee Member
-                    </option>
+                    <option value={UserRoles.COMMITTEE_MEMBER}>Committee Member</option>
 
                     <option value={UserRoles.MENTOR}>Mentor</option>
 
@@ -343,13 +314,11 @@ export default function AdminUsersPage() {
 
                 <span>Showing: {filteredUsers.length} results</span>
 
-                {selectedRole !== "all" && (
+                {selectedRole !== 'all' && (
                   <>
                     <span>•</span>
 
-                    <span>
-                      Role: {selectedRole.replace("_", " ").toLowerCase()}
-                    </span>
+                    <span>Role: {selectedRole.replace('_', ' ').toLowerCase()}</span>
                   </>
                 )}
               </div>
@@ -364,9 +333,7 @@ export default function AdminUsersPage() {
                     <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
                   </div>
                 ) : filteredUsers.length === 0 ? (
-                  <div className="p-6 text-center text-gray-500">
-                    No users found
-                  </div>
+                  <div className="p-6 text-center text-gray-500">No users found</div>
                 ) : (
                   <div className="divide-y divide-gray-200">
                     {filteredUsers.map((user) => (
@@ -377,26 +344,20 @@ export default function AdminUsersPage() {
                               <span className="text-sm font-semibold text-blue-700">
                                 {user.person?.firstName?.charAt(0) ||
                                   user.firstName?.charAt(0) ||
-                                  "?"}
+                                  '?'}
 
-                                {user.person?.lastName?.charAt(0) ||
-                                  user.lastName?.charAt(0) ||
-                                  ""}
+                                {user.person?.lastName?.charAt(0) || user.lastName?.charAt(0) || ''}
                               </span>
                             </div>
 
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-medium text-gray-900">
-                                {user.person?.firstName ||
-                                  user.firstName ||
-                                  "Unknown"}{" "}
-                                {user.person?.lastName || user.lastName || ""}
+                                {user.person?.firstName || user.firstName || 'Unknown'}{' '}
+                                {user.person?.lastName || user.lastName || ''}
                               </p>
 
                               <p className="truncate text-sm text-gray-500">
-                                {user.contact?.email ||
-                                  user.email ||
-                                  "No email"}
+                                {user.contact?.email || user.email || 'No email'}
                               </p>
                             </div>
                           </div>
@@ -463,10 +424,7 @@ export default function AdminUsersPage() {
                       </tr>
                     ) : filteredUsers.length === 0 ? (
                       <tr>
-                        <td
-                          className="px-6 py-12 text-center text-gray-500"
-                          colSpan={4}
-                        >
+                        <td className="px-6 py-12 text-center text-gray-500" colSpan={4}>
                           No users found
                         </td>
                       </tr>
@@ -479,26 +437,22 @@ export default function AdminUsersPage() {
                                 <span className="text-sm font-semibold text-blue-700">
                                   {user.person?.firstName?.charAt(0) ||
                                     user.firstName?.charAt(0) ||
-                                    "?"}
+                                    '?'}
 
                                   {user.person?.lastName?.charAt(0) ||
                                     user.lastName?.charAt(0) ||
-                                    ""}
+                                    ''}
                                 </span>
                               </div>
 
                               <div className="ml-4">
                                 <div className="text-sm font-medium text-gray-900">
-                                  {user.person?.firstName ||
-                                    user.firstName ||
-                                    "Unknown"}{" "}
-                                  {user.person?.lastName || user.lastName || ""}
+                                  {user.person?.firstName || user.firstName || 'Unknown'}{' '}
+                                  {user.person?.lastName || user.lastName || ''}
                                 </div>
 
                                 <div className="text-sm text-gray-500">
-                                  {user.contact?.email ||
-                                    user.email ||
-                                    "No email"}
+                                  {user.contact?.email || user.email || 'No email'}
                                 </div>
                               </div>
                             </div>
@@ -511,9 +465,7 @@ export default function AdminUsersPage() {
                           </td>
 
                           <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
-                            {user.createdAt
-                              ? new Date(user.createdAt).toLocaleDateString()
-                              : "N/A"}
+                            {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                           </td>
 
                           <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
@@ -554,11 +506,7 @@ export default function AdminUsersPage() {
                   <button
                     className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={currentPage >= pagination.totalPages}
-                    onClick={() =>
-                      setCurrentPage(
-                        Math.min(pagination.totalPages, currentPage + 1),
-                      )
-                    }
+                    onClick={() => setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))}
                   >
                     Next
                   </button>
@@ -567,11 +515,8 @@ export default function AdminUsersPage() {
                 <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm text-gray-700">
-                      Showing page{" "}
-                      <span className="font-medium">{currentPage}</span> of{" "}
-                      <span className="font-medium">
-                        {pagination.totalPages}
-                      </span>
+                      Showing page <span className="font-medium">{currentPage}</span> of{' '}
+                      <span className="font-medium">{pagination.totalPages}</span>
                     </p>
                   </div>
 
@@ -580,17 +525,11 @@ export default function AdminUsersPage() {
                       <button
                         className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={currentPage <= 1}
-                        onClick={() =>
-                          setCurrentPage(Math.max(1, currentPage - 1))
-                        }
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                       >
                         <span className="sr-only">Previous</span>
 
-                        <svg
-                          className="h-5 w-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
+                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                           <path
                             clipRule="evenodd"
                             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
@@ -607,18 +546,12 @@ export default function AdminUsersPage() {
                         className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                         disabled={currentPage >= pagination.totalPages}
                         onClick={() =>
-                          setCurrentPage(
-                            Math.min(pagination.totalPages, currentPage + 1),
-                          )
+                          setCurrentPage(Math.min(pagination.totalPages, currentPage + 1))
                         }
                       >
                         <span className="sr-only">Next</span>
 
-                        <svg
-                          className="h-5 w-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
+                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                           <path
                             clipRule="evenodd"
                             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useProjectManagement } from "@/hooks/useProjectManagement";
-import { CreateCycleCriteriaRequest } from "@/types/project.types";
+import { useState, useEffect } from 'react';
+import { useProjectManagement } from '@/hooks/useProjectManagement';
+import { CreateCycleCriteriaRequest } from '@/types/project.types';
 
 interface CycleCriteriaManagementProps {
   cycleSlug: string;
@@ -24,8 +24,8 @@ export default function CycleCriteriaManagement({
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    briefReview: "",
+    name: '',
+    briefReview: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -41,13 +41,13 @@ export default function CycleCriteriaManagement({
 
   const handleOpenModal = () => {
     setIsCreateModalOpen(true);
-    setFormData({ name: "", briefReview: "" });
+    setFormData({ name: '', briefReview: '' });
     setErrors({});
   };
 
   const handleCloseModal = () => {
     setIsCreateModalOpen(false);
-    setFormData({ name: "", briefReview: "" });
+    setFormData({ name: '', briefReview: '' });
     setErrors({});
   };
 
@@ -55,10 +55,10 @@ export default function CycleCriteriaManagement({
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Criteria name is required";
+      newErrors.name = 'Criteria name is required';
     }
     if (!formData.briefReview.trim()) {
-      newErrors.briefReview = "Brief review is required";
+      newErrors.briefReview = 'Brief review is required';
     }
 
     setErrors(newErrors);
@@ -105,18 +105,8 @@ export default function CycleCriteriaManagement({
           className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
           type="button"
         >
-          <svg
-            className="mr-2 h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M12 4v16m8-8H4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-            />
+          <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 4v16m8-8H4" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
           </svg>
           Create Criteria
         </button>
@@ -233,12 +223,7 @@ export default function CycleCriteriaManagement({
                     className="rounded-md text-gray-400 hover:text-gray-500"
                     type="button"
                   >
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         d="M6 18L18 6M6 6l12 12"
                         strokeLinecap="round"
@@ -260,15 +245,11 @@ export default function CycleCriteriaManagement({
                     <input
                       type="text"
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       placeholder="e.g., Technical Feasibility"
                     />
-                    {errors.name && (
-                      <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                    )}
+                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
                   </div>
 
                   <div>
@@ -277,9 +258,7 @@ export default function CycleCriteriaManagement({
                     </label>
                     <textarea
                       value={formData.briefReview}
-                      onChange={(e) =>
-                        setFormData({ ...formData, briefReview: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, briefReview: e.target.value })}
                       rows={4}
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                       placeholder="Describe what this criteria evaluates..."
@@ -307,8 +286,7 @@ export default function CycleCriteriaManagement({
                         <div className="mt-2 text-sm text-blue-700">
                           <p>
                             File upload for evaluation templates will be added in the next
-                            iteration. For now, you can create criteria with names and
-                            descriptions.
+                            iteration. For now, you can create criteria with names and descriptions.
                           </p>
                         </div>
                       </div>
@@ -335,11 +313,7 @@ export default function CycleCriteriaManagement({
                   >
                     {isSubmitting ? (
                       <>
-                        <svg
-                          className="mr-2 h-4 w-4 animate-spin"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                           <circle
                             className="opacity-25"
                             cx="12"
@@ -357,7 +331,7 @@ export default function CycleCriteriaManagement({
                         Creating...
                       </>
                     ) : (
-                      "Create Criteria"
+                      'Create Criteria'
                     )}
                   </button>
                 </div>

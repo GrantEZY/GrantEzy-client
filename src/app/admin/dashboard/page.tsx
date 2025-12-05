@@ -1,23 +1,17 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
-import Link from "next/link";
+import Link from 'next/link';
 
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import AdminLayout from "@/components/layout/AdminLayout";
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import AdminLayout from '@/components/layout/AdminLayout';
 
-import { useAdmin } from "@/hooks/useAdmin";
+import { useAdmin } from '@/hooks/useAdmin';
 
 export default function AdminDashboard() {
-  const {
-    users,
-    pagination,
-    organizations,
-    isLoading,
-    fetchUsers,
-    fetchOrganizations,
-  } = useAdmin();
+  const { users, pagination, organizations, isLoading, fetchUsers, fetchOrganizations } =
+    useAdmin();
 
   useEffect(() => {
     // Fetch initial data
@@ -27,7 +21,7 @@ export default function AdminDashboard() {
 
   const totalUsers = pagination?.total || 0;
   const totalOrganizations = organizations.length;
-  const adminUsers = users.filter((user) => user.role.includes("ADMIN" as any));
+  const adminUsers = users.filter((user) => user.role.includes('ADMIN' as any));
   const activeUsers = users; // All fetched users are considered active
 
   return (
@@ -37,23 +31,19 @@ export default function AdminDashboard() {
           {/* Header */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">
-                Admin Dashboard
-              </h1>
+              <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Admin Dashboard</h1>
 
-              <p className="text-sm text-gray-600 sm:text-base">
-                System Overview & Management
-              </p>
+              <p className="text-sm text-gray-600 sm:text-base">System Overview & Management</p>
             </div>
 
             <div className="text-left sm:text-right">
               <p className="text-xs text-gray-500 sm:text-sm">Last updated</p>
 
               <p className="text-xs font-medium text-gray-900 sm:text-sm">
-                {new Date().toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
+                {new Date().toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
                 })}
               </p>
             </div>
@@ -65,12 +55,10 @@ export default function AdminDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-600 sm:text-sm">
-                    Total Users
-                  </p>
+                  <p className="text-xs font-medium text-gray-600 sm:text-sm">Total Users</p>
 
                   <p className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">
-                    {isLoading ? "..." : totalUsers}
+                    {isLoading ? '...' : totalUsers}
                   </p>
                 </div>
 
@@ -103,12 +91,10 @@ export default function AdminDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-600 sm:text-sm">
-                    Organizations
-                  </p>
+                  <p className="text-xs font-medium text-gray-600 sm:text-sm">Organizations</p>
 
                   <p className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">
-                    {isLoading ? "..." : totalOrganizations}
+                    {isLoading ? '...' : totalOrganizations}
                   </p>
                 </div>
 
@@ -141,12 +127,10 @@ export default function AdminDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-600 sm:text-sm">
-                    Active Users
-                  </p>
+                  <p className="text-xs font-medium text-gray-600 sm:text-sm">Active Users</p>
 
                   <p className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">
-                    {isLoading ? "..." : activeUsers.length}
+                    {isLoading ? '...' : activeUsers.length}
                   </p>
                 </div>
 
@@ -172,12 +156,10 @@ export default function AdminDashboard() {
             <div className="rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md sm:p-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-600 sm:text-sm">
-                    Admin Users
-                  </p>
+                  <p className="text-xs font-medium text-gray-600 sm:text-sm">Admin Users</p>
 
                   <p className="mt-2 text-2xl font-bold text-gray-900 sm:text-3xl">
-                    {isLoading ? "..." : adminUsers.length}
+                    {isLoading ? '...' : adminUsers.length}
                   </p>
                 </div>
 
@@ -206,9 +188,7 @@ export default function AdminDashboard() {
             <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
               <div className="border-b border-gray-200 px-4 py-4 sm:px-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-gray-900 sm:text-lg">
-                    Recent Users
-                  </h2>
+                  <h2 className="text-base font-semibold text-gray-900 sm:text-lg">Recent Users</h2>
 
                   <Link
                     className="text-xs font-medium text-blue-600 hover:text-blue-700 sm:text-sm"
@@ -225,9 +205,7 @@ export default function AdminDashboard() {
                     <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-blue-500"></div>
                   </div>
                 ) : users.length === 0 ? (
-                  <p className="py-8 text-center text-sm text-gray-500">
-                    No users found
-                  </p>
+                  <p className="py-8 text-center text-sm text-gray-500">No users found</p>
                 ) : (
                   <div className="space-y-3">
                     {users.slice(0, 5).map((user) => (
@@ -237,41 +215,34 @@ export default function AdminDashboard() {
                       >
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full border-2 border-blue-200 bg-blue-100 sm:h-12 sm:w-12">
                           <span className="text-sm font-semibold text-blue-700 sm:text-base">
-                            {user.person?.firstName?.charAt(0) ||
-                              user.firstName?.charAt(0) ||
-                              "?"}
+                            {user.person?.firstName?.charAt(0) || user.firstName?.charAt(0) || '?'}
 
-                            {user.person?.lastName?.charAt(0) ||
-                              user.lastName?.charAt(0) ||
-                              ""}
+                            {user.person?.lastName?.charAt(0) || user.lastName?.charAt(0) || ''}
                           </span>
                         </div>
 
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-gray-900 sm:text-base">
-                            {user.person?.firstName ||
-                              user.firstName ||
-                              "Unknown"}{" "}
-                            {user.person?.lastName || user.lastName || ""}
+                            {user.person?.firstName || user.firstName || 'Unknown'}{' '}
+                            {user.person?.lastName || user.lastName || ''}
                           </p>
 
                           <p className="truncate text-xs text-gray-500 sm:text-sm">
-                            {user.contact?.email || user.email || "No email"}
+                            {user.contact?.email || user.email || 'No email'}
                           </p>
                         </div>
 
                         <div className="flex flex-shrink-0 flex-col items-end gap-1">
                           <span
                             className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                              user.role.includes("ADMIN" as any)
-                                ? "bg-purple-100 text-purple-800"
-                                : user.role.includes("SUPER_ADMIN" as any)
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-gray-100 text-gray-800"
+                              user.role.includes('ADMIN' as any)
+                                ? 'bg-purple-100 text-purple-800'
+                                : user.role.includes('SUPER_ADMIN' as any)
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-gray-100 text-gray-800'
                             }`}
                           >
-                            {user.role[0]?.replace("_", " ").toLowerCase() ||
-                              "user"}
+                            {user.role[0]?.replace('_', ' ').toLowerCase() || 'user'}
                           </span>
 
                           <span className="text-xs text-green-600">active</span>
@@ -306,9 +277,7 @@ export default function AdminDashboard() {
                     <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-green-500"></div>
                   </div>
                 ) : organizations.length === 0 ? (
-                  <p className="py-8 text-center text-sm text-gray-500">
-                    No organizations found
-                  </p>
+                  <p className="py-8 text-center text-sm text-gray-500">No organizations found</p>
                 ) : (
                   <div className="space-y-3">
                     {organizations.slice(0, 5).map((org) => (
@@ -334,11 +303,11 @@ export default function AdminDashboard() {
 
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-medium text-gray-900 sm:text-base">
-                            {org.name || "Unknown Organization"}
+                            {org.name || 'Unknown Organization'}
                           </p>
 
                           <p className="truncate text-xs text-gray-500 sm:text-sm">
-                            {org.type || "No type"}
+                            {org.type || 'No type'}
                           </p>
                         </div>
 
@@ -355,9 +324,7 @@ export default function AdminDashboard() {
 
           {/* Quick Actions */}
           <div className="rounded-lg border border-gray-200 bg-white p-6">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">
-              Quick Actions
-            </h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">Quick Actions</h2>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <Link
@@ -403,9 +370,7 @@ export default function AdminDashboard() {
                   </svg>
                 </div>
 
-                <span className="font-medium text-gray-900">
-                  Manage Organizations
-                </span>
+                <span className="font-medium text-gray-900">Manage Organizations</span>
               </Link>
 
               <Link
@@ -428,9 +393,7 @@ export default function AdminDashboard() {
                   </svg>
                 </div>
 
-                <span className="font-medium text-gray-900">
-                  Manage Startups
-                </span>
+                <span className="font-medium text-gray-900">Manage Startups</span>
               </Link>
 
               <Link

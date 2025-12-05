@@ -8,10 +8,11 @@ export const footerLinks = [
 export const contactInfo = {
   address: {
     line1: 'IIIT Sri City, Chittoor',
-    line2: 'Andhra Pradesh, India'
+    line2: 'Andhra Pradesh, India',
   },
   email: 'innovation@iiits.in',
-  phone: '+91-XXXX-XXXXXX'
+  phone: '+91-XXXX-XXXXXX',
 };
 
-export const copyrightText = '© 2025 Indian Institute of Information Technology Sri City. All rights reserved.';
+export const copyrightText =
+  '© 2025 Indian Institute of Information Technology Sri City. All rights reserved.';

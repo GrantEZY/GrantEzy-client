@@ -2,10 +2,10 @@
  * GCV Layout Component
  * Provides consistent layout structure for GCV pages
  */
-import React from "react";
+import React from 'react';
 
-import GCVSidebar from "./GCVSidebar";
-import Header from "./Header";
+import GCVSidebar from './GCVSidebar';
+import Header from './Header';
 
 interface GCVLayoutProps {
   children: React.ReactNode;

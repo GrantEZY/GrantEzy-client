@@ -6,21 +6,21 @@
 // ============= Enums =============
 
 export enum InviteStatus {
-  PENDING = "PENDING",
-  ACCEPTED = "ACCEPTED",
-  REJECTED = "REJECTED",
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
 }
 
 export enum ReviewStatus {
-  UNASSIGNED = "UNASSIGNED",
-  IN_PROGRESS = "IN_PROGRESS",
-  COMPLETED = "COMPLETED",
+  UNASSIGNED = 'UNASSIGNED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
 }
 
 export enum Recommendation {
-  APPROVE = "APPROVE",
-  REJECT = "REJECT",
-  REVISE = "REVISE",
+  APPROVE = 'APPROVE',
+  REJECT = 'REJECT',
+  REVISE = 'REVISE',
 }
 
 // ============= Basic Types =============

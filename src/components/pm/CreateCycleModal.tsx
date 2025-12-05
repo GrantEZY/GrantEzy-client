@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
-import { usePm } from "@/hooks/usePm";
+import { usePm } from '@/hooks/usePm';
 
-import { CreateCycleRequest, TRL } from "@/types/pm.types";
+import { CreateCycleRequest, TRL } from '@/types/pm.types';
 
 interface CreateCycleModalProps {
   isOpen: boolean;
@@ -23,64 +23,64 @@ export default function CreateCycleModal({
 
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<CreateCycleRequest>({
-    programId: programId || "", // Will be set dynamically if not provided
+    programId: programId || '', // Will be set dynamically if not provided
     round: {
       year: new Date().getFullYear(),
-      type: "Spring",
+      type: 'Spring',
     },
     budget: {
       amount: 100000,
-      currency: "INR",
+      currency: 'INR',
     },
     duration: {
-      startDate: new Date().toISOString().split("T")[0],
-      endDate: "",
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: '',
     },
     trlCriteria: {
       [TRL.TRL_1]: {
-        requirements: ["Basic research"],
-        evidence: ["Research documentation"],
-        metrics: ["Initial concept validation"],
+        requirements: ['Basic research'],
+        evidence: ['Research documentation'],
+        metrics: ['Initial concept validation'],
       },
       [TRL.TRL_2]: {
-        requirements: ["Technology concept formulated"],
-        evidence: ["Concept documentation"],
-        metrics: ["Feasibility assessment"],
+        requirements: ['Technology concept formulated'],
+        evidence: ['Concept documentation'],
+        metrics: ['Feasibility assessment'],
       },
       [TRL.TRL_3]: {
-        requirements: ["Experimental proof of concept"],
-        evidence: ["Prototype development"],
-        metrics: ["Performance metrics"],
+        requirements: ['Experimental proof of concept'],
+        evidence: ['Prototype development'],
+        metrics: ['Performance metrics'],
       },
       [TRL.TRL_4]: {
-        requirements: ["Technology validated in lab"],
-        evidence: ["Lab test results"],
-        metrics: ["Validation reports"],
+        requirements: ['Technology validated in lab'],
+        evidence: ['Lab test results'],
+        metrics: ['Validation reports'],
       },
       [TRL.TRL_5]: {
-        requirements: ["Technology validated in relevant environment"],
-        evidence: ["Field test results"],
-        metrics: ["Performance data"],
+        requirements: ['Technology validated in relevant environment'],
+        evidence: ['Field test results'],
+        metrics: ['Performance data'],
       },
       [TRL.TRL_6]: {
-        requirements: ["Technology demonstrated in relevant environment"],
-        evidence: ["Demo results"],
-        metrics: ["Market readiness"],
+        requirements: ['Technology demonstrated in relevant environment'],
+        evidence: ['Demo results'],
+        metrics: ['Market readiness'],
       },
       [TRL.TRL_7]: {
-        requirements: ["System prototype demonstration"],
-        evidence: ["Prototype testing"],
-        metrics: ["System performance"],
+        requirements: ['System prototype demonstration'],
+        evidence: ['Prototype testing'],
+        metrics: ['System performance'],
       },
       [TRL.TRL_8]: {
-        requirements: ["System complete and qualified"],
-        evidence: ["Complete system"],
-        metrics: ["Quality metrics"],
+        requirements: ['System complete and qualified'],
+        evidence: ['Complete system'],
+        metrics: ['Quality metrics'],
       },
       [TRL.TRL_9]: {
-        requirements: ["Actual system proven in operational environment"],
-        evidence: ["Operational proof"],
-        metrics: ["Commercial metrics"],
+        requirements: ['Actual system proven in operational environment'],
+        evidence: ['Operational proof'],
+        metrics: ['Commercial metrics'],
       },
     },
     scoringScheme: {
@@ -97,12 +97,12 @@ export default function CreateCycleModal({
   // Update programId when it becomes available
   useEffect(() => {
     if (programId && formData.programId !== programId) {
-      setFormData(prev => ({ ...prev, programId }));
+      setFormData((prev) => ({ ...prev, programId }));
     } else if (!programId && cycles && cycles.length > 0 && !formData.programId) {
       // Fallback to first cycle's programId if not provided
       const fallbackProgramId = cycles[0].programId;
       if (fallbackProgramId) {
-        setFormData(prev => ({ ...prev, programId: fallbackProgramId }));
+        setFormData((prev) => ({ ...prev, programId: fallbackProgramId }));
       }
     }
   }, [programId, cycles, formData.programId]);
@@ -112,16 +112,16 @@ export default function CreateCycleModal({
 
     if (step === 1) {
       if (!formData.round.year || formData.round.year < 2020) {
-        newErrors.year = "Valid year is required";
+        newErrors.year = 'Valid year is required';
       }
       if (!formData.round.type.trim()) {
-        newErrors.type = "Cycle type is required";
+        newErrors.type = 'Cycle type is required';
       }
       if (!formData.budget.amount || formData.budget.amount <= 0) {
-        newErrors.amount = "Valid budget amount is required";
+        newErrors.amount = 'Valid budget amount is required';
       }
       if (!formData.duration.startDate) {
-        newErrors.startDate = "Start date is required";
+        newErrors.startDate = 'Start date is required';
       }
     }
 
@@ -170,39 +170,42 @@ export default function CreateCycleModal({
     try {
       // Get programId - first try prop, then from existing cycles
       let targetProgramId = programId;
-      
+
       if (!targetProgramId && cycles && cycles.length > 0) {
         // Extract programId from first cycle (PM can only manage one program)
         targetProgramId = cycles[0].programId;
       }
 
       if (!targetProgramId) {
-        console.error("No programId available. Props programId:", programId, "Cycles:", cycles);
-        alert("Unable to determine program ID. This might be because:\n\n1. You haven't been assigned to any programs yet\n2. No cycles exist for your program\n3. There's a system error\n\nPlease contact your administrator to ensure you're assigned as a Program Manager for a specific program.");
+        console.error('No programId available. Props programId:', programId, 'Cycles:', cycles);
+        alert(
+          "Unable to determine program ID. This might be because:\n\n1. You haven't been assigned to any programs yet\n2. No cycles exist for your program\n3. There's a system error\n\nPlease contact your administrator to ensure you're assigned as a Program Manager for a specific program."
+        );
         return;
       }
 
       // Validate UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(targetProgramId)) {
-        console.error("Invalid programId format:", targetProgramId);
+        console.error('Invalid programId format:', targetProgramId);
         alert(`Invalid program ID format. Expected UUID, got: ${targetProgramId}`);
         return;
       }
 
-      console.log("Creating cycle with programId:", targetProgramId);
-      
+      console.log('Creating cycle with programId:', targetProgramId);
+
       const cycleData = {
         ...formData,
-        programId: targetProgramId
+        programId: targetProgramId,
       };
-        
+
       const success = await createCycle(cycleData);
       if (success) {
         onSuccess();
       }
     } catch (error) {
-      console.error("Failed to create cycle:", error);
+      console.error('Failed to create cycle:', error);
     }
   };
 
@@ -229,30 +232,20 @@ export default function CreateCycleModal({
         <div className="border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
-                Create New Cycle
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">Create New Cycle</h2>
 
               <p className="mt-1 text-sm text-gray-600">
-                Step {currentStep} of 3:{" "}
+                Step {currentStep} of 3:{' '}
                 {currentStep === 1
-                  ? "Basic Information"
+                  ? 'Basic Information'
                   : currentStep === 2
-                    ? "TRL Criteria"
-                    : "Scoring Scheme"}
+                    ? 'TRL Criteria'
+                    : 'Scoring Scheme'}
               </p>
             </div>
 
-            <button
-              className="text-gray-400 hover:text-gray-600"
-              onClick={onClose}
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+            <button className="text-gray-400 hover:text-gray-600" onClick={onClose}>
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M6 18L18 6M6 6l12 12"
                   strokeLinecap="round"
@@ -270,9 +263,7 @@ export default function CreateCycleModal({
                 <div className="flex items-center" key={step}>
                   <div
                     className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-medium ${
-                      step <= currentStep
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-200 text-gray-600"
+                      step <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
                     }`}
                   >
                     {step}
@@ -281,7 +272,7 @@ export default function CreateCycleModal({
                   {step < 3 && (
                     <div
                       className={`mx-2 h-1 w-16 ${
-                        step < currentStep ? "bg-blue-600" : "bg-gray-200"
+                        step < currentStep ? 'bg-blue-600' : 'bg-gray-200'
                       }`}
                     />
                   )}
@@ -298,44 +289,32 @@ export default function CreateCycleModal({
             <div className="space-y-6">
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Cycle Year
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Cycle Year</label>
 
                   <input
                     className={`w-full rounded-md border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 ${
-                      errors.year ? "border-red-500" : "border-gray-300"
+                      errors.year ? 'border-red-500' : 'border-gray-300'
                     }`}
                     max="2050"
                     min="2020"
                     onChange={(e) =>
-                      updateNestedFormData(
-                        "round",
-                        "year",
-                        parseInt(e.target.value),
-                      )
+                      updateNestedFormData('round', 'year', parseInt(e.target.value))
                     }
                     type="number"
                     value={formData.round.year}
                   />
 
-                  {errors.year && (
-                    <p className="mt-1 text-sm text-red-600">{errors.year}</p>
-                  )}
+                  {errors.year && <p className="mt-1 text-sm text-red-600">{errors.year}</p>}
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Cycle Type
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Cycle Type</label>
 
                   <select
                     className={`w-full rounded-md border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 ${
-                      errors.type ? "border-red-500" : "border-gray-300"
+                      errors.type ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    onChange={(e) =>
-                      updateNestedFormData("round", "type", e.target.value)
-                    }
+                    onChange={(e) => updateNestedFormData('round', 'type', e.target.value)}
                     value={formData.round.type}
                   >
                     <option value="Spring">Spring</option>
@@ -349,9 +328,7 @@ export default function CreateCycleModal({
                     <option value="Annual">Annual</option>
                   </select>
 
-                  {errors.type && (
-                    <p className="mt-1 text-sm text-red-600">{errors.type}</p>
-                  )}
+                  {errors.type && <p className="mt-1 text-sm text-red-600">{errors.type}</p>}
                 </div>
               </div>
 
@@ -363,35 +340,25 @@ export default function CreateCycleModal({
 
                   <input
                     className={`w-full rounded-md border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 ${
-                      errors.amount ? "border-red-500" : "border-gray-300"
+                      errors.amount ? 'border-red-500' : 'border-gray-300'
                     }`}
                     min="1"
                     onChange={(e) =>
-                      updateNestedFormData(
-                        "budget",
-                        "amount",
-                        parseInt(e.target.value),
-                      )
+                      updateNestedFormData('budget', 'amount', parseInt(e.target.value))
                     }
                     type="number"
                     value={formData.budget.amount}
                   />
 
-                  {errors.amount && (
-                    <p className="mt-1 text-sm text-red-600">{errors.amount}</p>
-                  )}
+                  {errors.amount && <p className="mt-1 text-sm text-red-600">{errors.amount}</p>}
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Currency
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Currency</label>
 
                   <select
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-                    onChange={(e) =>
-                      updateNestedFormData("budget", "currency", e.target.value)
-                    }
+                    onChange={(e) => updateNestedFormData('budget', 'currency', e.target.value)}
                     value={formData.budget.currency}
                   >
                     <option value="INR">INR</option>
@@ -405,21 +372,13 @@ export default function CreateCycleModal({
 
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Start Date
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Start Date</label>
 
                   <input
                     className={`w-full rounded-md border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 ${
-                      errors.startDate ? "border-red-500" : "border-gray-300"
+                      errors.startDate ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    onChange={(e) =>
-                      handleDateChange(
-                        "duration",
-                        "startDate",
-                        e.target.value,
-                      )
-                    }
+                    onChange={(e) => handleDateChange('duration', 'startDate', e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -427,18 +386,14 @@ export default function CreateCycleModal({
                     }}
                     type="date"
                     value={
-                      typeof formData.duration.startDate === "string"
+                      typeof formData.duration.startDate === 'string'
                         ? formData.duration.startDate
-                        : formData.duration.startDate
-                            .toISOString()
-                            .split("T")[0]
+                        : formData.duration.startDate.toISOString().split('T')[0]
                     }
                   />
 
                   {errors.startDate && (
-                    <p className="mt-1 text-sm text-red-600">
-                      {errors.startDate}
-                    </p>
+                    <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>
                   )}
                 </div>
 
@@ -449,13 +404,7 @@ export default function CreateCycleModal({
 
                   <input
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-                    onChange={(e) =>
-                      handleDateChange(
-                        "duration",
-                        "endDate",
-                        e.target.value,
-                      )
-                    }
+                    onChange={(e) => handleDateChange('duration', 'endDate', e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -464,12 +413,10 @@ export default function CreateCycleModal({
                     type="date"
                     value={
                       formData.duration.endDate
-                        ? typeof formData.duration.endDate === "string"
+                        ? typeof formData.duration.endDate === 'string'
                           ? formData.duration.endDate
-                          : formData.duration.endDate
-                              .toISOString()
-                              .split("T")[0]
-                        : ""
+                          : formData.duration.endDate.toISOString().split('T')[0]
+                        : ''
                     }
                   />
                 </div>
@@ -486,14 +433,13 @@ export default function CreateCycleModal({
                 </h3>
 
                 <p className="mb-4 text-sm text-gray-600">
-                  TRL criteria have been pre-configured with standard
-                  requirements. You can customize them after creation.
+                  TRL criteria have been pre-configured with standard requirements. You can
+                  customize them after creation.
                 </p>
 
                 <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
                   <p className="text-sm text-blue-800">
-                    ✓ TRL 1-9 criteria configured with standard requirements,
-                    evidence, and metrics
+                    ✓ TRL 1-9 criteria configured with standard requirements, evidence, and metrics
                   </p>
                 </div>
               </div>
@@ -508,76 +454,72 @@ export default function CreateCycleModal({
               </h3>
 
               <div className="space-y-4">
-                {Object.entries(formData.scoringScheme).map(
-                  ([key, criteria]) => (
-                    <div className="rounded-lg bg-gray-50 p-4" key={key}>
-                      <h4 className="mb-2 font-medium text-gray-900 capitalize">
-                        {key} Evaluation
-                      </h4>
+                {Object.entries(formData.scoringScheme).map(([key, criteria]) => (
+                  <div className="rounded-lg bg-gray-50 p-4" key={key}>
+                    <h4 className="mb-2 font-medium text-gray-900 capitalize">{key} Evaluation</h4>
 
-                      <div className="grid grid-cols-3 gap-4">
-                        <div>
-                          <label className="mb-1 block text-xs font-medium text-gray-600">
-                            Min Score
-                          </label>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
+                        <label className="mb-1 block text-xs font-medium text-gray-600">
+                          Min Score
+                        </label>
 
-                          <input
-                            className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
-                            min="0"
-                            onChange={(e) =>
-                              updateNestedFormData("scoringScheme", key, {
-                                ...criteria,
-                                minScore: parseInt(e.target.value),
-                              })
-                            }
-                            type="number"
-                            value={criteria.minScore}
-                          />
-                        </div>
+                        <input
+                          className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+                          min="0"
+                          onChange={(e) =>
+                            updateNestedFormData('scoringScheme', key, {
+                              ...criteria,
+                              minScore: parseInt(e.target.value),
+                            })
+                          }
+                          type="number"
+                          value={criteria.minScore}
+                        />
+                      </div>
 
-                        <div>
-                          <label className="mb-1 block text-xs font-medium text-gray-600">
-                            Max Score
-                          </label>
+                      <div>
+                        <label className="mb-1 block text-xs font-medium text-gray-600">
+                          Max Score
+                        </label>
 
-                          <input
-                            className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
-                            min="1"
-                            onChange={(e) =>
-                              updateNestedFormData("scoringScheme", key, {
-                                ...criteria,
-                                maxScore: parseInt(e.target.value),
-                              })
-                            }
-                            type="number"
-                            value={criteria.maxScore}
-                          />
-                        </div>
+                        <input
+                          className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+                          min="1"
+                          onChange={(e) =>
+                            updateNestedFormData('scoringScheme', key, {
+                              ...criteria,
+                              maxScore: parseInt(e.target.value),
+                            })
+                          }
+                          type="number"
+                          value={criteria.maxScore}
+                        />
+                      </div>
 
-                        <div>
-                          <label className="mb-1 block text-xs font-medium text-gray-600">
-                            Weight (0-1)
-                          </label>
+                      <div>
+                        <label className="mb-1 block text-xs font-medium text-gray-600">
+                          Weight (0-1)
+                        </label>
 
-                          <input
-                            className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
-                            max="1"
-                            min="0"
-                            onChange={(e) =>
-                              updateNestedFormData("scoringScheme", key, {
-                                ...criteria,
-                                weightage: parseFloat(e.target.value),
-                              })
-                            }
-                            step="0.01"
-                            type="number"
-                            value={criteria.weightage}
-                          />
-                        </div>
+                        <input
+                          className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+                          max="1"
+                          min="0"
+                          onChange={(e) =>
+                            updateNestedFormData('scoringScheme', key, {
+                              ...criteria,
+                              weightage: parseFloat(e.target.value),
+                            })
+                          }
+                          step="0.01"
+                          type="number"
+                          value={criteria.weightage}
+                        />
                       </div>
                     </div>
-                  ),
-                )}
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -619,7 +561,7 @@ export default function CreateCycleModal({
                   disabled={isCyclesLoading}
                   type="submit"
                 >
-                  {isCyclesLoading ? "Creating..." : "Create Cycle"}
+                  {isCyclesLoading ? 'Creating...' : 'Create Cycle'}
                 </button>
               )}
             </div>

@@ -2,16 +2,16 @@
  * Reviewer Store - State management for reviewer module
  * Manages reviews, invitations, and reviewer-specific data
  */
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { reviewerService } from "../services/reviewer.service";
+import { reviewerService } from '../services/reviewer.service';
 import {
   GetReviewDetailsRequest,
   GetUserReviewsRequest,
   ReviewerState,
   SubmitReviewRequest,
   UpdateInviteStatusRequest,
-} from "../types/reviewer.types";
+} from '../types/reviewer.types';
 
 export const useReviewerStore = create<ReviewerState>((set, get) => ({
   // ============= State =============
@@ -39,16 +39,14 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         });
       } else {
         set({
-          reviewsError: response.message || "Failed to fetch reviews",
+          reviewsError: response.message || 'Failed to fetch reviews',
           isLoadingReviews: false,
         });
       }
     } catch (error) {
       set({
         reviewsError:
-          error instanceof Error
-            ? error.message
-            : "An error occurred while fetching reviews",
+          error instanceof Error ? error.message : 'An error occurred while fetching reviews',
         isLoadingReviews: false,
       });
     }
@@ -70,7 +68,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         });
       } else {
         set({
-          reviewsError: response.message || "Failed to fetch review details",
+          reviewsError: response.message || 'Failed to fetch review details',
           isLoadingReviews: false,
         });
       }
@@ -79,7 +77,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         reviewsError:
           error instanceof Error
             ? error.message
-            : "An error occurred while fetching review details",
+            : 'An error occurred while fetching review details',
         isLoadingReviews: false,
       });
     }
@@ -108,7 +106,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         return true;
       } else {
         set({
-          reviewsError: response.message || "Failed to submit review",
+          reviewsError: response.message || 'Failed to submit review',
           isLoadingReviews: false,
         });
         return false;
@@ -116,9 +114,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
     } catch (error) {
       set({
         reviewsError:
-          error instanceof Error
-            ? error.message
-            : "An error occurred while submitting review",
+          error instanceof Error ? error.message : 'An error occurred while submitting review',
         isLoadingReviews: false,
       });
       return false;
@@ -129,9 +125,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
    * Update reviewer invite status (accept or reject)
    * Returns true if successful, throws error otherwise
    */
-  updateInviteStatus: async (
-    params: UpdateInviteStatusRequest,
-  ): Promise<boolean> => {
+  updateInviteStatus: async (params: UpdateInviteStatusRequest): Promise<boolean> => {
     try {
       set({ isLoadingReviews: true, reviewsError: null });
 
@@ -141,7 +135,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         set({ isLoadingReviews: false });
         return true;
       } else {
-        const errorMsg = response.message || "Failed to update invite status";
+        const errorMsg = response.message || 'Failed to update invite status';
         set({
           reviewsError: errorMsg,
           isLoadingReviews: false,
@@ -150,9 +144,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
       }
     } catch (error) {
       const errorMsg =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while updating invite status";
+        error instanceof Error ? error.message : 'An error occurred while updating invite status';
 
       set({
         reviewsError: errorMsg,

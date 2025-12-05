@@ -7,10 +7,10 @@
  * User Commitment Status Enum
  */
 export enum UserCommitmentStatus {
-  FULL_TIME = "FULL_TIME",
-  PART_TIME = "PART_TIME",
-  CONTRACT = "CONTRACT",
-  FREELANCE = "FREELANCE",
+  FULL_TIME = 'FULL_TIME',
+  PART_TIME = 'PART_TIME',
+  CONTRACT = 'CONTRACT',
+  FREELANCE = 'FREELANCE',
 }
 
 /**

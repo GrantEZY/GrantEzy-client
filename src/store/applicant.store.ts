@@ -1,9 +1,9 @@
 /**
  * Applicant store using Zustand for application submission state management
  */
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { applicantService } from "../services/applicant.service";
+import { applicantService } from '../services/applicant.service';
 import {
   AddApplicationBudgetRequest,
   AddApplicationDocumentsRequest,
@@ -16,7 +16,7 @@ import {
   ApplicationStepInfo,
   CreateApplicationRequest,
   UserApplication,
-} from "../types/applicant.types";
+} from '../types/applicant.types';
 
 interface ApplicantState {
   // Current application state (for submission flow)
@@ -45,29 +45,21 @@ interface ApplicantActions {
   addApplicationBudget: (data: AddApplicationBudgetRequest) => Promise<boolean>;
 
   // Step 3: Add technical details
-  addApplicationTechnicalDetails: (
-    data: AddApplicationTechnicalDetailsRequest,
-  ) => Promise<boolean>;
+  addApplicationTechnicalDetails: (data: AddApplicationTechnicalDetailsRequest) => Promise<boolean>;
 
   // Step 4: Add revenue model
-  addApplicationRevenueStream: (
-    data: AddApplicationRevenueStreamRequest,
-  ) => Promise<boolean>;
+  addApplicationRevenueStream: (data: AddApplicationRevenueStreamRequest) => Promise<boolean>;
 
   // Step 5: Add risks and milestones
   addApplicationRisksAndMilestones: (
-    data: AddApplicationRisksAndMilestonesRequest,
+    data: AddApplicationRisksAndMilestonesRequest
   ) => Promise<boolean>;
 
   // Step 6: Add documents
-  addApplicationDocuments: (
-    data: AddApplicationDocumentsRequest,
-  ) => Promise<boolean>;
+  addApplicationDocuments: (data: AddApplicationDocumentsRequest) => Promise<boolean>;
 
   // Step 7: Add teammates and submit
-  addApplicationTeammates: (
-    data: AddApplicationTeammatesRequest,
-  ) => Promise<boolean>;
+  addApplicationTeammates: (data: AddApplicationTeammatesRequest) => Promise<boolean>;
 
   // Load saved application (draft restoration)
   loadSavedApplication: (cycleSlug: string) => Promise<Application | null>;
@@ -75,11 +67,9 @@ interface ApplicantActions {
   // User applications management
   fetchUserApplications: () => Promise<void>;
   fetchApplicationWithCycleDetails: (
-    cycleSlug: string,
+    cycleSlug: string
   ) => Promise<{ cycle: any; applicationDetails: Application | null } | null>;
-  fetchUserCreatedApplicationDetails: (
-    applicationId: string,
-  ) => Promise<Application | null>;
+  fetchUserCreatedApplicationDetails: (applicationId: string) => Promise<Application | null>;
   deleteUserApplication: (applicationId: string) => Promise<boolean>;
 
   // Navigation helpers
@@ -101,50 +91,50 @@ type ApplicantStore = ApplicantState & ApplicantActions;
 const initialSteps: ApplicationStepInfo[] = [
   {
     step: ApplicationStep.BASIC_INFO,
-    title: "Basic Information",
-    description: "Project title, summary, problem, solution, and innovation",
+    title: 'Basic Information',
+    description: 'Project title, summary, problem, solution, and innovation',
     isCompleted: false,
     isActive: true,
   },
   {
     step: ApplicationStep.BUDGET,
-    title: "Budget Details",
-    description: "Project budget breakdown and resource allocation",
+    title: 'Budget Details',
+    description: 'Project budget breakdown and resource allocation',
     isCompleted: false,
     isActive: false,
   },
   {
     step: ApplicationStep.TECHNICAL_DETAILS,
-    title: "Technical & Market Info",
-    description: "Technical specifications and market analysis",
+    title: 'Technical & Market Info',
+    description: 'Technical specifications and market analysis',
     isCompleted: false,
     isActive: false,
   },
   {
     step: ApplicationStep.REVENUE_MODEL,
-    title: "Revenue Model",
-    description: "Revenue streams, pricing, and unit economics",
+    title: 'Revenue Model',
+    description: 'Revenue streams, pricing, and unit economics',
     isCompleted: false,
     isActive: false,
   },
   {
     step: ApplicationStep.RISKS_MILESTONES,
-    title: "Risks & Milestones",
-    description: "Project risks, mitigation, and delivery milestones",
+    title: 'Risks & Milestones',
+    description: 'Project risks, mitigation, and delivery milestones',
     isCompleted: false,
     isActive: false,
   },
   {
     step: ApplicationStep.DOCUMENTS,
-    title: "Documents",
-    description: "Upload required certificates and documents",
+    title: 'Documents',
+    description: 'Upload required certificates and documents',
     isCompleted: false,
     isActive: false,
   },
   {
     step: ApplicationStep.TEAM_MEMBERS,
-    title: "Team Members",
-    description: "Invite team members and submit application",
+    title: 'Team Members',
+    description: 'Invite team members and submit application',
     isCompleted: false,
     isActive: false,
   },
@@ -189,10 +179,10 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         return true;
       }
 
-      set({ error: "Failed to create application", isLoading: false });
+      set({ error: 'Failed to create application', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to create application";
+      const errorMessage = error?.message || 'Failed to create application';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
@@ -223,23 +213,20 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         }
       }
 
-      set({ error: "Failed to add budget details", isLoading: false });
+      set({ error: 'Failed to add budget details', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to add budget details";
+      const errorMessage = error?.message || 'Failed to add budget details';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
 
   // Step 3: Add technical details
-  addApplicationTechnicalDetails: async (
-    data: AddApplicationTechnicalDetailsRequest,
-  ) => {
+  addApplicationTechnicalDetails: async (data: AddApplicationTechnicalDetailsRequest) => {
     set({ isLoading: true, error: null, successMessage: null });
     try {
-      const response =
-        await applicantService.addApplicationTechnicalDetails(data);
+      const response = await applicantService.addApplicationTechnicalDetails(data);
 
       if (response.status === 200) {
         const currentApp = get().currentApplication;
@@ -261,19 +248,17 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         }
       }
 
-      set({ error: "Failed to add technical details", isLoading: false });
+      set({ error: 'Failed to add technical details', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to add technical details";
+      const errorMessage = error?.message || 'Failed to add technical details';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
 
   // Step 4: Add revenue model
-  addApplicationRevenueStream: async (
-    data: AddApplicationRevenueStreamRequest,
-  ) => {
+  addApplicationRevenueStream: async (data: AddApplicationRevenueStreamRequest) => {
     set({ isLoading: true, error: null, successMessage: null });
     try {
       const response = await applicantService.addApplicationRevenueStream(data);
@@ -297,23 +282,20 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         }
       }
 
-      set({ error: "Failed to add revenue model", isLoading: false });
+      set({ error: 'Failed to add revenue model', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to add revenue model";
+      const errorMessage = error?.message || 'Failed to add revenue model';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
   },
 
   // Step 5: Add risks and milestones
-  addApplicationRisksAndMilestones: async (
-    data: AddApplicationRisksAndMilestonesRequest,
-  ) => {
+  addApplicationRisksAndMilestones: async (data: AddApplicationRisksAndMilestonesRequest) => {
     set({ isLoading: true, error: null, successMessage: null });
     try {
-      const response =
-        await applicantService.addApplicationRisksAndMilestones(data);
+      const response = await applicantService.addApplicationRisksAndMilestones(data);
 
       if (response.status === 200) {
         const currentApp = get().currentApplication;
@@ -335,11 +317,10 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         }
       }
 
-      set({ error: "Failed to add risks and milestones", isLoading: false });
+      set({ error: 'Failed to add risks and milestones', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage =
-        error?.message || "Failed to add risks and milestones";
+      const errorMessage = error?.message || 'Failed to add risks and milestones';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
@@ -378,10 +359,10 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         }
       }
 
-      set({ error: "Failed to add documents", isLoading: false });
+      set({ error: 'Failed to add documents', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to add documents";
+      const errorMessage = error?.message || 'Failed to add documents';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
@@ -403,7 +384,7 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
               isSubmitted: data.isSubmitted,
             },
             successMessage: data.isSubmitted
-              ? "🎉 Application submitted successfully! Your application has been saved and team invites have been sent."
+              ? '🎉 Application submitted successfully! Your application has been saved and team invites have been sent.'
               : response.message,
             isLoading: false,
           });
@@ -411,8 +392,8 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
           // If application is submitted, redirect to dashboard after a delay
           if (data.isSubmitted) {
             setTimeout(() => {
-              if (typeof window !== "undefined") {
-                window.location.href = "/applicant";
+              if (typeof window !== 'undefined') {
+                window.location.href = '/applicant';
               }
             }, 3000);
           }
@@ -422,10 +403,10 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         }
       }
 
-      set({ error: "Failed to add team members", isLoading: false });
+      set({ error: 'Failed to add team members', isLoading: false });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to add team members";
+      const errorMessage = error?.message || 'Failed to add team members';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
@@ -503,13 +484,10 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
   },
 
   // Load saved application for draft restoration
-  loadSavedApplication: async (
-    cycleSlug: string,
-  ): Promise<Application | null> => {
+  loadSavedApplication: async (cycleSlug: string): Promise<Application | null> => {
     set({ isLoading: true, error: null });
     try {
-      const response =
-        await applicantService.getApplicationWithCycle(cycleSlug);
+      const response = await applicantService.getApplicationWithCycle(cycleSlug);
 
       if (response.status === 200 && response.res.applicationDetails) {
         const savedApp = response.res.applicationDetails as any;
@@ -548,7 +526,7 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       set({ isLoading: false });
       return null;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to load saved application";
+      const errorMessage = error?.message || 'Failed to load saved application';
       set({ error: errorMessage, isLoading: false });
       return null;
     }
@@ -561,46 +539,42 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       const response = await applicantService.getUserApplications();
 
       if (response.status === 200) {
-        console.log("[Applicant Store] Fetched applications:", {
+        console.log('[Applicant Store] Fetched applications:', {
           myApplications: response.res.myApplications,
           linkedApplications: response.res.linkedApplications,
         });
 
         // Log warning if cycle data is missing
-        const myAppsWithoutCycle = response.res.myApplications.filter(
-          (app: any) => !app.cycle,
-        );
+        const myAppsWithoutCycle = response.res.myApplications.filter((app: any) => !app.cycle);
         const linkedAppsWithoutCycle = response.res.linkedApplications.filter(
-          (app: any) => !app.cycle,
+          (app: any) => !app.cycle
         );
 
         if (myAppsWithoutCycle.length > 0) {
           console.warn(
-            "[Applicant Store] ⚠️ Some applications are missing cycle data:",
-            myAppsWithoutCycle,
+            '[Applicant Store] ⚠️ Some applications are missing cycle data:',
+            myAppsWithoutCycle
           );
           console.warn(
-            "[Applicant Store] 💡 Backend fix applied. Please restart the backend server for changes to take effect.",
+            '[Applicant Store] 💡 Backend fix applied. Please restart the backend server for changes to take effect.'
           );
         }
         if (linkedAppsWithoutCycle.length > 0) {
           console.warn(
-            "[Applicant Store] ⚠️ Some linked applications are missing cycle data:",
-            linkedAppsWithoutCycle,
+            '[Applicant Store] ⚠️ Some linked applications are missing cycle data:',
+            linkedAppsWithoutCycle
           );
           console.warn(
-            "[Applicant Store] 💡 Backend fix applied. Please restart the backend server for changes to take effect.",
+            '[Applicant Store] 💡 Backend fix applied. Please restart the backend server for changes to take effect.'
           );
         }
 
         // Log applications with complete data
-        const myAppsWithCycle = response.res.myApplications.filter(
-          (app: any) => app.cycle,
-        );
+        const myAppsWithCycle = response.res.myApplications.filter((app: any) => app.cycle);
         if (myAppsWithCycle.length > 0) {
           console.log(
-            "[Applicant Store] ✅ Applications with cycle data loaded successfully:",
-            myAppsWithCycle.length,
+            '[Applicant Store] ✅ Applications with cycle data loaded successfully:',
+            myAppsWithCycle.length
           );
         }
 
@@ -611,12 +585,12 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         });
       } else {
         set({
-          error: "Failed to fetch applications",
+          error: 'Failed to fetch applications',
           isLoadingApplications: false,
         });
       }
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to fetch applications";
+      const errorMessage = error?.message || 'Failed to fetch applications';
       set({ error: errorMessage, isLoadingApplications: false });
     }
   },
@@ -630,24 +604,24 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       if (response.status === 200) {
         // Remove the deleted application from myApplications list
         const updatedMyApplications = get().myApplications.filter(
-          (app: UserApplication) => app.id !== applicationId,
+          (app: UserApplication) => app.id !== applicationId
         );
 
         set({
           myApplications: updatedMyApplications,
           isLoading: false,
-          successMessage: "Application deleted successfully",
+          successMessage: 'Application deleted successfully',
         });
         return true;
       }
 
       set({
-        error: "Failed to delete application",
+        error: 'Failed to delete application',
         isLoading: false,
       });
       return false;
     } catch (error: any) {
-      const errorMessage = error?.message || "Failed to delete application";
+      const errorMessage = error?.message || 'Failed to delete application';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
@@ -657,8 +631,7 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
   fetchApplicationWithCycleDetails: async (cycleSlug: string) => {
     set({ isLoading: true, error: null });
     try {
-      const response =
-        await applicantService.getApplicationWithCycle(cycleSlug);
+      const response = await applicantService.getApplicationWithCycle(cycleSlug);
 
       if (response.status === 200) {
         set({ isLoading: false });
@@ -666,13 +639,12 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       }
 
       set({
-        error: "Failed to fetch application details",
+        error: 'Failed to fetch application details',
         isLoading: false,
       });
       return null;
     } catch (error: any) {
-      const errorMessage =
-        error?.message || "Failed to fetch application details";
+      const errorMessage = error?.message || 'Failed to fetch application details';
       set({ error: errorMessage, isLoading: false });
       return null;
     }
@@ -682,8 +654,7 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
   fetchUserCreatedApplicationDetails: async (applicationId: string) => {
     set({ isLoading: true, error: null });
     try {
-      const response =
-        await applicantService.getUserCreatedApplicationDetails(applicationId);
+      const response = await applicantService.getUserCreatedApplicationDetails(applicationId);
 
       if (response.status === 200) {
         set({ isLoading: false });
@@ -691,13 +662,12 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       }
 
       set({
-        error: "Failed to fetch application details",
+        error: 'Failed to fetch application details',
         isLoading: false,
       });
       return null;
     } catch (error: any) {
-      const errorMessage =
-        error?.message || "Failed to fetch application details";
+      const errorMessage = error?.message || 'Failed to fetch application details';
       set({ error: errorMessage, isLoading: false });
       return null;
     }

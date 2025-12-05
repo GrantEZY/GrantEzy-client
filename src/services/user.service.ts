@@ -3,13 +3,13 @@
  * Handles user profile related API calls
  */
 
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   GetUserProfileResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
-} from "../types/user.types";
+} from '../types/user.types';
 
 export class UserService {
   /**
@@ -17,9 +17,7 @@ export class UserService {
    * @returns Promise<GetUserProfileResponse>
    */
   async getUserProfile(): Promise<GetUserProfileResponse> {
-    return httpClient.get<GetUserProfileResponse>(
-      API_CONFIG.ENDPOINTS.USER.GET_PROFILE
-    );
+    return httpClient.get<GetUserProfileResponse>(API_CONFIG.ENDPOINTS.USER.GET_PROFILE);
   }
 
   /**
@@ -27,13 +25,8 @@ export class UserService {
    * @param data - Profile update data
    * @returns Promise<UpdateProfileResponse>
    */
-  async updateProfile(
-    data: UpdateProfileRequest
-  ): Promise<UpdateProfileResponse> {
-    return httpClient.patch<UpdateProfileResponse>(
-      API_CONFIG.ENDPOINTS.USER.UPDATE_PROFILE,
-      data
-    );
+  async updateProfile(data: UpdateProfileRequest): Promise<UpdateProfileResponse> {
+    return httpClient.patch<UpdateProfileResponse>(API_CONFIG.ENDPOINTS.USER.UPDATE_PROFILE, data);
   }
 }
 

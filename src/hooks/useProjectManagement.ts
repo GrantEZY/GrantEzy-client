@@ -2,7 +2,7 @@
  * Custom hook for Project Management store
  * Provides easy access to project state and actions
  */
-import { useProjectStore } from "../store/project.store";
+import { useProjectStore } from '../store/project.store';
 
 export const useProjectManagement = () => {
   // Projects state

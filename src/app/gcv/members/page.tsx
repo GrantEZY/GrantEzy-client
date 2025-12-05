@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { AddGCVMemberModal } from "@/components/gcv/AddGCVMemberModal";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import GCVLayout from "@/components/layout/GCVLayout";
-import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+import { AddGCVMemberModal } from '@/components/gcv/AddGCVMemberModal';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import GCVLayout from '@/components/layout/GCVLayout';
+import { showToast, ToastProvider } from '@/components/ui/ToastNew';
 
-import { useGcv } from "@/hooks/useGcv";
+import { useGcv } from '@/hooks/useGcv';
 
-import { UserRoles } from "@/types/auth.types";
-import { GCVMember, UpdateRole } from "@/types/gcv.types";
+import { UserRoles } from '@/types/auth.types';
+import { GCVMember, UpdateRole } from '@/types/gcv.types';
 
 export default function GCVMembersPage() {
   const {
@@ -25,7 +25,7 @@ export default function GCVMembersPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const pageSize = 10;
 
@@ -37,7 +37,7 @@ export default function GCVMembersPage() {
         filter: { role: UserRoles.COMMITTEE_MEMBER },
       });
     },
-    [getAllGCVMembers],
+    [getAllGCVMembers]
   );
 
   useEffect(() => {
@@ -48,16 +48,14 @@ export default function GCVMembersPage() {
     try {
       const success = await addGCVMember({ email });
       if (success) {
-        showToast.success("Member added successfully!");
+        showToast.success('Member added successfully!');
         setIsAddModalOpen(false);
         fetchMembers(currentPage);
       }
     } catch (error) {
       // Extract detailed error message from the store
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : membersError || "Failed to add member";
+        error instanceof Error ? error.message : membersError || 'Failed to add member';
       showToast.error(errorMessage);
     }
   };
@@ -75,17 +73,13 @@ export default function GCVMembersPage() {
       const success = await updateGCVUserRole(requestData);
 
       if (success) {
-        showToast.success(
-          `Role ${hasRole ? "removed" : "added"} successfully!`,
-        );
+        showToast.success(`Role ${hasRole ? 'removed' : 'added'} successfully!`);
         fetchMembers(currentPage);
       }
     } catch (error) {
       // Extract detailed error message from the store
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : membersError || "Failed to update role";
+        error instanceof Error ? error.message : membersError || 'Failed to update role';
       showToast.error(errorMessage);
     }
   };
@@ -93,9 +87,9 @@ export default function GCVMembersPage() {
   const filteredMembers = members.filter((member) => {
     if (!searchQuery) return true;
     const search = searchQuery.toLowerCase();
-    const firstName = member.person?.firstName || member.firstName || "";
-    const lastName = member.person?.lastName || member.lastName || "";
-    const email = member.contact?.email || member.email || "";
+    const firstName = member.person?.firstName || member.firstName || '';
+    const lastName = member.person?.lastName || member.lastName || '';
+    const email = member.contact?.email || member.email || '';
     return (
       firstName.toLowerCase().includes(search) ||
       lastName.toLowerCase().includes(search) ||
@@ -116,9 +110,7 @@ export default function GCVMembersPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">GCV Members</h1>
 
-              <p className="mt-2 text-gray-600">
-                Manage Grant Committee View members
-              </p>
+              <p className="mt-2 text-gray-600">Manage Grant Committee View members</p>
             </div>
 
             <button
@@ -172,10 +164,8 @@ export default function GCVMembersPage() {
 
             <div className="rounded-lg border border-gray-200 bg-white px-4 py-2">
               <p className="text-sm text-gray-600">
-                Total Members:{" "}
-                <span className="font-semibold text-gray-900">
-                  {membersPagination?.total || 0}
-                </span>
+                Total Members:{' '}
+                <span className="font-semibold text-gray-900">{membersPagination?.total || 0}</span>
               </p>
             </div>
           </div>
@@ -215,10 +205,7 @@ export default function GCVMembersPage() {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {filteredMembers.length === 0 ? (
                     <tr>
-                      <td
-                        className="px-6 py-8 text-center text-gray-500"
-                        colSpan={5}
-                      >
+                      <td className="px-6 py-8 text-center text-gray-500" colSpan={5}>
                         No members found
                       </td>
                     </tr>
@@ -231,18 +218,14 @@ export default function GCVMembersPage() {
                               <span className="text-sm font-semibold text-blue-600">
                                 {member.person?.firstName?.charAt(0) ||
                                   member.firstName?.charAt(0) ||
-                                  "?"}
+                                  '?'}
                               </span>
                             </div>
 
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">
-                                {member.person?.firstName ||
-                                  member.firstName ||
-                                  "N/A"}{" "}
-                                {member.person?.lastName ||
-                                  member.lastName ||
-                                  ""}
+                                {member.person?.firstName || member.firstName || 'N/A'}{' '}
+                                {member.person?.lastName || member.lastName || ''}
                               </div>
                             </div>
                           </div>
@@ -250,7 +233,7 @@ export default function GCVMembersPage() {
 
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-700">
-                            {member.contact?.email || member.email || "N/A"}
+                            {member.contact?.email || member.email || 'N/A'}
                           </div>
                         </td>
 
@@ -277,14 +260,14 @@ export default function GCVMembersPage() {
                           <button
                             className={`rounded-lg px-3 py-1 font-medium ${
                               member.role.includes(UserRoles.COMMITTEE_MEMBER)
-                                ? "bg-red-100 text-red-700 hover:bg-red-200"
-                                : "bg-green-100 text-green-700 hover:bg-green-200"
+                                ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                                : 'bg-green-100 text-green-700 hover:bg-green-200'
                             }`}
                             onClick={() => handleToggleRole(member)}
                           >
                             {member.role.includes(UserRoles.COMMITTEE_MEMBER)
-                              ? "Remove Role"
-                              : "Add Role"}
+                              ? 'Remove Role'
+                              : 'Add Role'}
                           </button>
                         </td>
                       </tr>
@@ -299,8 +282,8 @@ export default function GCVMembersPage() {
           {membersPagination && membersPagination.totalPages > 1 && (
             <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-6 py-4">
               <div className="text-sm text-gray-600">
-                Showing {(currentPage - 1) * pageSize + 1} to{" "}
-                {Math.min(currentPage * pageSize, membersPagination.total)} of{" "}
+                Showing {(currentPage - 1) * pageSize + 1} to{' '}
+                {Math.min(currentPage * pageSize, membersPagination.total)} of{' '}
                 {membersPagination.total} members
               </div>
 
@@ -314,15 +297,12 @@ export default function GCVMembersPage() {
                 </button>
 
                 <div className="flex items-center space-x-1">
-                  {Array.from(
-                    { length: membersPagination.totalPages },
-                    (_, i) => i + 1,
-                  )
+                  {Array.from({ length: membersPagination.totalPages }, (_, i) => i + 1)
                     .filter(
                       (page) =>
                         page === 1 ||
                         page === membersPagination.totalPages ||
-                        (page >= currentPage - 1 && page <= currentPage + 1),
+                        (page >= currentPage - 1 && page <= currentPage + 1)
                     )
                     .map((page, idx, arr) => (
                       <div className="flex items-center" key={page}>
@@ -333,8 +313,8 @@ export default function GCVMembersPage() {
                         <button
                           className={`h-10 w-10 rounded-lg text-sm font-medium ${
                             currentPage === page
-                              ? "bg-blue-600 text-white"
-                              : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                              ? 'bg-blue-600 text-white'
+                              : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
                           }`}
                           onClick={() => setCurrentPage(page)}
                         >
@@ -348,9 +328,7 @@ export default function GCVMembersPage() {
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={currentPage === membersPagination.totalPages}
                   onClick={() =>
-                    setCurrentPage((p) =>
-                      Math.min(membersPagination.totalPages, p + 1),
-                    )
+                    setCurrentPage((p) => Math.min(membersPagination.totalPages, p + 1))
                   }
                 >
                   Next

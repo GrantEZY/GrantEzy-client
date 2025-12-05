@@ -1,24 +1,17 @@
 /**
  * Add/Edit Program Modal Component
  */
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { OrganisationType } from "@/types/admin.types";
-import {
-  CreateProgramRequest,
-  Program,
-  TRL,
-  UpdateProgramRequest,
-} from "@/types/gcv.types";
+import { OrganisationType } from '@/types/admin.types';
+import { CreateProgramRequest, Program, TRL, UpdateProgramRequest } from '@/types/gcv.types';
 
 interface ProgramModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    data: CreateProgramRequest | UpdateProgramRequest,
-  ) => Promise<void>;
+  onSubmit: (data: CreateProgramRequest | UpdateProgramRequest) => Promise<void>;
   isLoading?: boolean;
-  mode: "create" | "edit";
+  mode: 'create' | 'edit';
   program?: Program;
 }
 
@@ -31,16 +24,16 @@ export function ProgramModal({
   program,
 }: ProgramModalProps) {
   const [formData, setFormData] = useState({
-    organizationName: "",
+    organizationName: '',
     organizationType: OrganisationType.IIIT as OrganisationType,
     isNewOrganization: false,
-    programName: "",
-    programDescription: "",
-    programCategory: "",
-    startDate: "",
-    endDate: "",
-    budgetAmount: "",
-    budgetCurrency: "USD",
+    programName: '',
+    programDescription: '',
+    programCategory: '',
+    startDate: '',
+    endDate: '',
+    budgetAmount: '',
+    budgetCurrency: 'USD',
     minTRL: TRL.TRL1 as TRL,
     maxTRL: TRL.TRL5 as TRL,
   });
@@ -48,20 +41,20 @@ export function ProgramModal({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    if (mode === "edit" && program) {
+    if (mode === 'edit' && program) {
       setFormData({
-        organizationName: program.organization?.name || "",
+        organizationName: program.organization?.name || '',
         organizationType: program.organization?.type || OrganisationType.IIIT,
         isNewOrganization: false,
         programName: program.details.name,
         programDescription: program.details.description,
         programCategory: program.details.category,
         startDate: program.duration.startDate
-          ? new Date(program.duration.startDate).toISOString().split("T")[0]
-          : "",
+          ? new Date(program.duration.startDate).toISOString().split('T')[0]
+          : '',
         endDate: program.duration.endDate
-          ? new Date(program.duration.endDate).toISOString().split("T")[0]
-          : "",
+          ? new Date(program.duration.endDate).toISOString().split('T')[0]
+          : '',
         budgetAmount: program.budget.amount.toString(),
         budgetCurrency: program.budget.currency,
         minTRL: program.minTRL,
@@ -74,22 +67,22 @@ export function ProgramModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.organizationName.trim()) {
-      newErrors.organizationName = "Organization name is required";
+      newErrors.organizationName = 'Organization name is required';
     }
     if (!formData.programName.trim()) {
-      newErrors.programName = "Program name is required";
+      newErrors.programName = 'Program name is required';
     }
     if (!formData.programDescription.trim()) {
-      newErrors.programDescription = "Description is required";
+      newErrors.programDescription = 'Description is required';
     }
     if (!formData.programCategory.trim()) {
-      newErrors.programCategory = "Category is required";
+      newErrors.programCategory = 'Category is required';
     }
     if (!formData.startDate) {
-      newErrors.startDate = "Start date is required";
+      newErrors.startDate = 'Start date is required';
     }
     if (!formData.budgetAmount || parseFloat(formData.budgetAmount) <= 0) {
-      newErrors.budgetAmount = "Valid budget amount is required";
+      newErrors.budgetAmount = 'Valid budget amount is required';
     }
 
     setErrors(newErrors);
@@ -103,7 +96,7 @@ export function ProgramModal({
       return;
     }
 
-    if (mode === "create") {
+    if (mode === 'create') {
       const data: CreateProgramRequest = {
         organization: {
           name: formData.organizationName,
@@ -117,9 +110,7 @@ export function ProgramModal({
         },
         duration: {
           startDate: new Date(formData.startDate).toISOString(),
-          endDate: formData.endDate
-            ? new Date(formData.endDate).toISOString()
-            : null,
+          endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
         },
         budget: {
           amount: parseFloat(formData.budgetAmount),
@@ -139,9 +130,7 @@ export function ProgramModal({
         },
         duration: {
           startDate: new Date(formData.startDate).toISOString(),
-          endDate: formData.endDate
-            ? new Date(formData.endDate).toISOString()
-            : null,
+          endDate: formData.endDate ? new Date(formData.endDate).toISOString() : null,
         },
         budget: {
           amount: parseFloat(formData.budgetAmount),
@@ -158,16 +147,16 @@ export function ProgramModal({
 
   const handleClose = () => {
     setFormData({
-      organizationName: "",
+      organizationName: '',
       organizationType: OrganisationType.IIIT,
       isNewOrganization: false,
-      programName: "",
-      programDescription: "",
-      programCategory: "",
-      startDate: "",
-      endDate: "",
-      budgetAmount: "",
-      budgetCurrency: "USD",
+      programName: '',
+      programDescription: '',
+      programCategory: '',
+      startDate: '',
+      endDate: '',
+      budgetAmount: '',
+      budgetCurrency: 'USD',
       minTRL: TRL.TRL1,
       maxTRL: TRL.TRL5,
     });
@@ -182,20 +171,11 @@ export function ProgramModal({
       <div className="my-8 w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">
-            {mode === "create" ? "Create Program" : "Edit Program"}
+            {mode === 'create' ? 'Create Program' : 'Edit Program'}
           </h2>
 
-          <button
-            className="text-gray-400 hover:text-gray-600"
-            onClick={handleClose}
-            type="button"
-          >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+          <button className="text-gray-400 hover:text-gray-600" onClick={handleClose} type="button">
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M6 18L18 6M6 6l12 12"
                 strokeLinecap="round"
@@ -209,11 +189,9 @@ export function ProgramModal({
         <form className="thin-scrollbar max-h-[70vh] overflow-y-auto" onSubmit={handleSubmit}>
           <div className="space-y-4">
             {/* Organization Section */}
-            {mode === "create" && (
+            {mode === 'create' && (
               <div className="rounded-lg border border-gray-200 p-4">
-                <h3 className="mb-3 font-semibold text-gray-900">
-                  Organization Details
-                </h3>
+                <h3 className="mb-3 font-semibold text-gray-900">Organization Details</h3>
 
                 <div className="mb-3">
                   <label className="flex items-center space-x-2">
@@ -229,9 +207,7 @@ export function ProgramModal({
                       type="checkbox"
                     />
 
-                    <span className="text-sm text-gray-700">
-                      Create new organization
-                    </span>
+                    <span className="text-sm text-gray-700">Create new organization</span>
                   </label>
                 </div>
 
@@ -245,9 +221,7 @@ export function ProgramModal({
 
                   <input
                     className={`w-full rounded-lg border px-4 py-2 ${
-                      errors.organizationName
-                        ? "border-red-500"
-                        : "border-gray-300"
+                      errors.organizationName ? 'border-red-500' : 'border-gray-300'
                     }`}
                     id="organizationName"
                     onChange={(e) =>
@@ -260,9 +234,7 @@ export function ProgramModal({
                   />
 
                   {errors.organizationName && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {errors.organizationName}
-                    </p>
+                    <p className="mt-1 text-sm text-red-500">{errors.organizationName}</p>
                   )}
                 </div>
 
@@ -299,9 +271,7 @@ export function ProgramModal({
 
             {/* Program Details */}
             <div className="rounded-lg border border-gray-200 p-4">
-              <h3 className="mb-3 font-semibold text-gray-900">
-                Program Details
-              </h3>
+              <h3 className="mb-3 font-semibold text-gray-900">Program Details</h3>
 
               <div className="mb-3">
                 <label
@@ -313,19 +283,15 @@ export function ProgramModal({
 
                 <input
                   className={`w-full rounded-lg border px-4 py-2 ${
-                    errors.programName ? "border-red-500" : "border-gray-300"
+                    errors.programName ? 'border-red-500' : 'border-gray-300'
                   }`}
                   id="programName"
-                  onChange={(e) =>
-                    setFormData({ ...formData, programName: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, programName: e.target.value })}
                   value={formData.programName}
                 />
 
                 {errors.programName && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.programName}
-                  </p>
+                  <p className="mt-1 text-sm text-red-500">{errors.programName}</p>
                 )}
               </div>
 
@@ -339,9 +305,7 @@ export function ProgramModal({
 
                 <textarea
                   className={`w-full rounded-lg border px-4 py-2 ${
-                    errors.programDescription
-                      ? "border-red-500"
-                      : "border-gray-300"
+                    errors.programDescription ? 'border-red-500' : 'border-gray-300'
                   }`}
                   id="programDescription"
                   onChange={(e) =>
@@ -355,9 +319,7 @@ export function ProgramModal({
                 />
 
                 {errors.programDescription && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.programDescription}
-                  </p>
+                  <p className="mt-1 text-sm text-red-500">{errors.programDescription}</p>
                 )}
               </div>
 
@@ -371,9 +333,7 @@ export function ProgramModal({
 
                 <input
                   className={`w-full rounded-lg border px-4 py-2 ${
-                    errors.programCategory
-                      ? "border-red-500"
-                      : "border-gray-300"
+                    errors.programCategory ? 'border-red-500' : 'border-gray-300'
                   }`}
                   id="programCategory"
                   onChange={(e) =>
@@ -386,9 +346,7 @@ export function ProgramModal({
                 />
 
                 {errors.programCategory && (
-                  <p className="mt-1 text-sm text-red-500">
-                    {errors.programCategory}
-                  </p>
+                  <p className="mt-1 text-sm text-red-500">{errors.programCategory}</p>
                 )}
               </div>
             </div>
@@ -408,37 +366,28 @@ export function ProgramModal({
 
                   <input
                     className={`w-full rounded-lg border px-4 py-2 ${
-                      errors.startDate ? "border-red-500" : "border-gray-300"
+                      errors.startDate ? 'border-red-500' : 'border-gray-300'
                     }`}
                     id="startDate"
-                    onChange={(e) =>
-                      setFormData({ ...formData, startDate: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
                     type="date"
                     value={formData.startDate}
                   />
 
                   {errors.startDate && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {errors.startDate}
-                    </p>
+                    <p className="mt-1 text-sm text-red-500">{errors.startDate}</p>
                   )}
                 </div>
 
                 <div>
-                  <label
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                    htmlFor="endDate"
-                  >
+                  <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="endDate">
                     End Date (Optional)
                   </label>
 
                   <input
                     className="w-full rounded-lg border border-gray-300 px-4 py-2"
                     id="endDate"
-                    onChange={(e) =>
-                      setFormData({ ...formData, endDate: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
                     type="date"
                     value={formData.endDate}
                   />
@@ -461,20 +410,16 @@ export function ProgramModal({
 
                   <input
                     className={`w-full rounded-lg border px-4 py-2 ${
-                      errors.budgetAmount ? "border-red-500" : "border-gray-300"
+                      errors.budgetAmount ? 'border-red-500' : 'border-gray-300'
                     }`}
                     id="budgetAmount"
-                    onChange={(e) =>
-                      setFormData({ ...formData, budgetAmount: e.target.value })
-                    }
+                    onChange={(e) => setFormData({ ...formData, budgetAmount: e.target.value })}
                     type="number"
                     value={formData.budgetAmount}
                   />
 
                   {errors.budgetAmount && (
-                    <p className="mt-1 text-sm text-red-500">
-                      {errors.budgetAmount}
-                    </p>
+                    <p className="mt-1 text-sm text-red-500">{errors.budgetAmount}</p>
                   )}
                 </div>
 
@@ -507,10 +452,7 @@ export function ProgramModal({
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                    htmlFor="minTRL"
-                  >
+                  <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="minTRL">
                     Minimum TRL
                   </label>
 
@@ -534,10 +476,7 @@ export function ProgramModal({
                 </div>
 
                 <div>
-                  <label
-                    className="mb-2 block text-sm font-medium text-gray-700"
-                    htmlFor="maxTRL"
-                  >
+                  <label className="mb-2 block text-sm font-medium text-gray-700" htmlFor="maxTRL">
                     Maximum TRL
                   </label>
 
@@ -578,12 +517,12 @@ export function ProgramModal({
               type="submit"
             >
               {isLoading
-                ? mode === "create"
-                  ? "Creating..."
-                  : "Updating..."
-                : mode === "create"
-                  ? "Create Program"
-                  : "Update Program"}
+                ? mode === 'create'
+                  ? 'Creating...'
+                  : 'Updating...'
+                : mode === 'create'
+                  ? 'Create Program'
+                  : 'Update Program'}
             </button>
           </div>
         </form>

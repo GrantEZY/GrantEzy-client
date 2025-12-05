@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from 'react';
 
-import { usePathname } from "next/navigation";
+import { usePathname } from 'next/navigation';
 
-import { useAuthStore } from "@/store/auth.store";
+import { useAuthStore } from '@/store/auth.store';
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -25,7 +25,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     // Don't set up refresh on login/signup pages to prevent redirects during login
-    const isAuthPage = pathname === "/login" || pathname === "/signup";
+    const isAuthPage = pathname === '/login' || pathname === '/signup';
 
     // Set up automatic token refresh if user is authenticated and not on auth pages
     if (isAuthenticated && !isAuthPage) {
