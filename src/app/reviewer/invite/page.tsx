@@ -42,37 +42,31 @@ export default function ReviewerInvitePage() {
     setSuccess(false);
 
     try {
-      const result = await updateInviteStatus({
+      await updateInviteStatus({
         token,
         slug,
         status,
       });
 
-      if (result) {
-        setSuccess(true);
-        setInviteAccepted(status === InviteStatus.ACCEPTED);
+      // Success - clear URL and show success message
+      setSuccess(true);
+      setInviteAccepted(status === InviteStatus.ACCEPTED);
+      window.history.replaceState({}, '', '/reviewer/invite');
 
-        // Clear URL parameters to prevent re-submission on refresh
-        window.history.replaceState({}, '', '/reviewer/invite');
+      // Redirect to login after a short delay
+      setTimeout(() => {
+        router.push("/login?redirect=/reviewer");
+      }, 3000);
 
-        // Redirect to login after a short delay
-        setTimeout(() => {
-          router.push("/login?redirect=/reviewer");
-        }, 3000); // 3 seconds
-      } else {
-        setError("Failed to update invitation status. Please try again.");
-      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "An error occurred while processing your response";
       
-      // Check if this is an "already handled" error
-      if (errorMessage.includes("already been handled") || errorMessage.includes("already handled") || 
-          errorMessage.includes("already accepted") || errorMessage.includes("already declined")) {
+      // Check if this is an "already handled" error - treat as success
+      if (errorMessage.toLowerCase().includes("already")) {
         setSuccess(true);
-        setInviteAccepted(status === InviteStatus.ACCEPTED);
-        
-        // Clear URL and redirect
+        setInviteAccepted(true); // Assume it was accepted if already handled
         window.history.replaceState({}, '', '/reviewer/invite');
+        
         setTimeout(() => {
           router.push("/login?redirect=/reviewer");
         }, 2000);
