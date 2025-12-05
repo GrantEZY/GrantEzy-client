@@ -16,6 +16,7 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
   // Initial state
   applicationDetails: null,
   tokenDetails: null,
+  linkedProjects: [],
   isLoading: false,
   error: null,
 
@@ -106,6 +107,33 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
     }
   },
 
+  getUserLinkedProjects: async (page: number, numberOfResults: number) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await coApplicantService.getUserLinkedProjects(page, numberOfResults);
+      
+      if (response.status === 200 && response.res) {
+        set({
+          linkedProjects: response.res.applications || [],
+          isLoading: false,
+        });
+      } else {
+        set({
+          error: response.message || "Failed to fetch linked projects",
+          isLoading: false,
+          linkedProjects: [],
+        });
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      set({
+        error: errorMessage,
+        isLoading: false,
+        linkedProjects: [],
+      });
+    }
+  },
+
   clearError: () => {
     set({ error: null });
   },
@@ -114,6 +142,7 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
     set({
       applicationDetails: null,
       tokenDetails: null,
+      linkedProjects: [],
       isLoading: false,
       error: null,
     });

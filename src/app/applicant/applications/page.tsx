@@ -145,7 +145,7 @@ export default function MyApplicationsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700">
-                                  {application.basicInfo?.title || "Untitled Application"}
+                                  {application.basicDetails?.title || "Untitled Application"}
                                 </h3>
                                 {getStatusBadge(application)}
                               </div>
@@ -153,11 +153,11 @@ export default function MyApplicationsPage() {
                               <div className="space-y-2 text-sm text-gray-600">
                                 <p>
                                   <span className="font-medium">Program:</span>{" "}
-                                  {application.cycle?.program?.title || "Unknown Program"}
+                                  {application.cycle?.program?.details?.name || "Unknown Program"}
                                 </p>
                                 <p>
                                   <span className="font-medium">Cycle:</span>{" "}
-                                  {application.cycle?.title || "Unknown Cycle"}
+                                  {application.cycle?.round ? `${application.cycle.round.type} ${application.cycle.round.year}` : "Unknown Cycle"}
                                 </p>
                                 <p>
                                   <span className="font-medium">Created:</span>{" "}
@@ -232,7 +232,7 @@ export default function MyApplicationsPage() {
                             <div className="flex-1">
                               <div className="flex items-center gap-3 mb-2">
                                 <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-700">
-                                  {application.basicInfo?.title || "Untitled Application"}
+                                  {application.basicDetails?.title || "Untitled Application"}
                                 </h3>
                                 {getStatusBadge(application)}
                                 <span className="inline-flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
@@ -246,11 +246,11 @@ export default function MyApplicationsPage() {
                               <div className="space-y-2 text-sm text-gray-600">
                                 <p>
                                   <span className="font-medium">Program:</span>{" "}
-                                  {application.cycle?.program?.title || "Unknown Program"}
+                                  {application.cycle?.program?.details?.name || "Unknown Program"}
                                 </p>
                                 <p>
                                   <span className="font-medium">Cycle:</span>{" "}
-                                  {application.cycle?.title || "Unknown Cycle"}
+                                  {application.cycle?.round ? `${application.cycle.round.type} ${application.cycle.round.year}` : "Unknown Cycle"}
                                 </p>
                                 <p>
                                   <span className="font-medium">Created:</span>{" "}

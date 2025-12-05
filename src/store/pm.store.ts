@@ -20,6 +20,7 @@ import {
   Review,
   ReviewDetails,
   UpdateCycleRequest,
+  PendingInvite,
 } from "../types/pm.types";
 
 interface PMState {
@@ -45,6 +46,7 @@ interface PMState {
   
   // Reviews state
   reviews: Review[];
+  pendingInvites: PendingInvite[];
   reviewsPagination: PaginationMeta | null;
   isReviewsLoading: boolean;
   reviewsError: string | null;
@@ -111,6 +113,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
   currentApplication: null,
   isApplicationLoading: false,
   reviews: [],
+  pendingInvites: [],
   reviewsPagination: null,
   isReviewsLoading: false,
   reviewsError: null,
@@ -532,11 +535,13 @@ export const usePMStore = create<PMStore>((set, get) => ({
       const response = await pmService.getApplicationReviews(params);
 
       if (response.status === 200) {
-        const { reviews } = response.res;
+        const { reviews, pendingInvites } = response.res;
 
         console.log('📝 Application Reviews Response:', {
           reviewsCount: reviews.length,
-          reviews: reviews
+          pendingInvitesCount: pendingInvites?.length || 0,
+          reviews: reviews,
+          pendingInvites: pendingInvites
         });
 
         // Backend doesn't return pagination, so we'll create a simple one based on request params
@@ -549,6 +554,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
         set({
           reviews,
+          pendingInvites: pendingInvites || [],
           reviewsPagination: paginationMeta,
           isReviewsLoading: false,
           reviewsError: null,
@@ -624,6 +630,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
   clearReviews: () => {
     set({
       reviews: [],
+      pendingInvites: [],
       reviewsPagination: null,
       reviewsError: null,
       currentReview: null,
@@ -654,6 +661,7 @@ export const usePMStore = create<PMStore>((set, get) => ({
       currentApplication: null,
       isApplicationLoading: false,
       reviews: [],
+      pendingInvites: [],
       reviewsPagination: null,
       isReviewsLoading: false,
       reviewsError: null,

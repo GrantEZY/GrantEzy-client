@@ -21,8 +21,8 @@ export default function CoApplicantDashboard() {
     // Fetch linked projects when component mounts
     console.log('[CoApplicantDashboard] Fetching linked projects');
     getUserLinkedProjects(1, 50);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   const handleApplicationClick = (applicationId: string) => {
     setSelectedApplicationId(applicationId);
@@ -31,6 +31,15 @@ export default function CoApplicantDashboard() {
   const handleBackToList = () => {
     setSelectedApplicationId(null);
   };
+
+  if (selectedApplicationId) {
+    return (
+      <ApplicationDetailsView
+        applicationId={selectedApplicationId}
+        onBack={handleBackToList}
+      />
+    );
+  }
 
   const getStatusBadge = (status: string) => {
     const statusColors: Record<string, string> = {
@@ -48,17 +57,6 @@ export default function CoApplicantDashboard() {
     );
   };
 
-  if (selectedApplicationId) {
-    return (
-      <AuthGuard>
-        <ApplicationDetailsView
-          applicationId={selectedApplicationId}
-          onBack={handleBackToList}
-        />
-      </AuthGuard>
-    );
-  }
-
   return (
     <AuthGuard>
       <CoApplicantLayout>
@@ -73,6 +71,7 @@ export default function CoApplicantDashboard() {
               </p>
             </div>
 
+            {/* Applications List */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Your Applications ({linkedProjects.length})
@@ -142,6 +141,7 @@ export default function CoApplicantDashboard() {
             )}
           </div>
 
+          {/* User Info Card */}
           <div className="mt-6 bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Profile</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -163,7 +163,6 @@ export default function CoApplicantDashboard() {
           </div>
         </div>
       </div>
-      </CoApplicantLayout>
-    </AuthGuard>
+    </CoApplicantLayout>
   );
 }

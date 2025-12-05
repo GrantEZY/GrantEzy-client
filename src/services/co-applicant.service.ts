@@ -13,7 +13,9 @@ import {
   InviteStatus,
 } from "../types/co-applicant.types";
 import {
-  GetUserProjectsResponse,
+  GetUserLinkedProjectsResponse,
+} from "../types/co-applicant.types";
+import {
   GetProjectDetailsResponse,
 } from "../types/project.types";
 
@@ -108,13 +110,13 @@ export class CoApplicantService {
   async getUserLinkedProjects(
     page: number,
     numberOfResults: number,
-  ): Promise<GetUserProjectsResponse> {
+  ): Promise<GetUserLinkedProjectsResponse> {
     const queryParams: Record<string, string> = {
       page: page.toString(),
       numberOfResults: numberOfResults.toString(),
     };
 
-    return httpClient.get<GetUserProjectsResponse>(
+    return httpClient.get<GetUserLinkedProjectsResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_USER_LINKED_PROJECTS,
       queryParams,
     );

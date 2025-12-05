@@ -22,6 +22,7 @@ export default function ApplicationDetailsPage() {
     clearApplication,
     getApplicationReviews,
     reviews,
+    pendingInvites,
     isReviewsLoading,
   } = usePm();
 
@@ -39,6 +40,16 @@ export default function ApplicationDetailsPage() {
       clearApplication();
     };
   }, [cycleSlug, applicationSlug, getApplicationDetails, clearApplication, getApplicationReviews]);
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Application Details Page State:', {
+      reviews: reviews?.length || 0,
+      pendingInvites: pendingInvites?.length || 0,
+      pendingInvitesData: pendingInvites,
+      isLoading: isReviewsLoading
+    });
+  }, [reviews, pendingInvites, isReviewsLoading]);
 
   // Calculate review analytics
   const reviewAnalytics = useMemo(() => {
@@ -412,6 +423,74 @@ export default function ApplicationDetailsPage() {
                   </div>
                 )}
 
+                {/* Pending Invites Section */}
+                {!isReviewsLoading && (
+                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 mb-6">
+                    <h3 className="font-semibold text-blue-900">Debug Info</h3>
+                    <p className="text-sm text-blue-700">
+                      Pending Invites Count: {pendingInvites?.length || 0}
+                    </p>
+                    <p className="text-sm text-blue-700">
+                      Reviews Count: {reviews?.length || 0}
+                    </p>
+                    <p className="text-sm text-blue-700">
+                      Is Loading: {isReviewsLoading ? 'Yes' : 'No'}
+                    </p>
+                  </div>
+                )}
+                
+                {pendingInvites && pendingInvites.length > 0 && (
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 shadow-sm mb-6">
+                    <div className="border-b border-amber-200 px-6 py-4">
+                      <h2 className="text-lg font-semibold text-amber-900">
+                        Pending Invitations ({pendingInvites.length})
+                      </h2>
+                      <p className="text-sm text-amber-700 mt-1">
+                        Reviewers who have been invited but haven't accepted yet
+                      </p>
+                    </div>
+                    <div className="p-6">
+                      <div className="space-y-3">
+                        {pendingInvites.map((invite) => (
+                          <div
+                            key={invite.id}
+                            className="flex items-center justify-between rounded-lg border border-amber-200 bg-white p-4"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100">
+                                <svg
+                                  className="h-5 w-5 text-amber-600"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                  />
+                                </svg>
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-gray-900">{invite.email}</p>
+                                <p className="text-xs text-gray-500">
+                                  Invited {new Date(invite.createdAt).toLocaleDateString()}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
+                                {invite.status === "SENT" ? "⏳ Pending" : invite.status}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Reviews List */}
                 <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
                   <div className="border-b border-gray-200 px-6 py-4">
@@ -652,6 +731,15 @@ export default function ApplicationDetailsPage() {
             applicationTitle={currentApplication.basicInfo?.title}
             isOpen={isInviteModalOpen}
             onClose={() => setIsInviteModalOpen(false)}
+            onSuccess={() => {
+              // Refresh the reviews list after successful invite
+              getApplicationReviews({ 
+                cycleSlug, 
+                applicationSlug, 
+                page: 1, 
+                numberOfResults: 50 
+              });
+            }}
           />
         )}
       </PMLayout>

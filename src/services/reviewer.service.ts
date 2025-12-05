@@ -22,6 +22,7 @@ export class ReviewerService {
   /**
    * Get token details for reviewing an invitation
    * Used to verify invitation token before accepting/rejecting
+   * This is a public endpoint - no authentication required
    */
   async getTokenDetails(
     params: GetTokenDetailsRequest,
@@ -31,7 +32,7 @@ export class ReviewerService {
       slug: params.slug,
     };
 
-    return httpClient.get<GetTokenDetailsResponse>(
+    return httpClient.publicGet<GetTokenDetailsResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.GET_TOKEN_DETAILS,
       queryParams,
     );
@@ -39,11 +40,12 @@ export class ReviewerService {
 
   /**
    * Update reviewer invite status (accept or reject)
+   * This is a public endpoint - no authentication required
    */
   async updateInviteStatus(
     data: UpdateInviteStatusRequest,
   ): Promise<UpdateInviteStatusResponse> {
-    return httpClient.patch<UpdateInviteStatusResponse>(
+    return httpClient.publicPatch<UpdateInviteStatusResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.UPDATE_INVITE_STATUS,
       data,
     );
