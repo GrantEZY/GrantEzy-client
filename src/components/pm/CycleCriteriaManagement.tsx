@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { useProjectManagement } from "@/hooks/useProjectManagement";
+
 import { CreateCycleCriteriaRequest } from "@/types/project.types";
 
 interface CycleCriteriaManagementProps {
@@ -95,7 +97,9 @@ export default function CycleCriteriaManagement({
       {/* Header with Create Button */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Assessment Criteria</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            Assessment Criteria
+          </h3>
           <p className="mt-1 text-sm text-gray-600">
             Create and manage evaluation criteria for projects in this cycle
           </p>
@@ -155,7 +159,9 @@ export default function CycleCriteriaManagement({
               strokeWidth={2}
             />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No Criteria</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">
+            No Criteria
+          </h3>
           <p className="mt-1 text-sm text-gray-500">
             Create your first assessment criteria to start evaluating projects
           </p>
@@ -181,7 +187,9 @@ export default function CycleCriteriaManagement({
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <h4 className="font-medium text-gray-900">{criteria.name}</h4>
-                  <p className="mt-2 text-sm text-gray-600">{criteria.briefReview}</p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    {criteria.briefReview}
+                  </p>
                 </div>
               </div>
               {criteria.templateFile && (
@@ -216,7 +224,7 @@ export default function CycleCriteriaManagement({
           <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
             {/* Background overlay */}
             <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+              className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity"
               onClick={handleCloseModal}
             ></div>
 
@@ -225,7 +233,7 @@ export default function CycleCriteriaManagement({
               {/* Header */}
               <div className="border-b border-gray-200 bg-white px-6 py-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">
                     Create Assessment Criteria
                   </h3>
                   <button
@@ -263,7 +271,7 @@ export default function CycleCriteriaManagement({
                       onChange={(e) =>
                         setFormData({ ...formData, name: e.target.value })
                       }
-                      className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                       placeholder="e.g., Technical Feasibility"
                     />
                     {errors.name && (
@@ -278,14 +286,19 @@ export default function CycleCriteriaManagement({
                     <textarea
                       value={formData.briefReview}
                       onChange={(e) =>
-                        setFormData({ ...formData, briefReview: e.target.value })
+                        setFormData({
+                          ...formData,
+                          briefReview: e.target.value,
+                        })
                       }
                       rows={4}
-                      className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                       placeholder="Describe what this criteria evaluates..."
                     />
                     {errors.briefReview && (
-                      <p className="mt-1 text-sm text-red-600">{errors.briefReview}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.briefReview}
+                      </p>
                     )}
                   </div>
 
@@ -303,12 +316,14 @@ export default function CycleCriteriaManagement({
                         />
                       </svg>
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium text-blue-800">Note</h3>
+                        <h3 className="text-sm font-medium text-blue-800">
+                          Note
+                        </h3>
                         <div className="mt-2 text-sm text-blue-700">
                           <p>
-                            File upload for evaluation templates will be added in the next
-                            iteration. For now, you can create criteria with names and
-                            descriptions.
+                            File upload for evaluation templates will be added
+                            in the next iteration. For now, you can create
+                            criteria with names and descriptions.
                           </p>
                         </div>
                       </div>

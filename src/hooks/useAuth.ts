@@ -1,7 +1,6 @@
 /**
  * Custom hooks for authentication
  */
-
 import { useAuthStore } from "../store/auth.store";
 import { LoginRequest, RegisterRequest } from "../types/auth.types";
 

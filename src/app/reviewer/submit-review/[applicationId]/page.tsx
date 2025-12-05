@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useParams, useRouter } from "next/navigation";
+
 import ReviewerLayout from "@/components/layout/ReviewerLayout";
 import ReviewSubmissionForm from "@/components/reviewer/ReviewSubmissionForm";
+
 import { useReviewer } from "@/hooks/useReviewer";
 
 export default function SubmitReviewPage() {
@@ -28,7 +31,7 @@ export default function SubmitReviewPage() {
         setError(
           err instanceof Error
             ? err.message
-            : "Failed to load application details"
+            : "Failed to load application details",
         );
       } finally {
         setIsLoading(false);
@@ -185,31 +188,28 @@ export default function SubmitReviewPage() {
                 <div className="mt-2 text-sm text-blue-700">
                   <ul className="list-disc space-y-1 pl-5">
                     <li>
-                      Rate each category from 0 to 100 based on the application's
-                      merit
+                      Rate each category from 0 to 100 based on the
+                      application's merit
                     </li>
                     <li>
                       Technical: Feasibility and soundness of the technical
                       approach
                     </li>
-                    <li>
-                      Market: Market opportunity and potential for impact
-                    </li>
+                    <li>Market: Market opportunity and potential for impact</li>
                     <li>
                       Financial: Budget reasonableness and financial planning
                     </li>
-                    <li>
-                      Team: Team capability and relevant experience
-                    </li>
+                    <li>Team: Team capability and relevant experience</li>
                     <li>
                       Innovation: Novelty and innovative aspects of the project
                     </li>
                     <li>
-                      Provide a clear recommendation (Approve, Reject, or Request
-                      Revisions)
+                      Provide a clear recommendation (Approve, Reject, or
+                      Request Revisions)
                     </li>
                     <li>
-                      Suggest an appropriate budget considering the project scope
+                      Suggest an appropriate budget considering the project
+                      scope
                     </li>
                   </ul>
                 </div>

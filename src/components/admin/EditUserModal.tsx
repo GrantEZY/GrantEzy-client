@@ -10,7 +10,7 @@ interface EditUserModalProps {
   onSubmit: (userData: {
     email: string;
     role: UserRoles;
-    action: 'add' | 'remove';
+    action: "add" | "remove";
   }) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
   user?: {
@@ -35,14 +35,14 @@ export function EditUserModal({
   isLoading,
   user,
 }: EditUserModalProps) {
-  const [formData, setFormData] = useState<{ 
-    email: string; 
-    role: UserRoles; 
-    action: 'add' | 'remove';
+  const [formData, setFormData] = useState<{
+    email: string;
+    role: UserRoles;
+    action: "add" | "remove";
   }>({
     email: "",
     role: UserRoles.APPLICANT,
-    action: 'add',
+    action: "add",
   });
   const [currentRoles, setCurrentRoles] = useState<UserRoles[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -76,7 +76,7 @@ export function EditUserModal({
       setFormData({
         email: userEmail,
         role: UserRoles.APPLICANT, // Default selection for adding new role
-        action: 'add',
+        action: "add",
       });
       setErrors({}); // Clear any previous errors
     }
@@ -95,7 +95,10 @@ export function EditUserModal({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleRoleAction = async (role: UserRoles, action: 'add' | 'remove') => {
+  const handleRoleAction = async (
+    role: UserRoles,
+    action: "add" | "remove",
+  ) => {
     if (!validateForm()) {
       return;
     }
@@ -108,14 +111,14 @@ export function EditUserModal({
 
     if (result.success) {
       // Update current roles based on the action
-      if (action === 'add') {
-        setCurrentRoles(prev => [...prev, role]);
-      } else if (action === 'remove') {
-        setCurrentRoles(prev => prev.filter(r => r !== role));
+      if (action === "add") {
+        setCurrentRoles((prev) => [...prev, role]);
+      } else if (action === "remove") {
+        setCurrentRoles((prev) => prev.filter((r) => r !== role));
       }
       setErrors({});
     } else {
-      setErrors({ submit: result.error || 'Failed to update role' });
+      setErrors({ submit: result.error || "Failed to update role" });
     }
   };
 
@@ -188,8 +191,8 @@ export function EditUserModal({
                       {currentRoles.length > 1 && (
                         <button
                           type="button"
-                          onClick={() => handleRoleAction(role, 'remove')}
-                          className="ml-1 h-4 w-4 rounded-full hover:bg-blue-200 flex items-center justify-center"
+                          onClick={() => handleRoleAction(role, "remove")}
+                          className="ml-1 flex h-4 w-4 items-center justify-center rounded-full hover:bg-blue-200"
                           disabled={isLoading}
                         >
                           ×
@@ -204,7 +207,8 @@ export function EditUserModal({
             </div>
 
             <p className="mt-1 text-xs text-gray-500">
-              Current roles assigned to this user. Click × to remove a role (minimum 1 role required).
+              Current roles assigned to this user. Click × to remove a role
+              (minimum 1 role required).
             </p>
           </div>
 
@@ -230,9 +234,9 @@ export function EditUserModal({
 
               <button
                 type="button"
-                onClick={() => handleRoleAction(formData.role, 'add')}
+                onClick={() => handleRoleAction(formData.role, "add")}
                 disabled={isLoading || currentRoles.includes(formData.role)}
-                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                className="rounded-md bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-400"
               >
                 Add Role
               </button>

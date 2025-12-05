@@ -289,7 +289,8 @@ export default function Sidebar() {
     {
       icon: icons.people,
       label: "People",
-      active: pathname.includes("/admin/") && !pathname.includes("/admin/dashboard"),
+      active:
+        pathname.includes("/admin/") && !pathname.includes("/admin/dashboard"),
     },
   ];
 
@@ -325,122 +326,122 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="flex h-full w-[280px] flex-col flex-shrink-0 border-r border-[var(--color-border-light)] bg-[var(--color-white)]">
+    <aside className="flex h-full w-[280px] flex-shrink-0 flex-col border-r border-[var(--color-border-light)] bg-[var(--color-white)]">
       <div className="flex-1">
         <nav className="p-4">
-        <ul className="space-y-1">
-          {menuItems.map((item, idx) => (
-            // FIX 2: The <li> wrapper is here. Added className="relative" to it.
-            <li className="relative" key={idx}>
-              <SidebarItem
-                {...item}
-                index={idx}
-                onClick={() => {
-                  if (item.label === "People") {
-                    setPeopleOpen((v) => !v);
-                  }
-                }}
-              />
+          <ul className="space-y-1">
+            {menuItems.map((item, idx) => (
+              // FIX 2: The <li> wrapper is here. Added className="relative" to it.
+              <li className="relative" key={idx}>
+                <SidebarItem
+                  {...item}
+                  index={idx}
+                  onClick={() => {
+                    if (item.label === "People") {
+                      setPeopleOpen((v) => !v);
+                    }
+                  }}
+                />
 
-              {item.label === "People" && (
-                <div
-                  className={`relative mt-2 mb-4 ${peopleOpen ? "block" : "hidden"}`}
-                  style={{ zIndex: 1 }}
-                >
+                {item.label === "People" && (
                   <div
-                    aria-hidden
-                    className="absolute"
-                    style={{
-                      left: 24,
-                      top: 8,
-                      bottom: 8,
-                      width: 3,
-                      background: "var(--color-black)",
-                      borderRadius: 2,
-                    }}
-                  />
+                    className={`relative mt-2 mb-4 ${peopleOpen ? "block" : "hidden"}`}
+                    style={{ zIndex: 1 }}
+                  >
+                    <div
+                      aria-hidden
+                      className="absolute"
+                      style={{
+                        left: 24,
+                        top: 8,
+                        bottom: 8,
+                        width: 3,
+                        background: "var(--color-black)",
+                        borderRadius: 2,
+                      }}
+                    />
 
-                  {/* FIX 3: Replaced invalid <div> wrappers with a proper <ul>/<li> structure for the sub-menu. */}
-                  <ul className="flex flex-col space-y-6">
-                    {subItems.map((sub, sidx) => {
-                      const isSelected = sub.active;
-                      return (
-                        <li className="relative" key={sidx}>
-                          <span
-                            aria-hidden
-                            className="absolute top-1/2 -translate-y-1/2"
-                            style={{
-                              left: "19.5px",
-                              width: 12,
-                              height: 12,
-                              borderRadius: "50%",
-                              background: isSelected
-                                ? "var(--color-yellow)"
-                                : "var(--color-black)",
-                              border: "3px solid var(--color-black)",
-                              boxSizing: "border-box",
-                              zIndex: 1,
-                            }}
-                          />
+                    {/* FIX 3: Replaced invalid <div> wrappers with a proper <ul>/<li> structure for the sub-menu. */}
+                    <ul className="flex flex-col space-y-6">
+                      {subItems.map((sub, sidx) => {
+                        const isSelected = sub.active;
+                        return (
+                          <li className="relative" key={sidx}>
+                            <span
+                              aria-hidden
+                              className="absolute top-1/2 -translate-y-1/2"
+                              style={{
+                                left: "19.5px",
+                                width: 12,
+                                height: 12,
+                                borderRadius: "50%",
+                                background: isSelected
+                                  ? "var(--color-yellow)"
+                                  : "var(--color-black)",
+                                border: "3px solid var(--color-black)",
+                                boxSizing: "border-box",
+                                zIndex: 1,
+                              }}
+                            />
 
-                          <Link
-                            className={`flex items-center space-x-3 rounded-lg px-3 py-1 pl-12 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] ${
-                              isSelected
-                                ? "font-semibold text-[var(--color-gray-900)]"
-                                : "text-[var(--color-gray-700)]"
-                            }`}
-                            href={sub.href || "#"}
-                          >
-                            <span className="text-[var(--color-gray-700)]">
-                              {sub.icon}
-                            </span>
+                            <Link
+                              className={`flex items-center space-x-3 rounded-lg px-3 py-1 pl-12 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] ${
+                                isSelected
+                                  ? "font-semibold text-[var(--color-gray-900)]"
+                                  : "text-[var(--color-gray-700)]"
+                              }`}
+                              href={sub.href || "#"}
+                            >
+                              <span className="text-[var(--color-gray-700)]">
+                                {sub.icon}
+                              </span>
 
-                            <span>{sub.label}</span>
-                          </Link>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+                              <span>{sub.label}</span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
         </nav>
       </div>
 
       {/* User Actions */}
       <div className="border-t border-[var(--color-gray-200)] p-4">
         <div className="space-y-1">
-        <a
-          className="flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-gray-50)] hover:text-[var(--color-gray-900)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none"
-          href="#"
-        >
-          {icons.settings}
-
-          <span>Settings</span>
-        </a>
-
-        <button
-          className="flex w-full items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-red-50)] hover:text-[var(--color-red-700)] focus:ring-2 focus:ring-[var(--color-red-500)] focus:ring-offset-2 focus:outline-none"
-          onClick={handleLogout}
-        >
-          <svg
-            className="h-5 w-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <a
+            className="flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-gray-50)] hover:text-[var(--color-gray-900)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none"
+            href="#"
           >
-            <path
-              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-            />
-          </svg>
+            {icons.settings}
 
-          <span>Logout</span>
-        </button>
+            <span>Settings</span>
+          </a>
+
+          <button
+            className="flex w-full items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-red-50)] hover:text-[var(--color-red-700)] focus:ring-2 focus:ring-[var(--color-red-500)] focus:ring-offset-2 focus:outline-none"
+            onClick={handleLogout}
+          >
+            <svg
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+              />
+            </svg>
+
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     </aside>

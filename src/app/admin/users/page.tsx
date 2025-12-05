@@ -47,9 +47,9 @@ export default function AdminUsersPage() {
   // Helper function to format role display
   const formatRole = (role: string | string[] | undefined): React.ReactNode => {
     if (!role) return <span className="text-gray-500">No roles</span>;
-    
+
     const roles = Array.isArray(role) ? role : [role];
-    
+
     if (roles.length === 1) {
       return (
         <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
@@ -57,12 +57,12 @@ export default function AdminUsersPage() {
         </span>
       );
     }
-    
+
     return (
       <div className="flex flex-wrap gap-1">
         {roles.slice(0, 2).map((r, index) => (
-          <span 
-            key={index} 
+          <span
+            key={index}
             className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800"
           >
             {r?.replace(/_/g, " ") || "unknown"}
@@ -125,13 +125,16 @@ export default function AdminUsersPage() {
   const handleUpdateUser = async (userData: {
     email: string;
     role: UserRoles;
-    action: 'add' | 'remove';
+    action: "add" | "remove";
   }) => {
     if (!selectedUser) return { success: false, error: "No user selected" };
 
     try {
-      const updateType = userData.action === 'add' ? UpdateRole.ADD_ROLE : UpdateRole.DELETE_ROLE;
-      
+      const updateType =
+        userData.action === "add"
+          ? UpdateRole.ADD_ROLE
+          : UpdateRole.DELETE_ROLE;
+
       const result = await updateUser({
         email: userData.email,
         type: updateType,

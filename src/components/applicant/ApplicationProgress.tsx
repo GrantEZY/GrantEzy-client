@@ -6,6 +6,11 @@
 
 import { ApplicationStep } from "@/types/applicant.types";
 
+/**
+ * Application Progress Bar Component
+ * Shows overall progress percentage
+ */
+
 interface ApplicationProgressProps {
   currentStep: ApplicationStep;
   totalSteps: number;
@@ -19,7 +24,7 @@ export default function ApplicationProgress({
 }: ApplicationProgressProps) {
   return (
     <div className="mb-8">
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <span className="text-sm font-medium text-gray-700">
           Step {currentStep} of {totalSteps}
         </span>
@@ -27,7 +32,7 @@ export default function ApplicationProgress({
           {percentage}% Complete
         </span>
       </div>
-      <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
         <div
           className="h-full bg-blue-600 transition-all duration-300 ease-in-out"
           style={{ width: `${percentage}%` }}

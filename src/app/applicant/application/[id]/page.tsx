@@ -1,11 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
 import Link from "next/link";
+import { useParams } from "next/navigation";
+
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import ApplicantLayout from "@/components/layout/ApplicantLayout";
+
 import { applicantService } from "@/services/applicant.service";
+
 import { Application } from "@/types/applicant.types";
 
 export default function ApplicationDetailsPage() {
@@ -23,9 +27,10 @@ export default function ApplicationDetailsPage() {
         setIsLoading(true);
         setError("");
 
-        const response = await applicantService.getUserCreatedApplicationDetails(
-          applicationId,
-        );
+        const response =
+          await applicantService.getUserCreatedApplicationDetails(
+            applicationId,
+          );
 
         if (response.status === 200 && response.res.application) {
           setApplication(response.res.application);
@@ -50,10 +55,12 @@ export default function ApplicationDetailsPage() {
     return (
       <AuthGuard>
         <ApplicantLayout>
-          <div className="flex justify-center items-center min-h-[400px]">
+          <div className="flex min-h-[400px] items-center justify-center">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading application details...</p>
+              <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
+              <p className="mt-4 text-gray-600">
+                Loading application details...
+              </p>
             </div>
           </div>
         </ApplicantLayout>
@@ -114,7 +121,7 @@ export default function ApplicationDetailsPage() {
             </div>
             <Link
               href="/applicant"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
             >
               ← Back to Dashboard
             </Link>
@@ -123,10 +130,11 @@ export default function ApplicationDetailsPage() {
           {/* Status Badge */}
           <div className="mt-4">
             <span
-              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${application.isSubmitted
-                ? "bg-green-100 text-green-800"
-                : "bg-yellow-100 text-yellow-800"
-                }`}
+              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                application.isSubmitted
+                  ? "bg-green-100 text-green-800"
+                  : "bg-yellow-100 text-yellow-800"
+              }`}
             >
               {application.isSubmitted ? "Submitted" : "Draft"}
             </span>
@@ -139,7 +147,7 @@ export default function ApplicationDetailsPage() {
         {/* Basic Information */}
         {application.basicInfo && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
               Basic Information
             </h2>
             <div className="space-y-4">
@@ -156,19 +164,25 @@ export default function ApplicationDetailsPage() {
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Problem Statement</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Problem Statement
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.basicInfo.problem}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Proposed Solution</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Proposed Solution
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.basicInfo.solution}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Innovation</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Innovation
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.basicInfo.innovation}
                 </p>
@@ -180,75 +194,101 @@ export default function ApplicationDetailsPage() {
         {/* Budget Details */}
         {application.budget && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
               Budget Details
             </h2>
             <div className="space-y-6">
               {/* ManPower */}
-              {application.budget.ManPower && application.budget.ManPower.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">ManPower</h3>
-                  <div className="space-y-2">
-                    {application.budget.ManPower.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center p-2 bg-gray-50 rounded"
-                      >
-                        <span className="text-sm text-gray-900">{item.BudgetReason}</span>
-                        <span className="text-sm font-medium text-gray-900">
-                          {formatCurrency(item.Budget.amount, item.Budget.currency)}
-                        </span>
-                      </div>
-                    ))}
+              {application.budget.ManPower &&
+                application.budget.ManPower.length > 0 && (
+                  <div>
+                    <h3 className="mb-2 text-sm font-medium text-gray-700">
+                      ManPower
+                    </h3>
+                    <div className="space-y-2">
+                      {application.budget.ManPower.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between rounded bg-gray-50 p-2"
+                        >
+                          <span className="text-sm text-gray-900">
+                            {item.BudgetReason}
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            {formatCurrency(
+                              item.Budget.amount,
+                              item.Budget.currency,
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Equipment */}
-              {application.budget.Equipment && application.budget.Equipment.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Equipment</h3>
-                  <div className="space-y-2">
-                    {application.budget.Equipment.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center p-2 bg-gray-50 rounded"
-                      >
-                        <span className="text-sm text-gray-900">{item.BudgetReason}</span>
-                        <span className="text-sm font-medium text-gray-900">
-                          {formatCurrency(item.Budget.amount, item.Budget.currency)}
-                        </span>
-                      </div>
-                    ))}
+              {application.budget.Equipment &&
+                application.budget.Equipment.length > 0 && (
+                  <div>
+                    <h3 className="mb-2 text-sm font-medium text-gray-700">
+                      Equipment
+                    </h3>
+                    <div className="space-y-2">
+                      {application.budget.Equipment.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between rounded bg-gray-50 p-2"
+                        >
+                          <span className="text-sm text-gray-900">
+                            {item.BudgetReason}
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            {formatCurrency(
+                              item.Budget.amount,
+                              item.Budget.currency,
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Other Costs */}
-              {application.budget.OtherCosts && application.budget.OtherCosts.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-700 mb-2">Other Costs</h3>
-                  <div className="space-y-2">
-                    {application.budget.OtherCosts.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex justify-between items-center p-2 bg-gray-50 rounded"
-                      >
-                        <span className="text-sm text-gray-900">{item.BudgetReason}</span>
-                        <span className="text-sm font-medium text-gray-900">
-                          {formatCurrency(item.Budget.amount, item.Budget.currency)}
-                        </span>
-                      </div>
-                    ))}
+              {application.budget.OtherCosts &&
+                application.budget.OtherCosts.length > 0 && (
+                  <div>
+                    <h3 className="mb-2 text-sm font-medium text-gray-700">
+                      Other Costs
+                    </h3>
+                    <div className="space-y-2">
+                      {application.budget.OtherCosts.map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between rounded bg-gray-50 p-2"
+                        >
+                          <span className="text-sm text-gray-900">
+                            {item.BudgetReason}
+                          </span>
+                          <span className="text-sm font-medium text-gray-900">
+                            {formatCurrency(
+                              item.Budget.amount,
+                              item.Budget.currency,
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Single Items */}
               <div className="grid grid-cols-2 gap-4">
                 {application.budget.Consumables && (
-                  <div className="p-3 bg-gray-50 rounded">
-                    <h3 className="text-sm font-medium text-gray-700">Consumables</h3>
+                  <div className="rounded bg-gray-50 p-3">
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Consumables
+                    </h3>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Consumables.Budget.amount,
@@ -258,8 +298,10 @@ export default function ApplicationDetailsPage() {
                   </div>
                 )}
                 {application.budget.Travel && (
-                  <div className="p-3 bg-gray-50 rounded">
-                    <h3 className="text-sm font-medium text-gray-700">Travel</h3>
+                  <div className="rounded bg-gray-50 p-3">
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Travel
+                    </h3>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Travel.Budget.amount,
@@ -269,8 +311,10 @@ export default function ApplicationDetailsPage() {
                   </div>
                 )}
                 {application.budget.Contigency && (
-                  <div className="p-3 bg-gray-50 rounded">
-                    <h3 className="text-sm font-medium text-gray-700">Contingency</h3>
+                  <div className="rounded bg-gray-50 p-3">
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Contingency
+                    </h3>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Contigency.Budget.amount,
@@ -280,8 +324,10 @@ export default function ApplicationDetailsPage() {
                   </div>
                 )}
                 {application.budget.Overhead && (
-                  <div className="p-3 bg-gray-50 rounded">
-                    <h3 className="text-sm font-medium text-gray-700">Overhead</h3>
+                  <div className="rounded bg-gray-50 p-3">
+                    <h3 className="text-sm font-medium text-gray-700">
+                      Overhead
+                    </h3>
                     <p className="mt-1 text-base font-medium text-gray-900">
                       {formatCurrency(
                         application.budget.Overhead.Budget.amount,
@@ -298,18 +344,22 @@ export default function ApplicationDetailsPage() {
         {/* Technical Specifications */}
         {application.technicalSpec && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
               Technical Specifications
             </h2>
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Description</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Description
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.technicalSpec.description}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Tech Stack</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Tech Stack
+                </h3>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {application.technicalSpec.techStack.map((tech, index) => (
                     <span
@@ -322,7 +372,9 @@ export default function ApplicationDetailsPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Prototype Status</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Prototype Status
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.technicalSpec.prototype}
                 </p>
@@ -334,7 +386,7 @@ export default function ApplicationDetailsPage() {
         {/* Market Information */}
         {application.marketInfo && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
               Market Analysis
             </h2>
             <div className="space-y-4">
@@ -377,13 +429,15 @@ export default function ApplicationDetailsPage() {
         {/* Revenue Model */}
         {application.revenueModel && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
               Revenue Model
             </h2>
             <div className="space-y-4">
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Primary Revenue Stream</h3>
-                <div className="mt-2 p-3 bg-gray-50 rounded">
+                <h3 className="text-sm font-medium text-gray-500">
+                  Primary Revenue Stream
+                </h3>
+                <div className="mt-2 rounded bg-gray-50 p-3">
                   <p className="text-sm font-medium text-gray-900">
                     {application.revenueModel.primaryStream.type} (
                     {application.revenueModel.primaryStream.percentage}%)
@@ -400,25 +454,33 @@ export default function ApplicationDetailsPage() {
                       Secondary Revenue Streams
                     </h3>
                     <div className="mt-2 space-y-2">
-                      {application.revenueModel.secondaryStreams.map((stream, index) => (
-                        <div key={index} className="p-3 bg-gray-50 rounded">
-                          <p className="text-sm font-medium text-gray-900">
-                            {stream.type} ({stream.percentage}%)
-                          </p>
-                          <p className="mt-1 text-sm text-gray-600">{stream.description}</p>
-                        </div>
-                      ))}
+                      {application.revenueModel.secondaryStreams.map(
+                        (stream, index) => (
+                          <div key={index} className="rounded bg-gray-50 p-3">
+                            <p className="text-sm font-medium text-gray-900">
+                              {stream.type} ({stream.percentage}%)
+                            </p>
+                            <p className="mt-1 text-sm text-gray-600">
+                              {stream.description}
+                            </p>
+                          </div>
+                        ),
+                      )}
                     </div>
                   </div>
                 )}
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Pricing Strategy</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Pricing Strategy
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.revenueModel.pricing}
                 </p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-gray-500">Unit Economics</h3>
+                <h3 className="text-sm font-medium text-gray-500">
+                  Unit Economics
+                </h3>
                 <p className="mt-1 text-base text-gray-900">
                   {application.revenueModel.unitEconomics}
                 </p>
@@ -428,34 +490,40 @@ export default function ApplicationDetailsPage() {
         )}
 
         {/* Risks & Milestones */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="mb-8 grid gap-6 md:grid-cols-2">
           {/* Risks */}
           {application.risks && application.risks.length > 0 && (
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Risks</h2>
+              <h2 className="mb-4 text-xl font-semibold text-gray-900">
+                Risks
+              </h2>
               <div className="space-y-3">
                 {application.risks.map((risk, index) => (
-                  <div key={index} className="p-3 bg-gray-50 rounded">
-                    <div className="flex items-center justify-between mb-2">
+                  <div key={index} className="rounded bg-gray-50 p-3">
+                    <div className="mb-2 flex items-center justify-between">
                       <span className="text-sm font-medium text-gray-900">
                         Risk #{index + 1}
                       </span>
                       <span
-                        className={`text-xs font-semibold px-2 py-1 rounded ${risk.impact === "CRITICAL"
-                          ? "bg-red-100 text-red-800"
-                          : risk.impact === "HIGH"
-                            ? "bg-orange-100 text-orange-800"
-                            : risk.impact === "MEDIUM"
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-green-100 text-green-800"
-                          }`}
+                        className={`rounded px-2 py-1 text-xs font-semibold ${
+                          risk.impact === "CRITICAL"
+                            ? "bg-red-100 text-red-800"
+                            : risk.impact === "HIGH"
+                              ? "bg-orange-100 text-orange-800"
+                              : risk.impact === "MEDIUM"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-green-100 text-green-800"
+                        }`}
                       >
                         {risk.impact}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-700 mb-2">{risk.description}</p>
+                    <p className="mb-2 text-sm text-gray-700">
+                      {risk.description}
+                    </p>
                     <p className="text-xs text-gray-600">
-                      <span className="font-medium">Mitigation:</span> {risk.mitigation}
+                      <span className="font-medium">Mitigation:</span>{" "}
+                      {risk.mitigation}
                     </p>
                   </div>
                 ))}
@@ -466,10 +534,12 @@ export default function ApplicationDetailsPage() {
           {/* Milestones */}
           {application.milestones && application.milestones.length > 0 && (
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Milestones</h2>
+              <h2 className="mb-4 text-xl font-semibold text-gray-900">
+                Milestones
+              </h2>
               <div className="space-y-3">
                 {application.milestones.map((milestone, index) => (
-                  <div key={index} className="p-3 bg-gray-50 rounded">
+                  <div key={index} className="rounded bg-gray-50 p-3">
                     <p className="text-sm font-medium text-gray-900">
                       {milestone.title}
                     </p>
@@ -479,16 +549,19 @@ export default function ApplicationDetailsPage() {
                     <p className="mt-2 text-xs text-gray-500">
                       Due: {formatDate(milestone.dueDate)}
                     </p>
-                    {milestone.deliverables && milestone.deliverables.length > 0 && (
-                      <div className="mt-2">
-                        <p className="text-xs font-medium text-gray-700">Deliverables:</p>
-                        <ul className="mt-1 list-disc list-inside text-xs text-gray-600">
-                          {milestone.deliverables.map((deliverable, idx) => (
-                            <li key={idx}>{deliverable}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
+                    {milestone.deliverables &&
+                      milestone.deliverables.length > 0 && (
+                        <div className="mt-2">
+                          <p className="text-xs font-medium text-gray-700">
+                            Deliverables:
+                          </p>
+                          <ul className="mt-1 list-inside list-disc text-xs text-gray-600">
+                            {milestone.deliverables.map((deliverable, idx) => (
+                              <li key={idx}>{deliverable}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                   </div>
                 ))}
               </div>
@@ -499,18 +572,22 @@ export default function ApplicationDetailsPage() {
         {/* Documents */}
         {application.documents && (
           <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Documents</h2>
-            <div className="grid md:grid-cols-2 gap-4">
+            <h2 className="mb-4 text-xl font-semibold text-gray-900">
+              Documents
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
               {application.documents.endorsementLetter && (
-                <div className="p-3 bg-gray-50 rounded">
-                  <p className="text-sm font-medium text-gray-900">Endorsement Letter</p>
+                <div className="rounded bg-gray-50 p-3">
+                  <p className="text-sm font-medium text-gray-900">
+                    Endorsement Letter
+                  </p>
                   <p className="mt-1 text-xs text-gray-600">
                     {application.documents.endorsementLetter.fileName}
                   </p>
                 </div>
               )}
               {application.documents.plagiarismUndertaking && (
-                <div className="p-3 bg-gray-50 rounded">
+                <div className="rounded bg-gray-50 p-3">
                   <p className="text-sm font-medium text-gray-900">
                     Plagiarism Undertaking
                   </p>
@@ -520,7 +597,7 @@ export default function ApplicationDetailsPage() {
                 </div>
               )}
               {application.documents.ageProof && (
-                <div className="p-3 bg-gray-50 rounded">
+                <div className="rounded bg-gray-50 p-3">
                   <p className="text-sm font-medium text-gray-900">Age Proof</p>
                   <p className="mt-1 text-xs text-gray-600">
                     {application.documents.ageProof.fileName}
@@ -528,7 +605,7 @@ export default function ApplicationDetailsPage() {
                 </div>
               )}
               {application.documents.aadhar && (
-                <div className="p-3 bg-gray-50 rounded">
+                <div className="rounded bg-gray-50 p-3">
                   <p className="text-sm font-medium text-gray-900">Aadhar</p>
                   <p className="mt-1 text-xs text-gray-600">
                     {application.documents.aadhar.fileName}
@@ -536,16 +613,20 @@ export default function ApplicationDetailsPage() {
                 </div>
               )}
               {application.documents.piCertificate && (
-                <div className="p-3 bg-gray-50 rounded">
-                  <p className="text-sm font-medium text-gray-900">PI Certificate</p>
+                <div className="rounded bg-gray-50 p-3">
+                  <p className="text-sm font-medium text-gray-900">
+                    PI Certificate
+                  </p>
                   <p className="mt-1 text-xs text-gray-600">
                     {application.documents.piCertificate.fileName}
                   </p>
                 </div>
               )}
               {application.documents.coPiCertificate && (
-                <div className="p-3 bg-gray-50 rounded">
-                  <p className="text-sm font-medium text-gray-900">Co-PI Certificate</p>
+                <div className="rounded bg-gray-50 p-3">
+                  <p className="text-sm font-medium text-gray-900">
+                    Co-PI Certificate
+                  </p>
                   <p className="mt-1 text-xs text-gray-600">
                     {application.documents.coPiCertificate.fileName}
                   </p>
@@ -556,44 +637,50 @@ export default function ApplicationDetailsPage() {
         )}
 
         {/* Team Members */}
-        {application.teamMateInvites && application.teamMateInvites.length > 0 && (
-          <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Team Members</h2>
-            <div className="space-y-2">
-              {application.teamMateInvites.map((invite) => (
-                <div
-                  key={invite.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded"
-                >
-                  <span className="text-sm text-gray-900">{invite.email}</span>
-                  <span
-                    className={`text-xs font-semibold px-2 py-1 rounded ${invite.status === "ACCEPTED"
-                      ? "bg-green-100 text-green-800"
-                      : invite.status === "PENDING"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
-                      }`}
+        {application.teamMateInvites &&
+          application.teamMateInvites.length > 0 && (
+            <div className="mb-8 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-4 text-xl font-semibold text-gray-900">
+                Team Members
+              </h2>
+              <div className="space-y-2">
+                {application.teamMateInvites.map((invite) => (
+                  <div
+                    key={invite.id}
+                    className="flex items-center justify-between rounded bg-gray-50 p-3"
                   >
-                    {invite.status}
-                  </span>
-                </div>
-              ))}
+                    <span className="text-sm text-gray-900">
+                      {invite.email}
+                    </span>
+                    <span
+                      className={`rounded px-2 py-1 text-xs font-semibold ${
+                        invite.status === "ACCEPTED"
+                          ? "bg-green-100 text-green-800"
+                          : invite.status === "PENDING"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {invite.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Footer Actions */}
-        <div className="flex justify-between items-center border-t border-gray-200 pt-6">
+        <div className="flex items-center justify-between border-t border-gray-200 pt-6">
           <Link
             href="/applicant"
-            className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+            className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
           >
             ← Back to Dashboard
           </Link>
           {!application.isSubmitted && (
             <Link
               href={`/applicant/new-application?applicationId=${applicationId}`}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700"
             >
               Continue Editing →
             </Link>

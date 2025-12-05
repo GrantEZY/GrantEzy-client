@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import { useReviewer } from "@/hooks/useReviewer";
+
 import { Recommendation } from "@/types/reviewer.types";
 
 interface ReviewSubmissionFormProps {
@@ -73,7 +76,10 @@ export default function ReviewSubmissionForm({
     // Validate scores
     Object.keys(scores).forEach((key) => {
       const fieldName = key.charAt(0).toUpperCase() + key.slice(1);
-      const error = validateScore(scores[key as keyof typeof scores], fieldName);
+      const error = validateScore(
+        scores[key as keyof typeof scores],
+        fieldName,
+      );
       if (error) {
         newErrors[key as keyof FormErrors] = error;
       }
@@ -90,7 +96,8 @@ export default function ReviewSubmissionForm({
     } else {
       const budgetValue = parseFloat(suggestedBudget.amount);
       if (isNaN(budgetValue) || budgetValue <= 0) {
-        newErrors.suggestedBudget = "Suggested budget must be a positive number";
+        newErrors.suggestedBudget =
+          "Suggested budget must be a positive number";
       }
     }
 
@@ -154,7 +161,7 @@ export default function ReviewSubmissionForm({
       setSubmitError(
         err instanceof Error
           ? err.message
-          : "An error occurred while submitting the review"
+          : "An error occurred while submitting the review",
       );
     } finally {
       setIsSubmitting(false);
@@ -235,8 +242,8 @@ export default function ReviewSubmissionForm({
           Evaluation Scores
         </h3>
         <p className="text-sm text-gray-600">
-          Rate each category from 0 to 100, where 0 is the lowest and 100 is
-          the highest.
+          Rate each category from 0 to 100, where 0 is the lowest and 100 is the
+          highest.
         </p>
 
         {/* Technical Score */}
@@ -438,7 +445,10 @@ export default function ReviewSubmissionForm({
             name="suggestedBudget"
             min="0"
             onChange={(e) => {
-              setSuggestedBudget((prev) => ({ ...prev, amount: e.target.value }));
+              setSuggestedBudget((prev) => ({
+                ...prev,
+                amount: e.target.value,
+              }));
               if (errors.suggestedBudget) {
                 setErrors((prev) => ({ ...prev, suggestedBudget: undefined }));
               }
@@ -453,7 +463,10 @@ export default function ReviewSubmissionForm({
             id="currency"
             name="currency"
             onChange={(e) =>
-              setSuggestedBudget((prev) => ({ ...prev, currency: e.target.value }))
+              setSuggestedBudget((prev) => ({
+                ...prev,
+                currency: e.target.value,
+              }))
             }
             value={suggestedBudget.currency}
           >
@@ -471,7 +484,7 @@ export default function ReviewSubmissionForm({
       {/* Form Actions */}
       <div className="flex justify-end space-x-3 border-t border-gray-200 pt-6">
         <button
-          className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           disabled={isSubmitting || submitSuccess}
           onClick={handleCancel}
           type="button"
@@ -479,7 +492,7 @@ export default function ReviewSubmissionForm({
           Cancel
         </button>
         <button
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           disabled={isSubmitting || submitSuccess}
           type="submit"
         >

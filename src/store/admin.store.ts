@@ -123,15 +123,19 @@ export const useAdminStore = create<AdminStore>((set) => ({
       console.log("Update user role response:", response);
 
       // Backend returns 200, 201, or 204 for successful update
-      if (response.status === 200 || response.status === 201 || response.status === 204) {
+      if (
+        response.status === 200 ||
+        response.status === 201 ||
+        response.status === 204
+      ) {
         set({ isLoading: false });
         return true;
       }
-      
+
       console.warn("Unexpected response status:", response.status);
-      set({ 
+      set({
         error: `Unexpected response status: ${response.status}`,
-        isLoading: false 
+        isLoading: false,
       });
       return false;
     } catch (error: unknown) {
@@ -140,15 +144,15 @@ export const useAdminStore = create<AdminStore>((set) => ({
       // Extract detailed error message from API response
       if (error && typeof error === "object" && "response" in error) {
         const apiError = error as {
-          response?: { 
+          response?: {
             status?: number;
             data?: { message?: string; error?: string; statusCode?: number };
           };
         };
-        
+
         const responseData = apiError.response?.data;
         const status = apiError.response?.status;
-        
+
         if (responseData?.message) {
           errorMessage = responseData.message;
         } else if (responseData?.error) {
@@ -244,7 +248,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
           type: response.res.type,
           createdAt: new Date().toISOString(),
         };
-        
+
         // Add the new organization to the list
         set((state) => ({
           organizations: [...state.organizations, newOrganization],

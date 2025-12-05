@@ -88,7 +88,7 @@ export interface CoApplicantErrorResponse {
 }
 
 // Union type for all possible responses
-export type CoApplicantApiResponse<T = any> = 
+export type CoApplicantApiResponse<T = any> =
   | { status: 200; message: string; res: T }
   | CoApplicantErrorResponse;
 
@@ -151,8 +151,15 @@ export interface CoApplicantState {
 export interface CoApplicantActions {
   getApplicationDetails: (applicationId: string) => Promise<void>;
   getTokenDetails: (token: string, slug: string) => Promise<void>;
-  updateInviteStatus: (token: string, slug: string, status: InviteStatus.ACCEPTED | InviteStatus.REJECTED) => Promise<void>;
-  getUserLinkedProjects: (page: number, numberOfResults: number) => Promise<void>;
+  updateInviteStatus: (
+    token: string,
+    slug: string,
+    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED,
+  ) => Promise<void>;
+  getUserLinkedProjects: (
+    page: number,
+    numberOfResults: number,
+  ) => Promise<void>;
   clearError: () => void;
   clearState: () => void;
 }

@@ -236,7 +236,10 @@ export class HttpClient {
   }
 
   // Public methods that don't send authentication headers
-  async publicGet<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+  async publicGet<T>(
+    endpoint: string,
+    params?: Record<string, string>,
+  ): Promise<T> {
     const url = new URL(getApiUrl(endpoint));
 
     if (params) {

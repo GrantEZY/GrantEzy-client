@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import {
-  FaBullseye,
-  FaExternalLinkAlt,
-  FaEye,
-  FaRocket,
-} from "react-icons/fa";
+import { FaBullseye, FaExternalLinkAlt, FaEye, FaRocket } from "react-icons/fa";
 
 import { leadership, successStories, team } from "@/constants";
 import { usePublicStore } from "@/store/public.store";
@@ -605,7 +600,9 @@ function OpenCallsSection() {
             <h2 className="mb-6 text-4xl font-bold text-[var(--color-gray-900)] md:text-5xl">
               Open Opportunities
             </h2>
-            <div className="text-red-600">Failed to load opportunities. Please try again later.</div>
+            <div className="text-red-600">
+              Failed to load opportunities. Please try again later.
+            </div>
           </div>
         </div>
       </section>
@@ -667,15 +664,19 @@ function OpenCallsSection() {
                     {/* Title & Description */}
                     <div className="flex-grow">
                       <h3 className="mb-2 text-xl font-bold text-[var(--color-gray-900)] transition-colors duration-300 group-hover:text-[var(--color-blue-700)]">
-                        {cycle.title || cycle.program?.name || "Innovation Program"}
+                        {cycle.title ||
+                          cycle.program?.name ||
+                          "Innovation Program"}
                       </h3>
 
-                      <p className="mb-4 text-sm text-[var(--color-blue-600)] font-semibold">
+                      <p className="mb-4 text-sm font-semibold text-[var(--color-blue-600)]">
                         {cycle.program?.name}
                       </p>
 
                       <p className="mb-6 leading-relaxed text-[var(--color-gray-600)]">
-                        {cycle.description || cycle.program?.description || "Join our innovation program to accelerate your startup journey."}
+                        {cycle.description ||
+                          cycle.program?.description ||
+                          "Join our innovation program to accelerate your startup journey."}
                       </p>
 
                       {/* Dates */}
@@ -685,14 +686,16 @@ function OpenCallsSection() {
                             Application Period
                           </div>
                           <div className="text-xs text-[var(--color-gray-600)]">
-                            {formatDate(cycle.startDate)} - {formatDate(cycle.endDate)}
+                            {formatDate(cycle.startDate)} -{" "}
+                            {formatDate(cycle.endDate)}
                           </div>
                         </div>
 
                         {cycle.budget && (
                           <div className="rounded-lg bg-white/50 p-3">
                             <div className="text-lg font-bold text-[var(--color-gray-900)]">
-                              {cycle.budget.currency} {cycle.budget.amount.toLocaleString()}
+                              {cycle.budget.currency}{" "}
+                              {cycle.budget.amount.toLocaleString()}
                             </div>
                             <div className="text-xs text-[var(--color-gray-600)]">
                               Funding Available
@@ -717,14 +720,17 @@ function OpenCallsSection() {
                     {/* CTA Button - Always at bottom */}
                     <div className="mt-auto">
                       <button
-                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${cycle.status === "OPEN"
-                          ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
-                          : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
-                          }`}
+                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${
+                          cycle.status === "OPEN"
+                            ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
+                            : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
+                        }`}
                         disabled={cycle.status !== "OPEN"}
                       >
                         <span>
-                          {cycle.status === "OPEN" ? "Apply Now" : "Applications Closed"}
+                          {cycle.status === "OPEN"
+                            ? "Apply Now"
+                            : "Applications Closed"}
                         </span>
 
                         {cycle.status === "OPEN" && (
@@ -740,7 +746,7 @@ function OpenCallsSection() {
         ) : (
           <div className="mb-16 text-center">
             <div className="rounded-2xl bg-white p-12 shadow-lg">
-              <div className="text-6xl mb-6">🚀</div>
+              <div className="mb-6 text-6xl">🚀</div>
               <h3 className="mb-4 text-2xl font-bold text-[var(--color-gray-900)]">
                 No Active Opportunities
               </h3>

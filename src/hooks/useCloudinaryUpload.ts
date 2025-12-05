@@ -1,16 +1,16 @@
 /**
  * Custom hook for file uploads to Cloudinary
  */
-
 import { useState } from "react";
+
 import {
-  uploadToCloudinary,
-  uploadMultipleToCloudinary,
-  validateFile,
+  CloudinaryUploadResult,
   formatFileSize,
   getMimeType,
-  CloudinaryUploadResult,
+  uploadMultipleToCloudinary,
   UploadOptions,
+  uploadToCloudinary,
+  validateFile,
 } from "../utils/cloudinary.util";
 
 export interface UploadProgress {
@@ -31,7 +31,7 @@ export const useCloudinaryUpload = () => {
    */
   const uploadFile = async (
     file: File,
-    options?: UploadOptions
+    options?: UploadOptions,
   ): Promise<CloudinaryUploadResult | null> => {
     setUploading(true);
     setError(null);
@@ -68,8 +68,7 @@ export const useCloudinaryUpload = () => {
       setUploading(false);
       return result;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Upload failed";
+      const errorMessage = err instanceof Error ? err.message : "Upload failed";
       setError(errorMessage);
 
       setProgress([
@@ -91,7 +90,7 @@ export const useCloudinaryUpload = () => {
    */
   const uploadFiles = async (
     files: File[],
-    options?: UploadOptions
+    options?: UploadOptions,
   ): Promise<(CloudinaryUploadResult | null)[]> => {
     setUploading(true);
     setError(null);
@@ -118,7 +117,7 @@ export const useCloudinaryUpload = () => {
         fileName: file.name,
         progress: 0,
         status: "uploading",
-      }))
+      })),
     );
 
     try {
@@ -130,14 +129,13 @@ export const useCloudinaryUpload = () => {
           progress: 100,
           status: "success",
           result: results[index],
-        }))
+        })),
       );
 
       setUploading(false);
       return results;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Upload failed";
+      const errorMessage = err instanceof Error ? err.message : "Upload failed";
       setError(errorMessage);
 
       setProgress(
@@ -146,7 +144,7 @@ export const useCloudinaryUpload = () => {
           progress: 0,
           status: "error",
           error: errorMessage,
-        }))
+        })),
       );
 
       setUploading(false);

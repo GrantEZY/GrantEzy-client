@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useReviewer } from "@/hooks/useReviewer";
+
 import { InviteStatus } from "@/types/reviewer.types";
 
 export default function ReviewerInvitePage() {
@@ -31,7 +34,9 @@ export default function ReviewerInvitePage() {
     };
   }, [searchParams, clearError]);
 
-  const handleResponse = async (status: InviteStatus.ACCEPTED | InviteStatus.REJECTED) => {
+  const handleResponse = async (
+    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED,
+  ) => {
     if (!token || !slug) {
       setError("Invalid invitation link. Missing token or slug.");
       return;
@@ -51,22 +56,24 @@ export default function ReviewerInvitePage() {
       // Success - clear URL and show success message
       setSuccess(true);
       setInviteAccepted(status === InviteStatus.ACCEPTED);
-      window.history.replaceState({}, '', '/reviewer/invite');
+      window.history.replaceState({}, "", "/reviewer/invite");
 
       // Redirect to login after a short delay
       setTimeout(() => {
         router.push("/login?redirect=/reviewer");
       }, 3000);
-
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An error occurred while processing your response";
-      
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "An error occurred while processing your response";
+
       // Check if this is an "already handled" error - treat as success
       if (errorMessage.toLowerCase().includes("already")) {
         setSuccess(true);
         setInviteAccepted(true); // Assume it was accepted if already handled
-        window.history.replaceState({}, '', '/reviewer/invite');
-        
+        window.history.replaceState({}, "", "/reviewer/invite");
+
         setTimeout(() => {
           router.push("/login?redirect=/reviewer");
         }, 2000);
@@ -84,7 +91,7 @@ export default function ReviewerInvitePage() {
         <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
           {/* Header */}
           <div className="border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50 px-6 py-8">
-            <div className="flex justify-center mb-4">
+            <div className="mb-4 flex justify-center">
               <div className="rounded-full bg-indigo-100 p-3">
                 <svg
                   className="h-8 w-8 text-indigo-600"
@@ -129,8 +136,8 @@ export default function ReviewerInvitePage() {
                     </svg>
                     <div className="ml-3">
                       <p className="text-sm text-blue-800">
-                        A Program Manager has invited you to review a grant application.
-                        Please accept or decline this invitation.
+                        A Program Manager has invited you to review a grant
+                        application. Please accept or decline this invitation.
                       </p>
                     </div>
                   </div>
@@ -183,8 +190,9 @@ export default function ReviewerInvitePage() {
                       </svg>
                       <div className="ml-3">
                         <p className="text-sm text-yellow-800">
-                          This invitation link appears to be invalid or incomplete.
-                          Please check the link in your email invitation.
+                          This invitation link appears to be invalid or
+                          incomplete. Please check the link in your email
+                          invitation.
                         </p>
                       </div>
                     </div>
@@ -194,7 +202,7 @@ export default function ReviewerInvitePage() {
                 {/* Action Buttons */}
                 <div className="flex space-x-4">
                   <button
-                    className="flex-1 rounded-md bg-green-600 px-4 py-3 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex-1 rounded-md bg-green-600 px-4 py-3 text-sm font-medium text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isLoading || !token || !slug}
                     onClick={() => handleResponse(InviteStatus.ACCEPTED)}
                     type="button"
@@ -228,7 +236,7 @@ export default function ReviewerInvitePage() {
                   </button>
 
                   <button
-                    className="flex-1 rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex-1 rounded-md border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                     disabled={isLoading || !token || !slug}
                     onClick={() => handleResponse(InviteStatus.REJECTED)}
                     type="button"
@@ -256,7 +264,9 @@ export default function ReviewerInvitePage() {
                   </svg>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                  {inviteAccepted ? "Invitation Accepted!" : "Invitation Declined"}
+                  {inviteAccepted
+                    ? "Invitation Accepted!"
+                    : "Invitation Declined"}
                 </h3>
                 <p className="mb-4 text-sm text-gray-600">
                   {inviteAccepted
@@ -275,7 +285,10 @@ export default function ReviewerInvitePage() {
             <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
               <p className="text-center text-xs text-gray-500">
                 Need help?{" "}
-                <Link className="font-medium text-indigo-600 hover:text-indigo-500" href="/contact">
+                <Link
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  href="/contact"
+                >
                   Contact Support
                 </Link>
               </p>

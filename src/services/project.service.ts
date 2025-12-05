@@ -4,16 +4,16 @@
 import { API_CONFIG } from "../lib/config/api.config";
 import { httpClient } from "../lib/http/http-client";
 import {
+  CreateCycleCriteriaRequest,
+  CreateCycleCriteriaResponse,
   CreateProjectRequest,
   CreateProjectResponse,
+  GetCycleCriteriasRequest,
+  GetCycleCriteriasResponse,
   GetCycleProjectsRequest,
   GetCycleProjectsResponse,
   GetProjectDetailsRequest,
   GetProjectDetailsResponse,
-  CreateCycleCriteriaRequest,
-  CreateCycleCriteriaResponse,
-  GetCycleCriteriasRequest,
-  GetCycleCriteriasResponse,
 } from "../types/project.types";
 
 export class ProjectManagementService {

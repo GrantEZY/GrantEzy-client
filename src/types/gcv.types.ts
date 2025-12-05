@@ -19,7 +19,7 @@ export enum ProgramStatus {
 
 export enum TRL {
   TRL1 = "TRL1",
-  TRL2 = "TRL2", 
+  TRL2 = "TRL2",
   TRL3 = "TRL3",
   TRL4 = "TRL4",
   TRL5 = "TRL5",

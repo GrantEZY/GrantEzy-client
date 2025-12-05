@@ -8,7 +8,9 @@ export const useReviewer = () => {
   // State
   const reviews = useReviewerStore((state) => state.reviews);
   const currentReview = useReviewerStore((state) => state.currentReview);
-  const reviewsPagination = useReviewerStore((state) => state.reviewsPagination);
+  const reviewsPagination = useReviewerStore(
+    (state) => state.reviewsPagination,
+  );
   const isLoadingReviews = useReviewerStore((state) => state.isLoadingReviews);
   const reviewsError = useReviewerStore((state) => state.reviewsError);
 
@@ -16,9 +18,13 @@ export const useReviewer = () => {
   const getUserReviews = useReviewerStore((state) => state.getUserReviews);
   const getReviewDetails = useReviewerStore((state) => state.getReviewDetails);
   const submitReview = useReviewerStore((state) => state.submitReview);
-  const updateInviteStatus = useReviewerStore((state) => state.updateInviteStatus);
+  const updateInviteStatus = useReviewerStore(
+    (state) => state.updateInviteStatus,
+  );
   const clearReviews = useReviewerStore((state) => state.clearReviews);
-  const clearCurrentReview = useReviewerStore((state) => state.clearCurrentReview);
+  const clearCurrentReview = useReviewerStore(
+    (state) => state.clearCurrentReview,
+  );
   const clearError = useReviewerStore((state) => state.clearError);
 
   return {

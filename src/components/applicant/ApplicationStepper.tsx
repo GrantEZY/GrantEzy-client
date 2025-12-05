@@ -4,7 +4,12 @@
  */
 "use client";
 
-import { ApplicationStepInfo, ApplicationStep } from "@/types/applicant.types";
+import { ApplicationStep, ApplicationStepInfo } from "@/types/applicant.types";
+
+/**
+ * Application Stepper Component
+ * Shows the 7-step progress with visual indicators
+ */
 
 interface ApplicationStepperProps {
   steps: ApplicationStepInfo[];
@@ -21,12 +26,13 @@ export default function ApplicationStepper({
         {steps.map((step, index) => (
           <li key={step.step}>
             <div
-              className={`group relative flex items-start ${step.isActive
-                ? "cursor-default"
-                : step.isCompleted
-                  ? "cursor-pointer hover:opacity-75"
-                  : "cursor-not-allowed opacity-50"
-                }`}
+              className={`group relative flex items-start ${
+                step.isActive
+                  ? "cursor-default"
+                  : step.isCompleted
+                    ? "cursor-pointer hover:opacity-75"
+                    : "cursor-not-allowed opacity-50"
+              }`}
             >
               {/* Step Indicator */}
               <span className="flex h-9 items-center">
@@ -50,7 +56,7 @@ export default function ApplicationStepper({
                   </span>
                 ) : (
                   <span className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 border-gray-300 bg-white">
-                    <span className="text-gray-500 text-sm font-medium">
+                    <span className="text-sm font-medium text-gray-500">
                       {index + 1}
                     </span>
                   </span>
@@ -60,12 +66,13 @@ export default function ApplicationStepper({
               {/* Step Content */}
               <span className="ml-4 flex min-w-0 flex-col">
                 <span
-                  className={`text-sm font-medium ${step.isActive
-                    ? "text-blue-600"
-                    : step.isCompleted
-                      ? "text-gray-900"
-                      : "text-gray-500"
-                    }`}
+                  className={`text-sm font-medium ${
+                    step.isActive
+                      ? "text-blue-600"
+                      : step.isCompleted
+                        ? "text-gray-900"
+                        : "text-gray-500"
+                  }`}
                 >
                   {step.title}
                 </span>
@@ -77,8 +84,9 @@ export default function ApplicationStepper({
               {/* Connector Line */}
               {index < steps.length - 1 && (
                 <div
-                  className={`absolute left-4 top-9 -ml-px mt-0.5 h-full w-0.5 ${step.isCompleted ? "bg-green-600" : "bg-gray-300"
-                    }`}
+                  className={`absolute top-9 left-4 mt-0.5 -ml-px h-full w-0.5 ${
+                    step.isCompleted ? "bg-green-600" : "bg-gray-300"
+                  }`}
                   style={{ height: "calc(100% + 1rem)" }}
                 />
               )}

@@ -2,13 +2,10 @@
  * User Profile Store
  * Manages user profile state
  */
-
 import { create } from "zustand";
+
 import { userService } from "../services/user.service";
-import {
-  UserProfile,
-  UpdateProfileRequest,
-} from "../types/user.types";
+import { UpdateProfileRequest, UserProfile } from "../types/user.types";
 
 interface UserState {
   // State

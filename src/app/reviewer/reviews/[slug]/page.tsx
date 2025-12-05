@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useParams, useRouter } from "next/navigation";
+
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import ReviewerLayout from "@/components/layout/ReviewerLayout";
+
 import { useReviewer } from "@/hooks/useReviewer";
+
 import { Recommendation, ReviewStatus } from "@/types/reviewer.types";
 
 export default function ReviewDetailsPage() {
@@ -94,7 +98,7 @@ export default function ReviewDetailsPage() {
             <p className="mt-1 text-sm text-red-700">{reviewsError}</p>
           </div>
         ) : isLoadingReviews ? (
-          <div className="text-center py-12">
+          <div className="py-12 text-center">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
             <p className="mt-2 text-gray-600">Loading review details...</p>
           </div>
@@ -104,33 +108,40 @@ export default function ReviewDetailsPage() {
               Review Not Found
             </h3>
             <p className="mt-1 text-sm text-gray-500">
-              The review you're looking for doesn't exist or you don't have permission to view it.
+              The review you're looking for doesn't exist or you don't have
+              permission to view it.
             </p>
           </div>
         ) : (
           <div className="space-y-6">
             {/* Submit Review Button - Show for ASSIGNED reviews without submission */}
-            {currentReview.status === ReviewStatus.UNASSIGNED && !currentReview.recommendation && (
-              <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-sm font-medium text-indigo-900">
-                      Ready to submit your review?
-                    </h3>
-                    <p className="mt-1 text-sm text-indigo-700">
-                      This review is awaiting your evaluation and recommendation.
-                    </p>
+            {currentReview.status === ReviewStatus.UNASSIGNED &&
+              !currentReview.recommendation && (
+                <div className="rounded-lg border border-indigo-200 bg-indigo-50 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-medium text-indigo-900">
+                        Ready to submit your review?
+                      </h3>
+                      <p className="mt-1 text-sm text-indigo-700">
+                        This review is awaiting your evaluation and
+                        recommendation.
+                      </p>
+                    </div>
+                    <button
+                      className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none"
+                      onClick={() =>
+                        router.push(
+                          `/reviewer/submit-review/${currentReview.applicationId}`,
+                        )
+                      }
+                      type="button"
+                    >
+                      Submit Review
+                    </button>
                   </div>
-                  <button
-                    className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => router.push(`/reviewer/submit-review/${currentReview.applicationId}`)}
-                    type="button"
-                  >
-                    Submit Review
-                  </button>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Review Status Card */}
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
@@ -157,11 +168,15 @@ export default function ReviewDetailsPage() {
                       {currentReview.recommendation}
                     </span>
                   ) : (
-                    <p className="mt-1 text-sm text-gray-400">Not submitted yet</p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Not submitted yet
+                    </p>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Last Updated</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Last Updated
+                  </p>
                   <p className="mt-1 text-sm text-gray-900">
                     {new Date(currentReview.updatedAt).toLocaleString()}
                   </p>
@@ -185,7 +200,9 @@ export default function ReviewDetailsPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Review ID</p>
-                  <p className="mt-1 text-sm text-gray-900">{currentReview.id}</p>
+                  <p className="mt-1 text-sm text-gray-900">
+                    {currentReview.id}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Slug</p>
@@ -204,7 +221,9 @@ export default function ReviewDetailsPage() {
                 </h2>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Technical</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Technical
+                    </p>
                     <p className="mt-1 text-2xl font-semibold text-gray-900">
                       {currentReview.scores.technical}
                     </p>
@@ -216,7 +235,9 @@ export default function ReviewDetailsPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Financial</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Financial
+                    </p>
                     <p className="mt-1 text-2xl font-semibold text-gray-900">
                       {currentReview.scores.financial}
                     </p>
@@ -228,16 +249,23 @@ export default function ReviewDetailsPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Innovation</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Innovation
+                    </p>
                     <p className="mt-1 text-2xl font-semibold text-gray-900">
                       {currentReview.scores.innovation}
                     </p>
                   </div>
                 </div>
                 <div className="mt-4 border-t border-gray-200 pt-4">
-                  <p className="text-sm font-medium text-gray-600">Total Score</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    Total Score
+                  </p>
                   <p className="mt-1 text-3xl font-bold text-blue-600">
-                    {Object.values(currentReview.scores).reduce((a, b) => a + b, 0)}
+                    {Object.values(currentReview.scores).reduce(
+                      (a, b) => a + b,
+                      0,
+                    )}
                   </p>
                 </div>
               </div>
@@ -260,7 +288,9 @@ export default function ReviewDetailsPage() {
 
             {/* Timeline */}
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-xl font-semibold text-gray-900">Timeline</h2>
+              <h2 className="mb-4 text-xl font-semibold text-gray-900">
+                Timeline
+              </h2>
               <div className="space-y-3">
                 <div className="flex items-center space-x-4">
                   <div className="flex-shrink-0">
@@ -306,7 +336,9 @@ export default function ReviewDetailsPage() {
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">Last Updated</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      Last Updated
+                    </p>
                     <p className="text-sm text-gray-500">
                       {new Date(currentReview.updatedAt).toLocaleString()}
                     </p>

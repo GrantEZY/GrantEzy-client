@@ -172,7 +172,9 @@ export default function PMSidebar() {
       icon: icons.programs,
       label: "Programs",
       href: "/pm/programs",
-      active: pathname?.startsWith("/pm/programs") || pathname?.startsWith("/pm/cycles"),
+      active:
+        pathname?.startsWith("/pm/programs") ||
+        pathname?.startsWith("/pm/cycles"),
     },
     {
       icon: icons.analytics,

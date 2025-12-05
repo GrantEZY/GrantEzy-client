@@ -4,15 +4,28 @@
  */
 "use client";
 
-import { useState, useEffect } from "react";
-import { useApplicant } from "@/hooks/useApplicant";
+import { useEffect, useState } from "react";
+
 import { showToast } from "@/components/ui/ToastNew";
 
+import { useApplicant } from "@/hooks/useApplicant";
+
+/**
+ * Step 7: Team Members Form (Final Step)
+ * Collects: emails[] + isSubmitted boolean for final submission
+ */
+
 export default function TeamMembersForm() {
-  const { addTeammates, isLoading, goToPreviousStep, currentApplication, successMessage } = useApplicant();
+  const {
+    addTeammates,
+    isLoading,
+    goToPreviousStep,
+    currentApplication,
+    successMessage,
+  } = useApplicant();
 
   const [emails, setEmails] = useState<string[]>(
-    currentApplication?.teamMateInvites?.map((invite) => invite.email) || []
+    currentApplication?.teamMateInvites?.map((invite) => invite.email) || [],
   );
   const [newEmail, setNewEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,7 +34,7 @@ export default function TeamMembersForm() {
 
   // Show celebration toast when application is successfully submitted
   useEffect(() => {
-    if (successMessage && successMessage.includes('🎉') && hasSubmitted) {
+    if (successMessage && successMessage.includes("🎉") && hasSubmitted) {
       showToast.success(successMessage);
       setHasSubmitted(false); // Reset to prevent duplicate toasts
     }
@@ -44,7 +57,10 @@ export default function TeamMembersForm() {
     }
 
     if (emails.includes(newEmail)) {
-      setErrors((prev) => ({ ...prev, newEmail: "This email has already been added" }));
+      setErrors((prev) => ({
+        ...prev,
+        newEmail: "This email has already been added",
+      }));
       return;
     }
 
@@ -57,22 +73,28 @@ export default function TeamMembersForm() {
     setEmails(emails.filter((_: any, i: number) => i !== index));
   };
 
-  const handleSubmit = async (e: React.FormEvent, submitApplication: boolean = false) => {
+  const handleSubmit = async (
+    e: React.FormEvent,
+    submitApplication: boolean = false,
+  ) => {
     e.preventDefault();
 
     // Validate at least one email if submitting
     if (submitApplication && emails.length === 0) {
-      setErrors((prev) => ({ ...prev, general: "Add at least one team member before submitting" }));
+      setErrors((prev) => ({
+        ...prev,
+        general: "Add at least one team member before submitting",
+      }));
       return;
     }
 
     setIsSubmitting(submitApplication);
-    
+
     // Track if this is a final submission for toast notification
     if (submitApplication) {
       setHasSubmitted(true);
     }
-    
+
     await addTeammates(emails, submitApplication);
   };
 
@@ -88,8 +110,10 @@ export default function TeamMembersForm() {
       </div>
 
       {/* Add Email Section */}
-      <div className="rounded-lg border border-gray-200 p-6 space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Invite Team Members</h3>
+      <div className="space-y-4 rounded-lg border border-gray-200 p-6">
+        <h3 className="text-lg font-medium text-gray-900">
+          Invite Team Members
+        </h3>
 
         <div className="flex gap-2">
           <div className="flex-1">
@@ -111,15 +135,27 @@ export default function TeamMembersForm() {
               }`}
               placeholder="teammate@example.com"
             />
-            {errors.newEmail && <p className="mt-1 text-sm text-red-500">{errors.newEmail}</p>}
+            {errors.newEmail && (
+              <p className="mt-1 text-sm text-red-500">{errors.newEmail}</p>
+            )}
           </div>
           <button
             type="button"
             onClick={addEmail}
             className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
-            <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="mr-1 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add
           </button>
@@ -128,7 +164,11 @@ export default function TeamMembersForm() {
         {errors.general && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="flex">
-              <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="h-5 w-5 text-red-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -142,7 +182,7 @@ export default function TeamMembersForm() {
       </div>
 
       {/* Team Members List */}
-      <div className="rounded-lg border border-gray-200 p-6 space-y-4">
+      <div className="space-y-4 rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium text-gray-900">
             Team Members ({emails.length})
@@ -164,7 +204,9 @@ export default function TeamMembersForm() {
                 d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
               />
             </svg>
-            <p className="mt-2 text-sm text-gray-500">No team members added yet</p>
+            <p className="mt-2 text-sm text-gray-500">
+              No team members added yet
+            </p>
             <p className="text-xs text-gray-400">
               Team members will receive email invitations to collaborate
             </p>
@@ -178,7 +220,7 @@ export default function TeamMembersForm() {
               >
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
                       <svg
                         className="h-5 w-5 text-blue-600"
                         fill="none"
@@ -205,7 +247,12 @@ export default function TeamMembersForm() {
                   className="text-red-600 hover:text-red-700"
                   title="Remove team member"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -221,9 +268,13 @@ export default function TeamMembersForm() {
       </div>
 
       {/* Information Banner */}
-      <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
+      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
         <div className="flex">
-          <svg className="h-5 w-5 text-blue-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <svg
+            className="mt-0.5 h-5 w-5 text-blue-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
             <path
               fillRule="evenodd"
               d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
@@ -231,9 +282,11 @@ export default function TeamMembersForm() {
             />
           </svg>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">Application Submission</h3>
+            <h3 className="text-sm font-medium text-blue-800">
+              Application Submission
+            </h3>
             <div className="mt-2 text-sm text-blue-700">
-              <ul className="list-disc list-inside space-y-1">
+              <ul className="list-inside list-disc space-y-1">
                 <li>You can save as draft and add team members later</li>
                 <li>Once submitted, the application cannot be edited</li>
                 <li>Team members will receive email notifications</li>
@@ -245,14 +298,24 @@ export default function TeamMembersForm() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between pt-6 border-t border-gray-200">
+      <div className="flex justify-between border-t border-gray-200 pt-6">
         <button
           type="button"
           onClick={goToPreviousStep}
           className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
-          <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="mr-2 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </button>
@@ -276,7 +339,7 @@ export default function TeamMembersForm() {
             {isLoading && isSubmitting ? (
               <>
                 <svg
-                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
                   fill="none"
                   viewBox="0 0 24 24"
                 >
@@ -298,7 +361,12 @@ export default function TeamMembersForm() {
               </>
             ) : (
               <>
-                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="mr-2 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

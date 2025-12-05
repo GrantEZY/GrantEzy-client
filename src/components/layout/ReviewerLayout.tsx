@@ -1,7 +1,8 @@
 import { ReactNode } from "react";
 
-import Header from "./Header";
 import ReviewerSidebar from "@/components/layout/ReviewerSidebar";
+
+import Header from "./Header";
 
 interface ReviewerLayoutProps {
   children: ReactNode;

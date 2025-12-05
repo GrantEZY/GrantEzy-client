@@ -4,16 +4,16 @@
 import { API_CONFIG } from "../lib/config/api.config";
 import { httpClient } from "../lib/http/http-client";
 import {
-  GetTokenDetailsRequest,
-  GetTokenDetailsResponse,
-  UpdateInviteStatusRequest,
-  UpdateInviteStatusResponse,
-  SubmitReviewRequest,
-  SubmitReviewResponse,
-  GetUserReviewsRequest,
-  GetUserReviewsResponse,
   GetReviewDetailsRequest,
   GetReviewDetailsResponse,
+  GetTokenDetailsRequest,
+  GetTokenDetailsResponse,
+  GetUserReviewsRequest,
+  GetUserReviewsResponse,
+  SubmitReviewRequest,
+  SubmitReviewResponse,
+  UpdateInviteStatusRequest,
+  UpdateInviteStatusResponse,
 } from "../types/reviewer.types";
 
 export class ReviewerService {
@@ -56,9 +56,7 @@ export class ReviewerService {
   /**
    * Submit a review for an application
    */
-  async submitReview(
-    data: SubmitReviewRequest,
-  ): Promise<SubmitReviewResponse> {
+  async submitReview(data: SubmitReviewRequest): Promise<SubmitReviewResponse> {
     return httpClient.post<SubmitReviewResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.SUBMIT_REVIEW,
       data,

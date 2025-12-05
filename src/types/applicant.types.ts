@@ -293,7 +293,7 @@ export interface UserApplication {
   isSubmitted: boolean;
   createdAt: string;
   updatedAt: string;
-  basicDetails?: BasicInfo;  // Changed from basicInfo to match backend
+  basicDetails?: BasicInfo; // Changed from basicInfo to match backend
   cycle?: {
     id: string;
     slug: string;

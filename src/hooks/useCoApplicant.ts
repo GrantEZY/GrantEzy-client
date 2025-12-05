@@ -1,7 +1,6 @@
 /**
  * Custom hooks for co-applicant functionality
  */
-
 import { useCoApplicantStore } from "../store/co-applicant.store";
 import { InviteStatus } from "../types/co-applicant.types";
 
@@ -26,7 +25,10 @@ export const useCoApplicant = () => {
       await getApplicationDetails(applicationId);
       return { success: true };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to fetch application details";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch application details";
       return { success: false, error: message };
     }
   };
@@ -37,7 +39,10 @@ export const useCoApplicant = () => {
       const currentTokenDetails = useCoApplicantStore.getState().tokenDetails;
       return { success: true, data: currentTokenDetails };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to fetch token details";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to fetch token details";
       return { success: false, error: message };
     }
   };
@@ -47,7 +52,8 @@ export const useCoApplicant = () => {
       await updateInviteStatus(token, slug, InviteStatus.ACCEPTED);
       return { success: true, message: "Invite accepted successfully" };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to accept invite";
+      const message =
+        error instanceof Error ? error.message : "Failed to accept invite";
       return { success: false, error: message };
     }
   };
@@ -57,22 +63,27 @@ export const useCoApplicant = () => {
       await updateInviteStatus(token, slug, InviteStatus.REJECTED);
       return { success: true, message: "Invite rejected successfully" };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to reject invite";
+      const message =
+        error instanceof Error ? error.message : "Failed to reject invite";
       return { success: false, error: message };
     }
   };
 
   const handleUpdateInviteStatus = async (
-    token: string, 
-    slug: string, 
-    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED
+    token: string,
+    slug: string,
+    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED,
   ) => {
     try {
       await updateInviteStatus(token, slug, status);
-      const statusText = status === InviteStatus.ACCEPTED ? "accepted" : "rejected";
+      const statusText =
+        status === InviteStatus.ACCEPTED ? "accepted" : "rejected";
       return { success: true, message: `Invite ${statusText} successfully` };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Failed to update invite status";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to update invite status";
       return { success: false, error: message };
     }
   };
@@ -84,7 +95,7 @@ export const useCoApplicant = () => {
     linkedProjects,
     isLoading,
     error,
-    
+
     // Actions
     getApplicationDetails: handleGetApplicationDetails,
     getTokenDetails: handleGetTokenDetails,
@@ -101,7 +112,8 @@ export const useCoApplicant = () => {
  * Hook for token verification page
  */
 export const useCoApplicantInvite = (token?: string, slug?: string) => {
-  const { getTokenDetails, acceptInvite, rejectInvite, ...rest } = useCoApplicant();
+  const { getTokenDetails, acceptInvite, rejectInvite, ...rest } =
+    useCoApplicant();
 
   const verifyToken = async () => {
     if (!token || !slug) {

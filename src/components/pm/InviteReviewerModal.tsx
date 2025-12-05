@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { usePm } from "@/hooks/usePm";
 
 interface InviteReviewerModalProps {
@@ -48,12 +49,12 @@ export default function InviteReviewerModal({
       if (result) {
         setSuccess(true);
         setEmail("");
-        
+
         // Call onSuccess callback to refresh the reviews list
         if (onSuccess) {
           onSuccess();
         }
-        
+
         setTimeout(() => {
           onClose();
           setSuccess(false);
@@ -63,7 +64,7 @@ export default function InviteReviewerModal({
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "An unexpected error occurred"
+        err instanceof Error ? err.message : "An unexpected error occurred",
       );
     } finally {
       setIsSubmitting(false);
@@ -83,7 +84,7 @@ export default function InviteReviewerModal({
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+        className="bg-opacity-50 fixed inset-0 bg-black transition-opacity"
         onClick={handleClose}
       />
 
@@ -118,7 +119,8 @@ export default function InviteReviewerModal({
             </div>
             {applicationTitle && (
               <p className="mt-1 text-sm text-gray-600">
-                For application: <span className="font-medium">{applicationTitle}</span>
+                For application:{" "}
+                <span className="font-medium">{applicationTitle}</span>
               </p>
             )}
           </div>
@@ -128,13 +130,13 @@ export default function InviteReviewerModal({
             <div className="px-6 py-4">
               <div className="mb-4">
                 <label
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="mb-2 block text-sm font-medium text-gray-700"
                   htmlFor="reviewer-email"
                 >
                   Reviewer Email Address
                 </label>
                 <input
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   id="reviewer-email"
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="reviewer@example.com"
@@ -143,7 +145,8 @@ export default function InviteReviewerModal({
                   value={email}
                 />
                 <p className="mt-2 text-xs text-gray-500">
-                  The reviewer will receive an invitation email with a link to review this application.
+                  The reviewer will receive an invitation email with a link to
+                  review this application.
                 </p>
               </div>
 
@@ -209,7 +212,8 @@ export default function InviteReviewerModal({
                   </svg>
                   <div className="ml-3">
                     <p className="text-xs text-blue-800">
-                      <strong>Application ID:</strong> {applicationId.slice(0, 8)}...
+                      <strong>Application ID:</strong>{" "}
+                      {applicationId.slice(0, 8)}...
                     </p>
                   </div>
                 </div>
@@ -220,18 +224,22 @@ export default function InviteReviewerModal({
             <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
               <div className="flex justify-end space-x-3">
                 <button
-                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                   onClick={handleClose}
                   type="button"
                 >
                   Cancel
                 </button>
                 <button
-                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={isSubmitting || success}
                   type="submit"
                 >
-                  {isSubmitting ? "Sending..." : success ? "Sent!" : "Send Invitation"}
+                  {isSubmitting
+                    ? "Sending..."
+                    : success
+                      ? "Sent!"
+                      : "Send Invitation"}
                 </button>
               </div>
             </div>

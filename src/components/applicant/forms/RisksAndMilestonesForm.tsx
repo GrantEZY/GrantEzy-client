@@ -5,37 +5,61 @@
 "use client";
 
 import { useState } from "react";
+
 import { useApplicant } from "@/hooks/useApplicant";
-import { Risk, Milestone, RiskImpact } from "@/types/applicant.types";
+
+import { Milestone, Risk, RiskImpact } from "@/types/applicant.types";
+
+/**
+ * Step 5: Risks and Milestones Form
+ * Collects: risks[] (description, impact, mitigation) + milestones[] (title, description, deliverables[], dueDate)
+ */
 
 export default function RisksAndMilestonesForm() {
-  const { addRisksAndMilestones, isLoading, goToPreviousStep, currentApplication } = useApplicant();
+  const {
+    addRisksAndMilestones,
+    isLoading,
+    goToPreviousStep,
+    currentApplication,
+  } = useApplicant();
 
-  const [risks, setRisks] = useState<Risk[]>(
-    currentApplication?.risks || []
-  );
+  const [risks, setRisks] = useState<Risk[]>(currentApplication?.risks || []);
   const [milestones, setMilestones] = useState<Milestone[]>(
-    currentApplication?.milestones || []
+    currentApplication?.milestones || [],
   );
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Risk Management
   const addRisk = () => {
-    setRisks([...risks, { description: "", impact: RiskImpact.MEDIUM, mitigation: "" }]);
+    setRisks([
+      ...risks,
+      { description: "", impact: RiskImpact.MEDIUM, mitigation: "" },
+    ]);
   };
 
   const removeRisk = (index: number) => {
     setRisks(risks.filter((_: any, i: number) => i !== index));
   };
 
-  const updateRisk = (index: number, field: keyof Risk, value: string | RiskImpact) => {
-    setRisks(risks.map((risk: Risk, i: number) => (i === index ? { ...risk, [field]: value } : risk)));
+  const updateRisk = (
+    index: number,
+    field: keyof Risk,
+    value: string | RiskImpact,
+  ) => {
+    setRisks(
+      risks.map((risk: Risk, i: number) =>
+        i === index ? { ...risk, [field]: value } : risk,
+      ),
+    );
     setErrors((prev) => ({ ...prev, [`risk_${index}_${field}`]: "" }));
   };
 
   // Milestone Management
   const addMilestone = () => {
-    setMilestones([...milestones, { title: "", description: "", deliverables: [], dueDate: "" }]);
+    setMilestones([
+      ...milestones,
+      { title: "", description: "", deliverables: [], dueDate: "" },
+    ]);
   };
 
   const removeMilestone = (index: number) => {
@@ -45,32 +69,44 @@ export default function RisksAndMilestonesForm() {
   const updateMilestone = (
     index: number,
     field: keyof Milestone,
-    value: string | string[]
+    value: string | string[],
   ) => {
     setMilestones(
       milestones.map((milestone: Milestone, i: number) =>
-        i === index ? { ...milestone, [field]: value } : milestone
-      )
+        i === index ? { ...milestone, [field]: value } : milestone,
+      ),
     );
     setErrors((prev) => ({ ...prev, [`milestone_${index}_${field}`]: "" }));
   };
 
   const addDeliverable = (milestoneIndex: number) => {
     const milestone = milestones[milestoneIndex];
-    updateMilestone(milestoneIndex, "deliverables", [...milestone.deliverables, ""]);
+    updateMilestone(milestoneIndex, "deliverables", [
+      ...milestone.deliverables,
+      "",
+    ]);
   };
 
-  const updateDeliverable = (milestoneIndex: number, deliverableIndex: number, value: string) => {
+  const updateDeliverable = (
+    milestoneIndex: number,
+    deliverableIndex: number,
+    value: string,
+  ) => {
     const milestone = milestones[milestoneIndex];
-    const newDeliverables = milestone.deliverables.map((d: string, i: number) =>
-      i === deliverableIndex ? value : d
+    const newDeliverables = milestone.deliverables.map(
+      (d: string, i: number) => (i === deliverableIndex ? value : d),
     );
     updateMilestone(milestoneIndex, "deliverables", newDeliverables);
   };
 
-  const removeDeliverable = (milestoneIndex: number, deliverableIndex: number) => {
+  const removeDeliverable = (
+    milestoneIndex: number,
+    deliverableIndex: number,
+  ) => {
     const milestone = milestones[milestoneIndex];
-    const newDeliverables = milestone.deliverables.filter((_: any, i: number) => i !== deliverableIndex);
+    const newDeliverables = milestone.deliverables.filter(
+      (_: any, i: number) => i !== deliverableIndex,
+    );
     updateMilestone(milestoneIndex, "deliverables", newDeliverables);
   };
 
@@ -86,7 +122,8 @@ export default function RisksAndMilestonesForm() {
         newErrors[`risk_${index}_description`] = "Risk description is required";
       }
       if (!risk.mitigation.trim()) {
-        newErrors[`risk_${index}_mitigation`] = "Mitigation strategy is required";
+        newErrors[`risk_${index}_mitigation`] =
+          "Mitigation strategy is required";
       }
     });
 
@@ -99,10 +136,12 @@ export default function RisksAndMilestonesForm() {
         newErrors[`milestone_${index}_title`] = "Milestone title is required";
       }
       if (!milestone.description.trim()) {
-        newErrors[`milestone_${index}_description`] = "Milestone description is required";
+        newErrors[`milestone_${index}_description`] =
+          "Milestone description is required";
       }
       if (milestone.deliverables.length === 0) {
-        newErrors[`milestone_${index}_deliverables`] = "Add at least one deliverable";
+        newErrors[`milestone_${index}_deliverables`] =
+          "Add at least one deliverable";
       }
       if (!milestone.dueDate) {
         newErrors[`milestone_${index}_dueDate`] = "Due date is required";
@@ -130,7 +169,7 @@ export default function RisksAndMilestonesForm() {
       </div>
 
       {/* Risks Section */}
-      <div className="rounded-lg border border-gray-200 p-6 space-y-4">
+      <div className="space-y-4 rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium text-gray-900">Project Risks</h3>
           <button
@@ -138,40 +177,73 @@ export default function RisksAndMilestonesForm() {
             onClick={addRisk}
             className="inline-flex items-center rounded-md bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
           >
-            <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="mr-1 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add Risk
           </button>
         </div>
 
-        {errors.risksRequired && <p className="text-sm text-red-500">{errors.risksRequired}</p>}
+        {errors.risksRequired && (
+          <p className="text-sm text-red-500">{errors.risksRequired}</p>
+        )}
 
         {risks.length === 0 ? (
           <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
-            <p className="text-sm text-gray-500">No risks added yet. Click  Add Risk" to begin.</p>
+            <p className="text-sm text-gray-500">
+              No risks added yet. Click Add Risk" to begin.
+            </p>
           </div>
         ) : (
           risks.map((risk: Risk, index: number) => (
-            <div key={index} className="rounded-lg border border-gray-200 p-4 space-y-3">
+            <div
+              key={index}
+              className="space-y-3 rounded-lg border border-gray-200 p-4"
+            >
               <div className="flex items-start justify-between">
-                <span className="text-sm font-medium text-gray-700">Risk {index + 1}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Risk {index + 1}
+                </span>
                 <button
                   type="button"
                   onClick={() => removeRisk(index)}
                   className="text-red-600 hover:text-red-700"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Impact Level</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Impact Level
+                </label>
                 <select
                   value={risk.impact}
-                  onChange={(e) => updateRisk(index, "impact", e.target.value as RiskImpact)}
+                  onChange={(e) =>
+                    updateRisk(index, "impact", e.target.value as RiskImpact)
+                  }
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 >
                   {Object.values(RiskImpact).map((impact) => (
@@ -183,10 +255,14 @@ export default function RisksAndMilestonesForm() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Description *</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Description *
+                </label>
                 <textarea
                   value={risk.description}
-                  onChange={(e) => updateRisk(index, "description", e.target.value)}
+                  onChange={(e) =>
+                    updateRisk(index, "description", e.target.value)
+                  }
                   rows={2}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                     errors[`risk_${index}_description`] ? "border-red-300" : ""
@@ -194,15 +270,21 @@ export default function RisksAndMilestonesForm() {
                   placeholder="Describe the risk..."
                 />
                 {errors[`risk_${index}_description`] && (
-                  <p className="mt-1 text-sm text-red-500">{errors[`risk_${index}_description`]}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors[`risk_${index}_description`]}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Mitigation Strategy *</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Mitigation Strategy *
+                </label>
                 <textarea
                   value={risk.mitigation}
-                  onChange={(e) => updateRisk(index, "mitigation", e.target.value)}
+                  onChange={(e) =>
+                    updateRisk(index, "mitigation", e.target.value)
+                  }
                   rows={2}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                     errors[`risk_${index}_mitigation`] ? "border-red-300" : ""
@@ -210,7 +292,9 @@ export default function RisksAndMilestonesForm() {
                   placeholder="How will you mitigate this risk?"
                 />
                 {errors[`risk_${index}_mitigation`] && (
-                  <p className="mt-1 text-sm text-red-500">{errors[`risk_${index}_mitigation`]}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors[`risk_${index}_mitigation`]}
+                  </p>
                 )}
               </div>
             </div>
@@ -219,16 +303,28 @@ export default function RisksAndMilestonesForm() {
       </div>
 
       {/* Milestones Section */}
-      <div className="rounded-lg border border-gray-200 p-6 space-y-4">
+      <div className="space-y-4 rounded-lg border border-gray-200 p-6">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-gray-900">Project Milestones</h3>
+          <h3 className="text-lg font-medium text-gray-900">
+            Project Milestones
+          </h3>
           <button
             type="button"
             onClick={addMilestone}
             className="inline-flex items-center rounded-md bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100"
           >
-            <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            <svg
+              className="mr-1 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add Milestone
           </button>
@@ -240,75 +336,114 @@ export default function RisksAndMilestonesForm() {
 
         {milestones.length === 0 ? (
           <div className="rounded-lg border-2 border-dashed border-gray-300 p-6 text-center">
-            <p className="text-sm text-gray-500">No milestones added yet. Click "Add Milestone" to begin.</p>
+            <p className="text-sm text-gray-500">
+              No milestones added yet. Click "Add Milestone" to begin.
+            </p>
           </div>
         ) : (
           milestones.map((milestone: Milestone, index: number) => (
-            <div key={index} className="rounded-lg border border-gray-200 p-4 space-y-3">
+            <div
+              key={index}
+              className="space-y-3 rounded-lg border border-gray-200 p-4"
+            >
               <div className="flex items-start justify-between">
-                <span className="text-sm font-medium text-gray-700">Milestone {index + 1}</span>
+                <span className="text-sm font-medium text-gray-700">
+                  Milestone {index + 1}
+                </span>
                 <button
                   type="button"
                   onClick={() => removeMilestone(index)}
                   className="text-red-600 hover:text-red-700"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Title *</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Title *
+                </label>
                 <input
                   type="text"
                   value={milestone.title}
-                  onChange={(e) => updateMilestone(index, "title", e.target.value)}
+                  onChange={(e) =>
+                    updateMilestone(index, "title", e.target.value)
+                  }
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                     errors[`milestone_${index}_title`] ? "border-red-300" : ""
                   }`}
                   placeholder="e.g., MVP Development"
                 />
                 {errors[`milestone_${index}_title`] && (
-                  <p className="mt-1 text-sm text-red-500">{errors[`milestone_${index}_title`]}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors[`milestone_${index}_title`]}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Description *</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Description *
+                </label>
                 <textarea
                   value={milestone.description}
-                  onChange={(e) => updateMilestone(index, "description", e.target.value)}
+                  onChange={(e) =>
+                    updateMilestone(index, "description", e.target.value)
+                  }
                   rows={2}
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                    errors[`milestone_${index}_description`] ? "border-red-300" : ""
+                    errors[`milestone_${index}_description`]
+                      ? "border-red-300"
+                      : ""
                   }`}
                   placeholder="Describe this milestone..."
                 />
                 {errors[`milestone_${index}_description`] && (
-                  <p className="mt-1 text-sm text-red-500">{errors[`milestone_${index}_description`]}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors[`milestone_${index}_description`]}
+                  </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Due Date *</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Due Date *
+                </label>
                 <input
                   type="date"
                   value={milestone.dueDate}
-                  onChange={(e) => updateMilestone(index, "dueDate", e.target.value)}
+                  onChange={(e) =>
+                    updateMilestone(index, "dueDate", e.target.value)
+                  }
                   className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
                     errors[`milestone_${index}_dueDate`] ? "border-red-300" : ""
                   }`}
                 />
                 {errors[`milestone_${index}_dueDate`] && (
-                  <p className="mt-1 text-sm text-red-500">{errors[`milestone_${index}_dueDate`]}</p>
+                  <p className="mt-1 text-sm text-red-500">
+                    {errors[`milestone_${index}_dueDate`]}
+                  </p>
                 )}
               </div>
 
               {/* Deliverables */}
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">Deliverables *</label>
+                <div className="mb-2 flex items-center justify-between">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Deliverables *
+                  </label>
                   <button
                     type="button"
                     onClick={() => addDeliverable(index)}
@@ -318,28 +453,44 @@ export default function RisksAndMilestonesForm() {
                   </button>
                 </div>
                 {errors[`milestone_${index}_deliverables`] && (
-                  <p className="mb-2 text-sm text-red-500">{errors[`milestone_${index}_deliverables`]}</p>
+                  <p className="mb-2 text-sm text-red-500">
+                    {errors[`milestone_${index}_deliverables`]}
+                  </p>
                 )}
-                {milestone.deliverables.map((deliverable: string, dIndex: number) => (
-                  <div key={dIndex} className="flex gap-2 mb-2">
-                    <input
-                      type="text"
-                      value={deliverable}
-                      onChange={(e) => updateDeliverable(index, dIndex, e.target.value)}
-                      className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      placeholder="e.g., Working prototype"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeDeliverable(index, dIndex)}
-                      className="text-red-600 hover:text-red-700"
-                    >
-                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
+                {milestone.deliverables.map(
+                  (deliverable: string, dIndex: number) => (
+                    <div key={dIndex} className="mb-2 flex gap-2">
+                      <input
+                        type="text"
+                        value={deliverable}
+                        onChange={(e) =>
+                          updateDeliverable(index, dIndex, e.target.value)
+                        }
+                        className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                        placeholder="e.g., Working prototype"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeDeliverable(index, dIndex)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  ),
+                )}
               </div>
             </div>
           ))
@@ -347,14 +498,24 @@ export default function RisksAndMilestonesForm() {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-between pt-6 border-t border-gray-200">
+      <div className="flex justify-between border-t border-gray-200 pt-6">
         <button
           type="button"
           onClick={goToPreviousStep}
           className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
-          <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg
+            className="mr-2 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </button>
@@ -364,8 +525,18 @@ export default function RisksAndMilestonesForm() {
           className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
         >
           {isLoading ? "Saving..." : "Continue"}
-          <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          <svg
+            className="ml-2 h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
           </svg>
         </button>
       </div>

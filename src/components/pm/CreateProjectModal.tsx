@@ -1,9 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
 import { useProjectManagement } from "@/hooks/useProjectManagement";
-import { CreateProjectRequest, QuotedBudget, BudgetItem, Money } from "@/types/project.types";
+
 import { CycleApplication } from "@/types/pm.types";
+import {
+  BudgetItem,
+  CreateProjectRequest,
+  Money,
+  QuotedBudget,
+} from "@/types/project.types";
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -26,7 +33,8 @@ export default function CreateProjectModal({
   onSuccess,
   approvedApplications,
 }: CreateProjectModalProps) {
-  const { createProject, isProjectLoading, projectError } = useProjectManagement();
+  const { createProject, isProjectLoading, projectError } =
+    useProjectManagement();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedApplicationId, setSelectedApplicationId] = useState("");
@@ -35,13 +43,13 @@ export default function CreateProjectModal({
   // Debug: Log approved applications
   useEffect(() => {
     if (isOpen) {
-      console.log('🎯 CreateProjectModal opened with:', {
+      console.log("🎯 CreateProjectModal opened with:", {
         approvedApplicationsCount: approvedApplications.length,
-        applications: approvedApplications.map(app => ({
+        applications: approvedApplications.map((app) => ({
           id: app.id,
           title: app.basicInfo?.title,
-          status: app.status
-        }))
+          status: app.status,
+        })),
       });
     }
   }, [isOpen, approvedApplications]);
@@ -85,7 +93,7 @@ export default function CreateProjectModal({
 
   const addBudgetItem = (
     items: FormBudgetItem[],
-    setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>
+    setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>,
   ) => {
     setItems([...items, { reason: "", qty: 1, rate: 0 }]);
   };
@@ -93,7 +101,7 @@ export default function CreateProjectModal({
   const removeBudgetItem = (
     index: number,
     items: FormBudgetItem[],
-    setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>
+    setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>,
   ) => {
     if (items.length > 1) {
       setItems(items.filter((_, i) => i !== index));
@@ -105,7 +113,7 @@ export default function CreateProjectModal({
     field: keyof FormBudgetItem,
     value: string | number,
     items: FormBudgetItem[],
-    setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>
+    setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>,
   ) => {
     const updated = [...items];
     updated[index][field] = value as never;
@@ -115,15 +123,15 @@ export default function CreateProjectModal({
   const calculateTotal = () => {
     const manPowerTotal = manPowerItems.reduce(
       (sum, item) => sum + item.qty * item.rate,
-      0
+      0,
     );
     const equipmentTotal = equipmentItems.reduce(
       (sum, item) => sum + item.qty * item.rate,
-      0
+      0,
     );
     const otherCostTotal = otherCostItems.reduce(
       (sum, item) => sum + item.qty * item.rate,
-      0
+      0,
     );
 
     return (
@@ -153,13 +161,13 @@ export default function CreateProjectModal({
 
     // Validate that at least one budget category has data
     const hasManPower = manPowerItems.some(
-      (item) => item.reason.trim() !== "" && item.rate > 0
+      (item) => item.reason.trim() !== "" && item.rate > 0,
     );
     const hasEquipment = equipmentItems.some(
-      (item) => item.reason.trim() !== "" && item.rate > 0
+      (item) => item.reason.trim() !== "" && item.rate > 0,
     );
     const hasOtherCost = otherCostItems.some(
-      (item) => item.reason.trim() !== "" && item.rate > 0
+      (item) => item.reason.trim() !== "" && item.rate > 0,
     );
     const hasConsumables = consumables > 0;
     const hasTravel = travel > 0;
@@ -280,7 +288,7 @@ export default function CreateProjectModal({
   if (!isOpen) return null;
 
   const selectedApplication = approvedApplications.find(
-    (app) => app.id === selectedApplicationId
+    (app) => app.id === selectedApplicationId,
   );
 
   return (
@@ -288,7 +296,7 @@ export default function CreateProjectModal({
       <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
         {/* Background overlay */}
         <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+          className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity"
           onClick={onClose}
         ></div>
 
@@ -297,7 +305,7 @@ export default function CreateProjectModal({
           {/* Header */}
           <div className="border-b border-gray-200 bg-white px-6 py-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
+              <h3 className="text-lg leading-6 font-medium text-gray-900">
                 Create Project
               </h3>
               <button
@@ -305,7 +313,12 @@ export default function CreateProjectModal({
                 className="rounded-md text-gray-400 hover:text-gray-500"
                 type="button"
               >
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path
                     d="M6 18L18 6M6 6l12 12"
                     strokeLinecap="round"
@@ -322,16 +335,18 @@ export default function CreateProjectModal({
                 {[1, 2, 3].map((step, index) => (
                   <div key={step} className="flex flex-1 items-center">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${currentStep >= step
+                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
+                        currentStep >= step
                           ? "border-blue-600 bg-blue-600 text-white"
                           : "border-gray-300 bg-white text-gray-500"
-                        }`}
+                      }`}
                     >
                       {step}
                     </div>
                     <div
-                      className={`ml-2 text-sm font-medium ${currentStep >= step ? "text-blue-600" : "text-gray-500"
-                        }`}
+                      className={`ml-2 text-sm font-medium ${
+                        currentStep >= step ? "text-blue-600" : "text-gray-500"
+                      }`}
                     >
                       {step === 1
                         ? "Select Application"
@@ -341,8 +356,9 @@ export default function CreateProjectModal({
                     </div>
                     {index < 2 && (
                       <div
-                        className={`mx-4 h-0.5 flex-1 ${currentStep > step ? "bg-blue-600" : "bg-gray-300"
-                          }`}
+                        className={`mx-4 h-0.5 flex-1 ${
+                          currentStep > step ? "bg-blue-600" : "bg-gray-300"
+                        }`}
                       ></div>
                     )}
                   </div>
@@ -364,7 +380,9 @@ export default function CreateProjectModal({
                     Choose an approved application to create a project
                   </p>
                   {errors.application && (
-                    <p className="mt-1 text-sm text-red-600">{errors.application}</p>
+                    <p className="mt-1 text-sm text-red-600">
+                      {errors.application}
+                    </p>
                   )}
                 </div>
 
@@ -388,8 +406,9 @@ export default function CreateProjectModal({
                         </h3>
                         <div className="mt-2 text-sm text-yellow-700">
                           <p>
-                            There are no approved applications in this cycle yet. You need to
-                            approve an application before creating a project.
+                            There are no approved applications in this cycle
+                            yet. You need to approve an application before
+                            creating a project.
                           </p>
                         </div>
                       </div>
@@ -401,10 +420,11 @@ export default function CreateProjectModal({
                       <div
                         key={app.id}
                         onClick={() => setSelectedApplicationId(app.id)}
-                        className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${selectedApplicationId === app.id
+                        className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
+                          selectedApplicationId === app.id
                             ? "border-blue-600 bg-blue-50"
                             : "border-gray-200 hover:border-gray-300"
-                          }`}
+                        }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -418,7 +438,9 @@ export default function CreateProjectModal({
                               </p>
                             )}
                             <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                              <span>Applicant: {app.applicant?.email || "N/A"}</span>
+                              <span>
+                                Applicant: {app.applicant?.email || "N/A"}
+                              </span>
                               <span>•</span>
                               <span>
                                 Submitted:{" "}
@@ -455,9 +477,12 @@ export default function CreateProjectModal({
                 <div>
                   <h4 className="font-medium text-gray-900">Allocate Budget</h4>
                   <p className="mt-1 text-sm text-gray-500">
-                    Define the budget allocation for this project across different categories
+                    Define the budget allocation for this project across
+                    different categories
                   </p>
-                  {errors.budget && <p className="mt-1 text-sm text-red-600">{errors.budget}</p>}
+                  {errors.budget && (
+                    <p className="mt-1 text-sm text-red-600">{errors.budget}</p>
+                  )}
                 </div>
 
                 {/* Selected Application Info */}
@@ -474,9 +499,14 @@ export default function CreateProjectModal({
 
                 {/* ManPower */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">ManPower</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    ManPower
+                  </label>
                   {manPowerItems.map((item, index) => (
-                    <div key={index} className="mt-2 flex items-center space-x-2">
+                    <div
+                      key={index}
+                      className="mt-2 flex items-center space-x-2"
+                    >
                       <input
                         type="text"
                         value={item.reason}
@@ -486,7 +516,7 @@ export default function CreateProjectModal({
                             "reason",
                             e.target.value,
                             manPowerItems,
-                            setManPowerItems
+                            setManPowerItems,
                           )
                         }
                         placeholder="Item description"
@@ -501,7 +531,7 @@ export default function CreateProjectModal({
                             "qty",
                             Number(e.target.value),
                             manPowerItems,
-                            setManPowerItems
+                            setManPowerItems,
                           )
                         }
                         placeholder="Qty"
@@ -517,7 +547,7 @@ export default function CreateProjectModal({
                             "rate",
                             Number(e.target.value),
                             manPowerItems,
-                            setManPowerItems
+                            setManPowerItems,
                           )
                         }
                         placeholder="Rate"
@@ -528,12 +558,22 @@ export default function CreateProjectModal({
                         = {(item.qty * item.rate).toLocaleString()}
                       </span>
                       <button
-                        onClick={() => removeBudgetItem(index, manPowerItems, setManPowerItems)}
+                        onClick={() =>
+                          removeBudgetItem(
+                            index,
+                            manPowerItems,
+                            setManPowerItems,
+                          )
+                        }
                         className="text-red-600 hover:text-red-700"
                         type="button"
                         disabled={manPowerItems.length === 1}
                       >
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className="h-5 w-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -544,7 +584,9 @@ export default function CreateProjectModal({
                     </div>
                   ))}
                   <button
-                    onClick={() => addBudgetItem(manPowerItems, setManPowerItems)}
+                    onClick={() =>
+                      addBudgetItem(manPowerItems, setManPowerItems)
+                    }
                     className="mt-2 text-sm text-blue-600 hover:text-blue-700"
                     type="button"
                   >
@@ -554,9 +596,14 @@ export default function CreateProjectModal({
 
                 {/* Equipment */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Equipment</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Equipment
+                  </label>
                   {equipmentItems.map((item, index) => (
-                    <div key={index} className="mt-2 flex items-center space-x-2">
+                    <div
+                      key={index}
+                      className="mt-2 flex items-center space-x-2"
+                    >
                       <input
                         type="text"
                         value={item.reason}
@@ -566,7 +613,7 @@ export default function CreateProjectModal({
                             "reason",
                             e.target.value,
                             equipmentItems,
-                            setEquipmentItems
+                            setEquipmentItems,
                           )
                         }
                         placeholder="Item description"
@@ -581,7 +628,7 @@ export default function CreateProjectModal({
                             "qty",
                             Number(e.target.value),
                             equipmentItems,
-                            setEquipmentItems
+                            setEquipmentItems,
                           )
                         }
                         placeholder="Qty"
@@ -597,7 +644,7 @@ export default function CreateProjectModal({
                             "rate",
                             Number(e.target.value),
                             equipmentItems,
-                            setEquipmentItems
+                            setEquipmentItems,
                           )
                         }
                         placeholder="Rate"
@@ -608,12 +655,22 @@ export default function CreateProjectModal({
                         = {(item.qty * item.rate).toLocaleString()}
                       </span>
                       <button
-                        onClick={() => removeBudgetItem(index, equipmentItems, setEquipmentItems)}
+                        onClick={() =>
+                          removeBudgetItem(
+                            index,
+                            equipmentItems,
+                            setEquipmentItems,
+                          )
+                        }
                         className="text-red-600 hover:text-red-700"
                         type="button"
                         disabled={equipmentItems.length === 1}
                       >
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className="h-5 w-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -624,7 +681,9 @@ export default function CreateProjectModal({
                     </div>
                   ))}
                   <button
-                    onClick={() => addBudgetItem(equipmentItems, setEquipmentItems)}
+                    onClick={() =>
+                      addBudgetItem(equipmentItems, setEquipmentItems)
+                    }
                     className="mt-2 text-sm text-blue-600 hover:text-blue-700"
                     type="button"
                   >
@@ -634,9 +693,14 @@ export default function CreateProjectModal({
 
                 {/* Other Costs */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Other Costs</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Other Costs
+                  </label>
                   {otherCostItems.map((item, index) => (
-                    <div key={index} className="mt-2 flex items-center space-x-2">
+                    <div
+                      key={index}
+                      className="mt-2 flex items-center space-x-2"
+                    >
                       <input
                         type="text"
                         value={item.reason}
@@ -646,7 +710,7 @@ export default function CreateProjectModal({
                             "reason",
                             e.target.value,
                             otherCostItems,
-                            setOtherCostItems
+                            setOtherCostItems,
                           )
                         }
                         placeholder="Item description"
@@ -661,7 +725,7 @@ export default function CreateProjectModal({
                             "qty",
                             Number(e.target.value),
                             otherCostItems,
-                            setOtherCostItems
+                            setOtherCostItems,
                           )
                         }
                         placeholder="Qty"
@@ -677,7 +741,7 @@ export default function CreateProjectModal({
                             "rate",
                             Number(e.target.value),
                             otherCostItems,
-                            setOtherCostItems
+                            setOtherCostItems,
                           )
                         }
                         placeholder="Rate"
@@ -688,12 +752,22 @@ export default function CreateProjectModal({
                         = {(item.qty * item.rate).toLocaleString()}
                       </span>
                       <button
-                        onClick={() => removeBudgetItem(index, otherCostItems, setOtherCostItems)}
+                        onClick={() =>
+                          removeBudgetItem(
+                            index,
+                            otherCostItems,
+                            setOtherCostItems,
+                          )
+                        }
                         className="text-red-600 hover:text-red-700"
                         type="button"
                         disabled={otherCostItems.length === 1}
                       >
-                        <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <svg
+                          className="h-5 w-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
                           <path
                             fillRule="evenodd"
                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
@@ -704,7 +778,9 @@ export default function CreateProjectModal({
                     </div>
                   ))}
                   <button
-                    onClick={() => addBudgetItem(otherCostItems, setOtherCostItems)}
+                    onClick={() =>
+                      addBudgetItem(otherCostItems, setOtherCostItems)
+                    }
                     className="mt-2 text-sm text-blue-600 hover:text-blue-700"
                     type="button"
                   >
@@ -715,7 +791,9 @@ export default function CreateProjectModal({
                 {/* Simple Amount Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Consumables</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Consumables
+                    </label>
                     <input
                       type="number"
                       value={consumables}
@@ -725,7 +803,9 @@ export default function CreateProjectModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Travel</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Travel
+                    </label>
                     <input
                       type="number"
                       value={travel}
@@ -735,7 +815,9 @@ export default function CreateProjectModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Contingency</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Contingency
+                    </label>
                     <input
                       type="number"
                       value={contingency}
@@ -745,7 +827,9 @@ export default function CreateProjectModal({
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">Overhead</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      Overhead
+                    </label>
                     <input
                       type="number"
                       value={overhead}
@@ -759,7 +843,9 @@ export default function CreateProjectModal({
                 {/* Total */}
                 <div className="rounded-lg bg-gray-50 p-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold text-gray-900">Total Budget:</span>
+                    <span className="text-lg font-semibold text-gray-900">
+                      Total Budget:
+                    </span>
                     <span className="text-2xl font-bold text-blue-600">
                       INR {calculateTotal().toLocaleString()}
                     </span>
@@ -772,7 +858,9 @@ export default function CreateProjectModal({
             {currentStep === 3 && (
               <div className="space-y-6">
                 <div>
-                  <h4 className="font-medium text-gray-900">Project Duration</h4>
+                  <h4 className="font-medium text-gray-900">
+                    Project Duration
+                  </h4>
                   <p className="mt-1 text-sm text-gray-500">
                     Define the planned start and end dates for this project
                   </p>
@@ -802,11 +890,15 @@ export default function CreateProjectModal({
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
                     />
                     {errors.startDate && (
-                      <p className="mt-1 text-sm text-red-600">{errors.startDate}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.startDate}
+                      </p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">End Date *</label>
+                    <label className="block text-sm font-medium text-gray-700">
+                      End Date *
+                    </label>
                     <input
                       type="date"
                       value={endDate}
@@ -814,23 +906,28 @@ export default function CreateProjectModal({
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
                     />
                     {errors.endDate && (
-                      <p className="mt-1 text-sm text-red-600">{errors.endDate}</p>
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.endDate}
+                      </p>
                     )}
                   </div>
                 </div>
 
-                {startDate && endDate && new Date(startDate) < new Date(endDate) && (
-                  <div className="rounded-lg bg-green-50 p-4">
-                    <p className="text-sm text-green-800">
-                      Project duration:{" "}
-                      {Math.ceil(
-                        (new Date(endDate).getTime() - new Date(startDate).getTime()) /
-                        (1000 * 60 * 60 * 24)
-                      )}{" "}
-                      days
-                    </p>
-                  </div>
-                )}
+                {startDate &&
+                  endDate &&
+                  new Date(startDate) < new Date(endDate) && (
+                    <div className="rounded-lg bg-green-50 p-4">
+                      <p className="text-sm text-green-800">
+                        Project duration:{" "}
+                        {Math.ceil(
+                          (new Date(endDate).getTime() -
+                            new Date(startDate).getTime()) /
+                            (1000 * 60 * 60 * 24),
+                        )}{" "}
+                        days
+                      </p>
+                    </div>
+                  )}
 
                 {projectError && (
                   <div className="rounded-md bg-red-50 p-4">

@@ -66,7 +66,8 @@ export const API_CONFIG = {
       ADD_TEAMMATES: "/applicant/add-application-teammates",
       // Application Management
       GET_USER_APPLICATIONS: "/applicant/get-user-applications",
-      GET_APPLICATION_WITH_CYCLE: "/applicant/get-application-details-with-cycle",
+      GET_APPLICATION_WITH_CYCLE:
+        "/applicant/get-application-details-with-cycle",
       GET_USER_CREATED_APPLICATION: "/applicant/get-user-created-applications",
       DELETE_APPLICATION: "/applicant/delete-user-application",
       // Project Management

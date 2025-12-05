@@ -206,7 +206,10 @@ export function ProgramModal({
           </button>
         </div>
 
-        <form className="thin-scrollbar max-h-[70vh] overflow-y-auto" onSubmit={handleSubmit}>
+        <form
+          className="thin-scrollbar max-h-[70vh] overflow-y-auto"
+          onSubmit={handleSubmit}
+        >
           <div className="space-y-4">
             {/* Organization Section */}
             {mode === "create" && (

@@ -2,8 +2,10 @@
  * Cloudinary Upload Utility
  * Handles file uploads to Cloudinary CDN
  */
-
-import { CLOUDINARY_CONFIG, getCloudinaryUrl } from "../lib/config/cloudinary.config";
+import {
+  CLOUDINARY_CONFIG,
+  getCloudinaryUrl,
+} from "../lib/config/cloudinary.config";
 
 export interface CloudinaryUploadResult {
   secure_url: string;
@@ -31,50 +33,52 @@ export interface UploadOptions {
  */
 export const uploadToCloudinary = async (
   file: File,
-  options: UploadOptions = {}
+  options: UploadOptions = {},
 ): Promise<CloudinaryUploadResult> => {
   try {
     const formData = new FormData();
-    
+
     // Add file
     formData.append("file", file);
-    
+
     // Add upload preset (required for unsigned uploads)
     formData.append("upload_preset", CLOUDINARY_CONFIG.UPLOAD_PRESET);
-    
+
     // Add optional parameters
     if (options.folder) {
       formData.append("folder", options.folder);
     }
-    
+
     if (options.publicId) {
       formData.append("public_id", options.publicId);
     }
-    
+
     if (options.tags && options.tags.length > 0) {
       formData.append("tags", options.tags.join(","));
     }
-    
+
     if (options.context) {
-      formData.append("context", Object.entries(options.context)
-        .map(([key, value]) => `${key}=${value}`)
-        .join("|")
+      formData.append(
+        "context",
+        Object.entries(options.context)
+          .map(([key, value]) => `${key}=${value}`)
+          .join("|"),
       );
     }
-    
+
     // Set resource type
     formData.append("resource_type", options.resourceType || "auto");
-    
+
     const response = await fetch(getCloudinaryUrl(), {
       method: "POST",
       body: formData,
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error?.message || "Upload failed");
     }
-    
+
     const result: CloudinaryUploadResult = await response.json();
     return result;
   } catch (error) {
@@ -91,7 +95,7 @@ export const uploadToCloudinary = async (
  */
 export const uploadMultipleToCloudinary = async (
   files: File[],
-  options: UploadOptions = {}
+  options: UploadOptions = {},
 ): Promise<CloudinaryUploadResult[]> => {
   const uploadPromises = files.map((file) => uploadToCloudinary(file, options));
   return Promise.all(uploadPromises);
@@ -106,7 +110,7 @@ export const uploadMultipleToCloudinary = async (
 export const validateFile = (
   file: File,
   allowedFormats: readonly string[] = CLOUDINARY_CONFIG.ALLOWED_FORMATS.ALL,
-  maxSize: number = CLOUDINARY_CONFIG.MAX_FILE_SIZE
+  maxSize: number = CLOUDINARY_CONFIG.MAX_FILE_SIZE,
 ): { valid: boolean; error?: string } => {
   // Check file size
   if (file.size > maxSize) {
@@ -115,7 +119,7 @@ export const validateFile = (
       error: `File size exceeds maximum allowed size of ${maxSize / (1024 * 1024)}MB`,
     };
   }
-  
+
   // Check file format
   const fileExtension = file.name.split(".").pop()?.toLowerCase();
   if (!fileExtension || !allowedFormats.includes(fileExtension)) {
@@ -124,7 +128,7 @@ export const validateFile = (
       error: `File format .${fileExtension} is not allowed. Allowed formats: ${allowedFormats.join(", ")}`,
     };
   }
-  
+
   return { valid: true };
 };
 
@@ -134,9 +138,9 @@ export const validateFile = (
  * @returns Formatted string (e.g., "1.5 MB")
  */
 export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) return "0 Bytes";
   const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const sizes = ["Bytes", "KB", "MB", "GB"];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 };
@@ -169,22 +173,23 @@ export const getMimeType = (filename: string): string => {
  * @returns Transformed URL with viewing flags
  */
 export const getViewableUrl = (url: string): string => {
-  if (!url || !url.includes('cloudinary.com')) {
+  if (!url || !url.includes("cloudinary.com")) {
     return url;
   }
 
   // Check if it's a PDF or document
-  const isPdf = url.toLowerCase().includes('.pdf') || url.includes('/image/upload/');
-  
+  const isPdf =
+    url.toLowerCase().includes(".pdf") || url.includes("/image/upload/");
+
   if (isPdf) {
     // Add fl_attachment:false to prevent download and ensure inline viewing
     // Add pg_1 to show first page for PDFs
-    const urlParts = url.split('/upload/');
+    const urlParts = url.split("/upload/");
     if (urlParts.length === 2) {
       return `${urlParts[0]}/upload/fl_attachment:false/${urlParts[1]}`;
     }
   }
-  
+
   return url;
 };
 
@@ -193,15 +198,19 @@ export const getViewableUrl = (url: string): string => {
  * @param url - Original Cloudinary URL
  * @returns Thumbnail URL for preview
  */
-export const getThumbnailUrl = (url: string, width = 200, height = 200): string => {
-  if (!url || !url.includes('cloudinary.com')) {
+export const getThumbnailUrl = (
+  url: string,
+  width = 200,
+  height = 200,
+): string => {
+  if (!url || !url.includes("cloudinary.com")) {
     return url;
   }
 
-  const urlParts = url.split('/upload/');
+  const urlParts = url.split("/upload/");
   if (urlParts.length === 2) {
     return `${urlParts[0]}/upload/w_${width},h_${height},c_fill,f_jpg,pg_1/${urlParts[1]}`;
   }
-  
+
   return url;
 };

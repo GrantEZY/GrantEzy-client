@@ -18,14 +18,14 @@ import {
   AddApplicationTechnicalDetailsResponse,
   CreateApplicationRequest,
   CreateApplicationResponse,
-  GetUserApplicationsResponse,
-  GetApplicationWithCycleDetailsResponse,
-  GetUserCreatedApplicationDetailsResponse,
   DeleteApplicationResponse,
+  GetApplicationWithCycleDetailsResponse,
+  GetUserApplicationsResponse,
+  GetUserCreatedApplicationDetailsResponse,
 } from "../types/applicant.types";
 import {
-  GetUserProjectsResponse,
   GetProjectDetailsResponse,
+  GetUserProjectsResponse,
 } from "../types/project.types";
 
 export class ApplicantService {
@@ -151,7 +151,9 @@ export class ApplicantService {
    * Delete a draft application
    * Only draft applications can be deleted, not submitted ones
    */
-  async deleteApplication(applicationId: string): Promise<DeleteApplicationResponse> {
+  async deleteApplication(
+    applicationId: string,
+  ): Promise<DeleteApplicationResponse> {
     return httpClient.delete<DeleteApplicationResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.DELETE_APPLICATION,
       { applicationId },

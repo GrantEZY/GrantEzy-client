@@ -5,12 +5,22 @@
  */
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useCoApplicantInvite } from "@/hooks/useCoApplicant";
-import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+
 import { UserCommitmentStatus } from "@/types/auth.types";
+
+/**
+ * Co-Applicant Registration Page
+ * Handles registration for invited co-applicants
+ * URL: /co-applicant/register?token={token}&slug={slug}&email={email}
+ */
 
 export default function CoApplicantRegisterPage() {
   const searchParams = useSearchParams();
@@ -18,7 +28,7 @@ export default function CoApplicantRegisterPage() {
   const { register, isLoading: authLoading } = useAuth();
   const { accept } = useCoApplicantInvite(
     searchParams.get("token") || "",
-    searchParams.get("slug") || ""
+    searchParams.get("slug") || "",
   );
 
   const [formData, setFormData] = useState({
@@ -42,11 +52,11 @@ export default function CoApplicantRegisterPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -110,7 +120,7 @@ export default function CoApplicantRegisterPage() {
       });
 
       showToast.success(
-        "🎉 Account created successfully! Now processing your team invite..."
+        "🎉 Account created successfully! Now processing your team invite...",
       );
 
       // Step 2: Accept the co-applicant invite (user should exist now)
@@ -121,7 +131,7 @@ export default function CoApplicantRegisterPage() {
 
           if (acceptResult.success) {
             showToast.success(
-              "✅ Invite accepted! You're now part of the team."
+              "✅ Invite accepted! You're now part of the team.",
             );
 
             // Step 3: Redirect to co-applicant dashboard after success
@@ -129,23 +139,31 @@ export default function CoApplicantRegisterPage() {
               router.push("/co-applicant/dashboard");
             }, 1500);
           } else {
-            showToast.error("Account created but failed to accept invite. Please try logging in and accepting the invite again.");
+            showToast.error(
+              "Account created but failed to accept invite. Please try logging in and accepting the invite again.",
+            );
             setTimeout(() => {
-              router.push(`/login?redirect=/invite-accept-or-reject/${token}/${slug}`);
+              router.push(
+                `/login?redirect=/invite-accept-or-reject/${token}/${slug}`,
+              );
             }, 2000);
           }
         } catch (inviteError) {
           console.error("Invite acceptance error:", inviteError);
-          showToast.error("Account created but failed to accept invite. Please try logging in and accepting the invite again.");
+          showToast.error(
+            "Account created but failed to accept invite. Please try logging in and accepting the invite again.",
+          );
           setTimeout(() => {
-            router.push(`/login?redirect=/invite-accept-or-reject/${token}/${slug}`);
+            router.push(
+              `/login?redirect=/invite-accept-or-reject/${token}/${slug}`,
+            );
           }, 2000);
         }
       }, 1000); // Wait 1 second for user creation to complete
     } catch (error: any) {
       console.error("Registration error:", error);
       showToast.error(
-        error.message || "Failed to create account. Please try again."
+        error.message || "Failed to create account. Please try again.",
       );
     } finally {
       setIsSubmitting(false);
@@ -158,12 +176,22 @@ export default function CoApplicantRegisterPage() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-8">
           <div>
-            <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
-              <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
+              <svg
+                className="h-8 w-8 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
               </svg>
             </div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -176,16 +204,25 @@ export default function CoApplicantRegisterPage() {
             </p>
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
             <div className="flex items-start">
-              <svg className="h-5 w-5 text-blue-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              <svg
+                className="mt-0.5 h-5 w-5 text-blue-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
               </svg>
               <div className="ml-3">
                 <p className="text-sm text-blue-700">
                   You've been invited to join a grant application team.
                   <br />
-                  After registration, you'll automatically join the team and gain access to the application.
+                  After registration, you'll automatically join the team and
+                  gain access to the application.
                 </p>
               </div>
             </div>
@@ -195,7 +232,10 @@ export default function CoApplicantRegisterPage() {
             <div className="space-y-4">
               {/* First Name */}
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   First Name
                 </label>
                 <input
@@ -205,16 +245,24 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.firstName ? 'border-red-300' : 'border-gray-300'
-                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`relative mt-1 block w-full appearance-none border px-3 py-2 ${
+                    errors.firstName ? "border-red-300" : "border-gray-300"
+                  } rounded-md text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm`}
                   placeholder="Enter your first name"
                 />
-                {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
+                {errors.firstName && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.firstName}
+                  </p>
+                )}
               </div>
 
               {/* Last Name */}
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Last Name
                 </label>
                 <input
@@ -224,16 +272,22 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.lastName ? 'border-red-300' : 'border-gray-300'
-                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`relative mt-1 block w-full appearance-none border px-3 py-2 ${
+                    errors.lastName ? "border-red-300" : "border-gray-300"
+                  } rounded-md text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm`}
                   placeholder="Enter your last name"
                 />
-                {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
+                {errors.lastName && (
+                  <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
+                )}
               </div>
 
               {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Email Address
                 </label>
                 <input
@@ -243,17 +297,25 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.email ? 'border-red-300' : 'border-gray-300'
-                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`relative mt-1 block w-full appearance-none border px-3 py-2 ${
+                    errors.email ? "border-red-300" : "border-gray-300"
+                  } rounded-md text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm`}
                   placeholder="Enter the email you were invited to"
                 />
-                {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-                <p className="mt-1 text-xs text-gray-500">Use the email address that received the invitation.</p>
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+                <p className="mt-1 text-xs text-gray-500">
+                  Use the email address that received the invitation.
+                </p>
               </div>
 
               {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Password
                 </label>
                 <input
@@ -263,16 +325,22 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.password ? 'border-red-300' : 'border-gray-300'
-                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`relative mt-1 block w-full appearance-none border px-3 py-2 ${
+                    errors.password ? "border-red-300" : "border-gray-300"
+                  } rounded-md text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm`}
                   placeholder="Create a strong password"
                 />
-                {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                )}
               </div>
 
               {/* Confirm Password */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700"
+                >
                   Confirm Password
                 </label>
                 <input
@@ -282,11 +350,18 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`relative mt-1 block w-full appearance-none border px-3 py-2 ${
+                    errors.confirmPassword
+                      ? "border-red-300"
+                      : "border-gray-300"
+                  } rounded-md text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:ring-blue-500 focus:outline-none sm:text-sm`}
                   placeholder="Confirm your password"
                 />
-                {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.confirmPassword}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -294,13 +369,29 @@ export default function CoApplicantRegisterPage() {
               <button
                 type="submit"
                 disabled={isSubmitting || authLoading}
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSubmitting ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="mr-3 -ml-1 h-5 w-5 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Creating Account & Joining Team...
                   </>
@@ -315,7 +406,11 @@ export default function CoApplicantRegisterPage() {
                 Already have an account?{" "}
                 <button
                   type="button"
-                  onClick={() => router.push(`/login?redirect=/invite-accept-or-reject/${token}/${slug}`)}
+                  onClick={() =>
+                    router.push(
+                      `/login?redirect=/invite-accept-or-reject/${token}/${slug}`,
+                    )
+                  }
                   className="font-medium text-blue-600 hover:text-blue-500"
                 >
                   Sign in instead

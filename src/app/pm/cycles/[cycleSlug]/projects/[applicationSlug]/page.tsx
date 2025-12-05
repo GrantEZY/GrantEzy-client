@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import PMLayout from "@/components/layout/PMLayout";
+
 import { useProjectManagement } from "@/hooks/useProjectManagement";
 
 export default function ProjectDetailsPage() {
@@ -39,19 +42,19 @@ export default function ProjectDetailsPage() {
     if (budget.ManPower && Array.isArray(budget.ManPower)) {
       total += budget.ManPower.reduce(
         (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
+        0,
       );
     }
     if (budget.Equipment && Array.isArray(budget.Equipment)) {
       total += budget.Equipment.reduce(
         (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
+        0,
       );
     }
     if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
       total += budget.OtherCosts.reduce(
         (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
+        0,
       );
     }
 
@@ -113,7 +116,9 @@ export default function ProjectDetailsPage() {
               </svg>
               Back to Projects
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">Project Details</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Project Details
+            </h1>
             <p className="mt-2 text-gray-600">
               View complete project information and budget breakdown
             </p>
@@ -124,7 +129,9 @@ export default function ProjectDetailsPage() {
             <div className="flex h-64 items-center justify-center rounded-lg border border-gray-200 bg-white">
               <div className="text-center">
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-sm text-gray-600">Loading project details...</p>
+                <p className="mt-4 text-sm text-gray-600">
+                  Loading project details...
+                </p>
               </div>
             </div>
           )}
@@ -145,7 +152,9 @@ export default function ProjectDetailsPage() {
                   />
                 </svg>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">Error loading project</h3>
+                  <h3 className="text-sm font-medium text-red-800">
+                    Error loading project
+                  </h3>
                   <p className="mt-2 text-sm text-red-700">{projectError}</p>
                 </div>
               </div>
@@ -182,27 +191,36 @@ export default function ProjectDetailsPage() {
                 {/* Key Metrics */}
                 <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <div className="rounded-lg bg-blue-50 p-4">
-                    <p className="text-sm font-medium text-blue-900">Total Budget</p>
+                    <p className="text-sm font-medium text-blue-900">
+                      Total Budget
+                    </p>
                     <p className="mt-2 text-2xl font-bold text-blue-600">
-                      INR {calculateBudgetTotal(currentProject.allocatedBudget).toLocaleString()}
+                      INR{" "}
+                      {calculateBudgetTotal(
+                        currentProject.allocatedBudget,
+                      ).toLocaleString()}
                     </p>
                   </div>
                   <div className="rounded-lg bg-green-50 p-4">
-                    <p className="text-sm font-medium text-green-900">Duration</p>
+                    <p className="text-sm font-medium text-green-900">
+                      Duration
+                    </p>
                     <p className="mt-2 text-2xl font-bold text-green-600">
                       {currentProject.plannedDuration?.startDate &&
                       currentProject.plannedDuration?.endDate
                         ? calculateDuration(
                             currentProject.plannedDuration.startDate.toString(),
-                            currentProject.plannedDuration.endDate.toString()
+                            currentProject.plannedDuration.endDate.toString(),
                           )
                         : "N/A"}{" "}
                       days
                     </p>
                   </div>
                   <div className="rounded-lg bg-purple-50 p-4">
-                    <p className="text-sm font-medium text-purple-900">Project ID</p>
-                    <p className="mt-2 text-sm font-mono text-purple-600">
+                    <p className="text-sm font-medium text-purple-900">
+                      Project ID
+                    </p>
+                    <p className="mt-2 font-mono text-sm text-purple-600">
                       {currentProject.id.substring(0, 8)}...
                     </p>
                   </div>
@@ -212,14 +230,18 @@ export default function ProjectDetailsPage() {
               {/* Timeline */}
               {currentProject.plannedDuration && (
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900">Project Timeline</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Project Timeline
+                  </h3>
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Start Date</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Start Date
+                      </p>
                       <p className="mt-1 text-base text-gray-900">
                         {currentProject.plannedDuration.startDate
                           ? new Date(
-                              currentProject.plannedDuration.startDate
+                              currentProject.plannedDuration.startDate,
                             ).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
@@ -229,11 +251,13 @@ export default function ProjectDetailsPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">End Date</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        End Date
+                      </p>
                       <p className="mt-1 text-base text-gray-900">
                         {currentProject.plannedDuration.endDate
                           ? new Date(
-                              currentProject.plannedDuration.endDate
+                              currentProject.plannedDuration.endDate,
                             ).toLocaleDateString("en-US", {
                               year: "numeric",
                               month: "long",
@@ -249,7 +273,9 @@ export default function ProjectDetailsPage() {
               {/* Budget Breakdown */}
               {currentProject.allocatedBudget && (
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold text-gray-900">Budget Breakdown</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    Budget Breakdown
+                  </h3>
 
                   <div className="mt-4 space-y-6">
                     {/* ManPower */}
@@ -257,31 +283,36 @@ export default function ProjectDetailsPage() {
                       Array.isArray(currentProject.allocatedBudget.ManPower) &&
                       currentProject.allocatedBudget.ManPower.length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-900">ManPower</h4>
+                          <h4 className="font-medium text-gray-900">
+                            ManPower
+                          </h4>
                           <div className="mt-2 overflow-hidden rounded-lg border border-gray-200">
                             <table className="min-w-full divide-y divide-gray-200">
                               <thead className="bg-gray-50">
                                 <tr>
-                                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Item
                                   </th>
-                                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                                  <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Amount
                                   </th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.ManPower.map((item: any, idx: number) => (
-                                  <tr key={idx}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">
-                                      {item.BudgetReason || "N/A"}
-                                    </td>
-                                    <td className="px-4 py-3 text-right text-sm text-gray-900">
-                                      {item.Budget?.currency || "INR"}{" "}
-                                      {item.Budget?.amount?.toLocaleString() || "0"}
-                                    </td>
-                                  </tr>
-                                ))}
+                                {currentProject.allocatedBudget.ManPower.map(
+                                  (item: any, idx: number) => (
+                                    <tr key={idx}>
+                                      <td className="px-4 py-3 text-sm text-gray-900">
+                                        {item.BudgetReason || "N/A"}
+                                      </td>
+                                      <td className="px-4 py-3 text-right text-sm text-gray-900">
+                                        {item.Budget?.currency || "INR"}{" "}
+                                        {item.Budget?.amount?.toLocaleString() ||
+                                          "0"}
+                                      </td>
+                                    </tr>
+                                  ),
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -293,31 +324,36 @@ export default function ProjectDetailsPage() {
                       Array.isArray(currentProject.allocatedBudget.Equipment) &&
                       currentProject.allocatedBudget.Equipment.length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-900">Equipment</h4>
+                          <h4 className="font-medium text-gray-900">
+                            Equipment
+                          </h4>
                           <div className="mt-2 overflow-hidden rounded-lg border border-gray-200">
                             <table className="min-w-full divide-y divide-gray-200">
                               <thead className="bg-gray-50">
                                 <tr>
-                                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Item
                                   </th>
-                                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                                  <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Amount
                                   </th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.Equipment.map((item: any, idx: number) => (
-                                  <tr key={idx}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">
-                                      {item.BudgetReason || "N/A"}
-                                    </td>
-                                    <td className="px-4 py-3 text-right text-sm text-gray-900">
-                                      {item.Budget?.currency || "INR"}{" "}
-                                      {item.Budget?.amount?.toLocaleString() || "0"}
-                                    </td>
-                                  </tr>
-                                ))}
+                                {currentProject.allocatedBudget.Equipment.map(
+                                  (item: any, idx: number) => (
+                                    <tr key={idx}>
+                                      <td className="px-4 py-3 text-sm text-gray-900">
+                                        {item.BudgetReason || "N/A"}
+                                      </td>
+                                      <td className="px-4 py-3 text-right text-sm text-gray-900">
+                                        {item.Budget?.currency || "INR"}{" "}
+                                        {item.Budget?.amount?.toLocaleString() ||
+                                          "0"}
+                                      </td>
+                                    </tr>
+                                  ),
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -326,34 +362,41 @@ export default function ProjectDetailsPage() {
 
                     {/* Other Costs */}
                     {currentProject.allocatedBudget.OtherCosts &&
-                      Array.isArray(currentProject.allocatedBudget.OtherCosts) &&
+                      Array.isArray(
+                        currentProject.allocatedBudget.OtherCosts,
+                      ) &&
                       currentProject.allocatedBudget.OtherCosts.length > 0 && (
                         <div>
-                          <h4 className="font-medium text-gray-900">Other Costs</h4>
+                          <h4 className="font-medium text-gray-900">
+                            Other Costs
+                          </h4>
                           <div className="mt-2 overflow-hidden rounded-lg border border-gray-200">
                             <table className="min-w-full divide-y divide-gray-200">
                               <thead className="bg-gray-50">
                                 <tr>
-                                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                  <th className="px-4 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Item
                                   </th>
-                                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                                  <th className="px-4 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                                     Amount
                                   </th>
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.OtherCosts.map((item: any, idx: number) => (
-                                  <tr key={idx}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">
-                                      {item.BudgetReason || "N/A"}
-                                    </td>
-                                    <td className="px-4 py-3 text-right text-sm text-gray-900">
-                                      {item.Budget?.currency || "INR"}{" "}
-                                      {item.Budget?.amount?.toLocaleString() || "0"}
-                                    </td>
-                                  </tr>
-                                ))}
+                                {currentProject.allocatedBudget.OtherCosts.map(
+                                  (item: any, idx: number) => (
+                                    <tr key={idx}>
+                                      <td className="px-4 py-3 text-sm text-gray-900">
+                                        {item.BudgetReason || "N/A"}
+                                      </td>
+                                      <td className="px-4 py-3 text-right text-sm text-gray-900">
+                                        {item.Budget?.currency || "INR"}{" "}
+                                        {item.Budget?.amount?.toLocaleString() ||
+                                          "0"}
+                                      </td>
+                                    </tr>
+                                  ),
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -362,40 +405,58 @@ export default function ProjectDetailsPage() {
 
                     {/* Single Budget Items */}
                     <div>
-                      <h4 className="font-medium text-gray-900">Additional Costs</h4>
+                      <h4 className="font-medium text-gray-900">
+                        Additional Costs
+                      </h4>
                       <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {currentProject.allocatedBudget.Consumables?.Budget?.amount > 0 && (
+                        {currentProject.allocatedBudget.Consumables?.Budget
+                          ?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
-                            <span className="text-sm text-gray-600">Consumables</span>
+                            <span className="text-sm text-gray-600">
+                              Consumables
+                            </span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Consumables.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Consumables.Budget
+                                .currency || "INR"}{" "}
                               {currentProject.allocatedBudget.Consumables.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
-                        {currentProject.allocatedBudget.Travel?.Budget?.amount > 0 && (
+                        {currentProject.allocatedBudget.Travel?.Budget?.amount >
+                          0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
-                            <span className="text-sm text-gray-600">Travel</span>
+                            <span className="text-sm text-gray-600">
+                              Travel
+                            </span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Travel.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Travel.Budget
+                                .currency || "INR"}{" "}
                               {currentProject.allocatedBudget.Travel.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
-                        {currentProject.allocatedBudget.Contigency?.Budget?.amount > 0 && (
+                        {currentProject.allocatedBudget.Contigency?.Budget
+                          ?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
-                            <span className="text-sm text-gray-600">Contingency</span>
+                            <span className="text-sm text-gray-600">
+                              Contingency
+                            </span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Contigency.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Contigency.Budget
+                                .currency || "INR"}{" "}
                               {currentProject.allocatedBudget.Contigency.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
-                        {currentProject.allocatedBudget.Overhead?.Budget?.amount > 0 && (
+                        {currentProject.allocatedBudget.Overhead?.Budget
+                          ?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
-                            <span className="text-sm text-gray-600">Overhead</span>
+                            <span className="text-sm text-gray-600">
+                              Overhead
+                            </span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Overhead.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Overhead.Budget
+                                .currency || "INR"}{" "}
                               {currentProject.allocatedBudget.Overhead.Budget.amount.toLocaleString()}
                             </span>
                           </div>
@@ -406,10 +467,14 @@ export default function ProjectDetailsPage() {
                     {/* Total */}
                     <div className="border-t border-gray-200 pt-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-lg font-semibold text-gray-900">Total Budget</span>
+                        <span className="text-lg font-semibold text-gray-900">
+                          Total Budget
+                        </span>
                         <span className="text-2xl font-bold text-blue-600">
                           INR{" "}
-                          {calculateBudgetTotal(currentProject.allocatedBudget).toLocaleString()}
+                          {calculateBudgetTotal(
+                            currentProject.allocatedBudget,
+                          ).toLocaleString()}
                         </span>
                       </div>
                     </div>
@@ -433,13 +498,17 @@ export default function ProjectDetailsPage() {
                   </div>
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Application ID</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Application ID
+                      </p>
                       <p className="mt-1 font-mono text-sm text-gray-900">
                         {currentProject.application.id}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-600">Application Status</p>
+                      <p className="text-sm font-medium text-gray-600">
+                        Application Status
+                      </p>
                       <p className="mt-1 text-sm text-gray-900">
                         {currentProject.application.status}
                       </p>
@@ -450,30 +519,42 @@ export default function ProjectDetailsPage() {
 
               {/* Metadata */}
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-900">Project Metadata</h3>
+                <h3 className="text-lg font-semibold text-gray-900">
+                  Project Metadata
+                </h3>
                 <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Created At</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Created At
+                    </p>
                     <p className="mt-1 text-sm text-gray-900">
-                      {new Date(currentProject.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {new Date(currentProject.createdAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Last Updated</p>
+                    <p className="text-sm font-medium text-gray-600">
+                      Last Updated
+                    </p>
                     <p className="mt-1 text-sm text-gray-900">
-                      {new Date(currentProject.updatedAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {new Date(currentProject.updatedAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        },
+                      )}
                     </p>
                   </div>
                 </div>
@@ -497,9 +578,12 @@ export default function ProjectDetailsPage() {
                   strokeWidth={2}
                 />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">Project Not Found</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                Project Not Found
+              </h3>
               <p className="mt-1 text-sm text-gray-500">
-                The project you're looking for doesn't exist or you don't have access to it.
+                The project you're looking for doesn't exist or you don't have
+                access to it.
               </p>
               <div className="mt-6">
                 <Link

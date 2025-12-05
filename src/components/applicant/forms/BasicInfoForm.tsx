@@ -5,8 +5,15 @@
 "use client";
 
 import { useState } from "react";
+
 import { useApplicant } from "@/hooks/useApplicant";
+
 import { BasicInfo } from "@/types/applicant.types";
+
+/**
+ * Step 1: Basic Information Form
+ * Collects: title, summary, problem, solution, innovation
+ */
 
 interface BasicInfoFormProps {
   cycleSlug: string;
@@ -23,7 +30,9 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
     innovation: currentApplication?.basicInfo?.innovation || "",
   });
 
-  const [errors, setErrors] = useState<Partial<Record<keyof BasicInfo, string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<keyof BasicInfo, string>>
+  >({});
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof BasicInfo, string>> = {};
@@ -75,10 +84,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
     });
   };
 
-  const handleChange = (
-    field: keyof BasicInfo,
-    value: string
-  ) => {
+  const handleChange = (field: keyof BasicInfo, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error for this field
     if (errors[field]) {
@@ -89,9 +95,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900">
-          Basic Information
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
         <p className="mt-1 text-sm text-gray-600">
           Provide essential details about your project
         </p>
@@ -112,7 +116,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
           onChange={(e) => handleChange("title", e.target.value)}
           className={`mt-1 block w-full rounded-md border ${
             errors.title ? "border-red-300" : "border-gray-300"
-          } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          } px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
           placeholder="e.g., AI-powered Healthcare Assistant"
           maxLength={200}
         />
@@ -139,7 +143,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
           onChange={(e) => handleChange("summary", e.target.value)}
           className={`mt-1 block w-full rounded-md border ${
             errors.summary ? "border-red-300" : "border-gray-300"
-          } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          } px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
           placeholder="Provide a brief overview of your project..."
           maxLength={500}
         />
@@ -166,7 +170,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
           onChange={(e) => handleChange("problem", e.target.value)}
           className={`mt-1 block w-full rounded-md border ${
             errors.problem ? "border-red-300" : "border-gray-300"
-          } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          } px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
           placeholder="Describe the problem your project addresses..."
           maxLength={1000}
         />
@@ -193,7 +197,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
           onChange={(e) => handleChange("solution", e.target.value)}
           className={`mt-1 block w-full rounded-md border ${
             errors.solution ? "border-red-300" : "border-gray-300"
-          } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          } px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
           placeholder="Explain your proposed solution..."
           maxLength={1000}
         />
@@ -220,7 +224,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
           onChange={(e) => handleChange("innovation", e.target.value)}
           className={`mt-1 block w-full rounded-md border ${
             errors.innovation ? "border-red-300" : "border-gray-300"
-          } px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          } px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none`}
           placeholder="What makes your project innovative and unique?"
           maxLength={1000}
         />
@@ -233,16 +237,16 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+      <div className="flex justify-end space-x-3 border-t border-gray-200 pt-6">
         <button
           type="submit"
           disabled={isLoading}
-          className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
         >
           {isLoading ? (
             <>
               <svg
-                className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                className="mr-2 -ml-1 h-4 w-4 animate-spin text-white"
                 fill="none"
                 viewBox="0 0 24 24"
               >

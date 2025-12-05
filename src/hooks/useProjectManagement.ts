@@ -7,7 +7,9 @@ import { useProjectStore } from "../store/project.store";
 export const useProjectManagement = () => {
   // Projects state
   const projects = useProjectStore((state) => state.projects);
-  const projectsPagination = useProjectStore((state) => state.projectsPagination);
+  const projectsPagination = useProjectStore(
+    (state) => state.projectsPagination,
+  );
   const isProjectsLoading = useProjectStore((state) => state.isProjectsLoading);
   const projectsError = useProjectStore((state) => state.projectsError);
 
@@ -18,7 +20,9 @@ export const useProjectManagement = () => {
 
   // Criterias
   const criterias = useProjectStore((state) => state.criterias);
-  const isCriteriasLoading = useProjectStore((state) => state.isCriteriasLoading);
+  const isCriteriasLoading = useProjectStore(
+    (state) => state.isCriteriasLoading,
+  );
   const criteriasError = useProjectStore((state) => state.criteriasError);
 
   // Actions
@@ -28,7 +32,9 @@ export const useProjectManagement = () => {
   const clearProjects = useProjectStore((state) => state.clearProjects);
   const clearProject = useProjectStore((state) => state.clearProject);
 
-  const createCycleCriteria = useProjectStore((state) => state.createCycleCriteria);
+  const createCycleCriteria = useProjectStore(
+    (state) => state.createCycleCriteria,
+  );
   const getCycleCriterias = useProjectStore((state) => state.getCycleCriterias);
   const clearCriterias = useProjectStore((state) => state.clearCriterias);
 

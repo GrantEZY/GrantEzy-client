@@ -1,10 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import Link from "next/link";
+
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import CoApplicantLayout from "@/components/layout/CoApplicantLayout";
+
 import { coApplicantService } from "@/services/co-applicant.service";
+
 import { Project } from "@/types/project.types";
 
 export default function CoApplicantProjectsPage() {
@@ -25,16 +29,23 @@ export default function CoApplicantProjectsPage() {
     setError(null);
 
     try {
-      const response = await coApplicantService.getUserLinkedProjects(currentPage, resultsPerPage);
+      const response = await coApplicantService.getUserLinkedProjects(
+        currentPage,
+        resultsPerPage,
+      );
 
       if (response && response.status === 200 && response.res) {
         setProjects(response.res.projects);
         setTotalPages(response.res.pagination?.totalPages || 1);
       } else {
-        throw new Error((response as any)?.message || "Failed to load linked projects");
+        throw new Error(
+          (response as any)?.message || "Failed to load linked projects",
+        );
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load linked projects");
+      setError(
+        err instanceof Error ? err.message : "Failed to load linked projects",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -63,32 +74,32 @@ export default function CoApplicantProjectsPage() {
     if (budget.ManPower && Array.isArray(budget.ManPower)) {
       total += budget.ManPower.reduce(
         (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
-        0
+        0,
       );
     }
     if (budget.Equipment && Array.isArray(budget.Equipment)) {
       total += budget.Equipment.reduce(
         (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
-        0
+        0,
       );
     }
     if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
       total += budget.OtherCosts.reduce(
         (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
-        0
+        0,
       );
     }
 
-    if (budget.Consumables && 'Budget' in budget.Consumables) {
+    if (budget.Consumables && "Budget" in budget.Consumables) {
       total += (budget.Consumables as any).Budget?.totalAmount || 0;
     }
-    if (budget.Travel && 'Budget' in budget.Travel) {
+    if (budget.Travel && "Budget" in budget.Travel) {
       total += (budget.Travel as any).Budget?.totalAmount || 0;
     }
-    if (budget.Contigency && 'Budget' in budget.Contigency) {
+    if (budget.Contigency && "Budget" in budget.Contigency) {
       total += (budget.Contigency as any).Budget?.totalAmount || 0;
     }
-    if (budget.Overhead && 'Budget' in budget.Overhead) {
+    if (budget.Overhead && "Budget" in budget.Overhead) {
       total += (budget.Overhead as any).Budget?.totalAmount || 0;
     }
 
@@ -101,7 +112,9 @@ export default function CoApplicantProjectsPage() {
         <div className="space-y-6 p-6">
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Linked Projects</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Linked Projects
+            </h1>
             <p className="mt-2 text-gray-600">
               View projects where you are a co-applicant
             </p>
@@ -112,7 +125,9 @@ export default function CoApplicantProjectsPage() {
             <div className="flex h-64 items-center justify-center rounded-lg border border-gray-200 bg-white">
               <div className="text-center">
                 <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                <p className="mt-4 text-sm text-gray-600">Loading linked projects...</p>
+                <p className="mt-4 text-sm text-gray-600">
+                  Loading linked projects...
+                </p>
               </div>
             </div>
           )}
@@ -133,7 +148,9 @@ export default function CoApplicantProjectsPage() {
                   />
                 </svg>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">Error loading projects</h3>
+                  <h3 className="text-sm font-medium text-red-800">
+                    Error loading projects
+                  </h3>
                   <p className="mt-2 text-sm text-red-700">{error}</p>
                 </div>
               </div>
@@ -158,9 +175,12 @@ export default function CoApplicantProjectsPage() {
                       strokeWidth={2}
                     />
                   </svg>
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">No Linked Projects</h3>
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">
+                    No Linked Projects
+                  </h3>
                   <p className="mt-1 text-sm text-gray-500">
-                    You are not currently linked to any projects as a co-applicant.
+                    You are not currently linked to any projects as a
+                    co-applicant.
                   </p>
                 </div>
               ) : (
@@ -175,19 +195,19 @@ export default function CoApplicantProjectsPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                       <thead className="bg-gray-50">
                         <tr>
-                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                             Project Title
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                             Status
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                             Budget
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                          <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                             Duration
                           </th>
-                          <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                          <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                             Actions
                           </th>
                         </tr>
@@ -205,22 +225,26 @@ export default function CoApplicantProjectsPage() {
                                 ID: {project.id.substring(0, 8)}...
                               </div>
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4">
+                            <td className="px-6 py-4 whitespace-nowrap">
                               <span
                                 className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.status)}`}
                               >
                                 {project.status}
                               </span>
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                              INR {calculateBudgetTotal(project.allocatedBudget).toLocaleString()}
+                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                              INR{" "}
+                              {calculateBudgetTotal(
+                                project.allocatedBudget,
+                              ).toLocaleString()}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {project.plannedDuration?.startDate && project.plannedDuration?.endDate
+                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                              {project.plannedDuration?.startDate &&
+                              project.plannedDuration?.endDate
                                 ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
                                 : "Not set"}
                             </td>
-                            <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                            <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
                               <Link
                                 className="text-blue-600 hover:text-blue-700"
                                 href={`/co-applicant/projects/${project.application?.slug || project.slug}`}

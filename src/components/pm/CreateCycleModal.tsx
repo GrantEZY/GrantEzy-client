@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { usePm } from "@/hooks/usePm";
 
@@ -97,12 +97,17 @@ export default function CreateCycleModal({
   // Update programId when it becomes available
   useEffect(() => {
     if (programId && formData.programId !== programId) {
-      setFormData(prev => ({ ...prev, programId }));
-    } else if (!programId && cycles && cycles.length > 0 && !formData.programId) {
+      setFormData((prev) => ({ ...prev, programId }));
+    } else if (
+      !programId &&
+      cycles &&
+      cycles.length > 0 &&
+      !formData.programId
+    ) {
       // Fallback to first cycle's programId if not provided
       const fallbackProgramId = cycles[0].programId;
       if (fallbackProgramId) {
-        setFormData(prev => ({ ...prev, programId: fallbackProgramId }));
+        setFormData((prev) => ({ ...prev, programId: fallbackProgramId }));
       }
     }
   }, [programId, cycles, formData.programId]);
@@ -141,7 +146,7 @@ export default function CreateCycleModal({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
     // Prevent Enter key from submitting form on steps 1 and 2
-    if (e.key === 'Enter' && currentStep !== 3) {
+    if (e.key === "Enter" && currentStep !== 3) {
       e.preventDefault();
       // Move to next step if Enter is pressed on steps 1 or 2
       if (currentStep < 3 && validateStep(currentStep)) {
@@ -170,33 +175,43 @@ export default function CreateCycleModal({
     try {
       // Get programId - first try prop, then from existing cycles
       let targetProgramId = programId;
-      
+
       if (!targetProgramId && cycles && cycles.length > 0) {
         // Extract programId from first cycle (PM can only manage one program)
         targetProgramId = cycles[0].programId;
       }
 
       if (!targetProgramId) {
-        console.error("No programId available. Props programId:", programId, "Cycles:", cycles);
-        alert("Unable to determine program ID. This might be because:\n\n1. You haven't been assigned to any programs yet\n2. No cycles exist for your program\n3. There's a system error\n\nPlease contact your administrator to ensure you're assigned as a Program Manager for a specific program.");
+        console.error(
+          "No programId available. Props programId:",
+          programId,
+          "Cycles:",
+          cycles,
+        );
+        alert(
+          "Unable to determine program ID. This might be because:\n\n1. You haven't been assigned to any programs yet\n2. No cycles exist for your program\n3. There's a system error\n\nPlease contact your administrator to ensure you're assigned as a Program Manager for a specific program.",
+        );
         return;
       }
 
       // Validate UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
       if (!uuidRegex.test(targetProgramId)) {
         console.error("Invalid programId format:", targetProgramId);
-        alert(`Invalid program ID format. Expected UUID, got: ${targetProgramId}`);
+        alert(
+          `Invalid program ID format. Expected UUID, got: ${targetProgramId}`,
+        );
         return;
       }
 
       console.log("Creating cycle with programId:", targetProgramId);
-      
+
       const cycleData = {
         ...formData,
-        programId: targetProgramId
+        programId: targetProgramId,
       };
-        
+
       const success = await createCycle(cycleData);
       if (success) {
         onSuccess();
@@ -292,7 +307,11 @@ export default function CreateCycleModal({
         </div>
 
         {/* Form Content */}
-        <form className="px-6 py-6" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
+        <form
+          className="px-6 py-6"
+          onSubmit={handleSubmit}
+          onKeyDown={handleKeyDown}
+        >
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
             <div className="space-y-6">
@@ -414,14 +433,10 @@ export default function CreateCycleModal({
                       errors.startDate ? "border-red-500" : "border-gray-300"
                     }`}
                     onChange={(e) =>
-                      handleDateChange(
-                        "duration",
-                        "startDate",
-                        e.target.value,
-                      )
+                      handleDateChange("duration", "startDate", e.target.value)
                     }
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                      if (e.key === "Enter") {
                         e.preventDefault();
                       }
                     }}
@@ -450,14 +465,10 @@ export default function CreateCycleModal({
                   <input
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     onChange={(e) =>
-                      handleDateChange(
-                        "duration",
-                        "endDate",
-                        e.target.value,
-                      )
+                      handleDateChange("duration", "endDate", e.target.value)
                     }
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                      if (e.key === "Enter") {
                         e.preventDefault();
                       }
                     }}

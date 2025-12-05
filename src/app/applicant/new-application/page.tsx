@@ -5,26 +5,35 @@
 "use client";
 
 import { useEffect } from "react";
+
 import { useSearchParams } from "next/navigation";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ApplicantLayout from "@/components/layout/ApplicantLayout";
-import { useApplicant } from "@/hooks/useApplicant";
-import ApplicationStepper from "@/components/applicant/ApplicationStepper";
+
 import ApplicationProgress from "@/components/applicant/ApplicationProgress";
+import ApplicationStepper from "@/components/applicant/ApplicationStepper";
 import BasicInfoForm from "@/components/applicant/forms/BasicInfoForm";
 import BudgetForm from "@/components/applicant/forms/BudgetForm";
-import TechnicalDetailsForm from "@/components/applicant/forms/TechnicalDetailsForm";
+import DocumentsForm from "@/components/applicant/forms/DocumentsForm";
 import RevenueModelForm from "@/components/applicant/forms/RevenueModelForm";
 import RisksAndMilestonesForm from "@/components/applicant/forms/RisksAndMilestonesForm";
-import DocumentsForm from "@/components/applicant/forms/DocumentsForm";
 import TeamMembersForm from "@/components/applicant/forms/TeamMembersForm";
-import { ApplicationStep } from "@/types/applicant.types";
+import TechnicalDetailsForm from "@/components/applicant/forms/TechnicalDetailsForm";
+import { AuthGuard } from "@/components/guards/AuthGuard";
+import ApplicantLayout from "@/components/layout/ApplicantLayout";
 import { ToastProvider } from "@/components/ui/ToastNew";
+
+import { useApplicant } from "@/hooks/useApplicant";
+
+import { ApplicationStep } from "@/types/applicant.types";
+
+/**
+ * Multi-step Application Form - Main Page
+ * Handles the 7-stage application submission process
+ */
 
 export default function NewApplicationPage() {
   const searchParams = useSearchParams();
   const cycleSlug = searchParams.get("cycleSlug");
-  
+
   const {
     currentStep,
     applicationSteps,
@@ -56,8 +65,12 @@ export default function NewApplicationPage() {
       <AuthGuard>
         <div className="flex h-screen items-center justify-center">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900">Missing Cycle Information</h2>
-            <p className="mt-2 text-gray-600">Please select a cycle to apply for.</p>
+            <h2 className="text-2xl font-bold text-gray-900">
+              Missing Cycle Information
+            </h2>
+            <p className="mt-2 text-gray-600">
+              Please select a cycle to apply for.
+            </p>
           </div>
         </div>
       </AuthGuard>
@@ -89,15 +102,15 @@ export default function NewApplicationPage() {
     <AuthGuard>
       <ToastProvider>
         <ApplicantLayout>
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            New Application
-          </h1>
-          <p className="mt-2 text-gray-600">
-            Complete all 7 steps to submit your application
-          </p>
-        </div>
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900">
+              New Application
+            </h1>
+            <p className="mt-2 text-gray-600">
+              Complete all 7 steps to submit your application
+            </p>
+          </div>
 
           {/* Progress Bar */}
           <ApplicationProgress
@@ -108,7 +121,7 @@ export default function NewApplicationPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 rounded-lg bg-red-50 border border-red-200 p-4">
+            <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg
@@ -127,10 +140,7 @@ export default function NewApplicationPage() {
                   <h3 className="text-sm font-medium text-red-800">Error</h3>
                   <p className="mt-1 text-sm text-red-700">{error}</p>
                 </div>
-                <button
-                  onClick={clearError}
-                  className="ml-auto flex-shrink-0"
-                >
+                <button onClick={clearError} className="ml-auto flex-shrink-0">
                   <svg
                     className="h-5 w-5 text-red-400 hover:text-red-600"
                     fill="currentColor"
@@ -149,7 +159,7 @@ export default function NewApplicationPage() {
 
           {/* Success Message */}
           {successMessage && (
-            <div className="mb-6 rounded-lg bg-green-50 border border-green-200 p-4">
+            <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg
@@ -200,7 +210,7 @@ export default function NewApplicationPage() {
 
             {/* Form Content */}
             <div className="lg:col-span-9">
-              <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+              <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                 {renderStepForm()}
               </div>
             </div>
@@ -208,10 +218,10 @@ export default function NewApplicationPage() {
 
           {/* Application Info */}
           {currentApplication && (
-            <div className="mt-6 rounded-lg bg-blue-50 border border-blue-200 p-4">
+            <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
               <div className="flex items-start">
                 <svg
-                  className="h-5 w-5 text-blue-400 mt-0.5"
+                  className="mt-0.5 h-5 w-5 text-blue-400"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -228,7 +238,8 @@ export default function NewApplicationPage() {
                   <p className="mt-1 text-sm text-blue-700">
                     Application ID: {currentApplication.id}
                     <br />
-                    You can save your progress and come back later to complete the remaining steps.
+                    You can save your progress and come back later to complete
+                    the remaining steps.
                   </p>
                 </div>
               </div>

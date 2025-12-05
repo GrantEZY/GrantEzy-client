@@ -1,7 +1,6 @@
 /**
  * Custom hook for user profile functionality
  */
-
 import { useUserStore } from "../store/user.store";
 import { UpdateProfileRequest } from "../types/user.types";
 

@@ -64,14 +64,12 @@ export class PublicService {
   /**
    * Get all active program cycles (public endpoint)
    */
-  async getActiveProgramCycles(
-    filters?: {
-      page?: number;
-      numberOfResults?: number;
-    }
-  ): Promise<GetActiveCyclesResponse> {
+  async getActiveProgramCycles(filters?: {
+    page?: number;
+    numberOfResults?: number;
+  }): Promise<GetActiveCyclesResponse> {
     const params = new URLSearchParams();
-    
+
     // Required pagination parameters
     params.append("page", String(filters?.page ?? 1));
     params.append("numberOfResults", String(filters?.numberOfResults ?? 10));

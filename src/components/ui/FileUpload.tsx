@@ -5,10 +5,18 @@
 
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useRef, useState } from "react";
+
 import { useCloudinaryUpload } from "@/hooks/useCloudinaryUpload";
+
 import { CLOUDINARY_CONFIG } from "@/lib/config/cloudinary.config";
+
 import { getViewableUrl } from "@/utils/cloudinary.util";
+
+/**
+ * File Upload Component with Cloudinary Integration
+ * Reusable component for uploading files with drag-and-drop support
+ */
 
 export interface FileUploadProps {
   /**
@@ -97,7 +105,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({
   const [uploadedFile, setUploadedFile] = useState<{
     url: string;
     fileName: string;
-  } | null>(existingFileUrl ? { url: existingFileUrl, fileName: "Existing file" } : null);
+  } | null>(
+    existingFileUrl
+      ? { url: existingFileUrl, fileName: "Existing file" }
+      : null,
+  );
 
   const { uploadFile, uploading, error, formatFileSize, getMimeType } =
     useCloudinaryUpload();
@@ -113,7 +125,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       if (result) {
         // Use getViewableUrl to ensure PDFs open inline instead of downloading
         const viewableUrl = getViewableUrl(result.secure_url);
-        
+
         const uploadData = {
           url: viewableUrl,
           publicId: result.public_id,
@@ -182,23 +194,21 @@ export const FileUpload: React.FC<FileUploadProps> = ({
       {label && (
         <label className="block text-sm font-medium text-gray-700">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="ml-1 text-red-500">*</span>}
         </label>
       )}
 
       {/* Description */}
-      {description && (
-        <p className="text-sm text-gray-500">{description}</p>
-      )}
+      {description && <p className="text-sm text-gray-500">{description}</p>}
 
       {/* Upload Area */}
       {!uploadedFile ? (
         <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+          className={`rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
             isDragging
               ? "border-blue-500 bg-blue-50"
               : "border-gray-300 hover:border-gray-400"
-          } ${uploading ? "opacity-50 pointer-events-none" : ""}`}
+          } ${uploading ? "pointer-events-none opacity-50" : ""}`}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
@@ -236,7 +246,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none"
                 >
                   Choose File
                 </button>
@@ -252,7 +262,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
         </div>
       ) : (
         showPreview && (
-          <div className="border border-gray-300 rounded-lg p-4 bg-gray-50">
+          <div className="rounded-lg border border-gray-300 bg-gray-50 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <svg
@@ -278,7 +288,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({
               <button
                 type="button"
                 onClick={handleRemove}
-                className="text-red-600 hover:text-red-800 text-sm font-medium"
+                className="text-sm font-medium text-red-600 hover:text-red-800"
               >
                 Remove
               </button>
