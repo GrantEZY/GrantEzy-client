@@ -6,14 +6,12 @@ import { AuthGuard } from "@/components/guards/AuthGuard";
 import PMLayout from "@/components/layout/PMLayout";
 import { usePm } from "@/hooks/usePm";
 import { CycleStatus, Cycle } from "@/types/pm.types";
-import { Program } from "@/types/gcv.types";
 import CreateCycleModal from "@/components/pm/CreateCycleModal";
 
 export default function PMDashboard() {
   const {
     program,
     isProgramLoading,
-    programError,
     getAssignedProgram,
     cycles,
     cyclesPagination,
@@ -22,7 +20,6 @@ export default function PMDashboard() {
     isProgramAssigned,
     getProgramCycles,
     deleteCycle,
-    clearCycles,
   } = usePm();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -112,7 +109,7 @@ export default function PMDashboard() {
   };
 
   // Derived states for better readability
-  const isAssignedToProgram = isProgramAssigned === true;
+  // const isAssignedToProgram = isProgramAssigned === true;  // commented out as it's unused
   const isNotAssigned = isProgramAssigned === false;
   const isLoading = isProgramLoading || isCyclesLoading;
 
@@ -360,8 +357,8 @@ export default function PMDashboard() {
                   </thead>
                   <tbody className="divide-y divide-gray-200 bg-white">
                     {cycles.map((cycle: Cycle) => (
-                      <tr 
-                        key={cycle.id} 
+                      <tr
+                        key={cycle.id}
                         className="hover:bg-gray-50 cursor-pointer"
                         onClick={() => window.location.href = `/pm/cycles/${cycle.slug}`}
                       >

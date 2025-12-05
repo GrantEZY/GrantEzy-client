@@ -6,7 +6,6 @@ import { AuthGuard } from "@/components/guards/AuthGuard";
 import ReviewerLayout from "@/components/layout/ReviewerLayout";
 import { useAuth } from "@/hooks/useAuth";
 import { useReviewer } from "@/hooks/useReviewer";
-import { ReviewStatus } from "@/types/reviewer.types";
 
 export default function ReviewerDashboard() {
   const { user } = useAuth();
@@ -215,15 +214,14 @@ export default function ReviewerDashboard() {
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         <span
-                          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                            review.status === "COMPLETED"
+                          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${review.status === "COMPLETED"
                               ? "bg-green-100 text-green-800"
                               : review.status === "IN_PROGRESS"
                                 ? review.recommendation
                                   ? "bg-blue-100 text-blue-800" // Has recommendation = submitted
                                   : "bg-yellow-100 text-yellow-800" // No recommendation = assigned/pending
                                 : "bg-gray-100 text-gray-800"
-                          }`}
+                            }`}
                         >
                           {review.status === "IN_PROGRESS" && !review.recommendation
                             ? "ASSIGNED"

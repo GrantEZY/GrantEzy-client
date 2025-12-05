@@ -17,10 +17,10 @@ import {
   GetProgramCyclesRequest,
   GetReviewDetailsRequest,
   InviteReviewerRequest,
+  PendingInvite,
   Review,
   ReviewDetails,
   UpdateCycleRequest,
-  PendingInvite,
 } from "../types/pm.types";
 
 interface PMState {
@@ -28,33 +28,33 @@ interface PMState {
   program: Program | null;
   isProgramLoading: boolean;
   programError: string | null;
-  
+
   // Cycles state
   cycles: Cycle[];
   cyclesPagination: PaginationMeta | null;
   isCyclesLoading: boolean;
   cyclesError: string | null;
-  
+
   // Current cycle details
   currentCycle: Cycle | null;
   currentCycleApplications: CycleApplication[];
   isCycleDetailsLoading: boolean;
-  
+
   // Current application details
   currentApplication: CycleApplication | null;
   isApplicationLoading: boolean;
-  
+
   // Reviews state
   reviews: Review[];
   pendingInvites: PendingInvite[];
   reviewsPagination: PaginationMeta | null;
   isReviewsLoading: boolean;
   reviewsError: string | null;
-  
+
   // Current review details
   currentReview: ReviewDetails | null;
   isReviewLoading: boolean;
-  
+
   // Program assignment state
   isProgramAssigned: boolean | null; // null = unknown, true = assigned, false = not assigned
 
@@ -66,7 +66,7 @@ interface PMActions {
   // Program actions
   getAssignedProgram: () => Promise<void>;
   clearProgram: () => void;
-  
+
   // Program selection
   setSelectedProgramId: (programId: string | null) => void;
 
@@ -78,16 +78,20 @@ interface PMActions {
   deleteCycle: (data: DeleteCycleRequest) => Promise<boolean>;
   clearCycles: () => void;
   setCyclesError: (error: string | null) => void;
-  
+
   // Application actions
-  getApplicationDetails: (params: GetPMApplicationDetailsRequest) => Promise<void>;
+  getApplicationDetails: (
+    params: GetPMApplicationDetailsRequest,
+  ) => Promise<void>;
   clearApplication: () => void;
-  
+
   // Reviewer actions
   inviteReviewer: (data: InviteReviewerRequest) => Promise<boolean>;
-  
+
   // Review actions
-  getApplicationReviews: (params: GetApplicationReviewsRequest) => Promise<void>;
+  getApplicationReviews: (
+    params: GetApplicationReviewsRequest,
+  ) => Promise<void>;
   getReviewDetails: (params: GetReviewDetailsRequest) => Promise<void>;
   clearReviews: () => void;
   clearReview: () => void;
@@ -152,7 +156,9 @@ export const usePMStore = create<PMStore>((set, get) => ({
       ) {
         errorMessage = String(error.message);
         // Check if this is a "not assigned" error (403 with specific message)
-        if (errorMessage.includes("Only Program Manager can access the Program")) {
+        if (
+          errorMessage.includes("Only Program Manager can access the Program")
+        ) {
           isNotAssigned = true;
         }
       }
@@ -270,7 +276,9 @@ export const usePMStore = create<PMStore>((set, get) => ({
       ) {
         errorMessage = String(error.message);
         // Check if this is a "not assigned" error (403 with specific message)
-        if (errorMessage.includes("Only Program Manager can access the Program")) {
+        if (
+          errorMessage.includes("Only Program Manager can access the Program")
+        ) {
           isNotAssigned = true;
         }
       }
@@ -396,13 +404,13 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
       if (response.status === 200) {
         // Extract applications from the cycle object
-        const cycle = response.res.cycle;
+        const { cycle } = response.res;
         const applications = (cycle as any).applications || [];
-        
-        console.log('📦 Cycle Details Response:', {
+
+        console.log("📦 Cycle Details Response:", {
           cycle: cycle,
           applicationsCount: applications.length,
-          applications: applications
+          applications: applications,
         });
 
         set({
@@ -537,11 +545,11 @@ export const usePMStore = create<PMStore>((set, get) => ({
       if (response.status === 200) {
         const { reviews, pendingInvites } = response.res;
 
-        console.log('📝 Application Reviews Response:', {
+        console.log("📝 Application Reviews Response:", {
           reviewsCount: reviews.length,
           pendingInvitesCount: pendingInvites?.length || 0,
           reviews: reviews,
-          pendingInvites: pendingInvites
+          pendingInvites: pendingInvites,
         });
 
         // Backend doesn't return pagination, so we'll create a simple one based on request params

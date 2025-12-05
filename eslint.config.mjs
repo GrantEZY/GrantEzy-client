@@ -132,7 +132,9 @@ export default [
 
       // React
       "react/boolean-prop-naming": ["warn"],
-      "react/jsx-newline": ["warn"],
+      "react/jsx-newline": ["off"],
+      "react/jsx-sort-props": "off",
+      "react/no-unescaped-entities": "off",
       "react/jsx-no-useless-fragment": [
         "error",
         {
@@ -140,7 +142,7 @@ export default [
         },
       ],
       "react/jsx-sort-props": [
-        "warn",
+        "off",
         {
           ignoreCase: true,
         },

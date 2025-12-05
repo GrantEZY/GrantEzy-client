@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import ApplicantLayout from "@/components/layout/ApplicantLayout";
@@ -10,7 +10,7 @@ import { Application } from "@/types/applicant.types";
 
 export default function ApplicationDetailsPage() {
   const params = useParams();
-  const router = useRouter();
+  //  const _router = useRouter(); // Uncomment if navigation is needed
   const applicationId = params.id as string;
 
   const [application, setApplication] = useState<Application | null>(null);
@@ -123,11 +123,10 @@ export default function ApplicationDetailsPage() {
           {/* Status Badge */}
           <div className="mt-4">
             <span
-              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
-                application.isSubmitted
-                  ? "bg-green-100 text-green-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}
+              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${application.isSubmitted
+                ? "bg-green-100 text-green-800"
+                : "bg-yellow-100 text-yellow-800"
+                }`}
             >
               {application.isSubmitted ? "Submitted" : "Draft"}
             </span>
@@ -394,24 +393,24 @@ export default function ApplicationDetailsPage() {
                   </p>
                 </div>
               </div>
-              {application.revenueModel.secondaryStreams && 
-               application.revenueModel.secondaryStreams.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">
-                    Secondary Revenue Streams
-                  </h3>
-                  <div className="mt-2 space-y-2">
-                    {application.revenueModel.secondaryStreams.map((stream, index) => (
-                      <div key={index} className="p-3 bg-gray-50 rounded">
-                        <p className="text-sm font-medium text-gray-900">
-                          {stream.type} ({stream.percentage}%)
-                        </p>
-                        <p className="mt-1 text-sm text-gray-600">{stream.description}</p>
-                      </div>
-                    ))}
+              {application.revenueModel.secondaryStreams &&
+                application.revenueModel.secondaryStreams.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500">
+                      Secondary Revenue Streams
+                    </h3>
+                    <div className="mt-2 space-y-2">
+                      {application.revenueModel.secondaryStreams.map((stream, index) => (
+                        <div key={index} className="p-3 bg-gray-50 rounded">
+                          <p className="text-sm font-medium text-gray-900">
+                            {stream.type} ({stream.percentage}%)
+                          </p>
+                          <p className="mt-1 text-sm text-gray-600">{stream.description}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
               <div>
                 <h3 className="text-sm font-medium text-gray-500">Pricing Strategy</h3>
                 <p className="mt-1 text-base text-gray-900">
@@ -442,15 +441,14 @@ export default function ApplicationDetailsPage() {
                         Risk #{index + 1}
                       </span>
                       <span
-                        className={`text-xs font-semibold px-2 py-1 rounded ${
-                          risk.impact === "CRITICAL"
-                            ? "bg-red-100 text-red-800"
-                            : risk.impact === "HIGH"
+                        className={`text-xs font-semibold px-2 py-1 rounded ${risk.impact === "CRITICAL"
+                          ? "bg-red-100 text-red-800"
+                          : risk.impact === "HIGH"
                             ? "bg-orange-100 text-orange-800"
                             : risk.impact === "MEDIUM"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-green-100 text-green-800"
-                        }`}
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-green-100 text-green-800"
+                          }`}
                       >
                         {risk.impact}
                       </span>
@@ -569,13 +567,12 @@ export default function ApplicationDetailsPage() {
                 >
                   <span className="text-sm text-gray-900">{invite.email}</span>
                   <span
-                    className={`text-xs font-semibold px-2 py-1 rounded ${
-                      invite.status === "ACCEPTED"
-                        ? "bg-green-100 text-green-800"
-                        : invite.status === "PENDING"
+                    className={`text-xs font-semibold px-2 py-1 rounded ${invite.status === "ACCEPTED"
+                      ? "bg-green-100 text-green-800"
+                      : invite.status === "PENDING"
                         ? "bg-yellow-100 text-yellow-800"
                         : "bg-red-100 text-red-800"
-                    }`}
+                      }`}
                   >
                     {invite.status}
                   </span>

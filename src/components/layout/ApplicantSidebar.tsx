@@ -47,11 +47,10 @@ function SidebarItem({
     </>
   );
 
-  const className = `flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none ${isSubItem ? "ml-6" : ""} ${
-    active
-      ? "border-l-4 border-[var(--color-blue-700)] bg-[var(--color-blue-50)] text-[var(--color-blue-700)] shadow-sm"
-      : "text-[var(--color-gray-700)] hover:text-[var(--color-gray-900)]"
-  }`;
+  const className = `flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium transition-all duration-200 hover:bg-[var(--color-gray-50)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none ${isSubItem ? "ml-6" : ""} ${active
+    ? "border-l-4 border-[var(--color-blue-700)] bg-[var(--color-blue-50)] text-[var(--color-blue-700)] shadow-sm"
+    : "text-[var(--color-gray-700)] hover:text-[var(--color-gray-900)]"
+    }`;
 
   return (
     <>
@@ -141,7 +140,7 @@ const icons = {
 
 export default function ApplicantSidebar() {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
+  const { user: _user, logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();

@@ -13,7 +13,7 @@ interface ApplicationStepperProps {
 
 export default function ApplicationStepper({
   steps,
-  currentStep,
+  //currentStep commented out as it's unused,
 }: ApplicationStepperProps) {
   return (
     <nav aria-label="Progress">
@@ -21,13 +21,12 @@ export default function ApplicationStepper({
         {steps.map((step, index) => (
           <li key={step.step}>
             <div
-              className={`group relative flex items-start ${
-                step.isActive
-                  ? "cursor-default"
-                  : step.isCompleted
-                    ? "cursor-pointer hover:opacity-75"
-                    : "cursor-not-allowed opacity-50"
-              }`}
+              className={`group relative flex items-start ${step.isActive
+                ? "cursor-default"
+                : step.isCompleted
+                  ? "cursor-pointer hover:opacity-75"
+                  : "cursor-not-allowed opacity-50"
+                }`}
             >
               {/* Step Indicator */}
               <span className="flex h-9 items-center">
@@ -61,13 +60,12 @@ export default function ApplicationStepper({
               {/* Step Content */}
               <span className="ml-4 flex min-w-0 flex-col">
                 <span
-                  className={`text-sm font-medium ${
-                    step.isActive
-                      ? "text-blue-600"
-                      : step.isCompleted
-                        ? "text-gray-900"
-                        : "text-gray-500"
-                  }`}
+                  className={`text-sm font-medium ${step.isActive
+                    ? "text-blue-600"
+                    : step.isCompleted
+                      ? "text-gray-900"
+                      : "text-gray-500"
+                    }`}
                 >
                   {step.title}
                 </span>
@@ -79,9 +77,8 @@ export default function ApplicationStepper({
               {/* Connector Line */}
               {index < steps.length - 1 && (
                 <div
-                  className={`absolute left-4 top-9 -ml-px mt-0.5 h-full w-0.5 ${
-                    step.isCompleted ? "bg-green-600" : "bg-gray-300"
-                  }`}
+                  className={`absolute left-4 top-9 -ml-px mt-0.5 h-full w-0.5 ${step.isCompleted ? "bg-green-600" : "bg-gray-300"
+                    }`}
                   style={{ height: "calc(100% + 1rem)" }}
                 />
               )}

@@ -2,11 +2,9 @@
 
 import React, { useEffect } from "react";
 import {
-  FaBolt,
   FaBullseye,
   FaExternalLinkAlt,
   FaEye,
-  FaHeartbeat,
   FaRocket,
 } from "react-icons/fa";
 
@@ -18,14 +16,15 @@ import { Marquee } from "@/components/magicui/marquee";
 import { cn } from "@/lib/utils";
 
 // Icon mapping function
-const getIcon = (iconName: string) => {
-  const icons: { [key: string]: React.ReactElement } = {
-    FaRocket: <FaRocket className="text-2xl" />,
-    FaBolt: <FaBolt className="text-2xl" />,
-    FaHeartbeat: <FaHeartbeat className="text-2xl" />,
-  };
-  return icons[iconName] || <FaRocket className="text-2xl" />;
-};
+// commented out as it is not used currently
+// const getIcon = (iconName: string) => {
+//   const icons: { [key: string]: React.ReactElement } = {
+//     FaRocket: <FaRocket className="text-2xl" />,
+//     FaBolt: <FaBolt className="text-2xl" />,
+//     FaHeartbeat: <FaHeartbeat className="text-2xl" />,
+//   };
+//   return icons[iconName] || <FaRocket className="text-2xl" />;
+// };
 
 function HeroSection() {
   return (
@@ -718,11 +717,10 @@ function OpenCallsSection() {
                     {/* CTA Button - Always at bottom */}
                     <div className="mt-auto">
                       <button
-                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${
-                          cycle.status === "OPEN"
-                            ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
-                            : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
-                        }`}
+                        className={`group/btn inline-flex w-full transform items-center justify-center rounded-xl px-6 py-3 font-semibold transition-all duration-300 hover:scale-105 ${cycle.status === "OPEN"
+                          ? "bg-[var(--color-gray-900)] text-[var(--color-white)] hover:bg-[var(--color-blue-600)]"
+                          : "cursor-not-allowed bg-[var(--color-gray-400)] text-[var(--color-white)]"
+                          }`}
                         disabled={cycle.status !== "OPEN"}
                       >
                         <span>

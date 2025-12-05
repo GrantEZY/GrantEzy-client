@@ -40,7 +40,7 @@ function InviteLoading() {
 function InvitePageContent({ params }: { params: { token: string; slug: string } }) {
   const { token, slug } = params;
   const router = useRouter();
-  const [isDetectingType, setIsDetectingType] = useState(true);
+  const [_isDetectingType, setIsDetectingType] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
 export default function UniversalInviteRoute({ params }: PageProps) {
   // Use React's use() hook to unwrap the promise in client component
   const resolvedParams = use(params);
-  
+
   return (
     <ToastProvider>
       <Suspense fallback={<InviteLoading />}>

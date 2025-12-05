@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import ApplicantLayout from "@/components/layout/ApplicantLayout";
@@ -9,7 +8,7 @@ import { applicantService } from "@/services/applicant.service";
 import { Project } from "@/types/project.types";
 
 export default function ApplicantProjectsPage() {
-  const router = useRouter();
+  // const router = useRouter(); // Uncomment if navigation is needed
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

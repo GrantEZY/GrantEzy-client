@@ -24,7 +24,6 @@ export default function CreateProjectModal({
   isOpen,
   onClose,
   onSuccess,
-  cycleSlug,
   approvedApplications,
 }: CreateProjectModalProps) {
   const { createProject, isProjectLoading, projectError } = useProjectManagement();
@@ -323,18 +322,16 @@ export default function CreateProjectModal({
                 {[1, 2, 3].map((step, index) => (
                   <div key={step} className="flex flex-1 items-center">
                     <div
-                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
-                        currentStep >= step
+                      className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${currentStep >= step
                           ? "border-blue-600 bg-blue-600 text-white"
                           : "border-gray-300 bg-white text-gray-500"
-                      }`}
+                        }`}
                     >
                       {step}
                     </div>
                     <div
-                      className={`ml-2 text-sm font-medium ${
-                        currentStep >= step ? "text-blue-600" : "text-gray-500"
-                      }`}
+                      className={`ml-2 text-sm font-medium ${currentStep >= step ? "text-blue-600" : "text-gray-500"
+                        }`}
                     >
                       {step === 1
                         ? "Select Application"
@@ -344,9 +341,8 @@ export default function CreateProjectModal({
                     </div>
                     {index < 2 && (
                       <div
-                        className={`mx-4 h-0.5 flex-1 ${
-                          currentStep > step ? "bg-blue-600" : "bg-gray-300"
-                        }`}
+                        className={`mx-4 h-0.5 flex-1 ${currentStep > step ? "bg-blue-600" : "bg-gray-300"
+                          }`}
                       ></div>
                     )}
                   </div>
@@ -405,11 +401,10 @@ export default function CreateProjectModal({
                       <div
                         key={app.id}
                         onClick={() => setSelectedApplicationId(app.id)}
-                        className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
-                          selectedApplicationId === app.id
+                        className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${selectedApplicationId === app.id
                             ? "border-blue-600 bg-blue-50"
                             : "border-gray-200 hover:border-gray-300"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -830,7 +825,7 @@ export default function CreateProjectModal({
                       Project duration:{" "}
                       {Math.ceil(
                         (new Date(endDate).getTime() - new Date(startDate).getTime()) /
-                          (1000 * 60 * 60 * 24)
+                        (1000 * 60 * 60 * 24)
                       )}{" "}
                       days
                     </p>

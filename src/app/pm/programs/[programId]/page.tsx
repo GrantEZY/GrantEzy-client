@@ -10,14 +10,14 @@ import { AuthGuard } from "@/components/guards/AuthGuard";
 import PMLayout from "@/components/layout/PMLayout";
 import { usePm } from "@/hooks/usePm";
 import { Program } from "@/types/gcv.types";
-import { CycleStatus, Cycle } from "@/types/pm.types";
+import { CycleStatus } from "@/types/pm.types";
 import CreateCycleModal from "@/components/pm/CreateCycleModal";
 
 export default function ProgramDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const programId = params.programId as string;
-  
+
   const {
     cycles,
     cyclesPagination,

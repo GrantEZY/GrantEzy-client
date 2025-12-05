@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AuthGuard } from "@/components/guards/AuthGuard";
 import ReviewerLayout from "@/components/layout/ReviewerLayout";
 import { useReviewer } from "@/hooks/useReviewer";
-import { Review, ReviewStatus } from "@/types/reviewer.types";
+import { ReviewStatus } from "@/types/reviewer.types";
 
 export default function ReviewsPage() {
   const { reviews, isLoadingReviews, reviewsError, getUserReviews } = useReviewer();
@@ -17,8 +17,8 @@ export default function ReviewsPage() {
     getUserReviews({ page: currentPage, numberOfResults: pageSize });
   }, [currentPage, getUserReviews]);
 
-  const filteredReviews = filterStatus === "ALL" 
-    ? reviews 
+  const filteredReviews = filterStatus === "ALL"
+    ? reviews
     : reviews.filter(r => r.status === filterStatus);
 
   const getStatusBadgeClass = (status: ReviewStatus) => {
@@ -96,7 +96,7 @@ export default function ReviewsPage() {
               </svg>
               <h3 className="mt-2 text-sm font-medium text-gray-900">No reviews found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                {filterStatus === "ALL" 
+                {filterStatus === "ALL"
                   ? "You haven't been assigned any applications to review yet."
                   : `No reviews with status "${filterStatus}".`
                 }
@@ -143,13 +143,12 @@ export default function ReviewsPage() {
                       <td className="whitespace-nowrap px-6 py-4 text-sm">
                         {review.recommendation ? (
                           <span
-                            className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                              review.recommendation === "APPROVE"
+                            className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${review.recommendation === "APPROVE"
                                 ? "bg-green-100 text-green-800"
                                 : review.recommendation === "REJECT"
                                   ? "bg-red-100 text-red-800"
                                   : "bg-yellow-100 text-yellow-800"
-                            }`}
+                              }`}
                           >
                             {review.recommendation}
                           </span>

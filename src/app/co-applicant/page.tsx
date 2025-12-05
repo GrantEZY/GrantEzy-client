@@ -7,10 +7,9 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { UserRoles } from "@/types/auth.types";
 
 export default function CoApplicantPage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user: _user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated) {

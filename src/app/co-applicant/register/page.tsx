@@ -10,8 +10,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useCoApplicantInvite } from "@/hooks/useCoApplicant";
 import { showToast, ToastProvider } from "@/components/ui/ToastNew";
-import { ValidationUtil } from "@/utils/validation.util";
-import { InviteStatus } from "@/types/co-applicant.types";
 import { UserCommitmentStatus } from "@/types/auth.types";
 
 export default function CoApplicantRegisterPage() {
@@ -45,7 +43,7 @@ export default function CoApplicantRegisterPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -120,12 +118,12 @@ export default function CoApplicantRegisterPage() {
       setTimeout(async () => {
         try {
           const acceptResult = await accept();
-          
+
           if (acceptResult.success) {
             showToast.success(
               "✅ Invite accepted! You're now part of the team."
             );
-            
+
             // Step 3: Redirect to co-applicant dashboard after success
             setTimeout(() => {
               router.push("/co-applicant/dashboard");
@@ -207,9 +205,8 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    errors.firstName ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.firstName ? 'border-red-300' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Enter your first name"
                 />
                 {errors.firstName && <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>}
@@ -227,9 +224,8 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    errors.lastName ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.lastName ? 'border-red-300' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Enter your last name"
                 />
                 {errors.lastName && <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>}
@@ -247,9 +243,8 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    errors.email ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.email ? 'border-red-300' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Enter the email you were invited to"
                 />
                 {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
@@ -268,9 +263,8 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    errors.password ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.password ? 'border-red-300' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Create a strong password"
                 />
                 {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
@@ -288,9 +282,8 @@ export default function CoApplicantRegisterPage() {
                   required
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
-                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${
-                    errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
-                  } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
+                  className={`mt-1 appearance-none relative block w-full px-3 py-2 border ${errors.confirmPassword ? 'border-red-300' : 'border-gray-300'
+                    } placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
                   placeholder="Confirm your password"
                 />
                 {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}

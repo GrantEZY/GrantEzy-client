@@ -3,13 +3,12 @@
  * Manages reviews, invitations, and reviewer-specific data
  */
 import { create } from "zustand";
+
 import { reviewerService } from "../services/reviewer.service";
 import {
-  Review,
-  ReviewerState,
-  PaginationMeta,
-  GetUserReviewsRequest,
   GetReviewDetailsRequest,
+  GetUserReviewsRequest,
+  ReviewerState,
   SubmitReviewRequest,
   UpdateInviteStatusRequest,
 } from "../types/reviewer.types";
@@ -71,8 +70,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         });
       } else {
         set({
-          reviewsError:
-            response.message || "Failed to fetch review details",
+          reviewsError: response.message || "Failed to fetch review details",
           isLoadingReviews: false,
         });
       }
@@ -99,14 +97,14 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
 
       if (response.status === 200 || response.status === 201) {
         set({ isLoadingReviews: false });
-        
+
         // Optionally refresh the reviews list
         const currentParams = {
           page: 1,
           numberOfResults: 10,
         };
         get().getUserReviews(currentParams);
-        
+
         return true;
       } else {
         set({
@@ -151,10 +149,11 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
         throw new Error(errorMsg);
       }
     } catch (error) {
-      const errorMsg = error instanceof Error
-        ? error.message
-        : "An error occurred while updating invite status";
-      
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : "An error occurred while updating invite status";
+
       set({
         reviewsError: errorMsg,
         isLoadingReviews: false,

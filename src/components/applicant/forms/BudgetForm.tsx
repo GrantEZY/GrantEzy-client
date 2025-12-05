@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import { useApplicant } from "@/hooks/useApplicant";
-import { Budget, BudgetItem, Money } from "@/types/applicant.types";
+import { Budget, BudgetItem } from "@/types/applicant.types";
 
 export default function BudgetForm() {
   const { addBudget, isLoading, goToPreviousStep, currentApplication } = useApplicant();
@@ -82,9 +82,9 @@ export default function BudgetForm() {
         key === "BudgetReason"
           ? { ...prev[field], BudgetReason: value as string }
           : {
-              ...prev[field],
-              Budget: { ...prev[field].Budget, amount: value as number },
-            },
+            ...prev[field],
+            Budget: { ...prev[field].Budget, amount: value as number },
+          },
     }));
   };
 

@@ -8,9 +8,7 @@ import {
   AddApplicationDocumentsRequest,
   AddApplicationRevenueStreamRequest,
   AddApplicationRisksAndMilestonesRequest,
-  AddApplicationTeammatesRequest,
   AddApplicationTechnicalDetailsRequest,
-  Application,
   ApplicationStep,
   CreateApplicationRequest,
 } from "../types/applicant.types";
@@ -23,8 +21,12 @@ export const useApplicant = () => {
   const currentStep = useApplicantStore((state) => state.currentStep);
   const applicationSteps = useApplicantStore((state) => state.applicationSteps);
   const myApplications = useApplicantStore((state) => state.myApplications);
-  const linkedApplications = useApplicantStore((state) => state.linkedApplications);
-  const isLoadingApplications = useApplicantStore((state) => state.isLoadingApplications);
+  const linkedApplications = useApplicantStore(
+    (state) => state.linkedApplications,
+  );
+  const isLoadingApplications = useApplicantStore(
+    (state) => state.isLoadingApplications,
+  );
   const isLoading = useApplicantStore((state) => state.isLoading);
   const error = useApplicantStore((state) => state.error);
   const successMessage = useApplicantStore((state) => state.successMessage);
@@ -113,7 +115,9 @@ export const useApplicant = () => {
     return await createApplication(data);
   };
 
-  const handleAddBudget = async (budget: AddApplicationBudgetRequest["budget"]) => {
+  const handleAddBudget = async (
+    budget: AddApplicationBudgetRequest["budget"],
+  ) => {
     if (!applicationId) {
       throw new Error("No active application");
     }
@@ -200,14 +204,14 @@ export const useApplicant = () => {
     isLoading,
     error,
     successMessage,
-    
+
     // Computed values
     isFirstStep,
     isLastStep,
     hasApplication,
     applicationId,
     isApplicationSubmitted,
-    
+
     // Actions
     createApplication: handleCreateApplication,
     addBudget: handleAddBudget,
@@ -216,19 +220,19 @@ export const useApplicant = () => {
     addRisksAndMilestones: handleAddRisksAndMilestones,
     addDocuments: handleAddDocuments,
     addTeammates: handleAddTeammates,
-    
+
     // User applications management
     fetchUserApplications,
     fetchApplicationWithCycleDetails,
     fetchUserCreatedApplicationDetails,
     deleteUserApplication,
-    
+
     // Navigation
     setCurrentStep,
     goToNextStep,
     goToPreviousStep,
     canNavigateToStep,
-    
+
     // State management
     setCurrentApplication,
     updateApplicationSteps,
@@ -236,7 +240,7 @@ export const useApplicant = () => {
     clearSuccessMessage,
     resetApplicationState,
     loadSavedApplication,
-    
+
     // Helper functions
     getCurrentStepInfo,
     getCompletedStepsCount,

@@ -2,17 +2,15 @@
  * Project Management Store - State management for project-related operations
  */
 import { create } from "zustand";
+
 import { projectManagementService } from "../services/project.service";
 import {
-  Project,
-  ProjectCriteria,
-  ProjectState,
-  PaginationMeta,
+  CreateCycleCriteriaRequest,
   CreateProjectRequest,
+  GetCycleCriteriasRequest,
   GetCycleProjectsRequest,
   GetProjectDetailsRequest,
-  CreateCycleCriteriaRequest,
-  GetCycleCriteriasRequest,
+  ProjectState,
 } from "../types/project.types";
 
 interface ProjectActions {
@@ -34,7 +32,7 @@ interface ProjectActions {
 
 type ProjectStore = ProjectState & ProjectActions;
 
-export const useProjectStore = create<ProjectStore>((set, get) => ({
+export const useProjectStore = create<ProjectStore>((set, _get) => ({
   // Initial state
   projects: [],
   projectsPagination: null,

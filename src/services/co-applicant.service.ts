@@ -4,20 +4,14 @@
 import { API_CONFIG } from "../lib/config/api.config";
 import { httpClient } from "../lib/http/http-client";
 import {
-  CoApplicantApplicationRequest,
   CoApplicantApplicationResponse,
-  GetTokenDetailsRequest,
+  InviteStatus,
+  InviteStatusUpdateResponse,
   TokenDetailsResponse,
   UpdateInviteStatusRequest,
-  InviteStatusUpdateResponse,
-  InviteStatus,
 } from "../types/co-applicant.types";
-import {
-  GetUserLinkedProjectsResponse,
-} from "../types/co-applicant.types";
-import {
-  GetProjectDetailsResponse,
-} from "../types/project.types";
+import { GetUserLinkedProjectsResponse } from "../types/co-applicant.types";
+import { GetProjectDetailsResponse } from "../types/project.types";
 
 export class CoApplicantService {
   /**
@@ -26,13 +20,13 @@ export class CoApplicantService {
    * @returns Promise<CoApplicantApplicationResponse>
    */
   async getApplicationDetails(
-    applicationId: string
+    applicationId: string,
   ): Promise<CoApplicantApplicationResponse> {
     const params = { applicationId };
-    
+
     return httpClient.get<CoApplicantApplicationResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_APPLICATION_DETAILS,
-      params
+      params,
     );
   }
 
@@ -44,14 +38,14 @@ export class CoApplicantService {
    */
   async getTokenDetails(
     token: string,
-    slug: string
+    slug: string,
   ): Promise<TokenDetailsResponse> {
     const params = { token, slug };
-    
+
     // Use public get method since this endpoint is used before authentication
     return httpClient.publicGet<TokenDetailsResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_TOKEN_DETAILS,
-      params
+      params,
     );
   }
 
@@ -65,14 +59,14 @@ export class CoApplicantService {
   async updateInviteStatus(
     token: string,
     slug: string,
-    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED
+    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED,
   ): Promise<InviteStatusUpdateResponse> {
     const data: UpdateInviteStatusRequest = { token, slug, status };
-    
+
     // Use public patch method since this endpoint doesn't require authentication
     return httpClient.publicPatch<InviteStatusUpdateResponse>(
       API_CONFIG.ENDPOINTS.CO_APPLICANT.UPDATE_INVITE_STATUS,
-      data
+      data,
     );
   }
 
@@ -84,7 +78,7 @@ export class CoApplicantService {
    */
   async acceptInvite(
     token: string,
-    slug: string
+    slug: string,
   ): Promise<InviteStatusUpdateResponse> {
     return this.updateInviteStatus(token, slug, InviteStatus.ACCEPTED);
   }
@@ -97,7 +91,7 @@ export class CoApplicantService {
    */
   async rejectInvite(
     token: string,
-    slug: string
+    slug: string,
   ): Promise<InviteStatusUpdateResponse> {
     return this.updateInviteStatus(token, slug, InviteStatus.REJECTED);
   }

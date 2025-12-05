@@ -34,11 +34,11 @@ export default function PMProgramsPage() {
   useEffect(() => {
     if (cycles && cycles.length > 0) {
       // Get the first cycle's program (all cycles should belong to the same program for a PM)
-      const firstCycle = cycles[0];
+      const [firstCycle, ..._restCycles] = cycles;
       if (firstCycle.program) {
-        const program = firstCycle.program;
+        const { program } = firstCycle;
         const cycleCount = cycles.filter((c) => c.program?.id === program.id).length;
-        
+
         setAssignedProgram({
           ...program,
           cycleCount,
@@ -68,7 +68,7 @@ export default function PMProgramsPage() {
 
   // Since PM can only have one assigned program, we just check if it matches the search
   const shouldShowProgram = assignedProgram && (
-    !searchTerm || 
+    !searchTerm ||
     (assignedProgram.details?.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
     (assignedProgram.details?.description || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -222,12 +222,12 @@ export default function PMProgramsPage() {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">Budget:</span>
                     <span className="font-medium text-gray-900">
-                      {assignedProgram.budget ? 
+                      {assignedProgram.budget ?
                         new Intl.NumberFormat("en-IN", {
                           style: "currency",
                           currency: assignedProgram.budget.currency || "INR",
                           maximumFractionDigits: 0,
-                        }).format(assignedProgram.budget.amount) : 
+                        }).format(assignedProgram.budget.amount) :
                         "Not specified"
                       }
                     </span>

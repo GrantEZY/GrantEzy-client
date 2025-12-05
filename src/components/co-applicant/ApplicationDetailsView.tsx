@@ -22,7 +22,7 @@ export default function ApplicationDetailsView({
     isLoading,
     error,
     fetchApplication,
-    clearError,
+    //clearError, //  comment out as it's unused
   } = useCoApplicantApplication(applicationId);
 
   useEffect(() => {
