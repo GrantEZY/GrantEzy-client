@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { UserRoles } from '@/types/auth.types';
 
+import { Suspense } from 'react';
+
 // Role-based redirect mapping
 const getRoleBasedRedirect = (role: string): string => {
   switch (role) {
@@ -29,7 +31,7 @@ const getRoleBasedRedirect = (role: string): string => {
   }
 };
 
-export default function LoginPage() {
+function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -279,5 +281,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function page() {
+  return (
+    <Suspense fallback={<div>Loading search parameters...</div>}>
+      <LoginPage />
+    </Suspense>
   );
 }

@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AuthGuard } from '@/components/guards/AuthGuard';
 import ApplicantLayout from '@/components/layout/ApplicantLayout';
@@ -21,7 +21,7 @@ import TeamMembersForm from '@/components/applicant/forms/TeamMembersForm';
 import { ApplicationStep } from '@/types/applicant.types';
 import { ToastProvider } from '@/components/ui/ToastNew';
 
-export default function NewApplicationPage() {
+function NewApplicationPage() {
   const searchParams = useSearchParams();
   const cycleSlug = searchParams.get('cycleSlug');
 
@@ -212,5 +212,13 @@ export default function NewApplicationPage() {
         </ApplicantLayout>
       </ToastProvider>
     </AuthGuard>
+  );
+}
+
+export default function page() {
+  return (
+    <Suspense fallback={<div>Loading search parameters...</div>}>
+      <NewApplicationPage />
+    </Suspense>
   );
 }

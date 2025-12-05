@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useReviewer } from '@/hooks/useReviewer';
 import { InviteStatus } from '@/types/reviewer.types';
 
-export default function ReviewerInvitePage() {
+function ReviewerInvitePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { updateInviteStatus, clearError } = useReviewer();
@@ -268,5 +268,14 @@ export default function ReviewerInvitePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+
+export default function page() {
+  return (
+    <Suspense fallback={<div>Loading search parameters...</div>}>
+      <ReviewerInvitePage />
+    </Suspense>
   );
 }
