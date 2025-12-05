@@ -271,7 +271,6 @@ function ReviewerInvitePage() {
   );
 }
 
-
 export default function page() {
   return (
     <Suspense fallback={<div>Loading search parameters...</div>}>
