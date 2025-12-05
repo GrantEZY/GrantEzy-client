@@ -69,12 +69,18 @@ export const API_CONFIG = {
       GET_APPLICATION_WITH_CYCLE: "/applicant/get-application-details-with-cycle",
       GET_USER_CREATED_APPLICATION: "/applicant/get-user-created-applications",
       DELETE_APPLICATION: "/applicant/delete-user-application",
+      // Project Management
+      GET_USER_CREATED_PROJECTS: "/applicant/get-user-created-projects",
+      GET_PROJECT_DETAILS: "/applicant/get-project-details",
     },
     CO_APPLICANT: {
       // Co-applicant management
       GET_APPLICATION_DETAILS: "/co-applicant/get-application-details",
       GET_TOKEN_DETAILS: "/co-applicant/get-token-details",
       UPDATE_INVITE_STATUS: "/co-applicant/update-user-invite-status",
+      // Project Management
+      GET_USER_LINKED_PROJECTS: "/co-applicant/get-user-linked-projects",
+      GET_PROJECT_DETAILS: "/co-applicant/get-project-details",
     },
     REVIEWER: {
       // Reviewer Management
@@ -83,6 +89,14 @@ export const API_CONFIG = {
       SUBMIT_REVIEW: "/reviewer/submit-application-review",
       GET_USER_REVIEWS: "/reviewer/get-user-reviews",
       GET_REVIEW_DETAILS: "/reviewer/get-review-details",
+    },
+    PROJECT_MANAGEMENT: {
+      // Project Management
+      CREATE_PROJECT: "/pt-management/create-project",
+      GET_CYCLE_PROJECTS: "/pt-management/get-cycle-projects",
+      GET_PROJECT_DETAILS: "/pt-management/get-project-details",
+      CREATE_CYCLE_CRITERIA: "/pt-management/create-cycle-criteria",
+      GET_CYCLE_CRITERIAS: "/pt-management/get-cycle-criterias",
     },
     PUBLIC: {
       // Public endpoints (no auth required)

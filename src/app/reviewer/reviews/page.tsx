@@ -23,13 +23,10 @@ export default function ReviewsPage() {
 
   const getStatusBadgeClass = (status: ReviewStatus) => {
     switch (status) {
-      case ReviewStatus.SUBMITTED:
       case ReviewStatus.COMPLETED:
         return "bg-green-100 text-green-800";
       case ReviewStatus.IN_PROGRESS:
         return "bg-orange-100 text-orange-800";
-      case ReviewStatus.ASSIGNED:
-        return "bg-yellow-100 text-yellow-800";
       case ReviewStatus.UNASSIGNED:
         return "bg-gray-100 text-gray-800";
       default:
@@ -57,10 +54,10 @@ export default function ReviewsPage() {
                 onChange={(e) => setFilterStatus(e.target.value as ReviewStatus | "ALL")}
                 value={filterStatus}
               >
-                <option value="ALL">All Statuses</option>
-                <option value={ReviewStatus.ASSIGNED}>Assigned</option>
+                <option value="">All Statuses</option>
+                <option value={ReviewStatus.UNASSIGNED}>Unassigned</option>
                 <option value={ReviewStatus.IN_PROGRESS}>In Progress</option>
-                <option value={ReviewStatus.SUBMITTED}>Submitted</option>
+                <option value={ReviewStatus.COMPLETED}>Completed</option>
                 <option value={ReviewStatus.COMPLETED}>Completed</option>
               </select>
             </div>
@@ -175,7 +172,7 @@ export default function ReviewsPage() {
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-3">
-                          {review.status === "ASSIGNED" && !review.recommendation && (
+                          {review.status === ReviewStatus.UNASSIGNED && !review.recommendation && (
                             <Link
                               className="text-indigo-600 hover:text-indigo-700"
                               href={`/reviewer/submit-review/${review.applicationId}`}

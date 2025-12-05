@@ -93,12 +93,57 @@ export type CoApplicantApiResponse<T = any> =
   | CoApplicantErrorResponse;
 
 // Utility types for component props and state management
+export interface LinkedApplication {
+  id: string;
+  cycleId: string;
+  stepNumber: number;
+  isSubmitted: boolean;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  basicDetails?: {
+    title: string;
+    summary: string;
+    problem: string;
+    solution: string;
+    innovation: string;
+  };
+  cycle?: {
+    id: string;
+    slug: string;
+    round: {
+      year: number;
+      type: string;
+    };
+    status: string;
+    program?: {
+      id: string;
+      slug: string;
+      status: string;
+      details?: {
+        name: string;
+        description: string;
+        about: string;
+      };
+    };
+  };
+}
+
+export interface GetUserLinkedProjectsResponse {
+  status: number;
+  message: string;
+  res: {
+    applications: LinkedApplication[];
+  };
+}
+
 export interface CoApplicantState {
   applicationDetails: ApplicationDetails | null;
   tokenDetails: {
     invitedAt: string;
     application: TokenDetailsApplication;
   } | null;
+  linkedProjects: LinkedApplication[];
   isLoading: boolean;
   error: string | null;
 }
@@ -107,6 +152,7 @@ export interface CoApplicantActions {
   getApplicationDetails: (applicationId: string) => Promise<void>;
   getTokenDetails: (token: string, slug: string) => Promise<void>;
   updateInviteStatus: (token: string, slug: string, status: InviteStatus.ACCEPTED | InviteStatus.REJECTED) => Promise<void>;
+  getUserLinkedProjects: (page: number, numberOfResults: number) => Promise<void>;
   clearError: () => void;
   clearState: () => void;
 }

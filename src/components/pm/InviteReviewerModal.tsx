@@ -6,6 +6,7 @@ import { usePm } from "@/hooks/usePm";
 interface InviteReviewerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
   applicationId: string;
   applicationTitle?: string;
 }
@@ -13,6 +14,7 @@ interface InviteReviewerModalProps {
 export default function InviteReviewerModal({
   isOpen,
   onClose,
+  onSuccess,
   applicationId,
   applicationTitle,
 }: InviteReviewerModalProps) {
@@ -46,6 +48,12 @@ export default function InviteReviewerModal({
       if (result) {
         setSuccess(true);
         setEmail("");
+        
+        // Call onSuccess callback to refresh the reviews list
+        if (onSuccess) {
+          onSuccess();
+        }
+        
         setTimeout(() => {
           onClose();
           setSuccess(false);

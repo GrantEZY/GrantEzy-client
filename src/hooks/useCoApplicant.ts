@@ -10,11 +10,13 @@ export const useCoApplicant = () => {
   const {
     applicationDetails,
     tokenDetails,
+    linkedProjects,
     isLoading,
     error,
     getApplicationDetails,
     getTokenDetails,
     updateInviteStatus,
+    getUserLinkedProjects,
     clearError,
     clearState,
   } = store;
@@ -79,6 +81,7 @@ export const useCoApplicant = () => {
     // State
     applicationDetails,
     tokenDetails,
+    linkedProjects,
     isLoading,
     error,
     
@@ -88,6 +91,7 @@ export const useCoApplicant = () => {
     acceptInvite: handleAcceptInvite,
     rejectInvite: handleRejectInvite,
     updateInviteStatus: handleUpdateInviteStatus,
+    getUserLinkedProjects,
     clearError,
     clearState,
   };

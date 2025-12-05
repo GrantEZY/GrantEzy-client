@@ -129,7 +129,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
 
   /**
    * Update reviewer invite status (accept or reject)
-   * Returns true if successful, false otherwise
+   * Returns true if successful, throws error otherwise
    */
   updateInviteStatus: async (
     params: UpdateInviteStatusRequest,
@@ -139,26 +139,27 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
 
       const response = await reviewerService.updateInviteStatus(params);
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         set({ isLoadingReviews: false });
         return true;
       } else {
+        const errorMsg = response.message || "Failed to update invite status";
         set({
-          reviewsError:
-            response.message || "Failed to update invite status",
+          reviewsError: errorMsg,
           isLoadingReviews: false,
         });
-        return false;
+        throw new Error(errorMsg);
       }
     } catch (error) {
+      const errorMsg = error instanceof Error
+        ? error.message
+        : "An error occurred while updating invite status";
+      
       set({
-        reviewsError:
-          error instanceof Error
-            ? error.message
-            : "An error occurred while updating invite status",
+        reviewsError: errorMsg,
         isLoadingReviews: false,
       });
-      return false;
+      throw error;
     }
   },
 

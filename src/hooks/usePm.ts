@@ -33,6 +33,7 @@ export const usePm = () => {
   
   // Reviews state
   const reviews = usePMStore((state) => state.reviews);
+  const pendingInvites = usePMStore((state) => state.pendingInvites);
   const reviewsPagination = usePMStore((state) => state.reviewsPagination);
   const isReviewsLoading = usePMStore((state) => state.isReviewsLoading);
   const reviewsError = usePMStore((state) => state.reviewsError);
@@ -122,6 +123,7 @@ export const usePm = () => {
     
     // Reviews
     reviews,
+    pendingInvites,
     reviewsPagination,
     isReviewsLoading,
     reviewsError,

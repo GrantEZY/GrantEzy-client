@@ -139,8 +139,29 @@ export default function CreateCycleModal({
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    // Prevent Enter key from submitting form on steps 1 and 2
+    if (e.key === 'Enter' && currentStep !== 3) {
+      e.preventDefault();
+      // Move to next step if Enter is pressed on steps 1 or 2
+      if (currentStep < 3 && validateStep(currentStep)) {
+        handleNext();
+      }
+    }
+  };
+
+  const handleDateChange = (section: string, field: string, value: string) => {
+    // Update the date field without triggering form submission
+    updateNestedFormData(section, field, value);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Only allow submission on step 3
+    if (currentStep !== 3) {
+      return;
+    }
 
     if (!validateStep(currentStep)) {
       return;
@@ -271,7 +292,7 @@ export default function CreateCycleModal({
         </div>
 
         {/* Form Content */}
-        <form className="px-6 py-6" onSubmit={handleSubmit}>
+        <form className="px-6 py-6" onSubmit={handleSubmit} onKeyDown={handleKeyDown}>
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
             <div className="space-y-6">
@@ -393,12 +414,17 @@ export default function CreateCycleModal({
                       errors.startDate ? "border-red-500" : "border-gray-300"
                     }`}
                     onChange={(e) =>
-                      updateNestedFormData(
+                      handleDateChange(
                         "duration",
                         "startDate",
                         e.target.value,
                       )
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                      }
+                    }}
                     type="date"
                     value={
                       typeof formData.duration.startDate === "string"
@@ -424,12 +450,17 @@ export default function CreateCycleModal({
                   <input
                     className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
                     onChange={(e) =>
-                      updateNestedFormData(
+                      handleDateChange(
                         "duration",
                         "endDate",
                         e.target.value,
                       )
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                      }
+                    }}
                     type="date"
                     value={
                       formData.duration.endDate

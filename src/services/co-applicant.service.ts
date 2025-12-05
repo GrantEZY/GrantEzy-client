@@ -12,6 +12,12 @@ import {
   InviteStatusUpdateResponse,
   InviteStatus,
 } from "../types/co-applicant.types";
+import {
+  GetUserLinkedProjectsResponse,
+} from "../types/co-applicant.types";
+import {
+  GetProjectDetailsResponse,
+} from "../types/project.types";
 
 export class CoApplicantService {
   /**
@@ -94,6 +100,42 @@ export class CoApplicantService {
     slug: string
   ): Promise<InviteStatusUpdateResponse> {
     return this.updateInviteStatus(token, slug, InviteStatus.REJECTED);
+  }
+
+  // ============= Project Management =============
+
+  /**
+   * Get all projects linked to the user (as co-applicant)
+   */
+  async getUserLinkedProjects(
+    page: number,
+    numberOfResults: number,
+  ): Promise<GetUserLinkedProjectsResponse> {
+    const queryParams: Record<string, string> = {
+      page: page.toString(),
+      numberOfResults: numberOfResults.toString(),
+    };
+
+    return httpClient.get<GetUserLinkedProjectsResponse>(
+      API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_USER_LINKED_PROJECTS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get project details by application slug (for co-applicants)
+   */
+  async getProjectDetails(
+    applicationSlug: string,
+  ): Promise<GetProjectDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      applicationSlug,
+    };
+
+    return httpClient.get<GetProjectDetailsResponse>(
+      API_CONFIG.ENDPOINTS.CO_APPLICANT.GET_PROJECT_DETAILS,
+      queryParams,
+    );
   }
 }
 

@@ -326,12 +326,26 @@ export interface Review {
   };
 }
 
+// ============= Pending Invite =============
+
+export interface PendingInvite {
+  id: string;
+  slug: string;
+  email: string;
+  applicationId: string;
+  inviteAs: string;
+  status: "SENT" | "ACCEPTED" | "REJECTED";
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface GetApplicationReviewsResponse {
   status: number;
   message: string;
   res: {
     application: CycleApplication;
     reviews: Review[];
+    pendingInvites?: PendingInvite[];
     // Note: Backend does not return pagination metadata
   };
 }

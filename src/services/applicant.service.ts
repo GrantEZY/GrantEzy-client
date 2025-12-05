@@ -23,6 +23,10 @@ import {
   GetUserCreatedApplicationDetailsResponse,
   DeleteApplicationResponse,
 } from "../types/applicant.types";
+import {
+  GetUserProjectsResponse,
+  GetProjectDetailsResponse,
+} from "../types/project.types";
 
 export class ApplicantService {
   /**
@@ -151,6 +155,42 @@ export class ApplicantService {
     return httpClient.delete<DeleteApplicationResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.DELETE_APPLICATION,
       { applicationId },
+    );
+  }
+
+  // ============= Project Management =============
+
+  /**
+   * Get all projects created by the user
+   */
+  async getUserProjects(
+    page: number,
+    numberOfResults: number,
+  ): Promise<GetUserProjectsResponse> {
+    const queryParams: Record<string, string> = {
+      page: page.toString(),
+      numberOfResults: numberOfResults.toString(),
+    };
+
+    return httpClient.get<GetUserProjectsResponse>(
+      API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_PROJECTS,
+      queryParams,
+    );
+  }
+
+  /**
+   * Get project details by application slug
+   */
+  async getProjectDetails(
+    applicationSlug: string,
+  ): Promise<GetProjectDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      applicationSlug,
+    };
+
+    return httpClient.get<GetProjectDetailsResponse>(
+      API_CONFIG.ENDPOINTS.APPLICANT.GET_PROJECT_DETAILS,
+      queryParams,
     );
   }
 }
