@@ -22,6 +22,11 @@ import { CycleStatus } from "@/types/pm.types";
  * Shows cycle management for a specific program assigned to the PM
  */
 
+/**
+ * Individual Program Management Page
+ * Shows cycle management for a specific program assigned to the PM
+ */
+
 export default function ProgramDetailsPage() {
   const params = useParams();
   const router = useRouter();

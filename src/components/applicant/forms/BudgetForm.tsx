@@ -15,6 +15,11 @@ import { Budget, BudgetItem } from "@/types/applicant.types";
  * Collects: ManPower, Equipment, OtherCosts, Consumables, Travel, Contingency, Overhead
  */
 
+/**
+ * Step 2: Budget Details Form
+ * Collects: ManPower, Equipment, OtherCosts, Consumables, Travel, Contingency, Overhead
+ */
+
 export default function BudgetForm() {
   const { addBudget, isLoading, goToPreviousStep, currentApplication } =
     useApplicant();

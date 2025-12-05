@@ -11,6 +11,11 @@ import { ApplicationStep, ApplicationStepInfo } from "@/types/applicant.types";
  * Shows the 7-step progress with visual indicators
  */
 
+/**
+ * Application Stepper Component
+ * Shows the 7-step progress with visual indicators
+ */
+
 interface ApplicationStepperProps {
   steps: ApplicationStepInfo[];
   currentStep: ApplicationStep;

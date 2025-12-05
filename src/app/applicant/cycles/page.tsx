@@ -18,6 +18,11 @@ import { ProgramCycle, publicService } from "@/services/public.service";
  * Allows applicants to browse and apply to open funding cycles
  */
 
+/**
+ * Applicant Cycles Page - Shows all available cycles for applications
+ * Allows applicants to browse and apply to open funding cycles
+ */
+
 export default function ApplicantCyclesPage() {
   const router = useRouter();
   const [cycles, setCycles] = useState<ProgramCycle[]>([]);

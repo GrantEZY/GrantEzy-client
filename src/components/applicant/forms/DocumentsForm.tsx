@@ -21,6 +21,12 @@ import { Document } from "@/types/applicant.types";
  * Uploads files to Cloudinary before saving to database
  */
 
+/**
+ * Step 6: Documents Form
+ * Collects: 6 required documents + optional otherDocuments[]
+ * Uploads files to Cloudinary before saving to database
+ */
+
 interface DocumentUpload {
   endorsementLetter: Document | null;
   plagiarismUndertaking: Document | null;

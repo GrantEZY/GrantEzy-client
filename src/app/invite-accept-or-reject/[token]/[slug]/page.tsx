@@ -21,6 +21,13 @@ import { ToastProvider } from "@/components/ui/ToastNew";
  * Handles both CO-APPLICANT and REVIEWER invites
  */
 
+/**
+ * Universal Invite Route (Backend Email Link)
+ * URL: /invite-accept-or-reject/[token]/[slug]
+ * This matches the email template route from the backend
+ * Handles both CO-APPLICANT and REVIEWER invites
+ */
+
 interface PageProps {
   params: Promise<{
     token: string;

@@ -17,6 +17,11 @@ import CoApplicantInvite from "./CoApplicantInvite";
  * Handles the invite verification and acceptance/rejection flow
  */
 
+/**
+ * Co-Applicant Invite Page
+ * Handles the invite verification and acceptance/rejection flow
+ */
+
 export default function CoApplicantInvitePage() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");

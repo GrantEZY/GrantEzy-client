@@ -14,6 +14,11 @@ import { useAuth } from "@/hooks/useAuth";
  * URL: /co-applicant
  */
 
+/**
+ * Co-Applicant Main Page
+ * URL: /co-applicant
+ */
+
 export default function CoApplicantPage() {
   const { user: _user, isAuthenticated } = useAuth();
 

@@ -19,6 +19,11 @@ import {
  * Collects: primaryStream, secondaryStreams[], pricing, unitEconomics
  */
 
+/**
+ * Step 4: Revenue Model Form
+ * Collects: primaryStream, secondaryStreams[], pricing, unitEconomics
+ */
+
 export default function RevenueModelForm() {
   const { addRevenueStream, isLoading, goToPreviousStep, currentApplication } =
     useApplicant();

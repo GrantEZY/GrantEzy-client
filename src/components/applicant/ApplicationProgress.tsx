@@ -11,6 +11,11 @@ import { ApplicationStep } from "@/types/applicant.types";
  * Shows overall progress percentage
  */
 
+/**
+ * Application Progress Bar Component
+ * Shows overall progress percentage
+ */
+
 interface ApplicationProgressProps {
   currentStep: ApplicationStep;
   totalSteps: number;

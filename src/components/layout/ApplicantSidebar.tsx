@@ -14,6 +14,11 @@ import { useAuth } from "@/hooks/useAuth";
  * Navigation sidebar for applicant pages
  */
 
+/**
+ * Applicant Sidebar Component
+ * Navigation sidebar for applicant pages
+ */
+
 interface MenuItem {
   icon: React.ReactNode;
   label: string;

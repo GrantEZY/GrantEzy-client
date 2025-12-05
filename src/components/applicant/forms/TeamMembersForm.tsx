@@ -15,6 +15,11 @@ import { useApplicant } from "@/hooks/useApplicant";
  * Collects: emails[] + isSubmitted boolean for final submission
  */
 
+/**
+ * Step 7: Team Members Form (Final Step)
+ * Collects: emails[] + isSubmitted boolean for final submission
+ */
+
 export default function TeamMembersForm() {
   const {
     addTeammates,

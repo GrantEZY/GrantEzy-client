@@ -15,6 +15,11 @@ import { TeamMate, TeamMateInvite } from "@/types/co-applicant.types";
  * Shows application details, teammates, and pending invites
  */
 
+/**
+ * Application Details View for Co-Applicants
+ * Shows application details, teammates, and pending invites
+ */
+
 interface ApplicationDetailsViewProps {
   applicationId: string;
   onBack?: () => void;

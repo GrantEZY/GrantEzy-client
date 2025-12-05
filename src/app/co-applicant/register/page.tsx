@@ -22,6 +22,12 @@ import { UserCommitmentStatus } from "@/types/auth.types";
  * URL: /co-applicant/register?token={token}&slug={slug}&email={email}
  */
 
+/**
+ * Co-Applicant Registration Page
+ * Handles registration for invited co-applicants
+ * URL: /co-applicant/register?token={token}&slug={slug}&email={email}
+ */
+
 export default function CoApplicantRegisterPage() {
   const searchParams = useSearchParams();
   const router = useRouter();

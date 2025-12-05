@@ -15,6 +15,11 @@ import { MarketInfo, TechnicalSpec } from "@/types/applicant.types";
  * Collects: technicalSpec (description, techStack, prototype) + marketInfo (TAM, SAM, SOM, competitorAnalysis)
  */
 
+/**
+ * Step 3: Technical Details Form
+ * Collects: technicalSpec (description, techStack, prototype) + marketInfo (TAM, SAM, SOM, competitorAnalysis)
+ */
+
 interface TechnicalDetailsFormData {
   technicalSpec: TechnicalSpec;
   marketInfo: MarketInfo;

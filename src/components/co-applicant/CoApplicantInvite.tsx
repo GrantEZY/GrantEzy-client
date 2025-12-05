@@ -15,6 +15,11 @@ import { InviteStatus } from "@/types/co-applicant.types";
  * Displays invite details and allows accepting/rejecting invites
  */
 
+/**
+ * Co-Applicant Invite Verification Component
+ * Displays invite details and allows accepting/rejecting invites
+ */
+
 interface CoApplicantInviteProps {
   token: string;
   slug: string;

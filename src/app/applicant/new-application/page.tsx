@@ -30,6 +30,11 @@ import { ApplicationStep } from "@/types/applicant.types";
  * Handles the 7-stage application submission process
  */
 
+/**
+ * Multi-step Application Form - Main Page
+ * Handles the 7-stage application submission process
+ */
+
 export default function NewApplicationPage() {
   const searchParams = useSearchParams();
   const cycleSlug = searchParams.get("cycleSlug");

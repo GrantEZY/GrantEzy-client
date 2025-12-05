@@ -18,6 +18,11 @@ import { getViewableUrl } from "@/utils/cloudinary.util";
  * Reusable component for uploading files with drag-and-drop support
  */
 
+/**
+ * File Upload Component with Cloudinary Integration
+ * Reusable component for uploading files with drag-and-drop support
+ */
+
 export interface FileUploadProps {
   /**
    * Callback when file is successfully uploaded

@@ -19,6 +19,11 @@ import { useCoApplicant } from "@/hooks/useCoApplicant";
  * URL: /co-applicant/dashboard
  */
 
+/**
+ * Co-Applicant Dashboard Route
+ * URL: /co-applicant/dashboard
+ */
+
 export default function CoApplicantDashboard() {
   const { user } = useAuth();
   const { linkedProjects, isLoading, getUserLinkedProjects } = useCoApplicant();

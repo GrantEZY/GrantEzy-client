@@ -15,6 +15,11 @@ import { Milestone, Risk, RiskImpact } from "@/types/applicant.types";
  * Collects: risks[] (description, impact, mitigation) + milestones[] (title, description, deliverables[], dueDate)
  */
 
+/**
+ * Step 5: Risks and Milestones Form
+ * Collects: risks[] (description, impact, mitigation) + milestones[] (title, description, deliverables[], dueDate)
+ */
+
 export default function RisksAndMilestonesForm() {
   const {
     addRisksAndMilestones,

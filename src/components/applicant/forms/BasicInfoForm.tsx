@@ -15,6 +15,11 @@ import { BasicInfo } from "@/types/applicant.types";
  * Collects: title, summary, problem, solution, innovation
  */
 
+/**
+ * Step 1: Basic Information Form
+ * Collects: title, summary, problem, solution, innovation
+ */
+
 interface BasicInfoFormProps {
   cycleSlug: string;
 }
