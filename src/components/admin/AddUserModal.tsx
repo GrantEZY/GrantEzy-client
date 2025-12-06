@@ -1,27 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { AddUserRequest } from "../../types/admin.types";
-import { UserRoles } from "../../types/auth.types";
+import { AddUserRequest } from '../../types/admin.types';
+import { UserRoles } from '../../types/auth.types';
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    userData: AddUserRequest,
-  ) => Promise<{ success: boolean; error?: string }>;
+  onSubmit: (userData: AddUserRequest) => Promise<{ success: boolean; error?: string }>;
   isLoading: boolean;
 }
 
-export function AddUserModal({
-  isOpen,
-  onClose,
-  onSubmit,
-  isLoading,
-}: AddUserModalProps) {
+export function AddUserModal({ isOpen, onClose, onSubmit, isLoading }: AddUserModalProps) {
   const [formData, setFormData] = useState<AddUserRequest>({
-    email: "",
+    email: '',
     role: UserRoles.APPLICANT,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -30,9 +23,9 @@ export function AddUserModal({
     const newErrors: Record<string, string> = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = 'Email is invalid';
     }
 
     setErrors(newErrors);
@@ -51,7 +44,7 @@ export function AddUserModal({
     if (result.success) {
       // Reset form and close modal
       setFormData({
-        email: "",
+        email: '',
         role: UserRoles.APPLICANT,
       });
       setErrors({});
@@ -63,7 +56,7 @@ export function AddUserModal({
     setFormData((prev) => ({ ...prev, [field]: value }));
     // Clear error for this field when user starts typing
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
@@ -82,40 +75,32 @@ export function AddUserModal({
 
         <form className="space-y-4 px-6 py-4" onSubmit={handleSubmit}>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Email Address
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Email Address</label>
 
             <input
               className={`w-full rounded-md border px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 ${
-                errors.email ? "border-red-500" : "border-gray-300"
+                errors.email ? 'border-red-500' : 'border-gray-300'
               }`}
-              onChange={(e) => handleChange("email", e.target.value)}
+              onChange={(e) => handleChange('email', e.target.value)}
               placeholder="Enter user's email address"
               type="email"
               value={formData.email}
             />
 
-            {errors.email && (
-              <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-            )}
+            {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Role
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700">Role</label>
 
             <select
               className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
-              onChange={(e) =>
-                handleChange("role", e.target.value as UserRoles)
-              }
+              onChange={(e) => handleChange('role', e.target.value as UserRoles)}
               value={formData.role}
             >
               {Object.values(UserRoles).map((role) => (
                 <option key={role} value={role}>
-                  {role.replace(/_/g, " ")}
+                  {role.replace(/_/g, ' ')}
                 </option>
               ))}
             </select>
@@ -137,7 +122,7 @@ export function AddUserModal({
             disabled={isLoading}
             onClick={handleSubmit}
           >
-            {isLoading ? "Adding..." : "Add Role"}
+            {isLoading ? 'Adding...' : 'Add Role'}
           </button>
         </div>
       </div>

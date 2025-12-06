@@ -3,24 +3,23 @@
  * URL: /co-applicant
  */
 
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useAuth } from "@/hooks/useAuth";
-import { UserRoles } from "@/types/auth.types";
+import { useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function CoApplicantPage() {
-  const { user, isAuthenticated } = useAuth();
+  const { user: _user, isAuthenticated } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated) {
       // Redirect to login if not authenticated
-      window.location.href = "/login?redirect=/co-applicant";
+      window.location.href = '/login?redirect=/co-applicant';
       return;
     }
 
     // If authenticated, redirect to dashboard
-    window.location.href = "/co-applicant/dashboard";
+    window.location.href = '/co-applicant/dashboard';
   }, [isAuthenticated]);
 
   if (!isAuthenticated) {

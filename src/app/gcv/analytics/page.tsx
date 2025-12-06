@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import GCVLayout from "@/components/layout/GCVLayout";
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import GCVLayout from '@/components/layout/GCVLayout';
 
 export default function AnalyticsPage() {
   return (
@@ -30,8 +30,8 @@ export default function AnalyticsPage() {
             <p className="text-xl text-gray-600">Coming Soon</p>
 
             <p className="mt-4 text-gray-500">
-              We&apos;re working on bringing you powerful analytics and
-              insights. Stay tuned for updates!
+              We&apos;re working on bringing you powerful analytics and insights. Stay tuned for
+              updates!
             </p>
           </div>
         </div>

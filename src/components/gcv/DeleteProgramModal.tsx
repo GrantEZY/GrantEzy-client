@@ -41,14 +41,12 @@ export function DeleteProgramModal({
         </div>
 
         <div className="mb-4 text-center">
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
-            Delete Program
-          </h3>
+          <h3 className="mb-2 text-lg font-semibold text-gray-900">Delete Program</h3>
 
           <p className="text-sm text-gray-600">
-            Are you sure you want to delete the program{" "}
-            <span className="font-semibold">&quot;{programName}&quot;</span>?
-            This action cannot be undone.
+            Are you sure you want to delete the program{' '}
+            <span className="font-semibold">&quot;{programName}&quot;</span>? This action cannot be
+            undone.
           </p>
         </div>
 
@@ -67,7 +65,7 @@ export function DeleteProgramModal({
             onClick={onConfirm}
             type="button"
           >
-            {isLoading ? "Deleting..." : "Delete Program"}
+            {isLoading ? 'Deleting...' : 'Delete Program'}
           </button>
         </div>
       </div>

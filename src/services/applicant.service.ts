@@ -1,8 +1,8 @@
 /**
  * Applicant service for handling application submission API calls
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   AddApplicationBudgetRequest,
   AddApplicationBudgetResponse,
@@ -22,22 +22,17 @@ import {
   GetApplicationWithCycleDetailsResponse,
   GetUserCreatedApplicationDetailsResponse,
   DeleteApplicationResponse,
-} from "../types/applicant.types";
-import {
-  GetUserProjectsResponse,
-  GetProjectDetailsResponse,
-} from "../types/project.types";
+} from '../types/applicant.types';
+import { GetUserProjectsResponse, GetProjectDetailsResponse } from '../types/project.types';
 
 export class ApplicantService {
   /**
    * Step 1: Create a new application with basic info
    */
-  async createApplication(
-    data: CreateApplicationRequest,
-  ): Promise<CreateApplicationResponse> {
+  async createApplication(data: CreateApplicationRequest): Promise<CreateApplicationResponse> {
     return httpClient.post<CreateApplicationResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.CREATE_APPLICATION,
-      data,
+      data
     );
   }
 
@@ -45,11 +40,11 @@ export class ApplicantService {
    * Step 2: Add budget details to application
    */
   async addApplicationBudget(
-    data: AddApplicationBudgetRequest,
+    data: AddApplicationBudgetRequest
   ): Promise<AddApplicationBudgetResponse> {
     return httpClient.patch<AddApplicationBudgetResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.ADD_BUDGET,
-      data,
+      data
     );
   }
 
@@ -57,11 +52,11 @@ export class ApplicantService {
    * Step 3: Add technical specifications and market info
    */
   async addApplicationTechnicalDetails(
-    data: AddApplicationTechnicalDetailsRequest,
+    data: AddApplicationTechnicalDetailsRequest
   ): Promise<AddApplicationTechnicalDetailsResponse> {
     return httpClient.patch<AddApplicationTechnicalDetailsResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.ADD_TECHNICAL_DETAILS,
-      data,
+      data
     );
   }
 
@@ -69,11 +64,11 @@ export class ApplicantService {
    * Step 4: Add revenue model and streams
    */
   async addApplicationRevenueStream(
-    data: AddApplicationRevenueStreamRequest,
+    data: AddApplicationRevenueStreamRequest
   ): Promise<AddApplicationRevenueStreamResponse> {
     return httpClient.patch<AddApplicationRevenueStreamResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.ADD_REVENUE_STREAM,
-      data,
+      data
     );
   }
 
@@ -81,11 +76,11 @@ export class ApplicantService {
    * Step 5: Add risks and milestones
    */
   async addApplicationRisksAndMilestones(
-    data: AddApplicationRisksAndMilestonesRequest,
+    data: AddApplicationRisksAndMilestonesRequest
   ): Promise<AddApplicationRisksAndMilestonesResponse> {
     return httpClient.patch<AddApplicationRisksAndMilestonesResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.ADD_RISKS_MILESTONES,
-      data,
+      data
     );
   }
 
@@ -93,11 +88,11 @@ export class ApplicantService {
    * Step 6: Add required documents
    */
   async addApplicationDocuments(
-    data: AddApplicationDocumentsRequest,
+    data: AddApplicationDocumentsRequest
   ): Promise<AddApplicationDocumentsResponse> {
     return httpClient.patch<AddApplicationDocumentsResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.ADD_DOCUMENTS,
-      data,
+      data
     );
   }
 
@@ -105,11 +100,11 @@ export class ApplicantService {
    * Step 7: Add team members and submit
    */
   async addApplicationTeammates(
-    data: AddApplicationTeammatesRequest,
+    data: AddApplicationTeammatesRequest
   ): Promise<AddApplicationTeammatesResponse> {
     return httpClient.patch<AddApplicationTeammatesResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.ADD_TEAMMATES,
-      data,
+      data
     );
   }
 
@@ -118,10 +113,10 @@ export class ApplicantService {
    * Used to check if user has an existing application for a cycle (draft or submitted)
    */
   async getApplicationWithCycle(
-    cycleSlug: string,
+    cycleSlug: string
   ): Promise<GetApplicationWithCycleDetailsResponse> {
     return httpClient.get<GetApplicationWithCycleDetailsResponse>(
-      `${API_CONFIG.ENDPOINTS.APPLICANT.GET_APPLICATION_WITH_CYCLE}?cycleSlug=${cycleSlug}`,
+      `${API_CONFIG.ENDPOINTS.APPLICANT.GET_APPLICATION_WITH_CYCLE}?cycleSlug=${cycleSlug}`
     );
   }
 
@@ -131,7 +126,7 @@ export class ApplicantService {
    */
   async getUserApplications(): Promise<GetUserApplicationsResponse> {
     return httpClient.get<GetUserApplicationsResponse>(
-      API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_APPLICATIONS,
+      API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_APPLICATIONS
     );
   }
 
@@ -140,10 +135,10 @@ export class ApplicantService {
    * Used for viewing/editing draft applications
    */
   async getUserCreatedApplicationDetails(
-    applicationId: string,
+    applicationId: string
   ): Promise<GetUserCreatedApplicationDetailsResponse> {
     return httpClient.get<GetUserCreatedApplicationDetailsResponse>(
-      `${API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_APPLICATION}?applicationId=${applicationId}`,
+      `${API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_APPLICATION}?applicationId=${applicationId}`
     );
   }
 
@@ -154,7 +149,7 @@ export class ApplicantService {
   async deleteApplication(applicationId: string): Promise<DeleteApplicationResponse> {
     return httpClient.delete<DeleteApplicationResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.DELETE_APPLICATION,
-      { applicationId },
+      { applicationId }
     );
   }
 
@@ -163,10 +158,7 @@ export class ApplicantService {
   /**
    * Get all projects created by the user
    */
-  async getUserProjects(
-    page: number,
-    numberOfResults: number,
-  ): Promise<GetUserProjectsResponse> {
+  async getUserProjects(page: number, numberOfResults: number): Promise<GetUserProjectsResponse> {
     const queryParams: Record<string, string> = {
       page: page.toString(),
       numberOfResults: numberOfResults.toString(),
@@ -174,23 +166,21 @@ export class ApplicantService {
 
     return httpClient.get<GetUserProjectsResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.GET_USER_CREATED_PROJECTS,
-      queryParams,
+      queryParams
     );
   }
 
   /**
    * Get project details by application slug
    */
-  async getProjectDetails(
-    applicationSlug: string,
-  ): Promise<GetProjectDetailsResponse> {
+  async getProjectDetails(applicationSlug: string): Promise<GetProjectDetailsResponse> {
     const queryParams: Record<string, string> = {
       applicationSlug,
     };
 
     return httpClient.get<GetProjectDetailsResponse>(
       API_CONFIG.ENDPOINTS.APPLICANT.GET_PROJECT_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 }

@@ -1,14 +1,15 @@
 /**
  * Public store for managing publicly available data
  */
-import { create } from "zustand";
-import { ProgramCycle, publicService } from "@/services/public.service";
+import { create } from 'zustand';
+
+import { ProgramCycle, publicService } from '@/services/public.service';
 
 interface PublicState {
   activeCycles: ProgramCycle[];
   loading: boolean;
   error: string | null;
-  
+
   // Actions
   fetchActiveCycles: (filters?: {
     isActive?: boolean;
@@ -19,7 +20,7 @@ interface PublicState {
   clearError: () => void;
 }
 
-export const usePublicStore = create<PublicState>((set, get) => ({
+export const usePublicStore = create<PublicState>((set, _get) => ({
   activeCycles: [],
   loading: false,
   error: null,
@@ -33,29 +34,29 @@ export const usePublicStore = create<PublicState>((set, get) => ({
       if (response.status === 200) {
         // Extract all cycles from all programs
         // Note: Currently the public API doesn't return cycles in programs, so this will be empty
-        const allCycles = response.res.programs.flatMap(program => 
-          (program.cycles || []).map(cycle => ({
+        const allCycles = response.res.programs.flatMap((program) =>
+          (program.cycles || []).map((cycle) => ({
             ...cycle,
             program: {
               id: program.id,
-              name: program.details?.name || "Unknown Program",
-              description: program.details?.description || ""
-            }
+              name: program.details?.name || 'Unknown Program',
+              description: program.details?.description || '',
+            },
           }))
         );
 
-        set({ 
+        set({
           activeCycles: allCycles,
-          loading: false 
+          loading: false,
         });
       } else {
-        throw new Error(response.message || "Failed to fetch active cycles");
+        throw new Error(response.message || 'Failed to fetch active cycles');
       }
     } catch (error: any) {
-      console.error("Error fetching active cycles:", error);
-      set({ 
-        error: error?.message || "Failed to fetch active cycles",
-        loading: false 
+      console.error('Error fetching active cycles:', error);
+      set({
+        error: error?.message || 'Failed to fetch active cycles',
+        loading: false,
       });
     }
   },

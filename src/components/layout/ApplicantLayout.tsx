@@ -2,10 +2,10 @@
  * Applicant Layout Component
  * Provides consistent layout structure for Applicant pages
  */
-import React from "react";
+import React from 'react';
 
-import ApplicantSidebar from "./ApplicantSidebar";
-import Header from "./Header";
+import ApplicantSidebar from './ApplicantSidebar';
+import Header from './Header';
 
 interface ApplicantLayoutProps {
   children: React.ReactNode;

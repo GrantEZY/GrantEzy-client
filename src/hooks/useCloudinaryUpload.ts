@@ -2,7 +2,7 @@
  * Custom hook for file uploads to Cloudinary
  */
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   uploadToCloudinary,
   uploadMultipleToCloudinary,
@@ -11,12 +11,12 @@ import {
   getMimeType,
   CloudinaryUploadResult,
   UploadOptions,
-} from "../utils/cloudinary.util";
+} from '../utils/cloudinary.util';
 
 export interface UploadProgress {
   fileName: string;
   progress: number;
-  status: "idle" | "uploading" | "success" | "error";
+  status: 'idle' | 'uploading' | 'success' | 'error';
   error?: string;
   result?: CloudinaryUploadResult;
 }
@@ -39,7 +39,7 @@ export const useCloudinaryUpload = () => {
     // Validate file
     const validation = validateFile(file);
     if (!validation.valid) {
-      setError(validation.error || "File validation failed");
+      setError(validation.error || 'File validation failed');
       setUploading(false);
       return null;
     }
@@ -49,7 +49,7 @@ export const useCloudinaryUpload = () => {
       {
         fileName: file.name,
         progress: 0,
-        status: "uploading",
+        status: 'uploading',
       },
     ]);
 
@@ -60,7 +60,7 @@ export const useCloudinaryUpload = () => {
         {
           fileName: file.name,
           progress: 100,
-          status: "success",
+          status: 'success',
           result,
         },
       ]);
@@ -68,15 +68,14 @@ export const useCloudinaryUpload = () => {
       setUploading(false);
       return result;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Upload failed";
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
       setError(errorMessage);
 
       setProgress([
         {
           fileName: file.name,
           progress: 0,
-          status: "error",
+          status: 'error',
           error: errorMessage,
         },
       ]);
@@ -104,9 +103,7 @@ export const useCloudinaryUpload = () => {
 
     const invalidFiles = validations.filter((v) => !v.validation.valid);
     if (invalidFiles.length > 0) {
-      const errors = invalidFiles
-        .map((v) => `${v.file.name}: ${v.validation.error}`)
-        .join(", ");
+      const errors = invalidFiles.map((v) => `${v.file.name}: ${v.validation.error}`).join(', ');
       setError(errors);
       setUploading(false);
       return [];
@@ -117,7 +114,7 @@ export const useCloudinaryUpload = () => {
       files.map((file) => ({
         fileName: file.name,
         progress: 0,
-        status: "uploading",
+        status: 'uploading',
       }))
     );
 
@@ -128,7 +125,7 @@ export const useCloudinaryUpload = () => {
         files.map((file, index) => ({
           fileName: file.name,
           progress: 100,
-          status: "success",
+          status: 'success',
           result: results[index],
         }))
       );
@@ -136,15 +133,14 @@ export const useCloudinaryUpload = () => {
       setUploading(false);
       return results;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Upload failed";
+      const errorMessage = err instanceof Error ? err.message : 'Upload failed';
       setError(errorMessage);
 
       setProgress(
         files.map((file) => ({
           fileName: file.name,
           progress: 0,
-          status: "error",
+          status: 'error',
           error: errorMessage,
         }))
       );

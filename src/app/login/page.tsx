@@ -1,41 +1,43 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
 
-import { UserRoles } from "@/types/auth.types";
+import { UserRoles } from '@/types/auth.types';
+
+import { Suspense } from 'react';
 
 // Role-based redirect mapping
 const getRoleBasedRedirect = (role: string): string => {
   switch (role) {
     case UserRoles.ADMIN:
-      return "/admin";
+      return '/admin';
     case UserRoles.COMMITTEE_MEMBER:
-      return "/gcv";
+      return '/gcv';
     case UserRoles.PROGRAM_MANAGER:
-      return "/pm";
+      return '/pm';
     case UserRoles.APPLICANT:
-      return "/applicant";
+      return '/applicant';
     case UserRoles.TEAM_MATE:
-      return "/co-applicant";
+      return '/co-applicant';
     case UserRoles.REVIEWER:
-      return "/reviewer";
+      return '/reviewer';
     default:
-      return "/";
+      return '/';
   }
 };
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState(UserRoles.ADMIN);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const { login } = useAuth();
   const router = useRouter();
@@ -43,16 +45,16 @@ export default function LoginPage() {
 
   // Set initial role based on redirect parameter
   useEffect(() => {
-    const redirect = searchParams.get("redirect");
-    if (redirect === "/gcv") {
+    const redirect = searchParams.get('redirect');
+    if (redirect === '/gcv') {
       setRole(UserRoles.COMMITTEE_MEMBER);
-    } else if (redirect === "/pm") {
+    } else if (redirect === '/pm') {
       setRole(UserRoles.PROGRAM_MANAGER);
-    } else if (redirect === "/applicant") {
+    } else if (redirect === '/applicant') {
       setRole(UserRoles.APPLICANT);
-    } else if (redirect === "/co-applicant") {
+    } else if (redirect === '/co-applicant') {
       setRole(UserRoles.TEAM_MATE);
-    } else if (redirect === "/reviewer") {
+    } else if (redirect === '/reviewer') {
       setRole(UserRoles.REVIEWER);
     }
   }, [searchParams]);
@@ -60,7 +62,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
 
     try {
       const result = await login({ email, password, role });
@@ -70,20 +72,19 @@ export default function LoginPage() {
         const backendRole = result.user?.role || role;
 
         // Get redirect from query params or use role-based default
-        const queryRedirect = searchParams.get("redirect");
+        const queryRedirect = searchParams.get('redirect');
         const defaultRedirect = getRoleBasedRedirect(backendRole);
         const redirect = queryRedirect || defaultRedirect;
 
         router.push(redirect);
       } else {
-        const errorMsg = result.error || "Login failed";
-        console.error("Login failed:", errorMsg);
+        const errorMsg = result.error || 'Login failed';
+        console.error('Login failed:', errorMsg);
         setError(errorMsg);
       }
     } catch (err) {
-      const errorMsg =
-        err instanceof Error ? err.message : "An unexpected error occurred";
-      console.error("Login error caught:", err);
+      const errorMsg = err instanceof Error ? err.message : 'An unexpected error occurred';
+      console.error('Login error caught:', err);
       setError(errorMsg);
     } finally {
       setIsLoading(false);
@@ -136,7 +137,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
                 required
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
               />
 
@@ -147,12 +148,27 @@ export default function LoginPage() {
               >
                 {showPassword ? (
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"
+                    />
                   </svg>
                 ) : (
                   <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
                   </svg>
                 )}
               </button>
@@ -173,7 +189,7 @@ export default function LoginPage() {
               >
                 {Object.values(UserRoles).map((userRole) => (
                   <option key={userRole} value={userRole}>
-                    {userRole.replace(/_/g, " ")}
+                    {userRole.replace(/_/g, ' ')}
                   </option>
                 ))}
               </select>
@@ -184,11 +200,7 @@ export default function LoginPage() {
             <div className="rounded-md bg-red-50 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg
-                    className="h-5 w-5 text-red-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       clipRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -198,9 +210,7 @@ export default function LoginPage() {
                 </div>
 
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    Login Failed
-                  </h3>
+                  <h3 className="text-sm font-medium text-red-800">Login Failed</h3>
 
                   <div className="mt-2 text-sm text-red-700">{error}</div>
                 </div>
@@ -214,27 +224,22 @@ export default function LoginPage() {
               disabled={isLoading}
               type="submit"
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
 
           <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Test credentials: admin@test.com / password123
-            </p>
+            <p className="text-sm text-gray-600">Test credentials: admin@test.com / password123</p>
 
             <p className="mt-2 text-sm text-gray-600">
-              Don&apos;t have an account?{" "}
-              <Link
-                className="font-medium text-blue-600 hover:text-blue-500"
-                href="/signup"
-              >
+              Don&apos;t have an account?{' '}
+              <Link className="font-medium text-blue-600 hover:text-blue-500" href="/signup">
                 Sign up here
               </Link>
             </p>
 
             <p className="mt-2 text-sm text-gray-600">
-              Access GCV Dashboard?{" "}
+              Access GCV Dashboard?{' '}
               <Link
                 className="font-medium text-purple-600 hover:text-purple-500"
                 href="/login?redirect=/gcv"
@@ -244,7 +249,7 @@ export default function LoginPage() {
             </p>
 
             <p className="mt-2 text-sm text-gray-600">
-              Access PM Dashboard?{" "}
+              Access PM Dashboard?{' '}
               <Link
                 className="font-medium text-green-600 hover:text-green-500"
                 href="/login?redirect=/pm"
@@ -254,7 +259,7 @@ export default function LoginPage() {
             </p>
 
             <p className="mt-2 text-sm text-gray-600">
-              Apply for Grants?{" "}
+              Apply for Grants?{' '}
               <Link
                 className="font-medium text-orange-600 hover:text-orange-500"
                 href="/login?redirect=/applicant"
@@ -264,7 +269,7 @@ export default function LoginPage() {
             </p>
 
             <p className="mt-2 text-sm text-gray-600">
-              Review Applications?{" "}
+              Review Applications?{' '}
               <Link
                 className="font-medium text-indigo-600 hover:text-indigo-500"
                 href="/login?redirect=/reviewer"
@@ -276,5 +281,13 @@ export default function LoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function page() {
+  return (
+    <Suspense fallback={<div>Loading search parameters...</div>}>
+      <LoginPage />
+    </Suspense>
   );
 }

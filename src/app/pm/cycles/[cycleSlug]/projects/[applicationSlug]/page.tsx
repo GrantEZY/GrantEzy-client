@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import PMLayout from "@/components/layout/PMLayout";
-import { useProjectManagement } from "@/hooks/useProjectManagement";
+import { useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import PMLayout from '@/components/layout/PMLayout';
+import { useProjectManagement } from '@/hooks/useProjectManagement';
 
 export default function ProjectDetailsPage() {
   const params = useParams();
@@ -13,13 +13,8 @@ export default function ProjectDetailsPage() {
   const cycleSlug = params.cycleSlug as string;
   const applicationSlug = params.applicationSlug as string;
 
-  const {
-    currentProject,
-    isProjectLoading,
-    projectError,
-    getProjectDetails,
-    clearProject,
-  } = useProjectManagement();
+  const { currentProject, isProjectLoading, projectError, getProjectDetails, clearProject } =
+    useProjectManagement();
 
   useEffect(() => {
     if (cycleSlug && applicationSlug) {
@@ -66,16 +61,16 @@ export default function ProjectDetailsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "ACTIVE":
-        return "bg-green-100 text-green-800";
-      case "COMPLETED":
-        return "bg-blue-100 text-blue-800";
-      case "ON_HOLD":
-        return "bg-yellow-100 text-yellow-800";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800";
+      case 'ACTIVE':
+        return 'bg-green-100 text-green-800';
+      case 'COMPLETED':
+        return 'bg-blue-100 text-blue-800';
+      case 'ON_HOLD':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'CANCELLED':
+        return 'bg-red-100 text-red-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -98,12 +93,7 @@ export default function ProjectDetailsPage() {
               onClick={() => router.back()}
               type="button"
             >
-              <svg
-                className="mr-2 h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M10 19l-7-7m0 0l7-7m-7 7h18"
                   strokeLinecap="round"
@@ -133,11 +123,7 @@ export default function ProjectDetailsPage() {
           {projectError && !isProjectLoading && (
             <div className="rounded-lg border border-red-200 bg-red-50 p-4">
               <div className="flex">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -163,7 +149,7 @@ export default function ProjectDetailsPage() {
                       <h2 className="text-2xl font-semibold text-gray-900">
                         {currentProject.application?.basicInfo?.title ||
                           currentProject.application?.title ||
-                          "Untitled Project"}
+                          'Untitled Project'}
                       </h2>
                       <span
                         className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getStatusColor(currentProject.status)}`}
@@ -196,7 +182,7 @@ export default function ProjectDetailsPage() {
                             currentProject.plannedDuration.startDate.toString(),
                             currentProject.plannedDuration.endDate.toString()
                           )
-                        : "N/A"}{" "}
+                        : 'N/A'}{' '}
                       days
                     </p>
                   </div>
@@ -218,28 +204,30 @@ export default function ProjectDetailsPage() {
                       <p className="text-sm font-medium text-gray-600">Start Date</p>
                       <p className="mt-1 text-base text-gray-900">
                         {currentProject.plannedDuration.startDate
-                          ? new Date(
-                              currentProject.plannedDuration.startDate
-                            ).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                          : "Not set"}
+                          ? new Date(currentProject.plannedDuration.startDate).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              }
+                            )
+                          : 'Not set'}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-600">End Date</p>
                       <p className="mt-1 text-base text-gray-900">
                         {currentProject.plannedDuration.endDate
-                          ? new Date(
-                              currentProject.plannedDuration.endDate
-                            ).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })
-                          : "Not set"}
+                          ? new Date(currentProject.plannedDuration.endDate).toLocaleDateString(
+                              'en-US',
+                              {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                              }
+                            )
+                          : 'Not set'}
                       </p>
                     </div>
                   </div>
@@ -271,17 +259,19 @@ export default function ProjectDetailsPage() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.ManPower.map((item: any, idx: number) => (
-                                  <tr key={idx}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">
-                                      {item.BudgetReason || "N/A"}
-                                    </td>
-                                    <td className="px-4 py-3 text-right text-sm text-gray-900">
-                                      {item.Budget?.currency || "INR"}{" "}
-                                      {item.Budget?.amount?.toLocaleString() || "0"}
-                                    </td>
-                                  </tr>
-                                ))}
+                                {currentProject.allocatedBudget.ManPower.map(
+                                  (item: any, idx: number) => (
+                                    <tr key={idx}>
+                                      <td className="px-4 py-3 text-sm text-gray-900">
+                                        {item.BudgetReason || 'N/A'}
+                                      </td>
+                                      <td className="px-4 py-3 text-right text-sm text-gray-900">
+                                        {item.Budget?.currency || 'INR'}{' '}
+                                        {item.Budget?.amount?.toLocaleString() || '0'}
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -307,17 +297,19 @@ export default function ProjectDetailsPage() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.Equipment.map((item: any, idx: number) => (
-                                  <tr key={idx}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">
-                                      {item.BudgetReason || "N/A"}
-                                    </td>
-                                    <td className="px-4 py-3 text-right text-sm text-gray-900">
-                                      {item.Budget?.currency || "INR"}{" "}
-                                      {item.Budget?.amount?.toLocaleString() || "0"}
-                                    </td>
-                                  </tr>
-                                ))}
+                                {currentProject.allocatedBudget.Equipment.map(
+                                  (item: any, idx: number) => (
+                                    <tr key={idx}>
+                                      <td className="px-4 py-3 text-sm text-gray-900">
+                                        {item.BudgetReason || 'N/A'}
+                                      </td>
+                                      <td className="px-4 py-3 text-right text-sm text-gray-900">
+                                        {item.Budget?.currency || 'INR'}{' '}
+                                        {item.Budget?.amount?.toLocaleString() || '0'}
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -343,17 +335,19 @@ export default function ProjectDetailsPage() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.OtherCosts.map((item: any, idx: number) => (
-                                  <tr key={idx}>
-                                    <td className="px-4 py-3 text-sm text-gray-900">
-                                      {item.BudgetReason || "N/A"}
-                                    </td>
-                                    <td className="px-4 py-3 text-right text-sm text-gray-900">
-                                      {item.Budget?.currency || "INR"}{" "}
-                                      {item.Budget?.amount?.toLocaleString() || "0"}
-                                    </td>
-                                  </tr>
-                                ))}
+                                {currentProject.allocatedBudget.OtherCosts.map(
+                                  (item: any, idx: number) => (
+                                    <tr key={idx}>
+                                      <td className="px-4 py-3 text-sm text-gray-900">
+                                        {item.BudgetReason || 'N/A'}
+                                      </td>
+                                      <td className="px-4 py-3 text-right text-sm text-gray-900">
+                                        {item.Budget?.currency || 'INR'}{' '}
+                                        {item.Budget?.amount?.toLocaleString() || '0'}
+                                      </td>
+                                    </tr>
+                                  )
+                                )}
                               </tbody>
                             </table>
                           </div>
@@ -368,7 +362,7 @@ export default function ProjectDetailsPage() {
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Consumables</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Consumables.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Consumables.Budget.currency || 'INR'}{' '}
                               {currentProject.allocatedBudget.Consumables.Budget.amount.toLocaleString()}
                             </span>
                           </div>
@@ -377,7 +371,7 @@ export default function ProjectDetailsPage() {
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Travel</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Travel.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Travel.Budget.currency || 'INR'}{' '}
                               {currentProject.allocatedBudget.Travel.Budget.amount.toLocaleString()}
                             </span>
                           </div>
@@ -386,7 +380,7 @@ export default function ProjectDetailsPage() {
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Contingency</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Contigency.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Contigency.Budget.currency || 'INR'}{' '}
                               {currentProject.allocatedBudget.Contigency.Budget.amount.toLocaleString()}
                             </span>
                           </div>
@@ -395,7 +389,7 @@ export default function ProjectDetailsPage() {
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Overhead</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Overhead.Budget.currency || "INR"}{" "}
+                              {currentProject.allocatedBudget.Overhead.Budget.currency || 'INR'}{' '}
                               {currentProject.allocatedBudget.Overhead.Budget.amount.toLocaleString()}
                             </span>
                           </div>
@@ -408,7 +402,7 @@ export default function ProjectDetailsPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-semibold text-gray-900">Total Budget</span>
                         <span className="text-2xl font-bold text-blue-600">
-                          INR{" "}
+                          INR{' '}
                           {calculateBudgetTotal(currentProject.allocatedBudget).toLocaleString()}
                         </span>
                       </div>
@@ -421,9 +415,7 @@ export default function ProjectDetailsPage() {
               {currentProject.application && (
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Associated Application
-                    </h3>
+                    <h3 className="text-lg font-semibold text-gray-900">Associated Application</h3>
                     <Link
                       href={`/pm/cycles/${cycleSlug}/applications/${currentProject.application.slug}`}
                       className="text-sm text-blue-600 hover:text-blue-700"
@@ -455,24 +447,24 @@ export default function ProjectDetailsPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-600">Created At</p>
                     <p className="mt-1 text-sm text-gray-900">
-                      {new Date(currentProject.createdAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
+                      {new Date(currentProject.createdAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-600">Last Updated</p>
                     <p className="mt-1 text-sm text-gray-900">
-                      {new Date(currentProject.updatedAt).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
+                      {new Date(currentProject.updatedAt).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
                       })}
                     </p>
                   </div>

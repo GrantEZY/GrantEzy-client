@@ -1,27 +1,27 @@
 /**
  * Program Manager (PM) related types
  */
-import { Program } from "./gcv.types";
+import { Program } from './gcv.types';
 
 // ============= Enums =============
 
 export enum TRL {
-  TRL_1 = "TRL1",
-  TRL_2 = "TRL2",
-  TRL_3 = "TRL3",
-  TRL_4 = "TRL4",
-  TRL_5 = "TRL5",
-  TRL_6 = "TRL6",
-  TRL_7 = "TRL7",
-  TRL_8 = "TRL8",
-  TRL_9 = "TRL9",
+  TRL_1 = 'TRL1',
+  TRL_2 = 'TRL2',
+  TRL_3 = 'TRL3',
+  TRL_4 = 'TRL4',
+  TRL_5 = 'TRL5',
+  TRL_6 = 'TRL6',
+  TRL_7 = 'TRL7',
+  TRL_8 = 'TRL8',
+  TRL_9 = 'TRL9',
 }
 
 export enum CycleStatus {
-  ACTIVE = "ACTIVE",
-  INACTIVE = "INACTIVE",
-  DRAFT = "DRAFT",
-  COMPLETED = "COMPLETED",
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  DRAFT = 'DRAFT',
+  COMPLETED = 'COMPLETED',
 }
 
 // ============= Basic Types =============
@@ -200,11 +200,7 @@ export interface PMDashboardStats {
 
 export interface RecentActivity {
   id: string;
-  type:
-    | "cycle_created"
-    | "cycle_updated"
-    | "cycle_deleted"
-    | "program_assigned";
+  type: 'cycle_created' | 'cycle_updated' | 'cycle_deleted' | 'program_assigned';
   message: string;
   timestamp: string;
   programName?: string;
@@ -334,7 +330,7 @@ export interface PendingInvite {
   email: string;
   applicationId: string;
   inviteAs: string;
-  status: "SENT" | "ACCEPTED" | "REJECTED";
+  status: 'SENT' | 'ACCEPTED' | 'REJECTED';
   createdAt: string;
   updatedAt: string;
 }

@@ -1,9 +1,9 @@
 /**
  * Admin store using Zustand for admin-related state management
  */
-import { create } from "zustand";
+import { create } from 'zustand';
 
-import { adminService } from "../services/admin.service";
+import { adminService } from '../services/admin.service';
 import {
   AddOrganizationRequest,
   AddUserRequest,
@@ -15,7 +15,7 @@ import {
   PaginationMeta,
   UpdateOrganizationRequest,
   UpdateUserRoleRequest,
-} from "../types/admin.types";
+} from '../types/admin.types';
 
 interface AdminState {
   users: AdminUser[];
@@ -72,10 +72,10 @@ export const useAdminStore = create<AdminStore>((set) => ({
             return {
               ...user,
               // Ensure email is always available at the top level for compatibility
-              email: user.contact?.email || user.email || "N/A",
+              email: user.contact?.email || user.email || 'N/A',
               // Ensure names are available at the top level for compatibility
-              firstName: user.person?.firstName || user.firstName || "N/A",
-              lastName: user.person?.lastName || user.lastName || "",
+              firstName: user.person?.firstName || user.firstName || 'N/A',
+              lastName: user.person?.lastName || user.lastName || '',
             };
           }),
           pagination,
@@ -83,8 +83,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to fetch users";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch users';
       set({
         error: errorMessage,
         isLoading: false,
@@ -105,8 +104,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
       }
       return false;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to add user";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add user';
       set({
         error: errorMessage,
         isLoading: false,
@@ -118,37 +116,37 @@ export const useAdminStore = create<AdminStore>((set) => ({
   updateUserRole: async (data: UpdateUserRoleRequest) => {
     set({ isLoading: true, error: null });
     try {
-      console.log("Updating user role with data:", data);
+      console.log('Updating user role with data:', data);
       const response = await adminService.updateUserRole(data);
-      console.log("Update user role response:", response);
+      console.log('Update user role response:', response);
 
       // Backend returns 200, 201, or 204 for successful update
       if (response.status === 200 || response.status === 201 || response.status === 204) {
         set({ isLoading: false });
         return true;
       }
-      
-      console.warn("Unexpected response status:", response.status);
-      set({ 
+
+      console.warn('Unexpected response status:', response.status);
+      set({
         error: `Unexpected response status: ${response.status}`,
-        isLoading: false 
+        isLoading: false,
       });
       return false;
     } catch (error: unknown) {
-      let errorMessage = "Failed to update user role";
+      let errorMessage = 'Failed to update user role';
 
       // Extract detailed error message from API response
-      if (error && typeof error === "object" && "response" in error) {
+      if (error && typeof error === 'object' && 'response' in error) {
         const apiError = error as {
-          response?: { 
+          response?: {
             status?: number;
             data?: { message?: string; error?: string; statusCode?: number };
           };
         };
-        
+
         const responseData = apiError.response?.data;
         const status = apiError.response?.status;
-        
+
         if (responseData?.message) {
           errorMessage = responseData.message;
         } else if (responseData?.error) {
@@ -160,8 +158,8 @@ export const useAdminStore = create<AdminStore>((set) => ({
         errorMessage = error.message;
       }
 
-      console.error("Update user role error:", error);
-      console.error("Error message:", errorMessage);
+      console.error('Update user role error:', error);
+      console.error('Error message:', errorMessage);
 
       set({
         error: errorMessage,
@@ -183,8 +181,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
       }
       return false;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to delete user";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete user';
       set({
         error: errorMessage,
         isLoading: false,
@@ -218,10 +215,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to fetch organizations";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to fetch organizations';
       set({
         error: errorMessage,
         isLoading: false,
@@ -244,7 +238,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
           type: response.res.type,
           createdAt: new Date().toISOString(),
         };
-        
+
         // Add the new organization to the list
         set((state) => ({
           organizations: [...state.organizations, newOrganization],
@@ -255,8 +249,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
       set({ isLoading: false });
       return false;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Failed to add organization";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to add organization';
       set({
         error: errorMessage,
         isLoading: false,
@@ -276,10 +269,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
       }
       return false;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to update organization";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update organization';
       set({
         error: errorMessage,
         isLoading: false,
@@ -299,10 +289,7 @@ export const useAdminStore = create<AdminStore>((set) => ({
       }
       return false;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to delete organization";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete organization';
       set({
         error: errorMessage,
         isLoading: false,

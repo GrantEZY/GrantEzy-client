@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useProjectManagement } from "@/hooks/useProjectManagement";
-import { CreateProjectRequest, QuotedBudget, BudgetItem, Money } from "@/types/project.types";
-import { CycleApplication } from "@/types/pm.types";
+import { useState, useEffect } from 'react';
+import { useProjectManagement } from '@/hooks/useProjectManagement';
+import { CreateProjectRequest, QuotedBudget, BudgetItem, Money } from '@/types/project.types';
+import { CycleApplication } from '@/types/pm.types';
 
 interface CreateProjectModalProps {
   isOpen: boolean;
@@ -24,13 +24,12 @@ export default function CreateProjectModal({
   isOpen,
   onClose,
   onSuccess,
-  cycleSlug,
   approvedApplications,
 }: CreateProjectModalProps) {
   const { createProject, isProjectLoading, projectError } = useProjectManagement();
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedApplicationId, setSelectedApplicationId] = useState("");
+  const [selectedApplicationId, setSelectedApplicationId] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Debug: Log approved applications
@@ -38,24 +37,24 @@ export default function CreateProjectModal({
     if (isOpen) {
       console.log('🎯 CreateProjectModal opened with:', {
         approvedApplicationsCount: approvedApplications.length,
-        applications: approvedApplications.map(app => ({
+        applications: approvedApplications.map((app) => ({
           id: app.id,
           title: app.basicInfo?.title,
-          status: app.status
-        }))
+          status: app.status,
+        })),
       });
     }
   }, [isOpen, approvedApplications]);
 
   // Budget state - using form-friendly structure
   const [manPowerItems, setManPowerItems] = useState<FormBudgetItem[]>([
-    { reason: "", qty: 1, rate: 0 },
+    { reason: '', qty: 1, rate: 0 },
   ]);
   const [equipmentItems, setEquipmentItems] = useState<FormBudgetItem[]>([
-    { reason: "", qty: 1, rate: 0 },
+    { reason: '', qty: 1, rate: 0 },
   ]);
   const [otherCostItems, setOtherCostItems] = useState<FormBudgetItem[]>([
-    { reason: "", qty: 1, rate: 0 },
+    { reason: '', qty: 1, rate: 0 },
   ]);
   const [consumables, setConsumables] = useState(0);
   const [travel, setTravel] = useState(0);
@@ -63,23 +62,23 @@ export default function CreateProjectModal({
   const [overhead, setOverhead] = useState(0);
 
   // Duration state
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
 
   useEffect(() => {
     if (!isOpen) {
       // Reset form when modal closes
       setCurrentStep(1);
-      setSelectedApplicationId("");
-      setManPowerItems([{ reason: "", qty: 1, rate: 0 }]);
-      setEquipmentItems([{ reason: "", qty: 1, rate: 0 }]);
-      setOtherCostItems([{ reason: "", qty: 1, rate: 0 }]);
+      setSelectedApplicationId('');
+      setManPowerItems([{ reason: '', qty: 1, rate: 0 }]);
+      setEquipmentItems([{ reason: '', qty: 1, rate: 0 }]);
+      setOtherCostItems([{ reason: '', qty: 1, rate: 0 }]);
       setConsumables(0);
       setTravel(0);
       setContingency(0);
       setOverhead(0);
-      setStartDate("");
-      setEndDate("");
+      setStartDate('');
+      setEndDate('');
       setErrors({});
     }
   }, [isOpen]);
@@ -88,7 +87,7 @@ export default function CreateProjectModal({
     items: FormBudgetItem[],
     setItems: React.Dispatch<React.SetStateAction<FormBudgetItem[]>>
   ) => {
-    setItems([...items, { reason: "", qty: 1, rate: 0 }]);
+    setItems([...items, { reason: '', qty: 1, rate: 0 }]);
   };
 
   const removeBudgetItem = (
@@ -114,18 +113,9 @@ export default function CreateProjectModal({
   };
 
   const calculateTotal = () => {
-    const manPowerTotal = manPowerItems.reduce(
-      (sum, item) => sum + item.qty * item.rate,
-      0
-    );
-    const equipmentTotal = equipmentItems.reduce(
-      (sum, item) => sum + item.qty * item.rate,
-      0
-    );
-    const otherCostTotal = otherCostItems.reduce(
-      (sum, item) => sum + item.qty * item.rate,
-      0
-    );
+    const manPowerTotal = manPowerItems.reduce((sum, item) => sum + item.qty * item.rate, 0);
+    const equipmentTotal = equipmentItems.reduce((sum, item) => sum + item.qty * item.rate, 0);
+    const otherCostTotal = otherCostItems.reduce((sum, item) => sum + item.qty * item.rate, 0);
 
     return (
       manPowerTotal +
@@ -142,7 +132,7 @@ export default function CreateProjectModal({
     const newErrors: Record<string, string> = {};
 
     if (!selectedApplicationId) {
-      newErrors.application = "Please select an application";
+      newErrors.application = 'Please select an application';
     }
 
     setErrors(newErrors);
@@ -153,15 +143,9 @@ export default function CreateProjectModal({
     const newErrors: Record<string, string> = {};
 
     // Validate that at least one budget category has data
-    const hasManPower = manPowerItems.some(
-      (item) => item.reason.trim() !== "" && item.rate > 0
-    );
-    const hasEquipment = equipmentItems.some(
-      (item) => item.reason.trim() !== "" && item.rate > 0
-    );
-    const hasOtherCost = otherCostItems.some(
-      (item) => item.reason.trim() !== "" && item.rate > 0
-    );
+    const hasManPower = manPowerItems.some((item) => item.reason.trim() !== '' && item.rate > 0);
+    const hasEquipment = equipmentItems.some((item) => item.reason.trim() !== '' && item.rate > 0);
+    const hasOtherCost = otherCostItems.some((item) => item.reason.trim() !== '' && item.rate > 0);
     const hasConsumables = consumables > 0;
     const hasTravel = travel > 0;
     const hasContingency = contingency > 0;
@@ -176,7 +160,7 @@ export default function CreateProjectModal({
       !hasContingency &&
       !hasOverhead
     ) {
-      newErrors.budget = "Please add at least one budget item";
+      newErrors.budget = 'Please add at least one budget item';
     }
 
     setErrors(newErrors);
@@ -187,13 +171,13 @@ export default function CreateProjectModal({
     const newErrors: Record<string, string> = {};
 
     if (!startDate) {
-      newErrors.startDate = "Start date is required";
+      newErrors.startDate = 'Start date is required';
     }
     if (!endDate) {
-      newErrors.endDate = "End date is required";
+      newErrors.endDate = 'End date is required';
     }
     if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
-      newErrors.endDate = "End date must be after start date";
+      newErrors.endDate = 'End date must be after start date';
     }
 
     setErrors(newErrors);
@@ -224,40 +208,40 @@ export default function CreateProjectModal({
       BudgetReason: item.reason,
       Budget: {
         amount: item.qty * item.rate,
-        currency: "INR",
+        currency: 'INR',
       },
     });
 
     const convertToMoney = (amount: number): Money => ({
       amount,
-      currency: "INR",
+      currency: 'INR',
     });
 
     // Build the quoted budget
     const allocatedBudget: QuotedBudget = {
       ManPower: manPowerItems
-        .filter((item) => item.reason.trim() !== "" && item.rate > 0)
+        .filter((item) => item.reason.trim() !== '' && item.rate > 0)
         .map(convertToBudgetItem),
       Equipment: equipmentItems
-        .filter((item) => item.reason.trim() !== "" && item.rate > 0)
+        .filter((item) => item.reason.trim() !== '' && item.rate > 0)
         .map(convertToBudgetItem),
       OtherCosts: otherCostItems
-        .filter((item) => item.reason.trim() !== "" && item.rate > 0)
+        .filter((item) => item.reason.trim() !== '' && item.rate > 0)
         .map(convertToBudgetItem),
       Consumables: {
-        BudgetReason: "Consumables",
+        BudgetReason: 'Consumables',
         Budget: convertToMoney(consumables),
       },
       Travel: {
-        BudgetReason: "Travel",
+        BudgetReason: 'Travel',
         Budget: convertToMoney(travel),
       },
       Contigency: {
-        BudgetReason: "Contingency",
+        BudgetReason: 'Contingency',
         Budget: convertToMoney(contingency),
       },
       Overhead: {
-        BudgetReason: "Overhead",
+        BudgetReason: 'Overhead',
         Budget: convertToMoney(overhead),
       },
     };
@@ -280,9 +264,7 @@ export default function CreateProjectModal({
 
   if (!isOpen) return null;
 
-  const selectedApplication = approvedApplications.find(
-    (app) => app.id === selectedApplicationId
-  );
+  const selectedApplication = approvedApplications.find((app) => app.id === selectedApplicationId);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -298,9 +280,7 @@ export default function CreateProjectModal({
           {/* Header */}
           <div className="border-b border-gray-200 bg-white px-6 py-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                Create Project
-              </h3>
+              <h3 className="text-lg font-medium leading-6 text-gray-900">Create Project</h3>
               <button
                 onClick={onClose}
                 className="rounded-md text-gray-400 hover:text-gray-500"
@@ -325,27 +305,27 @@ export default function CreateProjectModal({
                     <div
                       className={`flex h-10 w-10 items-center justify-center rounded-full border-2 ${
                         currentStep >= step
-                          ? "border-blue-600 bg-blue-600 text-white"
-                          : "border-gray-300 bg-white text-gray-500"
+                          ? 'border-blue-600 bg-blue-600 text-white'
+                          : 'border-gray-300 bg-white text-gray-500'
                       }`}
                     >
                       {step}
                     </div>
                     <div
                       className={`ml-2 text-sm font-medium ${
-                        currentStep >= step ? "text-blue-600" : "text-gray-500"
+                        currentStep >= step ? 'text-blue-600' : 'text-gray-500'
                       }`}
                     >
                       {step === 1
-                        ? "Select Application"
+                        ? 'Select Application'
                         : step === 2
-                          ? "Budget Allocation"
-                          : "Project Duration"}
+                          ? 'Budget Allocation'
+                          : 'Project Duration'}
                     </div>
                     {index < 2 && (
                       <div
                         className={`mx-4 h-0.5 flex-1 ${
-                          currentStep > step ? "bg-blue-600" : "bg-gray-300"
+                          currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
                         }`}
                       ></div>
                     )}
@@ -407,29 +387,29 @@ export default function CreateProjectModal({
                         onClick={() => setSelectedApplicationId(app.id)}
                         className={`cursor-pointer rounded-lg border-2 p-4 transition-all ${
                           selectedApplicationId === app.id
-                            ? "border-blue-600 bg-blue-50"
-                            : "border-gray-200 hover:border-gray-300"
+                            ? 'border-blue-600 bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h4 className="font-medium text-gray-900">
-                              {app.basicInfo?.title || "Untitled Application"}
+                              {app.basicInfo?.title || 'Untitled Application'}
                             </h4>
                             {app.basicInfo?.summary && (
                               <p className="mt-1 text-sm text-gray-500">
                                 {app.basicInfo.summary.substring(0, 150)}
-                                {app.basicInfo.summary.length > 150 && "..."}
+                                {app.basicInfo.summary.length > 150 && '...'}
                               </p>
                             )}
                             <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                              <span>Applicant: {app.applicant?.email || "N/A"}</span>
+                              <span>Applicant: {app.applicant?.email || 'N/A'}</span>
                               <span>•</span>
                               <span>
-                                Submitted:{" "}
+                                Submitted:{' '}
                                 {app.createdAt
                                   ? new Date(app.createdAt).toLocaleDateString()
-                                  : "N/A"}
+                                  : 'N/A'}
                               </span>
                             </div>
                           </div>
@@ -469,10 +449,10 @@ export default function CreateProjectModal({
                 {selectedApplication && (
                   <div className="rounded-lg bg-blue-50 p-4">
                     <h5 className="font-medium text-blue-900">
-                      {selectedApplication.basicInfo?.title || "Untitled"}
+                      {selectedApplication.basicInfo?.title || 'Untitled'}
                     </h5>
                     <p className="mt-1 text-sm text-blue-700">
-                      {selectedApplication.applicant?.email || "N/A"}
+                      {selectedApplication.applicant?.email || 'N/A'}
                     </p>
                   </div>
                 )}
@@ -488,7 +468,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "reason",
+                            'reason',
                             e.target.value,
                             manPowerItems,
                             setManPowerItems
@@ -503,7 +483,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "qty",
+                            'qty',
                             Number(e.target.value),
                             manPowerItems,
                             setManPowerItems
@@ -519,7 +499,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "rate",
+                            'rate',
                             Number(e.target.value),
                             manPowerItems,
                             setManPowerItems
@@ -568,7 +548,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "reason",
+                            'reason',
                             e.target.value,
                             equipmentItems,
                             setEquipmentItems
@@ -583,7 +563,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "qty",
+                            'qty',
                             Number(e.target.value),
                             equipmentItems,
                             setEquipmentItems
@@ -599,7 +579,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "rate",
+                            'rate',
                             Number(e.target.value),
                             equipmentItems,
                             setEquipmentItems
@@ -648,7 +628,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "reason",
+                            'reason',
                             e.target.value,
                             otherCostItems,
                             setOtherCostItems
@@ -663,7 +643,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "qty",
+                            'qty',
                             Number(e.target.value),
                             otherCostItems,
                             setOtherCostItems
@@ -679,7 +659,7 @@ export default function CreateProjectModal({
                         onChange={(e) =>
                           updateBudgetItem(
                             index,
-                            "rate",
+                            'rate',
                             Number(e.target.value),
                             otherCostItems,
                             setOtherCostItems
@@ -787,7 +767,7 @@ export default function CreateProjectModal({
                 {selectedApplication && (
                   <div className="rounded-lg bg-blue-50 p-4">
                     <h5 className="font-medium text-blue-900">
-                      {selectedApplication.basicInfo?.title || "Untitled"}
+                      {selectedApplication.basicInfo?.title || 'Untitled'}
                     </h5>
                     <p className="mt-1 text-sm text-blue-700">
                       Total Budget: INR {calculateTotal().toLocaleString()}
@@ -797,9 +777,7 @@ export default function CreateProjectModal({
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Start Date *
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Start Date *</label>
                     <input
                       type="date"
                       value={startDate}
@@ -827,11 +805,11 @@ export default function CreateProjectModal({
                 {startDate && endDate && new Date(startDate) < new Date(endDate) && (
                   <div className="rounded-lg bg-green-50 p-4">
                     <p className="text-sm text-green-800">
-                      Project duration:{" "}
+                      Project duration:{' '}
                       {Math.ceil(
                         (new Date(endDate).getTime() - new Date(startDate).getTime()) /
                           (1000 * 60 * 60 * 24)
-                      )}{" "}
+                      )}{' '}
                       days
                     </p>
                   </div>
@@ -860,7 +838,7 @@ export default function CreateProjectModal({
                 className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                 type="button"
               >
-                {currentStep === 1 ? "Cancel" : "Back"}
+                {currentStep === 1 ? 'Cancel' : 'Back'}
               </button>
               <div className="flex space-x-3">
                 {currentStep < 3 && (
@@ -881,11 +859,7 @@ export default function CreateProjectModal({
                   >
                     {isProjectLoading ? (
                       <>
-                        <svg
-                          className="mr-2 h-4 w-4 animate-spin"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                           <circle
                             className="opacity-25"
                             cx="12"
@@ -903,7 +877,7 @@ export default function CreateProjectModal({
                         Creating...
                       </>
                     ) : (
-                      "Create Project"
+                      'Create Project'
                     )}
                   </button>
                 )}

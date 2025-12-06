@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Organization } from "../../types/admin.types";
+import { Organization } from '../../types/admin.types';
 
 interface DeleteOrganizationModalProps {
   isOpen: boolean;
@@ -30,21 +30,14 @@ export function DeleteOrganizationModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-md">
       <div className="mx-4 w-full max-w-md scale-100 transform rounded-lg bg-white p-6 shadow-xl transition-all duration-200">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-red-600">
-            Delete Organization
-          </h2>
+          <h2 className="text-xl font-semibold text-red-600">Delete Organization</h2>
 
           <button
             className="text-gray-400 hover:text-gray-600"
             disabled={isLoading}
             onClick={onClose}
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M6 18L18 6M6 6l12 12"
                 strokeLinecap="round"
@@ -74,26 +67,22 @@ export function DeleteOrganizationModal({
             </div>
 
             <div className="ml-4">
-              <h3 className="text-lg font-medium text-gray-900">
-                Confirm Deletion
-              </h3>
+              <h3 className="text-lg font-medium text-gray-900">Confirm Deletion</h3>
 
-              <p className="mt-1 text-sm text-gray-600">
-                This action cannot be undone.
-              </p>
+              <p className="mt-1 text-sm text-gray-600">This action cannot be undone.</p>
             </div>
           </div>
 
           <div className="rounded-md bg-gray-50 p-4">
             <p className="text-sm text-gray-700">
-              Are you sure you want to delete the organization{" "}
+              Are you sure you want to delete the organization{' '}
               <span className="font-semibold">{organization.name}</span>?
             </p>
 
             <p className="mt-2 text-xs text-gray-500">
-              Type:{" "}
+              Type:{' '}
               {organization.type
-                .replace(/_/g, " ")
+                .replace(/_/g, ' ')
                 .toLowerCase()
                 .replace(/\b\w/g, (l) => l.toUpperCase())}
             </p>
@@ -116,7 +105,7 @@ export function DeleteOrganizationModal({
             onClick={handleConfirm}
             type="button"
           >
-            {isLoading ? "Deleting..." : "Delete Organization"}
+            {isLoading ? 'Deleting...' : 'Delete Organization'}
           </button>
         </div>
       </div>

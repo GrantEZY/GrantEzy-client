@@ -1,19 +1,17 @@
 /**
  * Project Management Store - State management for project-related operations
  */
-import { create } from "zustand";
-import { projectManagementService } from "../services/project.service";
+import { create } from 'zustand';
+
+import { projectManagementService } from '../services/project.service';
 import {
-  Project,
-  ProjectCriteria,
-  ProjectState,
-  PaginationMeta,
+  CreateCycleCriteriaRequest,
   CreateProjectRequest,
+  GetCycleCriteriasRequest,
   GetCycleProjectsRequest,
   GetProjectDetailsRequest,
-  CreateCycleCriteriaRequest,
-  GetCycleCriteriasRequest,
-} from "../types/project.types";
+  ProjectState,
+} from '../types/project.types';
 
 interface ProjectActions {
   // Project actions
@@ -34,7 +32,7 @@ interface ProjectActions {
 
 type ProjectStore = ProjectState & ProjectActions;
 
-export const useProjectStore = create<ProjectStore>((set, get) => ({
+export const useProjectStore = create<ProjectStore>((set, _get) => ({
   // Initial state
   projects: [],
   projectsPagination: null,
@@ -64,21 +62,19 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         return true;
       } else {
         set({
-          projectError: response.message || "Failed to create project",
+          projectError: response.message || 'Failed to create project',
           isProjectLoading: false,
         });
         return false;
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while creating project";
+        error instanceof Error ? error.message : 'An error occurred while creating project';
       set({
         projectError: errorMessage,
         isProjectLoading: false,
       });
-      console.error("Create project error:", error);
+      console.error('Create project error:', error);
       return false;
     }
   },
@@ -99,20 +95,18 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         });
       } else {
         set({
-          projectsError: response.message || "Failed to fetch projects",
+          projectsError: response.message || 'Failed to fetch projects',
           isProjectsLoading: false,
         });
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while fetching projects";
+        error instanceof Error ? error.message : 'An error occurred while fetching projects';
       set({
         projectsError: errorMessage,
         isProjectsLoading: false,
       });
-      console.error("Get cycle projects error:", error);
+      console.error('Get cycle projects error:', error);
     }
   },
 
@@ -131,20 +125,18 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         });
       } else {
         set({
-          projectError: response.message || "Failed to fetch project details",
+          projectError: response.message || 'Failed to fetch project details',
           isProjectLoading: false,
         });
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while fetching project details";
+        error instanceof Error ? error.message : 'An error occurred while fetching project details';
       set({
         projectError: errorMessage,
         isProjectLoading: false,
       });
-      console.error("Get project details error:", error);
+      console.error('Get project details error:', error);
     }
   },
 
@@ -169,9 +161,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   /**
    * Create assessment criteria for a cycle
    */
-  createCycleCriteria: async (
-    data: CreateCycleCriteriaRequest,
-  ): Promise<boolean> => {
+  createCycleCriteria: async (data: CreateCycleCriteriaRequest): Promise<boolean> => {
     set({ isCriteriasLoading: true, criteriasError: null });
     try {
       const response = await projectManagementService.createCycleCriteria(data);
@@ -181,21 +171,19 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         return true;
       } else {
         set({
-          criteriasError: response.message || "Failed to create criteria",
+          criteriasError: response.message || 'Failed to create criteria',
           isCriteriasLoading: false,
         });
         return false;
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while creating criteria";
+        error instanceof Error ? error.message : 'An error occurred while creating criteria';
       set({
         criteriasError: errorMessage,
         isCriteriasLoading: false,
       });
-      console.error("Create criteria error:", error);
+      console.error('Create criteria error:', error);
       return false;
     }
   },
@@ -215,20 +203,18 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         });
       } else {
         set({
-          criteriasError: response.message || "Failed to fetch criterias",
+          criteriasError: response.message || 'Failed to fetch criterias',
           isCriteriasLoading: false,
         });
       }
     } catch (error) {
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "An error occurred while fetching criterias";
+        error instanceof Error ? error.message : 'An error occurred while fetching criterias';
       set({
         criteriasError: errorMessage,
         isCriteriasLoading: false,
       });
-      console.error("Get criterias error:", error);
+      console.error('Get criterias error:', error);
     }
   },
 

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import PublicLayout from '@/components/layout/PublicLayout';
 import PublicPageContent from '@/components/public/PublicPageContent';

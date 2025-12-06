@@ -3,12 +3,9 @@
  * Manages user profile state
  */
 
-import { create } from "zustand";
-import { userService } from "../services/user.service";
-import {
-  UserProfile,
-  UpdateProfileRequest,
-} from "../types/user.types";
+import { create } from 'zustand';
+import { userService } from '../services/user.service';
+import { UserProfile, UpdateProfileRequest } from '../types/user.types';
 
 interface UserState {
   // State
@@ -42,13 +39,12 @@ export const useUserStore = create<UserState>((set) => ({
         });
       } else {
         set({
-          error: response.message || "Failed to fetch user profile",
+          error: response.message || 'Failed to fetch user profile',
           isLoading: false,
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       set({
         error: errorMessage,
         isLoading: false,
@@ -69,13 +65,12 @@ export const useUserStore = create<UserState>((set) => ({
         });
       } else {
         set({
-          error: response.message || "Failed to update profile",
+          error: response.message || 'Failed to update profile',
           isLoading: false,
         });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       set({
         error: errorMessage,
         isLoading: false,

@@ -1,8 +1,8 @@
 /**
  * PM (Program Manager) service for handling PM-related API calls
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   CreateCycleRequest,
   CreateCycleResponse,
@@ -23,7 +23,7 @@ import {
   GetReviewDetailsResponse,
   UpdateCycleRequest,
   UpdateCycleResponse,
-} from "../types/pm.types";
+} from '../types/pm.types';
 
 export class PMService {
   // ============= Program Management =============
@@ -32,9 +32,7 @@ export class PMService {
    * Get the program assigned to the current PM
    */
   async getAssignedProgram(): Promise<GetAssignedProgramResponse> {
-    return httpClient.get<GetAssignedProgramResponse>(
-      API_CONFIG.ENDPOINTS.PM.GET_ASSIGNED_PROGRAM,
-    );
+    return httpClient.get<GetAssignedProgramResponse>(API_CONFIG.ENDPOINTS.PM.GET_ASSIGNED_PROGRAM);
   }
 
   // ============= Cycle Management =============
@@ -43,19 +41,14 @@ export class PMService {
    * Create a new cycle for a program
    */
   async createCycle(data: CreateCycleRequest): Promise<CreateCycleResponse> {
-    return httpClient.post<CreateCycleResponse>(
-      API_CONFIG.ENDPOINTS.PM.CREATE_CYCLE,
-      data,
-    );
+    return httpClient.post<CreateCycleResponse>(API_CONFIG.ENDPOINTS.PM.CREATE_CYCLE, data);
   }
 
   /**
    * Get all cycles for the PM's assigned program with pagination
    * Note: Backend automatically determines the program based on logged-in PM user
    */
-  async getProgramCycles(
-    params: GetProgramCyclesRequest,
-  ): Promise<GetProgramCyclesResponse> {
+  async getProgramCycles(params: GetProgramCyclesRequest): Promise<GetProgramCyclesResponse> {
     const queryParams: Record<string, string> = {
       page: params.page.toString(),
       numberOfResults: params.numberOfResults.toString(),
@@ -63,7 +56,7 @@ export class PMService {
 
     return httpClient.get<GetProgramCyclesResponse>(
       API_CONFIG.ENDPOINTS.PM.GET_PROGRAM_CYCLES,
-      queryParams,
+      queryParams
     );
   }
 
@@ -73,7 +66,7 @@ export class PMService {
   async updateCycle(data: UpdateCycleRequest): Promise<UpdateCycleResponse> {
     return httpClient.patch<UpdateCycleResponse>(
       API_CONFIG.ENDPOINTS.PM.UPDATE_CYCLE_DETAILS,
-      data,
+      data
     );
   }
 
@@ -81,10 +74,7 @@ export class PMService {
    * Delete a program cycle
    */
   async deleteCycle(data: DeleteCycleRequest): Promise<DeleteCycleResponse> {
-    return httpClient.delete<DeleteCycleResponse>(
-      API_CONFIG.ENDPOINTS.PM.DELETE_CYCLE,
-      data,
-    );
+    return httpClient.delete<DeleteCycleResponse>(API_CONFIG.ENDPOINTS.PM.DELETE_CYCLE, data);
   }
 
   // ============= Cycle Details & Applications =============
@@ -92,16 +82,14 @@ export class PMService {
   /**
    * Get detailed information about a specific cycle including its applications
    */
-  async getCycleDetails(
-    params: GetCycleDetailsRequest,
-  ): Promise<GetCycleDetailsResponse> {
+  async getCycleDetails(params: GetCycleDetailsRequest): Promise<GetCycleDetailsResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
     };
 
     return httpClient.get<GetCycleDetailsResponse>(
       API_CONFIG.ENDPOINTS.PM.GET_CYCLE_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 
@@ -110,7 +98,7 @@ export class PMService {
    * Used by PM to review application before assigning reviewers
    */
   async getApplicationDetails(
-    params: GetPMApplicationDetailsRequest,
+    params: GetPMApplicationDetailsRequest
   ): Promise<GetPMApplicationDetailsResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
@@ -119,7 +107,7 @@ export class PMService {
 
     return httpClient.get<GetPMApplicationDetailsResponse>(
       API_CONFIG.ENDPOINTS.PM.GET_APPLICATION_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 
@@ -128,13 +116,8 @@ export class PMService {
   /**
    * Invite a reviewer to review a specific application
    */
-  async inviteReviewer(
-    data: InviteReviewerRequest,
-  ): Promise<InviteReviewerResponse> {
-    return httpClient.post<InviteReviewerResponse>(
-      API_CONFIG.ENDPOINTS.PM.INVITE_REVIEWER,
-      data,
-    );
+  async inviteReviewer(data: InviteReviewerRequest): Promise<InviteReviewerResponse> {
+    return httpClient.post<InviteReviewerResponse>(API_CONFIG.ENDPOINTS.PM.INVITE_REVIEWER, data);
   }
 
   // ============= Review Management =============
@@ -143,7 +126,7 @@ export class PMService {
    * Get all reviews for a specific application with pagination
    */
   async getApplicationReviews(
-    params: GetApplicationReviewsRequest,
+    params: GetApplicationReviewsRequest
   ): Promise<GetApplicationReviewsResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
@@ -154,16 +137,14 @@ export class PMService {
 
     return httpClient.get<GetApplicationReviewsResponse>(
       API_CONFIG.ENDPOINTS.PM.GET_APPLICATION_REVIEWS,
-      queryParams,
+      queryParams
     );
   }
 
   /**
    * Get detailed information about a specific review
    */
-  async getReviewDetails(
-    params: GetReviewDetailsRequest,
-  ): Promise<GetReviewDetailsResponse> {
+  async getReviewDetails(params: GetReviewDetailsRequest): Promise<GetReviewDetailsResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       applicationSlug: params.applicationSlug,
@@ -172,7 +153,7 @@ export class PMService {
 
     return httpClient.get<GetReviewDetailsResponse>(
       API_CONFIG.ENDPOINTS.PM.GET_REVIEW_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 }

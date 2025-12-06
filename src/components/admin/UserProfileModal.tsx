@@ -1,15 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 
-import { AdminUser, GetUserProfileRequest } from "../../types/admin.types";
+import { AdminUser, GetUserProfileRequest } from '../../types/admin.types';
 
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoadProfile: (
-    params: GetUserProfileRequest,
-  ) => Promise<{ success: boolean; error?: string }>;
+  onLoadProfile: (params: GetUserProfileRequest) => Promise<{ success: boolean; error?: string }>;
   userProfile: AdminUser | null;
   isLoading: boolean;
 }
@@ -21,18 +19,18 @@ export function UserProfileModal({
   userProfile,
   isLoading,
 }: UserProfileModalProps) {
-  const [userSlug, setUserSlug] = useState("");
-  const [searchError, setSearchError] = useState("");
+  const [userSlug, setUserSlug] = useState('');
+  const [searchError, setSearchError] = useState('');
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!userSlug.trim()) {
-      setSearchError("User slug is required");
+      setSearchError('User slug is required');
       return;
     }
 
-    setSearchError("");
+    setSearchError('');
     const result = await onLoadProfile({ userSlug: userSlug.trim() });
 
     if (!result.success && result.error) {
@@ -41,8 +39,8 @@ export function UserProfileModal({
   };
 
   const handleClose = () => {
-    setUserSlug("");
-    setSearchError("");
+    setUserSlug('');
+    setSearchError('');
     onClose();
   };
 
@@ -50,20 +48,20 @@ export function UserProfileModal({
     return roles
       .map((role) =>
         role
-          .replace(/_/g, " ")
+          .replace(/_/g, ' ')
           .toLowerCase()
-          .replace(/\b\w/g, (l) => l.toUpperCase()),
+          .replace(/\b\w/g, (l) => l.toUpperCase())
       )
-      .join(", ");
+      .join(', ');
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
@@ -80,12 +78,7 @@ export function UserProfileModal({
             disabled={isLoading}
             onClick={handleClose}
           >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M6 18L18 6M6 6l12 12"
                 strokeLinecap="round"
@@ -100,16 +93,13 @@ export function UserProfileModal({
         <form className="mb-6" onSubmit={handleSearch}>
           <div className="flex space-x-3">
             <div className="flex-1">
-              <label
-                className="mb-1 block text-sm font-medium text-gray-700"
-                htmlFor="userSlug"
-              >
+              <label className="mb-1 block text-sm font-medium text-gray-700" htmlFor="userSlug">
                 User Slug
               </label>
 
               <input
                 className={`w-full rounded-md border px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-                  searchError ? "border-red-500" : "border-gray-300"
+                  searchError ? 'border-red-500' : 'border-gray-300'
                 }`}
                 disabled={isLoading}
                 id="userSlug"
@@ -119,9 +109,7 @@ export function UserProfileModal({
                 value={userSlug}
               />
 
-              {searchError && (
-                <p className="mt-1 text-sm text-red-600">{searchError}</p>
-              )}
+              {searchError && <p className="mt-1 text-sm text-red-600">{searchError}</p>}
             </div>
 
             <div className="flex items-end">
@@ -130,7 +118,7 @@ export function UserProfileModal({
                 disabled={isLoading}
                 type="submit"
               >
-                {isLoading ? "Searching..." : "Search"}
+                {isLoading ? 'Searching...' : 'Search'}
               </button>
             </div>
           </div>
@@ -141,99 +129,67 @@ export function UserProfileModal({
           <div className="rounded-lg border bg-gray-50 p-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
-                <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                  Personal Information
-                </h3>
+                <h3 className="mb-4 text-lg font-semibold text-gray-900">Personal Information</h3>
 
                 <div className="space-y-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Person ID
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Person ID</label>
 
-                    <p className="font-mono text-sm text-gray-900">
-                      {userProfile.personId}
+                    <p className="font-mono text-sm text-gray-900">{userProfile.personId}</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700">Name</label>
+
+                    <p className="text-sm text-gray-900">
+                      {userProfile.person?.firstName || userProfile.firstName || 'N/A'}{' '}
+                      {userProfile.person?.lastName || userProfile.lastName || ''}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Name
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Email</label>
 
                     <p className="text-sm text-gray-900">
-                      {userProfile.person?.firstName ||
-                        userProfile.firstName ||
-                        "N/A"}{" "}
-                      {userProfile.person?.lastName ||
-                        userProfile.lastName ||
-                        ""}
+                      {userProfile.contact?.email || userProfile.email || 'N/A'}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Email
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Roles</label>
 
                     <p className="text-sm text-gray-900">
-                      {userProfile.contact?.email || userProfile.email || "N/A"}
-                    </p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Roles
-                    </label>
-
-                    <p className="text-sm text-gray-900">
-                      {Array.isArray(userProfile.role)
-                        ? formatRole(userProfile.role)
-                        : "N/A"}
+                      {Array.isArray(userProfile.role) ? formatRole(userProfile.role) : 'N/A'}
                     </p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="mb-4 text-lg font-semibold text-gray-900">
-                  Account Information
-                </h3>
+                <h3 className="mb-4 text-lg font-semibold text-gray-900">Account Information</h3>
 
                 <div className="space-y-3">
                   {userProfile.id && (
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        User ID
-                      </label>
+                      <label className="block text-sm font-medium text-gray-700">User ID</label>
 
-                      <p className="font-mono text-sm text-gray-900">
-                        {userProfile.id}
-                      </p>
+                      <p className="font-mono text-sm text-gray-900">{userProfile.id}</p>
                     </div>
                   )}
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Created At
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Created At</label>
 
                     <p className="text-sm text-gray-900">
-                      {userProfile.createdAt
-                        ? formatDate(userProfile.createdAt)
-                        : "N/A"}
+                      {userProfile.createdAt ? formatDate(userProfile.createdAt) : 'N/A'}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Last Updated
-                    </label>
+                    <label className="block text-sm font-medium text-gray-700">Last Updated</label>
 
                     <p className="text-sm text-gray-900">
-                      {userProfile.updatedAt
-                        ? formatDate(userProfile.updatedAt)
-                        : "N/A"}
+                      {userProfile.updatedAt ? formatDate(userProfile.updatedAt) : 'N/A'}
                     </p>
                   </div>
                 </div>
@@ -268,9 +224,7 @@ export function UserProfileModal({
               />
             </svg>
 
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
-              No user profile loaded
-            </h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No user profile loaded</h3>
 
             <p className="mt-1 text-sm text-gray-500">
               Enter a user slug and search to view user profile details.

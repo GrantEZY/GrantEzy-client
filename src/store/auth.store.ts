@@ -1,10 +1,10 @@
 /**
  * Authentication store using Zustand
  */
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-import { authService } from "../services/auth.service";
+import { authService } from '../services/auth.service';
 import {
   AuthState,
   AuthTokens,
@@ -12,8 +12,8 @@ import {
   RegisterRequest,
   User,
   UserCommitmentStatus,
-} from "../types/auth.types";
-import { storageUtil } from "../utils/storage.util";
+} from '../types/auth.types';
+import { storageUtil } from '../utils/storage.util';
 
 interface AuthActions {
   login: (credentials: LoginRequest) => Promise<void>;
@@ -57,8 +57,8 @@ export const useAuthStore = create<AuthStore>()(
 
             const user: User = {
               id: userData.id,
-              firstName: userData.name?.split(" ")[0] || "",
-              lastName: userData.name?.split(" ").slice(1).join(" ") || "",
+              firstName: userData.name?.split(' ')[0] || '',
+              lastName: userData.name?.split(' ').slice(1).join(' ') || '',
               email: userData.email,
               role: userData.role,
               commitment: UserCommitmentStatus.FULL_TIME, // Default value
@@ -75,18 +75,18 @@ export const useAuthStore = create<AuthStore>()(
           } else {
             // Handle non-200 status from backend
             set({ isLoading: false });
-            const errorMessage = response.message || "Login failed";
-            console.error("Login failed:", response);
+            const errorMessage = response.message || 'Login failed';
+            console.error('Login failed:', response);
             throw new Error(errorMessage);
           }
         } catch (error) {
           set({ isLoading: false });
-          console.error("Login error:", error);
+          console.error('Login error:', error);
           // Re-throw with better error message
           if (error instanceof Error) {
             throw error;
           }
-          throw new Error("An unexpected error occurred during login");
+          throw new Error('An unexpected error occurred during login');
         }
       },
 
@@ -138,8 +138,8 @@ export const useAuthStore = create<AuthStore>()(
           get().clearAuth();
 
           // Redirect to login
-          if (typeof window !== "undefined") {
-            window.location.href = "/login";
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login';
           }
 
           return false;
@@ -170,7 +170,7 @@ export const useAuthStore = create<AuthStore>()(
       },
     }),
     {
-      name: "auth-store",
+      name: 'auth-store',
       partialize: (state) => ({
         user: state.user,
         tokens: state.tokens,
@@ -181,6 +181,6 @@ export const useAuthStore = create<AuthStore>()(
           state.isHydrated = true;
         }
       },
-    },
-  ),
+    }
+  )
 );

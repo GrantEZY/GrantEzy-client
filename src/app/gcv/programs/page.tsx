@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { AddProgramManagerModal } from "@/components/gcv/AddProgramManagerModal";
-import { DeleteProgramModal } from "@/components/gcv/DeleteProgramModal";
-import { ProgramCyclesModal } from "@/components/gcv/ProgramCyclesModal";
-import { ProgramModal } from "@/components/gcv/ProgramModal";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import GCVLayout from "@/components/layout/GCVLayout";
-import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+import { AddProgramManagerModal } from '@/components/gcv/AddProgramManagerModal';
+import { DeleteProgramModal } from '@/components/gcv/DeleteProgramModal';
+import { ProgramCyclesModal } from '@/components/gcv/ProgramCyclesModal';
+import { ProgramModal } from '@/components/gcv/ProgramModal';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import GCVLayout from '@/components/layout/GCVLayout';
+import { showToast, ToastProvider } from '@/components/ui/ToastNew';
 
-import { useGcv } from "@/hooks/useGcv";
+import { useGcv } from '@/hooks/useGcv';
 
 import {
   CreateProgramRequest,
   Program,
   ProgramStatus,
   UpdateProgramRequest,
-} from "@/types/gcv.types";
+} from '@/types/gcv.types';
 
 export default function GCVProgramsPage() {
   const {
@@ -39,7 +39,7 @@ export default function GCVProgramsPage() {
   const [isManagerModalOpen, setIsManagerModalOpen] = useState(false);
   const [isCyclesModalOpen, setIsCyclesModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const pageSize = 10;
 
@@ -50,20 +50,18 @@ export default function GCVProgramsPage() {
         numberOfResults: pageSize,
       });
     },
-    [getPrograms],
+    [getPrograms]
   );
 
   useEffect(() => {
     fetchPrograms(currentPage);
   }, [currentPage, fetchPrograms]);
 
-  const handleCreateProgram = async (
-    data: CreateProgramRequest | UpdateProgramRequest,
-  ) => {
+  const handleCreateProgram = async (data: CreateProgramRequest | UpdateProgramRequest) => {
     try {
       const success = await createProgram(data as CreateProgramRequest);
       if (success) {
-        showToast.success("Program created successfully!");
+        showToast.success('Program created successfully!');
         setIsCreateModalOpen(false);
         fetchPrograms(1);
         setCurrentPage(1);
@@ -71,20 +69,16 @@ export default function GCVProgramsPage() {
     } catch (error) {
       // Extract detailed error message from the store
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : programsError || "Failed to create program";
+        error instanceof Error ? error.message : programsError || 'Failed to create program';
       showToast.error(errorMessage);
     }
   };
 
-  const handleUpdateProgram = async (
-    data: CreateProgramRequest | UpdateProgramRequest,
-  ) => {
+  const handleUpdateProgram = async (data: CreateProgramRequest | UpdateProgramRequest) => {
     try {
       const success = await updateProgram(data as UpdateProgramRequest);
       if (success) {
-        showToast.success("Program updated successfully!");
+        showToast.success('Program updated successfully!');
         setIsEditModalOpen(false);
         setSelectedProgram(null);
         await fetchPrograms(currentPage);
@@ -92,10 +86,8 @@ export default function GCVProgramsPage() {
     } catch (error) {
       // Extract detailed error message from the store
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : programsError || "Failed to update program";
-      console.error("Update program error:", error);
+        error instanceof Error ? error.message : programsError || 'Failed to update program';
+      console.error('Update program error:', error);
       showToast.error(errorMessage);
     }
   };
@@ -106,7 +98,7 @@ export default function GCVProgramsPage() {
     try {
       const success = await deleteProgram({ id: selectedProgram.id });
       if (success) {
-        showToast.success("Program deleted successfully!");
+        showToast.success('Program deleted successfully!');
         setIsDeleteModalOpen(false);
         setSelectedProgram(null);
         await fetchPrograms(currentPage);
@@ -114,10 +106,8 @@ export default function GCVProgramsPage() {
     } catch (error) {
       // Extract detailed error message from the store
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : programsError || "Failed to delete program";
-      console.error("Delete program error:", error);
+        error instanceof Error ? error.message : programsError || 'Failed to delete program';
+      console.error('Delete program error:', error);
       showToast.error(errorMessage);
     }
   };
@@ -131,7 +121,7 @@ export default function GCVProgramsPage() {
         email,
       });
       if (success) {
-        showToast.success("Program manager added successfully!");
+        showToast.success('Program manager added successfully!');
         setIsManagerModalOpen(false);
         setSelectedProgram(null);
         fetchPrograms(currentPage);
@@ -139,9 +129,7 @@ export default function GCVProgramsPage() {
     } catch (error) {
       // Extract detailed error message from the store
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : programsError || "Failed to add program manager";
+        error instanceof Error ? error.message : programsError || 'Failed to add program manager';
       showToast.error(errorMessage);
     }
   };
@@ -169,9 +157,7 @@ export default function GCVProgramsPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Programs</h1>
 
-              <p className="mt-2 text-gray-600">
-                Manage grant programs and assign managers
-              </p>
+              <p className="mt-2 text-gray-600">Manage grant programs and assign managers</p>
             </div>
 
             <button
@@ -225,7 +211,7 @@ export default function GCVProgramsPage() {
 
             <div className="rounded-lg border border-gray-200 bg-white px-4 py-2">
               <p className="text-sm text-gray-600">
-                Total Programs:{" "}
+                Total Programs:{' '}
                 <span className="font-semibold text-gray-900">
                   {programsPagination?.total || 0}
                 </span>
@@ -275,10 +261,10 @@ export default function GCVProgramsPage() {
                     <span
                       className={`rounded-full px-3 py-1 text-xs font-semibold shadow-sm ${
                         program.status === ProgramStatus.ACTIVE
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? 'bg-emerald-100 text-emerald-800'
                           : program.status === ProgramStatus.IN_ACTIVE
-                            ? "bg-gray-100 text-gray-800"
-                            : "bg-amber-100 text-amber-800"
+                            ? 'bg-gray-100 text-gray-800'
+                            : 'bg-amber-100 text-amber-800'
                       }`}
                     >
                       {program.status}
@@ -291,9 +277,7 @@ export default function GCVProgramsPage() {
                       {program.details.name}
                     </h3>
 
-                    <p className="mt-1 text-sm text-blue-600">
-                      {program.details.category}
-                    </p>
+                    <p className="mt-1 text-sm text-blue-600">{program.details.category}</p>
                   </div>
 
                   {/* Content */}
@@ -311,8 +295,7 @@ export default function GCVProgramsPage() {
                           </div>
 
                           <div className="text-sm font-semibold text-gray-900">
-                            {program.budget.currency}{" "}
-                            {program.budget.amount.toLocaleString()}
+                            {program.budget.currency} {program.budget.amount.toLocaleString()}
                           </div>
                         </div>
 
@@ -333,9 +316,7 @@ export default function GCVProgramsPage() {
                         </div>
 
                         <div className="text-sm font-semibold text-blue-900">
-                          {new Date(
-                            program.duration.startDate,
-                          ).toLocaleDateString()}
+                          {new Date(program.duration.startDate).toLocaleDateString()}
 
                           {program.duration.endDate &&
                             ` - ${new Date(program.duration.endDate).toLocaleDateString()}`}
@@ -370,13 +351,10 @@ export default function GCVProgramsPage() {
 
                             <div className="min-w-0 flex-1">
                               <p className="truncate text-sm font-semibold text-green-900">
-                                {program.manager.person.firstName}{" "}
-                                {program.manager.person.lastName}
+                                {program.manager.person.firstName} {program.manager.person.lastName}
                               </p>
 
-                              <p className="text-xs font-medium text-green-700">
-                                Program Manager
-                              </p>
+                              <p className="text-xs font-medium text-green-700">Program Manager</p>
                             </div>
                           </div>
                         </div>
@@ -470,8 +448,8 @@ export default function GCVProgramsPage() {
           {programsPagination && programsPagination.totalPages > 1 && (
             <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-6 py-4">
               <div className="text-sm text-gray-600">
-                Showing {(currentPage - 1) * pageSize + 1} to{" "}
-                {Math.min(currentPage * pageSize, programsPagination.total)} of{" "}
+                Showing {(currentPage - 1) * pageSize + 1} to{' '}
+                {Math.min(currentPage * pageSize, programsPagination.total)} of{' '}
                 {programsPagination.total} programs
               </div>
 
@@ -485,15 +463,12 @@ export default function GCVProgramsPage() {
                 </button>
 
                 <div className="flex items-center space-x-1">
-                  {Array.from(
-                    { length: programsPagination.totalPages },
-                    (_, i) => i + 1,
-                  )
+                  {Array.from({ length: programsPagination.totalPages }, (_, i) => i + 1)
                     .filter(
                       (page) =>
                         page === 1 ||
                         page === programsPagination.totalPages ||
-                        (page >= currentPage - 1 && page <= currentPage + 1),
+                        (page >= currentPage - 1 && page <= currentPage + 1)
                     )
                     .map((page, idx, arr) => (
                       <div className="flex items-center" key={page}>
@@ -504,8 +479,8 @@ export default function GCVProgramsPage() {
                         <button
                           className={`h-10 w-10 rounded-lg text-sm font-medium ${
                             currentPage === page
-                              ? "bg-blue-600 text-white"
-                              : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                              ? 'bg-blue-600 text-white'
+                              : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
                           }`}
                           onClick={() => setCurrentPage(page)}
                         >
@@ -519,9 +494,7 @@ export default function GCVProgramsPage() {
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                   disabled={currentPage === programsPagination.totalPages}
                   onClick={() =>
-                    setCurrentPage((p) =>
-                      Math.min(programsPagination.totalPages, p + 1),
-                    )
+                    setCurrentPage((p) => Math.min(programsPagination.totalPages, p + 1))
                   }
                 >
                   Next
@@ -560,7 +533,7 @@ export default function GCVProgramsPage() {
             setSelectedProgram(null);
           }}
           onConfirm={handleDeleteProgram}
-          programName={selectedProgram?.details.name || ""}
+          programName={selectedProgram?.details.name || ''}
         />
 
         <AddProgramManagerModal
@@ -571,7 +544,7 @@ export default function GCVProgramsPage() {
             setSelectedProgram(null);
           }}
           onSubmit={handleAddManager}
-          programName={selectedProgram?.details.name || ""}
+          programName={selectedProgram?.details.name || ''}
         />
 
         <ProgramCyclesModal

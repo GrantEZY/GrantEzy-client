@@ -2,11 +2,11 @@
  * Step 3: Technical Details Form
  * Collects: technicalSpec (description, techStack, prototype) + marketInfo (TAM, SAM, SOM, competitorAnalysis)
  */
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useApplicant } from "@/hooks/useApplicant";
-import { TechnicalSpec, MarketInfo } from "@/types/applicant.types";
+import { useState } from 'react';
+import { useApplicant } from '@/hooks/useApplicant';
+import { TechnicalSpec, MarketInfo } from '@/types/applicant.types';
 
 interface TechnicalDetailsFormData {
   technicalSpec: TechnicalSpec;
@@ -18,19 +18,19 @@ export default function TechnicalDetailsForm() {
 
   const [formData, setFormData] = useState<TechnicalDetailsFormData>({
     technicalSpec: currentApplication?.technicalSpec || {
-      description: "",
+      description: '',
       techStack: [],
-      prototype: "",
+      prototype: '',
     },
     marketInfo: currentApplication?.marketInfo || {
-      totalAddressableMarket: "",
-      serviceableMarket: "",
-      obtainableMarket: "",
-      competitorAnalysis: "",
+      totalAddressableMarket: '',
+      serviceableMarket: '',
+      obtainableMarket: '',
+      competitorAnalysis: '',
     },
   });
 
-  const [newTech, setNewTech] = useState("");
+  const [newTech, setNewTech] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const addTechStack = () => {
@@ -42,7 +42,7 @@ export default function TechnicalDetailsForm() {
           techStack: [...prev.technicalSpec.techStack, newTech.trim()],
         },
       }));
-      setNewTech("");
+      setNewTech('');
     }
   };
 
@@ -60,35 +60,35 @@ export default function TechnicalDetailsForm() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.technicalSpec.description.trim()) {
-      newErrors.description = "Technical description is required";
+      newErrors.description = 'Technical description is required';
     } else if (formData.technicalSpec.description.length < 100) {
-      newErrors.description = "Description must be at least 100 characters";
+      newErrors.description = 'Description must be at least 100 characters';
     }
 
     if (formData.technicalSpec.techStack.length === 0) {
-      newErrors.techStack = "Add at least one technology";
+      newErrors.techStack = 'Add at least one technology';
     }
 
     if (formData.technicalSpec.prototype && !isValidUrl(formData.technicalSpec.prototype)) {
-      newErrors.prototype = "Invalid URL format";
+      newErrors.prototype = 'Invalid URL format';
     }
 
     if (!formData.marketInfo.totalAddressableMarket.trim()) {
-      newErrors.totalAddressableMarket = "Total Addressable Market is required";
+      newErrors.totalAddressableMarket = 'Total Addressable Market is required';
     }
 
     if (!formData.marketInfo.serviceableMarket.trim()) {
-      newErrors.serviceableMarket = "Serviceable Addressable Market is required";
+      newErrors.serviceableMarket = 'Serviceable Addressable Market is required';
     }
 
     if (!formData.marketInfo.obtainableMarket.trim()) {
-      newErrors.obtainableMarket = "Serviceable Obtainable Market is required";
+      newErrors.obtainableMarket = 'Serviceable Obtainable Market is required';
     }
 
     if (!formData.marketInfo.competitorAnalysis.trim()) {
-      newErrors.competitorAnalysis = "Competitor analysis is required";
+      newErrors.competitorAnalysis = 'Competitor analysis is required';
     } else if (formData.marketInfo.competitorAnalysis.length < 100) {
-      newErrors.competitorAnalysis = "Competitor analysis must be at least 100 characters";
+      newErrors.competitorAnalysis = 'Competitor analysis must be at least 100 characters';
     }
 
     setErrors(newErrors);
@@ -137,17 +137,18 @@ export default function TechnicalDetailsForm() {
                 ...prev,
                 technicalSpec: { ...prev.technicalSpec, description: e.target.value },
               }));
-              setErrors((prev) => ({ ...prev, description: "" }));
+              setErrors((prev) => ({ ...prev, description: '' }));
             }}
             rows={6}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              errors.description ? "border-red-300" : ""
+              errors.description ? 'border-red-300' : ''
             }`}
             placeholder="Describe your technical approach, architecture, and implementation details..."
           />
           <div className="mt-1 flex justify-between text-sm">
-            <span className={errors.description ? "text-red-500" : "text-gray-500"}>
-              {errors.description || `${formData.technicalSpec.description.length} / 100 minimum characters`}
+            <span className={errors.description ? 'text-red-500' : 'text-gray-500'}>
+              {errors.description ||
+                `${formData.technicalSpec.description.length} / 100 minimum characters`}
             </span>
           </div>
         </div>
@@ -163,11 +164,11 @@ export default function TechnicalDetailsForm() {
               value={newTech}
               onChange={(e) => {
                 setNewTech(e.target.value);
-                setErrors((prev) => ({ ...prev, techStack: "" }));
+                setErrors((prev) => ({ ...prev, techStack: '' }));
               }}
-              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTechStack())}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTechStack())}
               className={`block flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                errors.techStack ? "border-red-300" : ""
+                errors.techStack ? 'border-red-300' : ''
               }`}
               placeholder="e.g., React, Node.js, PostgreSQL"
             />
@@ -213,10 +214,10 @@ export default function TechnicalDetailsForm() {
                 ...prev,
                 technicalSpec: { ...prev.technicalSpec, prototype: e.target.value },
               }));
-              setErrors((prev) => ({ ...prev, prototype: "" }));
+              setErrors((prev) => ({ ...prev, prototype: '' }));
             }}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              errors.prototype ? "border-red-300" : ""
+              errors.prototype ? 'border-red-300' : ''
             }`}
             placeholder="https://your-prototype.com"
           />
@@ -230,7 +231,10 @@ export default function TechnicalDetailsForm() {
 
         {/* TAM */}
         <div>
-          <label htmlFor="totalAddressableMarket" className="block text-sm font-medium text-gray-700">
+          <label
+            htmlFor="totalAddressableMarket"
+            className="block text-sm font-medium text-gray-700"
+          >
             TAM - Total Addressable Market <span className="text-red-500">*</span>
           </label>
           <input
@@ -242,14 +246,16 @@ export default function TechnicalDetailsForm() {
                 ...prev,
                 marketInfo: { ...prev.marketInfo, totalAddressableMarket: e.target.value },
               }));
-              setErrors((prev) => ({ ...prev, totalAddressableMarket: "" }));
+              setErrors((prev) => ({ ...prev, totalAddressableMarket: '' }));
             }}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              errors.totalAddressableMarket ? "border-red-300" : ""
+              errors.totalAddressableMarket ? 'border-red-300' : ''
             }`}
             placeholder="e.g., $10B global market for AI-powered analytics"
           />
-          {errors.totalAddressableMarket && <p className="mt-1 text-sm text-red-500">{errors.totalAddressableMarket}</p>}
+          {errors.totalAddressableMarket && (
+            <p className="mt-1 text-sm text-red-500">{errors.totalAddressableMarket}</p>
+          )}
         </div>
 
         {/* SAM */}
@@ -266,14 +272,16 @@ export default function TechnicalDetailsForm() {
                 ...prev,
                 marketInfo: { ...prev.marketInfo, serviceableMarket: e.target.value },
               }));
-              setErrors((prev) => ({ ...prev, serviceableMarket: "" }));
+              setErrors((prev) => ({ ...prev, serviceableMarket: '' }));
             }}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              errors.serviceableMarket ? "border-red-300" : ""
+              errors.serviceableMarket ? 'border-red-300' : ''
             }`}
             placeholder="e.g., $2B in North America"
           />
-          {errors.serviceableMarket && <p className="mt-1 text-sm text-red-500">{errors.serviceableMarket}</p>}
+          {errors.serviceableMarket && (
+            <p className="mt-1 text-sm text-red-500">{errors.serviceableMarket}</p>
+          )}
         </div>
 
         {/* SOM */}
@@ -290,14 +298,16 @@ export default function TechnicalDetailsForm() {
                 ...prev,
                 marketInfo: { ...prev.marketInfo, obtainableMarket: e.target.value },
               }));
-              setErrors((prev) => ({ ...prev, obtainableMarket: "" }));
+              setErrors((prev) => ({ ...prev, obtainableMarket: '' }));
             }}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              errors.obtainableMarket ? "border-red-300" : ""
+              errors.obtainableMarket ? 'border-red-300' : ''
             }`}
             placeholder="e.g., $100M in first 3 years"
           />
-          {errors.obtainableMarket && <p className="mt-1 text-sm text-red-500">{errors.obtainableMarket}</p>}
+          {errors.obtainableMarket && (
+            <p className="mt-1 text-sm text-red-500">{errors.obtainableMarket}</p>
+          )}
         </div>
 
         {/* Competitor Analysis */}
@@ -313,17 +323,18 @@ export default function TechnicalDetailsForm() {
                 ...prev,
                 marketInfo: { ...prev.marketInfo, competitorAnalysis: e.target.value },
               }));
-              setErrors((prev) => ({ ...prev, competitorAnalysis: "" }));
+              setErrors((prev) => ({ ...prev, competitorAnalysis: '' }));
             }}
             rows={5}
             className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-              errors.competitorAnalysis ? "border-red-300" : ""
+              errors.competitorAnalysis ? 'border-red-300' : ''
             }`}
             placeholder="Analyze your competitors, their strengths, weaknesses, and your competitive advantages..."
           />
           <div className="mt-1 flex justify-between text-sm">
-            <span className={errors.competitorAnalysis ? "text-red-500" : "text-gray-500"}>
-              {errors.competitorAnalysis || `${formData.marketInfo.competitorAnalysis.length} / 100 minimum characters`}
+            <span className={errors.competitorAnalysis ? 'text-red-500' : 'text-gray-500'}>
+              {errors.competitorAnalysis ||
+                `${formData.marketInfo.competitorAnalysis.length} / 100 minimum characters`}
             </span>
           </div>
         </div>
@@ -337,7 +348,12 @@ export default function TechnicalDetailsForm() {
           className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </button>
@@ -346,9 +362,14 @@ export default function TechnicalDetailsForm() {
           disabled={isLoading}
           className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          {isLoading ? "Saving..." : "Continue"}
+          {isLoading ? 'Saving...' : 'Continue'}
           <svg className="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 7l5 5m0 0l-5 5m5-5H6"
+            />
           </svg>
         </button>
       </div>

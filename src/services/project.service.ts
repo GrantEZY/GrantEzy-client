@@ -1,8 +1,8 @@
 /**
  * Project Management service for handling project-related API calls
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   CreateProjectRequest,
   CreateProjectResponse,
@@ -14,7 +14,7 @@ import {
   CreateCycleCriteriaResponse,
   GetCycleCriteriasRequest,
   GetCycleCriteriasResponse,
-} from "../types/project.types";
+} from '../types/project.types';
 
 export class ProjectManagementService {
   // ============= Project Management =============
@@ -22,21 +22,17 @@ export class ProjectManagementService {
   /**
    * Create a new project from an approved application
    */
-  async createProject(
-    data: CreateProjectRequest,
-  ): Promise<CreateProjectResponse> {
+  async createProject(data: CreateProjectRequest): Promise<CreateProjectResponse> {
     return httpClient.post<CreateProjectResponse>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.CREATE_PROJECT,
-      data,
+      data
     );
   }
 
   /**
    * Get all projects in a cycle with pagination
    */
-  async getCycleProjects(
-    params: GetCycleProjectsRequest,
-  ): Promise<GetCycleProjectsResponse> {
+  async getCycleProjects(params: GetCycleProjectsRequest): Promise<GetCycleProjectsResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       page: params.page.toString(),
@@ -45,16 +41,14 @@ export class ProjectManagementService {
 
     return httpClient.get<GetCycleProjectsResponse>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_PROJECTS,
-      queryParams,
+      queryParams
     );
   }
 
   /**
    * Get detailed information about a specific project
    */
-  async getProjectDetails(
-    params: GetProjectDetailsRequest,
-  ): Promise<GetProjectDetailsResponse> {
+  async getProjectDetails(params: GetProjectDetailsRequest): Promise<GetProjectDetailsResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       applicationSlug: params.applicationSlug,
@@ -62,7 +56,7 @@ export class ProjectManagementService {
 
     return httpClient.get<GetProjectDetailsResponse>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_PROJECT_DETAILS,
-      queryParams,
+      queryParams
     );
   }
 
@@ -72,27 +66,25 @@ export class ProjectManagementService {
    * Create assessment criteria for a cycle
    */
   async createCycleCriteria(
-    data: CreateCycleCriteriaRequest,
+    data: CreateCycleCriteriaRequest
   ): Promise<CreateCycleCriteriaResponse> {
     return httpClient.post<CreateCycleCriteriaResponse>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.CREATE_CYCLE_CRITERIA,
-      data,
+      data
     );
   }
 
   /**
    * Get all assessment criteria for a cycle
    */
-  async getCycleCriterias(
-    params: GetCycleCriteriasRequest,
-  ): Promise<GetCycleCriteriasResponse> {
+  async getCycleCriterias(params: GetCycleCriteriasRequest): Promise<GetCycleCriteriasResponse> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
     };
 
     return httpClient.get<GetCycleCriteriasResponse>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_CRITERIAS,
-      queryParams,
+      queryParams
     );
   }
 }

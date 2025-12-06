@@ -1,15 +1,14 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import CoApplicantLayout from "@/components/layout/CoApplicantLayout";
-import { coApplicantService } from "@/services/co-applicant.service";
-import { Project } from "@/types/project.types";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import CoApplicantLayout from '@/components/layout/CoApplicantLayout';
+import { coApplicantService } from '@/services/co-applicant.service';
+import { Project } from '@/types/project.types';
 
 export default function CoApplicantProjectsPage() {
-  const router = useRouter();
+  // const router = useRouter(); // Uncomment if navigation is needed
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,10 +31,10 @@ export default function CoApplicantProjectsPage() {
         setProjects(response.res.projects);
         setTotalPages(response.res.pagination?.totalPages || 1);
       } else {
-        throw new Error((response as any)?.message || "Failed to load linked projects");
+        throw new Error((response as any)?.message || 'Failed to load linked projects');
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load linked projects");
+      setError(err instanceof Error ? err.message : 'Failed to load linked projects');
     } finally {
       setIsLoading(false);
     }
@@ -43,16 +42,16 @@ export default function CoApplicantProjectsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "ACTIVE":
-        return "bg-green-100 text-green-800";
-      case "COMPLETED":
-        return "bg-blue-100 text-blue-800";
-      case "ON_HOLD":
-        return "bg-yellow-100 text-yellow-800";
-      case "CANCELLED":
-        return "bg-red-100 text-red-800";
+      case 'ACTIVE':
+        return 'bg-green-100 text-green-800';
+      case 'COMPLETED':
+        return 'bg-blue-100 text-blue-800';
+      case 'ON_HOLD':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'CANCELLED':
+        return 'bg-red-100 text-red-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -103,9 +102,7 @@ export default function CoApplicantProjectsPage() {
           {/* Header */}
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Linked Projects</h1>
-            <p className="mt-2 text-gray-600">
-              View projects where you are a co-applicant
-            </p>
+            <p className="mt-2 text-gray-600">View projects where you are a co-applicant</p>
           </div>
 
           {/* Loading State */}
@@ -122,11 +119,7 @@ export default function CoApplicantProjectsPage() {
           {error && !isLoading && (
             <div className="rounded-lg border border-red-200 bg-red-50 p-4">
               <div className="flex">
-                <svg
-                  className="h-5 w-5 text-red-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
+                <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
@@ -200,7 +193,7 @@ export default function CoApplicantProjectsPage() {
                               <div className="text-sm font-medium text-gray-900">
                                 {project.application?.basicInfo?.title ||
                                   project.application?.title ||
-                                  "Untitled Project"}
+                                  'Untitled Project'}
                               </div>
                               <div className="mt-1 text-sm text-gray-500">
                                 ID: {project.id.substring(0, 8)}...
@@ -217,9 +210,10 @@ export default function CoApplicantProjectsPage() {
                               INR {calculateBudgetTotal(project.allocatedBudget).toLocaleString()}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {project.plannedDuration?.startDate && project.plannedDuration?.endDate
+                              {project.plannedDuration?.startDate &&
+                              project.plannedDuration?.endDate
                                 ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
-                                : "Not set"}
+                                : 'Not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                               <Link

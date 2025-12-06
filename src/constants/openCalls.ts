@@ -3,7 +3,8 @@ export const openCalls = [
     title: 'Student Innovation Grant',
     deadline: 'March 15, 2025',
     funding: '₹15 Lakhs',
-    description: 'Empowering student innovators to develop cutting-edge solutions for real-world problems through comprehensive funding',
+    description:
+      'Empowering student innovators to develop cutting-edge solutions for real-world problems through comprehensive funding',
     status: 'Open',
     category: 'Student Innovation',
     eligibility: 'All Students',
@@ -13,13 +14,14 @@ export const openCalls = [
     color: 'blue',
     impact: 'Early Stage Funding',
     timeline: '12 months',
-    tags: ['Innovation', 'Student', 'Technology']
+    tags: ['Innovation', 'Student', 'Technology'],
   },
   {
     title: 'Technology Transfer Grant',
     deadline: 'April 10, 2025',
     funding: '₹50 Lakhs',
-    description: 'Accelerating the commercialization of research outcomes through strategic partnerships and industry collaboration.',
+    description:
+      'Accelerating the commercialization of research outcomes through strategic partnerships and industry collaboration.',
     status: 'Open',
     category: 'Research Transfer',
     eligibility: 'Faculty & Students',
@@ -29,13 +31,14 @@ export const openCalls = [
     color: 'green',
     impact: 'Research to Market',
     timeline: '18 months',
-    tags: ['Technology', 'Research', 'Commercialization']
+    tags: ['Technology', 'Research', 'Commercialization'],
   },
   {
     title: 'Social Impact Challenge',
     deadline: 'May 20, 2025',
     funding: '₹30 Lakhs',
-    description: 'Supporting startups focused on solving social and environmental challenges with sustainable solutions.',
+    description:
+      'Supporting startups focused on solving social and environmental challenges with sustainable solutions.',
     status: 'Coming Soon',
     category: 'Social Impact',
     eligibility: 'Social entrepreneurs',
@@ -45,6 +48,6 @@ export const openCalls = [
     color: 'red',
     impact: 'Social Change',
     timeline: '15 months',
-    tags: ['Social Impact', 'Environment', 'Sustainability']
-  }
+    tags: ['Social Impact', 'Environment', 'Sustainability'],
+  },
 ];

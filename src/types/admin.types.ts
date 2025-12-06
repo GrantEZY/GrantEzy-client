@@ -1,7 +1,7 @@
 /**
  * Admin related types based on server DTOs
  */
-import { UserRoles } from "./auth.types";
+import { UserRoles } from './auth.types';
 
 export interface UserFilterDto {
   role?: UserRoles;
@@ -56,8 +56,8 @@ export interface AddUserRequest {
 }
 
 export enum UpdateRole {
-  ADD_ROLE = "ADD_ROLE",
-  DELETE_ROLE = "DELETE_ROLE",
+  ADD_ROLE = 'ADD_ROLE',
+  DELETE_ROLE = 'DELETE_ROLE',
 }
 
 export interface UpdateUserRoleRequest {
@@ -78,14 +78,14 @@ export interface AdminOperationResponse {
 
 // Organization related types
 export enum OrganisationType {
-  IIT = "IIT",
-  NIT = "NIT",
-  IIIT = "IIIT",
-  OTHER_CFTI = "OTHER_CFTI",
-  STATE_UNIVERSITY = "STATE_UNIVERSITY",
-  PRIVATE_UNIVERSITY = "PRIVATE_UNIVERSITY",
-  STARTUP = "STARTUP",
-  OTHERS = "OTHERS",
+  IIT = 'IIT',
+  NIT = 'NIT',
+  IIIT = 'IIIT',
+  OTHER_CFTI = 'OTHER_CFTI',
+  STATE_UNIVERSITY = 'STATE_UNIVERSITY',
+  PRIVATE_UNIVERSITY = 'PRIVATE_UNIVERSITY',
+  STARTUP = 'STARTUP',
+  OTHERS = 'OTHERS',
 }
 
 export interface Organization {

@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ApplicantLayout from "@/components/layout/ApplicantLayout";
-import { useAuth } from "@/hooks/useAuth";
-import { useApplicant } from "@/hooks/useApplicant";
-import { publicService, ProgramCycle } from "@/services/public.service";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ApplicantLayout from '@/components/layout/ApplicantLayout';
+import { useAuth } from '@/hooks/useAuth';
+import { useApplicant } from '@/hooks/useApplicant';
+import { publicService, ProgramCycle } from '@/services/public.service';
 
 export default function ApplicantDashboard() {
   const { user } = useAuth();
-  const { 
+  const {
     myApplications,
     linkedApplications,
-    isLoadingApplications, 
+    isLoadingApplications,
     fetchUserApplications,
     deleteUserApplication,
-    error: applicantError 
+    error: _applicantError,
   } = useApplicant();
-  
+
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [programs, setPrograms] = useState<any[]>([]);
   const [selectedProgram, setSelectedProgram] = useState<any | null>(null);
   const [programCycles, setProgramCycles] = useState<ProgramCycle[]>([]);
@@ -35,30 +35,30 @@ export default function ApplicantDashboard() {
     const fetchPrograms = async () => {
       try {
         setIsLoading(true);
-        setError("");
-        
+        setError('');
+
         const response = await publicService.getActiveProgramCycles({
           page: 1,
           numberOfResults: 200,
         });
-        
-        console.log("=== BACKEND RESPONSE DEBUG ===");
-        console.log("Full response:", JSON.stringify(response, null, 2));
-        console.log("Programs array:", response.res?.programs);
-        
+
+        console.log('=== BACKEND RESPONSE DEBUG ===');
+        console.log('Full response:', JSON.stringify(response, null, 2));
+        console.log('Programs array:', response.res?.programs);
+
         if (response.res && response.res.programs) {
           response.res.programs.forEach((program: any, index: number) => {
             console.log(`Program ${index + 1}:`, {
               name: program.details?.name,
               slug: program.slug,
               cycles: program.cycles,
-              cyclesCount: program.cycles?.length || 0
+              cyclesCount: program.cycles?.length || 0,
             });
           });
           setPrograms(response.res.programs);
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load programs");
+        setError(err instanceof Error ? err.message : 'Failed to load programs');
       } finally {
         setIsLoading(false);
       }
@@ -70,36 +70,35 @@ export default function ApplicantDashboard() {
   const fetchProgramCycles = async (program: any) => {
     try {
       setIsLoadingCycles(true);
-      
-      console.log("=== FETCHING CYCLES FOR PROGRAM ===");
-      console.log("Selected program:", {
+
+      console.log('=== FETCHING CYCLES FOR PROGRAM ===');
+      console.log('Selected program:', {
         name: program.details?.name,
         slug: program.slug,
         hasCycles: !!program.cycles,
         cyclesCount: program.cycles?.length || 0,
-        cyclesData: program.cycles
+        cyclesData: program.cycles,
       });
-      
+
       // Use the cycles array from the program object (now loaded by backend)
       const cycles = program.cycles || [];
-      
-      console.log("Cycles found:", cycles.length);
-      
+
+      console.log('Cycles found:', cycles.length);
+
       // Map cycles to include program information
       const allCycles: ProgramCycle[] = cycles.map((cycle: any) => ({
         ...cycle,
         program: {
           id: program.id,
-          name: program.details?.name || "Unnamed Program", 
-          description: program.details?.description || "",
-        }
+          name: program.details?.name || 'Unnamed Program',
+          description: program.details?.description || '',
+        },
       }));
 
-      console.log("Mapped cycles:", allCycles);
+      console.log('Mapped cycles:', allCycles);
       setProgramCycles(allCycles);
-      
     } catch (e) {
-      console.error("Error in fetchProgramCycles:", e);
+      console.error('Error in fetchProgramCycles:', e);
       setProgramCycles([]);
     } finally {
       setIsLoadingCycles(false);
@@ -129,19 +128,17 @@ export default function ApplicantDashboard() {
       <ApplicantLayout>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, {user?.firstName || "Applicant"}
+            Welcome, {user?.firstName || 'Applicant'}
           </h1>
-          <p className="mt-2 text-gray-600">
-            Apply for grants and track your applications
-          </p>
+          <p className="mt-2 text-gray-600">Apply for grants and track your applications</p>
         </div>
 
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">
-              {selectedProgram 
-                ? `Cycles - ${selectedProgram.details?.name || "Program"}` 
-                : "Available Grant Programs"}
+              {selectedProgram
+                ? `Cycles - ${selectedProgram.details?.name || 'Program'}`
+                : 'Available Grant Programs'}
             </h2>
             {selectedProgram && (
               <button
@@ -176,100 +173,34 @@ export default function ApplicantDashboard() {
                 {programs.map((program, index) => {
                   // Ensure unique key - use id, slug, or fallback to index
                   const uniqueKey = program.id || program.slug || `program-${index}`;
-                  
+
                   return (
                     <div
                       key={uniqueKey}
                       className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
                       onClick={() => handleProgramSelect(program)}
                     >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-gray-900">
-                          {program.details?.name || "Unnamed Program"}
-                        </h3>
-                        <p className="mt-2 text-sm text-gray-600">
-                          {program.details?.description || "No description available"}
-                        </p>
-                      </div>
-                      <span className="ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-green-100 text-green-800">
-                        {program.status || "ACTIVE"}
-                      </span>
-                    </div>
-
-                    <div className="mt-4 flex items-center text-sm text-gray-500">
-                      <span>Organization: {program.organization?.name || "N/A"}</span>
-                    </div>
-
-                    <div className="mt-6">
-                      <button className="w-full rounded-md px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
-                        View Cycles
-                      </button>
-                    </div>
-                  </div>
-                  );
-                })}
-              </div>
-            )
-          ) : (
-            isLoadingCycles ? (
-              <div className="text-center py-12">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-                <p className="mt-2 text-gray-600">Loading cycles...</p>
-              </div>
-            ) : programCycles.length === 0 ? (
-              <div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No Active Cycles</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  This program currently has no active cycles open for applications.
-                </p>
-                <p className="mt-1 text-xs text-gray-400">
-                  Note: The system currently shows only the active cycle per program.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {programCycles.map((cycle, index) => {
-                  const isActive = isActiveStatus(cycle.status);
-                  const startDate = cycle.duration?.startDate || cycle.startDate;
-                  const endDate = cycle.duration?.endDate || cycle.endDate;
-                  
-                  // Ensure unique key - use id, slug, or fallback to index
-                  const uniqueKey = cycle.id || cycle.slug || `cycle-${index}`;
-
-                  return (
-                    <div key={uniqueKey} className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-gray-900">
-                            {cycle.title || `${selectedProgram?.details?.name} Cycle`}
+                            {program.details?.name || 'Unnamed Program'}
                           </h3>
-                          <p className="mt-1 text-sm text-gray-600">
-                            {cycle.description || "Grant application cycle"}
+                          <p className="mt-2 text-sm text-gray-600">
+                            {program.details?.description || 'No description available'}
                           </p>
                         </div>
-                        <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                          isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
-                        }`}>
-                          {cycle.status || "UNKNOWN"}
+                        <span className="ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold bg-green-100 text-green-800">
+                          {program.status || 'ACTIVE'}
                         </span>
                       </div>
 
                       <div className="mt-4 flex items-center text-sm text-gray-500">
-                        <span>
-                          {startDate ? new Date(startDate).toLocaleDateString() : "N/A"} - {endDate ? new Date(endDate).toLocaleDateString() : "N/A"}
-                        </span>
+                        <span>Organization: {program.organization?.name || 'N/A'}</span>
                       </div>
 
                       <div className="mt-6">
-                        <button
-                          onClick={() => handleApplyToCycle(cycle.slug)}
-                          disabled={!isActive}
-                          className={`w-full rounded-md px-4 py-2 text-sm font-medium text-white ${
-                            isActive ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-300 cursor-not-allowed"
-                          }`}
-                        >
-                          {isActive ? "Apply Now" : "Closed"}
+                        <button className="w-full rounded-md px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700">
+                          View Cycles
                         </button>
                       </div>
                     </div>
@@ -277,13 +208,85 @@ export default function ApplicantDashboard() {
                 })}
               </div>
             )
+          ) : isLoadingCycles ? (
+            <div className="text-center py-12">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+              <p className="mt-2 text-gray-600">Loading cycles...</p>
+            </div>
+          ) : programCycles.length === 0 ? (
+            <div className="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No Active Cycles</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                This program currently has no active cycles open for applications.
+              </p>
+              <p className="mt-1 text-xs text-gray-400">
+                Note: The system currently shows only the active cycle per program.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {programCycles.map((cycle, index) => {
+                const isActive = isActiveStatus(cycle.status);
+                const startDate = cycle.duration?.startDate || cycle.startDate;
+                const endDate = cycle.duration?.endDate || cycle.endDate;
+
+                // Ensure unique key - use id, slug, or fallback to index
+                const uniqueKey = cycle.id || cycle.slug || `cycle-${index}`;
+
+                return (
+                  <div
+                    key={uniqueKey}
+                    className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {cycle.title || `${selectedProgram?.details?.name} Cycle`}
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-600">
+                          {cycle.description || 'Grant application cycle'}
+                        </p>
+                      </div>
+                      <span
+                        className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
+                          isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {cycle.status || 'UNKNOWN'}
+                      </span>
+                    </div>
+
+                    <div className="mt-4 flex items-center text-sm text-gray-500">
+                      <span>
+                        {startDate ? new Date(startDate).toLocaleDateString() : 'N/A'} -{' '}
+                        {endDate ? new Date(endDate).toLocaleDateString() : 'N/A'}
+                      </span>
+                    </div>
+
+                    <div className="mt-6">
+                      <button
+                        onClick={() => handleApplyToCycle(cycle.slug)}
+                        disabled={!isActive}
+                        className={`w-full rounded-md px-4 py-2 text-sm font-medium text-white ${
+                          isActive
+                            ? 'bg-blue-600 hover:bg-blue-700'
+                            : 'bg-gray-300 cursor-not-allowed'
+                        }`}
+                      >
+                        {isActive ? 'Apply Now' : 'Closed'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
 
         {/* My Applications Section */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">My Applications</h2>
-          
+
           {isLoadingApplications ? (
             <div className="rounded-lg border border-gray-200 p-12 text-center">
               <div className="flex justify-center items-center">
@@ -294,11 +297,11 @@ export default function ApplicantDashboard() {
           ) : myApplications && myApplications.length > 0 ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {myApplications.map((application: any) => {
-                const statusColor = application.isSubmitted 
-                  ? "bg-green-100 text-green-800" 
-                  : "bg-yellow-100 text-yellow-800";
-                const statusText = application.isSubmitted ? "Submitted" : "Draft";
-                
+                const statusColor = application.isSubmitted
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800';
+                const statusText = application.isSubmitted ? 'Submitted' : 'Draft';
+
                 return (
                   <div
                     key={application.id}
@@ -307,20 +310,23 @@ export default function ApplicantDashboard() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {application.basicInfo?.title || "Untitled Application"}
+                          {application.basicInfo?.title || 'Untitled Application'}
                         </h3>
                         <p className="mt-1 text-sm text-gray-600">
-                          {application.cycle?.program?.title || "Program information not available"}
+                          {application.cycle?.program?.title || 'Program information not available'}
                         </p>
                       </div>
-                      <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}>
+                      <span
+                        className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}
+                      >
                         {statusText}
                       </span>
                     </div>
 
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">
-                        <span className="font-medium">Cycle:</span> {application.cycle?.title || "Cycle information not available"}
+                        <span className="font-medium">Cycle:</span>{' '}
+                        {application.cycle?.title || 'Cycle information not available'}
                       </p>
                       <p className="mt-1 text-sm text-gray-500">
                         Step {application.stepNumber} of 7
@@ -328,9 +334,7 @@ export default function ApplicantDashboard() {
                     </div>
 
                     <div className="mt-4 flex items-center text-xs text-gray-500">
-                      <span>
-                        Created: {new Date(application.createdAt).toLocaleDateString()}
-                      </span>
+                      <span>Created: {new Date(application.createdAt).toLocaleDateString()}</span>
                     </div>
 
                     <div className="mt-6 flex gap-2">
@@ -344,7 +348,9 @@ export default function ApplicantDashboard() {
                           </Link>
                           <button
                             onClick={async () => {
-                              if (confirm("Are you sure you want to delete this draft application?")) {
+                              if (
+                                confirm('Are you sure you want to delete this draft application?')
+                              ) {
                                 const success = await deleteUserApplication(application.id);
                                 if (success) {
                                   // Applications list will be updated automatically by the store
@@ -389,14 +395,14 @@ export default function ApplicantDashboard() {
             <p className="text-sm text-gray-600 mb-4">
               Applications where you've been invited as a co-applicant
             </p>
-            
+
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {linkedApplications.map((application: any) => {
-                const statusColor = application.isSubmitted 
-                  ? "bg-green-100 text-green-800" 
-                  : "bg-yellow-100 text-yellow-800";
-                const statusText = application.isSubmitted ? "Submitted" : "Draft";
-                
+                const statusColor = application.isSubmitted
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-yellow-100 text-yellow-800';
+                const statusText = application.isSubmitted ? 'Submitted' : 'Draft';
+
                 return (
                   <div
                     key={application.id}
@@ -405,10 +411,10 @@ export default function ApplicantDashboard() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <h3 className="text-lg font-semibold text-gray-900">
-                          {application.basicInfo?.title || "Untitled Application"}
+                          {application.basicInfo?.title || 'Untitled Application'}
                         </h3>
                         <p className="mt-1 text-sm text-gray-600">
-                          {application.cycle?.program?.title || "Program information not available"}
+                          {application.cycle?.program?.title || 'Program information not available'}
                         </p>
                         <span className="mt-1 inline-flex items-center text-xs text-blue-600">
                           <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
@@ -417,14 +423,17 @@ export default function ApplicantDashboard() {
                           Co-applicant
                         </span>
                       </div>
-                      <span className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}>
+                      <span
+                        className={`ml-2 inline-flex rounded-full px-2 py-1 text-xs font-semibold ${statusColor}`}
+                      >
                         {statusText}
                       </span>
                     </div>
 
                     <div className="mt-4">
                       <p className="text-sm text-gray-600">
-                        <span className="font-medium">Cycle:</span> {application.cycle?.title || "Cycle information not available"}
+                        <span className="font-medium">Cycle:</span>{' '}
+                        {application.cycle?.title || 'Cycle information not available'}
                       </p>
                       <p className="mt-1 text-sm text-gray-500">
                         Step {application.stepNumber} of 7
@@ -432,9 +441,7 @@ export default function ApplicantDashboard() {
                     </div>
 
                     <div className="mt-4 flex items-center text-xs text-gray-500">
-                      <span>
-                        Created: {new Date(application.createdAt).toLocaleDateString()}
-                      </span>
+                      <span>Created: {new Date(application.createdAt).toLocaleDateString()}</span>
                     </div>
 
                     <div className="mt-6">

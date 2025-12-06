@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { useReviewer } from "@/hooks/useReviewer";
-import { InviteStatus } from "@/types/reviewer.types";
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { useReviewer } from '@/hooks/useReviewer';
+import { InviteStatus } from '@/types/reviewer.types';
 
-export default function ReviewerInvitePage() {
+function ReviewerInvitePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { updateInviteStatus, clearError } = useReviewer();
 
-  const [token, setToken] = useState("");
-  const [slug, setSlug] = useState("");
+  const [token, setToken] = useState('');
+  const [slug, setSlug] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [inviteAccepted, setInviteAccepted] = useState(false);
 
   useEffect(() => {
     // Get token and slug from URL query parameters
-    const tokenParam = searchParams.get("token");
-    const slugParam = searchParams.get("slug");
+    const tokenParam = searchParams.get('token');
+    const slugParam = searchParams.get('slug');
 
     if (tokenParam) setToken(tokenParam);
     if (slugParam) setSlug(slugParam);
@@ -33,12 +33,12 @@ export default function ReviewerInvitePage() {
 
   const handleResponse = async (status: InviteStatus.ACCEPTED | InviteStatus.REJECTED) => {
     if (!token || !slug) {
-      setError("Invalid invitation link. Missing token or slug.");
+      setError('Invalid invitation link. Missing token or slug.');
       return;
     }
 
     setIsLoading(true);
-    setError("");
+    setError('');
     setSuccess(false);
 
     try {
@@ -55,20 +55,20 @@ export default function ReviewerInvitePage() {
 
       // Redirect to login after a short delay
       setTimeout(() => {
-        router.push("/login?redirect=/reviewer");
+        router.push('/login?redirect=/reviewer');
       }, 3000);
-
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "An error occurred while processing your response";
-      
+      const errorMessage =
+        err instanceof Error ? err.message : 'An error occurred while processing your response';
+
       // Check if this is an "already handled" error - treat as success
-      if (errorMessage.toLowerCase().includes("already")) {
+      if (errorMessage.toLowerCase().includes('already')) {
         setSuccess(true);
         setInviteAccepted(true); // Assume it was accepted if already handled
         window.history.replaceState({}, '', '/reviewer/invite');
-        
+
         setTimeout(() => {
-          router.push("/login?redirect=/reviewer");
+          router.push('/login?redirect=/reviewer');
         }, 2000);
       } else {
         setError(errorMessage);
@@ -101,9 +101,7 @@ export default function ReviewerInvitePage() {
                 </svg>
               </div>
             </div>
-            <h1 className="text-center text-2xl font-bold text-gray-900">
-              Reviewer Invitation
-            </h1>
+            <h1 className="text-center text-2xl font-bold text-gray-900">Reviewer Invitation</h1>
             <p className="mt-2 text-center text-sm text-gray-600">
               You've been invited to review a grant application
             </p>
@@ -116,11 +114,7 @@ export default function ReviewerInvitePage() {
                 {/* Info Message */}
                 <div className="mb-6 rounded-md bg-blue-50 p-4">
                   <div className="flex">
-                    <svg
-                      className="h-5 w-5 text-blue-400"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
+                    <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                       <path
                         clipRule="evenodd"
                         d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
@@ -129,8 +123,8 @@ export default function ReviewerInvitePage() {
                     </svg>
                     <div className="ml-3">
                       <p className="text-sm text-blue-800">
-                        A Program Manager has invited you to review a grant application.
-                        Please accept or decline this invitation.
+                        A Program Manager has invited you to review a grant application. Please
+                        accept or decline this invitation.
                       </p>
                     </div>
                   </div>
@@ -140,11 +134,7 @@ export default function ReviewerInvitePage() {
                 {error && (
                   <div className="mb-6 rounded-md bg-red-50 p-4">
                     <div className="flex">
-                      <svg
-                        className="h-5 w-5 text-red-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
+                      <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
                         <path
                           clipRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -153,7 +143,7 @@ export default function ReviewerInvitePage() {
                       </svg>
                       <div className="ml-3 flex-1">
                         <p className="text-sm text-red-800">{error}</p>
-                        {error.includes("already") && (
+                        {error.includes('already') && (
                           <Link
                             className="mt-2 inline-block text-sm font-medium text-red-600 hover:text-red-700"
                             href="/login?redirect=/reviewer"
@@ -183,8 +173,8 @@ export default function ReviewerInvitePage() {
                       </svg>
                       <div className="ml-3">
                         <p className="text-sm text-yellow-800">
-                          This invitation link appears to be invalid or incomplete.
-                          Please check the link in your email invitation.
+                          This invitation link appears to be invalid or incomplete. Please check the
+                          link in your email invitation.
                         </p>
                       </div>
                     </div>
@@ -201,11 +191,7 @@ export default function ReviewerInvitePage() {
                   >
                     {isLoading ? (
                       <span className="flex items-center justify-center">
-                        <svg
-                          className="mr-2 h-4 w-4 animate-spin"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
+                        <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                           <circle
                             className="opacity-25"
                             cx="12"
@@ -223,7 +209,7 @@ export default function ReviewerInvitePage() {
                         Processing...
                       </span>
                     ) : (
-                      "Accept Invitation"
+                      'Accept Invitation'
                     )}
                   </button>
 
@@ -256,16 +242,14 @@ export default function ReviewerInvitePage() {
                   </svg>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                  {inviteAccepted ? "Invitation Accepted!" : "Invitation Declined"}
+                  {inviteAccepted ? 'Invitation Accepted!' : 'Invitation Declined'}
                 </h3>
                 <p className="mb-4 text-sm text-gray-600">
                   {inviteAccepted
-                    ? "You can now review the application from your reviewer dashboard."
-                    : "Your response has been recorded. Thank you for your time."}
+                    ? 'You can now review the application from your reviewer dashboard.'
+                    : 'Your response has been recorded. Thank you for your time.'}
                 </p>
-                <p className="text-xs text-gray-500">
-                  Redirecting to dashboard in 3 seconds...
-                </p>
+                <p className="text-xs text-gray-500">Redirecting to dashboard in 3 seconds...</p>
               </div>
             )}
           </div>
@@ -274,7 +258,7 @@ export default function ReviewerInvitePage() {
           {!success && (
             <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
               <p className="text-center text-xs text-gray-500">
-                Need help?{" "}
+                Need help?{' '}
                 <Link className="font-medium text-indigo-600 hover:text-indigo-500" href="/contact">
                   Contact Support
                 </Link>
@@ -284,5 +268,13 @@ export default function ReviewerInvitePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function page() {
+  return (
+    <Suspense fallback={<div>Loading search parameters...</div>}>
+      <ReviewerInvitePage />
+    </Suspense>
   );
 }

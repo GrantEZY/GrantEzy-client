@@ -2,19 +2,20 @@
  * Step 7: Team Members Form (Final Step)
  * Collects: emails[] + isSubmitted boolean for final submission
  */
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useApplicant } from "@/hooks/useApplicant";
-import { showToast } from "@/components/ui/ToastNew";
+import { useState, useEffect } from 'react';
+import { useApplicant } from '@/hooks/useApplicant';
+import { showToast } from '@/components/ui/ToastNew';
 
 export default function TeamMembersForm() {
-  const { addTeammates, isLoading, goToPreviousStep, currentApplication, successMessage } = useApplicant();
+  const { addTeammates, isLoading, goToPreviousStep, currentApplication, successMessage } =
+    useApplicant();
 
   const [emails, setEmails] = useState<string[]>(
     currentApplication?.teamMateInvites?.map((invite) => invite.email) || []
   );
-  const [newEmail, setNewEmail] = useState("");
+  const [newEmail, setNewEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -34,23 +35,23 @@ export default function TeamMembersForm() {
 
   const addEmail = () => {
     if (!newEmail.trim()) {
-      setErrors((prev) => ({ ...prev, newEmail: "Email address is required" }));
+      setErrors((prev) => ({ ...prev, newEmail: 'Email address is required' }));
       return;
     }
 
     if (!validateEmail(newEmail)) {
-      setErrors((prev) => ({ ...prev, newEmail: "Invalid email format" }));
+      setErrors((prev) => ({ ...prev, newEmail: 'Invalid email format' }));
       return;
     }
 
     if (emails.includes(newEmail)) {
-      setErrors((prev) => ({ ...prev, newEmail: "This email has already been added" }));
+      setErrors((prev) => ({ ...prev, newEmail: 'This email has already been added' }));
       return;
     }
 
     setEmails([...emails, newEmail]);
-    setNewEmail("");
-    setErrors((prev) => ({ ...prev, newEmail: "" }));
+    setNewEmail('');
+    setErrors((prev) => ({ ...prev, newEmail: '' }));
   };
 
   const removeEmail = (index: number) => {
@@ -62,17 +63,17 @@ export default function TeamMembersForm() {
 
     // Validate at least one email if submitting
     if (submitApplication && emails.length === 0) {
-      setErrors((prev) => ({ ...prev, general: "Add at least one team member before submitting" }));
+      setErrors((prev) => ({ ...prev, general: 'Add at least one team member before submitting' }));
       return;
     }
 
     setIsSubmitting(submitApplication);
-    
+
     // Track if this is a final submission for toast notification
     if (submitApplication) {
       setHasSubmitted(true);
     }
-    
+
     await addTeammates(emails, submitApplication);
   };
 
@@ -82,8 +83,8 @@ export default function TeamMembersForm() {
         <h2 className="text-2xl font-bold text-gray-900">Team Members</h2>
         <p className="mt-1 text-sm text-gray-600">
           {emails.length === 0
-            ? "Invite your team members to collaborate on this application"
-            : "Review and finalize your team composition"}
+            ? 'Invite your team members to collaborate on this application'
+            : 'Review and finalize your team composition'}
         </p>
       </div>
 
@@ -98,16 +99,16 @@ export default function TeamMembersForm() {
               value={newEmail}
               onChange={(e) => {
                 setNewEmail(e.target.value);
-                setErrors((prev) => ({ ...prev, newEmail: "" }));
+                setErrors((prev) => ({ ...prev, newEmail: '' }));
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   addEmail();
                 }
               }}
               className={`block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 ${
-                errors.newEmail ? "border-red-300" : ""
+                errors.newEmail ? 'border-red-300' : ''
               }`}
               placeholder="teammate@example.com"
             />
@@ -119,7 +120,12 @@ export default function TeamMembersForm() {
             className="inline-flex items-center rounded-md bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 4v16m8-8H4"
+              />
             </svg>
             Add
           </button>
@@ -144,9 +150,7 @@ export default function TeamMembersForm() {
       {/* Team Members List */}
       <div className="rounded-lg border border-gray-200 p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium text-gray-900">
-            Team Members ({emails.length})
-          </h3>
+          <h3 className="text-lg font-medium text-gray-900">Team Members ({emails.length})</h3>
         </div>
 
         {emails.length === 0 ? (
@@ -252,7 +256,12 @@ export default function TeamMembersForm() {
           className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           Previous
         </button>
@@ -264,7 +273,7 @@ export default function TeamMembersForm() {
             disabled={isLoading}
             className="inline-flex items-center rounded-md border border-gray-300 bg-white px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
           >
-            {isLoading && !isSubmitting ? "Saving..." : "Save as Draft"}
+            {isLoading && !isSubmitting ? 'Saving...' : 'Save as Draft'}
           </button>
 
           <button

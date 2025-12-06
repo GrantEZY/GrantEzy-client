@@ -5,12 +5,12 @@
  * Handles both CO-APPLICANT and REVIEWER invites
  */
 
-"use client";
+'use client';
 
-import { Suspense, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ToastProvider } from "@/components/ui/ToastNew";
-import { use } from "react";
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { ToastProvider } from '@/components/ui/ToastNew';
+import { use } from 'react';
 
 interface PageProps {
   params: Promise<{
@@ -40,7 +40,7 @@ function InviteLoading() {
 function InvitePageContent({ params }: { params: { token: string; slug: string } }) {
   const { token, slug } = params;
   const router = useRouter();
-  const [isDetectingType, setIsDetectingType] = useState(true);
+  const [_isDetectingType, setIsDetectingType] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -55,7 +55,9 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
         if (coApplicantResponse.ok) {
           // It's a co-applicant invite
           console.log('[InviteRouter] Detected CO-APPLICANT invite, redirecting...');
-          router.replace(`/co-applicant/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`);
+          router.replace(
+            `/co-applicant/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`
+          );
           return;
         }
 
@@ -68,7 +70,9 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
         if (reviewerResponse.ok) {
           // It's a reviewer invite
           console.log('[InviteRouter] Detected REVIEWER invite, redirecting...');
-          router.replace(`/reviewer/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`);
+          router.replace(
+            `/reviewer/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`
+          );
           return;
         }
 
@@ -90,14 +94,24 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-8 h-8 text-red-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </div>
           <h2 className="text-2xl font-bold text-red-900 mb-2">Invalid Invitation</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
-            onClick={() => window.location.href = '/'}
+            onClick={() => (window.location.href = '/')}
             className="px-6 py-3 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors font-medium"
           >
             Go to Homepage
@@ -113,7 +127,7 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
 export default function UniversalInviteRoute({ params }: PageProps) {
   // Use React's use() hook to unwrap the promise in client component
   const resolvedParams = use(params);
-  
+
   return (
     <ToastProvider>
       <Suspense fallback={<InviteLoading />}>

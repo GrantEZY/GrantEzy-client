@@ -1,36 +1,35 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ReviewerLayout from "@/components/layout/ReviewerLayout";
-import { useReviewer } from "@/hooks/useReviewer";
-import { Review, ReviewStatus } from "@/types/reviewer.types";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ReviewerLayout from '@/components/layout/ReviewerLayout';
+import { useReviewer } from '@/hooks/useReviewer';
+import { ReviewStatus } from '@/types/reviewer.types';
 
 export default function ReviewsPage() {
   const { reviews, isLoadingReviews, reviewsError, getUserReviews } = useReviewer();
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterStatus, setFilterStatus] = useState<ReviewStatus | "ALL">("ALL");
+  const [filterStatus, setFilterStatus] = useState<ReviewStatus | 'ALL'>('ALL');
   const pageSize = 10;
 
   useEffect(() => {
     getUserReviews({ page: currentPage, numberOfResults: pageSize });
   }, [currentPage, getUserReviews]);
 
-  const filteredReviews = filterStatus === "ALL" 
-    ? reviews 
-    : reviews.filter(r => r.status === filterStatus);
+  const filteredReviews =
+    filterStatus === 'ALL' ? reviews : reviews.filter((r) => r.status === filterStatus);
 
   const getStatusBadgeClass = (status: ReviewStatus) => {
     switch (status) {
       case ReviewStatus.COMPLETED:
-        return "bg-green-100 text-green-800";
+        return 'bg-green-100 text-green-800';
       case ReviewStatus.IN_PROGRESS:
-        return "bg-orange-100 text-orange-800";
+        return 'bg-orange-100 text-orange-800';
       case ReviewStatus.UNASSIGNED:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -39,9 +38,7 @@ export default function ReviewsPage() {
       <ReviewerLayout>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">My Reviews</h1>
-          <p className="mt-2 text-gray-600">
-            View and manage all your application reviews
-          </p>
+          <p className="mt-2 text-gray-600">View and manage all your application reviews</p>
         </div>
 
         {/* Filters */}
@@ -51,7 +48,7 @@ export default function ReviewsPage() {
               <label className="text-sm font-medium text-gray-700">Filter by status:</label>
               <select
                 className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                onChange={(e) => setFilterStatus(e.target.value as ReviewStatus | "ALL")}
+                onChange={(e) => setFilterStatus(e.target.value as ReviewStatus | 'ALL')}
                 value={filterStatus}
               >
                 <option value="">All Statuses</option>
@@ -62,7 +59,7 @@ export default function ReviewsPage() {
               </select>
             </div>
             <div className="text-sm text-gray-600">
-              Total: {filteredReviews.length} review{filteredReviews.length !== 1 ? "s" : ""}
+              Total: {filteredReviews.length} review{filteredReviews.length !== 1 ? 's' : ''}
             </div>
           </div>
         </div>
@@ -96,10 +93,9 @@ export default function ReviewsPage() {
               </svg>
               <h3 className="mt-2 text-sm font-medium text-gray-900">No reviews found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                {filterStatus === "ALL" 
+                {filterStatus === 'ALL'
                   ? "You haven't been assigned any applications to review yet."
-                  : `No reviews with status "${filterStatus}".`
-                }
+                  : `No reviews with status "${filterStatus}".`}
               </p>
             </div>
           ) : (
@@ -144,11 +140,11 @@ export default function ReviewsPage() {
                         {review.recommendation ? (
                           <span
                             className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                              review.recommendation === "APPROVE"
-                                ? "bg-green-100 text-green-800"
-                                : review.recommendation === "REJECT"
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-yellow-100 text-yellow-800"
+                              review.recommendation === 'APPROVE'
+                                ? 'bg-green-100 text-green-800'
+                                : review.recommendation === 'REJECT'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-yellow-100 text-yellow-800'
                             }`}
                           >
                             {review.recommendation}
@@ -206,9 +202,7 @@ export default function ReviewsPage() {
             >
               Previous
             </button>
-            <span className="text-sm text-gray-700">
-              Page {currentPage}
-            </span>
+            <span className="text-sm text-gray-700">Page {currentPage}</span>
             <button
               className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={reviews.length < pageSize}

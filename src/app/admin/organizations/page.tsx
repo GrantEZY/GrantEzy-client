@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
-import { useAdminStore } from "@/store/admin.store";
+import { useAdminStore } from '@/store/admin.store';
 
-import { AddOrganizationModal } from "@/components/admin/AddOrganizationModal";
-import { DeleteOrganizationModal } from "@/components/admin/DeleteOrganizationModal";
-import { EditOrganizationModal } from "@/components/admin/EditOrganizationModal";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import AdminLayout from "@/components/layout/AdminLayout";
-import { showToast, ToastProvider } from "@/components/ui/ToastNew";
+import { AddOrganizationModal } from '@/components/admin/AddOrganizationModal';
+import { DeleteOrganizationModal } from '@/components/admin/DeleteOrganizationModal';
+import { EditOrganizationModal } from '@/components/admin/EditOrganizationModal';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import AdminLayout from '@/components/layout/AdminLayout';
+import { showToast, ToastProvider } from '@/components/ui/ToastNew';
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from '@/hooks/useAuth';
 
 import {
   AddOrganizationRequest,
   OrganisationType,
   Organization,
   UpdateOrganizationRequest,
-} from "@/types/admin.types";
-import { UserRoles } from "@/types/auth.types";
+} from '@/types/admin.types';
+import { UserRoles } from '@/types/auth.types';
 
 interface OrganizationTableProps {
   organizations: Organization[];
@@ -36,17 +36,17 @@ function OrganizationTable({
 }: OrganizationTableProps) {
   const formatType = (type: OrganisationType) => {
     return type
-      .replace(/_/g, " ")
+      .replace(/_/g, ' ')
       .toLowerCase()
       .replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+    if (!dateString) return 'N/A';
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     });
   };
 
@@ -92,9 +92,7 @@ function OrganizationTable({
             organizations?.map((org) => (
               <tr className="hover:bg-gray-50" key={org.id}>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    {org.name}
-                  </div>
+                  <div className="text-sm font-medium text-gray-900">{org.name}</div>
                 </td>
 
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -149,8 +147,7 @@ function OrganizationsPageContent() {
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedOrganization, setSelectedOrganization] =
-    useState<Organization | null>(null);
+  const [selectedOrganization, setSelectedOrganization] = useState<Organization | null>(null);
 
   // Load organizations on component mount
   useEffect(() => {
@@ -170,22 +167,21 @@ function OrganizationsPageContent() {
       try {
         const success = await addOrganization(orgData);
         if (success) {
-          showToast.success("Organization added successfully!");
+          showToast.success('Organization added successfully!');
           // No need to call getOrganizations() - the store updates automatically
           return { success: true };
         } else {
-          const errorMsg = "Failed to add organization";
+          const errorMsg = 'Failed to add organization';
           showToast.error(errorMsg);
           return { success: false, error: errorMsg };
         }
       } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Failed to add organization";
+        const errorMessage = error instanceof Error ? error.message : 'Failed to add organization';
         showToast.error(errorMessage);
         return { success: false, error: errorMessage };
       }
     },
-    [addOrganization],
+    [addOrganization]
   );
 
   const handleEditOrganization = useCallback(
@@ -193,41 +189,35 @@ function OrganizationsPageContent() {
       try {
         const success = await updateOrganization(orgData);
         if (success) {
-          showToast.success("Organization updated successfully!");
+          showToast.success('Organization updated successfully!');
           getOrganizations(); // Refresh the list
           return { success: true };
         } else {
-          return { success: false, error: "Failed to update organization" };
+          return { success: false, error: 'Failed to update organization' };
         }
       } catch (error) {
         const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "Failed to update organization";
+          error instanceof Error ? error.message : 'Failed to update organization';
         return { success: false, error: errorMessage };
       }
     },
-    [updateOrganization, getOrganizations],
+    [updateOrganization, getOrganizations]
   );
 
   const handleDeleteOrganization = useCallback(async () => {
-    if (!selectedOrganization)
-      return { success: false, error: "No organization selected" };
+    if (!selectedOrganization) return { success: false, error: 'No organization selected' };
 
     try {
       const success = await deleteOrganization({ id: selectedOrganization.id });
       if (success) {
-        showToast.success("Organization deleted successfully!");
+        showToast.success('Organization deleted successfully!');
         getOrganizations(); // Refresh the list
         return { success: true };
       } else {
-        return { success: false, error: "Failed to delete organization" };
+        return { success: false, error: 'Failed to delete organization' };
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to delete organization";
+      const errorMessage = error instanceof Error ? error.message : 'Failed to delete organization';
       return { success: false, error: errorMessage };
     }
   }, [selectedOrganization, deleteOrganization, getOrganizations]);
@@ -257,13 +247,9 @@ function OrganizationsPageContent() {
       <AdminLayout>
         <div className="flex h-64 items-center justify-center">
           <div className="text-center">
-            <h2 className="mb-2 text-xl font-semibold text-gray-900">
-              Access Denied
-            </h2>
+            <h2 className="mb-2 text-xl font-semibold text-gray-900">Access Denied</h2>
 
-            <p className="text-gray-600">
-              You don&apos;t have permission to access this page.
-            </p>
+            <p className="text-gray-600">You don&apos;t have permission to access this page.</p>
           </div>
         </div>
       </AdminLayout>
@@ -285,12 +271,7 @@ function OrganizationsPageContent() {
             className="flex items-center space-x-2 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             onClick={() => setAddModalOpen(true)}
           >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M12 4v16m8-8H4"
                 strokeLinecap="round"

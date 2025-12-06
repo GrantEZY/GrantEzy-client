@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useReviewer } from "@/hooks/useReviewer";
-import { Recommendation } from "@/types/reviewer.types";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useReviewer } from '@/hooks/useReviewer';
+import { Recommendation } from '@/types/reviewer.types';
 
 interface ReviewSubmissionFormProps {
   applicationId: string;
@@ -32,28 +32,28 @@ export default function ReviewSubmissionForm({
   const { submitReview } = useReviewer();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
+  const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   // Form state
   const [scores, setScores] = useState({
-    technical: "",
-    market: "",
-    financial: "",
-    team: "",
-    innovation: "",
+    technical: '',
+    market: '',
+    financial: '',
+    team: '',
+    innovation: '',
   });
-  const [recommendation, setRecommendation] = useState<Recommendation | "">("");
+  const [recommendation, setRecommendation] = useState<Recommendation | ''>('');
   const [suggestedBudget, setSuggestedBudget] = useState({
-    amount: "",
-    currency: "USD",
+    amount: '',
+    currency: 'USD',
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
 
   // Validate a single score field
   const validateScore = (value: string, fieldName: string): string => {
-    if (!value || value.trim() === "") {
+    if (!value || value.trim() === '') {
       return `${fieldName} score is required`;
     }
     const numValue = parseFloat(value);
@@ -63,7 +63,7 @@ export default function ReviewSubmissionForm({
     if (numValue < 0 || numValue > 100) {
       return `${fieldName} score must be between 0 and 100`;
     }
-    return "";
+    return '';
   };
 
   // Validate all form fields
@@ -81,16 +81,16 @@ export default function ReviewSubmissionForm({
 
     // Validate recommendation
     if (!recommendation) {
-      newErrors.recommendation = "Recommendation is required";
+      newErrors.recommendation = 'Recommendation is required';
     }
 
     // Validate suggested budget
-    if (!suggestedBudget.amount || suggestedBudget.amount.trim() === "") {
-      newErrors.suggestedBudget = "Suggested budget is required";
+    if (!suggestedBudget.amount || suggestedBudget.amount.trim() === '') {
+      newErrors.suggestedBudget = 'Suggested budget is required';
     } else {
       const budgetValue = parseFloat(suggestedBudget.amount);
       if (isNaN(budgetValue) || budgetValue <= 0) {
-        newErrors.suggestedBudget = "Suggested budget must be a positive number";
+        newErrors.suggestedBudget = 'Suggested budget must be a positive number';
       }
     }
 
@@ -113,12 +113,12 @@ export default function ReviewSubmissionForm({
 
     // Validate form
     if (!validateForm()) {
-      setSubmitError("Please fix the errors in the form");
+      setSubmitError('Please fix the errors in the form');
       return;
     }
 
     setIsSubmitting(true);
-    setSubmitError("");
+    setSubmitError('');
     setSubmitSuccess(false);
 
     try {
@@ -144,17 +144,15 @@ export default function ReviewSubmissionForm({
           if (onSuccess) {
             onSuccess();
           } else {
-            router.push("/reviewer/reviews");
+            router.push('/reviewer/reviews');
           }
         }, 2000);
       } else {
-        setSubmitError("Failed to submit review. Please try again.");
+        setSubmitError('Failed to submit review. Please try again.');
       }
     } catch (err) {
       setSubmitError(
-        err instanceof Error
-          ? err.message
-          : "An error occurred while submitting the review"
+        err instanceof Error ? err.message : 'An error occurred while submitting the review'
       );
     } finally {
       setIsSubmitting(false);
@@ -166,7 +164,7 @@ export default function ReviewSubmissionForm({
     if (onCancel) {
       onCancel();
     } else {
-      router.push("/reviewer/reviews");
+      router.push('/reviewer/reviews');
     }
   };
 
@@ -176,11 +174,7 @@ export default function ReviewSubmissionForm({
       {submitSuccess && (
         <div className="rounded-md bg-green-50 p-4">
           <div className="flex">
-            <svg
-              className="h-5 w-5 text-green-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
+            <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
               <path
                 clipRule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
@@ -200,11 +194,7 @@ export default function ReviewSubmissionForm({
       {submitError && (
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
-            <svg
-              className="h-5 w-5 text-red-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
+            <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
               <path
                 clipRule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -221,9 +211,7 @@ export default function ReviewSubmissionForm({
       {/* Application Info */}
       {applicationTitle && (
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-          <h3 className="text-sm font-medium text-gray-900">
-            Reviewing Application
-          </h3>
+          <h3 className="text-sm font-medium text-gray-900">Reviewing Application</h3>
           <p className="mt-1 text-sm text-gray-600">{applicationTitle}</p>
           <p className="mt-1 text-xs text-gray-500">ID: {applicationId}</p>
         </div>
@@ -231,173 +219,136 @@ export default function ReviewSubmissionForm({
 
       {/* Scores Section */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Evaluation Scores
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900">Evaluation Scores</h3>
         <p className="text-sm text-gray-600">
-          Rate each category from 0 to 100, where 0 is the lowest and 100 is
-          the highest.
+          Rate each category from 0 to 100, where 0 is the lowest and 100 is the highest.
         </p>
 
         {/* Technical Score */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="technical"
-          >
+          <label className="block text-sm font-medium text-gray-700" htmlFor="technical">
             Technical Feasibility <span className="text-red-500">*</span>
           </label>
           <input
             className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
               errors.technical
-                ? "border-red-300 text-red-900 placeholder-red-300"
-                : "border-gray-300"
+                ? 'border-red-300 text-red-900 placeholder-red-300'
+                : 'border-gray-300'
             }`}
             id="technical"
             name="technical"
             max="100"
             min="0"
-            onChange={(e) => handleScoreChange("technical", e.target.value)}
+            onChange={(e) => handleScoreChange('technical', e.target.value)}
             placeholder="0-100"
             step="0.1"
             type="number"
             value={scores.technical}
           />
-          {errors.technical && (
-            <p className="mt-1 text-sm text-red-600">{errors.technical}</p>
-          )}
+          {errors.technical && <p className="mt-1 text-sm text-red-600">{errors.technical}</p>}
         </div>
 
         {/* Market Potential Score */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="market"
-          >
+          <label className="block text-sm font-medium text-gray-700" htmlFor="market">
             Market Potential <span className="text-red-500">*</span>
           </label>
           <input
             className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-              errors.market
-                ? "border-red-300 text-red-900 placeholder-red-300"
-                : "border-gray-300"
+              errors.market ? 'border-red-300 text-red-900 placeholder-red-300' : 'border-gray-300'
             }`}
             id="market"
             name="market"
             max="100"
             min="0"
-            onChange={(e) => handleScoreChange("market", e.target.value)}
+            onChange={(e) => handleScoreChange('market', e.target.value)}
             placeholder="0-100"
             step="0.1"
             type="number"
             value={scores.market}
           />
-          {errors.market && (
-            <p className="mt-1 text-sm text-red-600">{errors.market}</p>
-          )}
+          {errors.market && <p className="mt-1 text-sm text-red-600">{errors.market}</p>}
         </div>
 
         {/* Financial Viability Score */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="financial"
-          >
+          <label className="block text-sm font-medium text-gray-700" htmlFor="financial">
             Financial Viability <span className="text-red-500">*</span>
           </label>
           <input
             className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
               errors.financial
-                ? "border-red-300 text-red-900 placeholder-red-300"
-                : "border-gray-300"
+                ? 'border-red-300 text-red-900 placeholder-red-300'
+                : 'border-gray-300'
             }`}
             id="financial"
             name="financial"
             max="100"
             min="0"
-            onChange={(e) => handleScoreChange("financial", e.target.value)}
+            onChange={(e) => handleScoreChange('financial', e.target.value)}
             placeholder="0-100"
             step="0.1"
             type="number"
             value={scores.financial}
           />
-          {errors.financial && (
-            <p className="mt-1 text-sm text-red-600">{errors.financial}</p>
-          )}
+          {errors.financial && <p className="mt-1 text-sm text-red-600">{errors.financial}</p>}
         </div>
 
         {/* Team Capability Score */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="team"
-          >
+          <label className="block text-sm font-medium text-gray-700" htmlFor="team">
             Team Capability <span className="text-red-500">*</span>
           </label>
           <input
             className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-              errors.team
-                ? "border-red-300 text-red-900 placeholder-red-300"
-                : "border-gray-300"
+              errors.team ? 'border-red-300 text-red-900 placeholder-red-300' : 'border-gray-300'
             }`}
             id="team"
             name="team"
             max="100"
             min="0"
-            onChange={(e) => handleScoreChange("team", e.target.value)}
+            onChange={(e) => handleScoreChange('team', e.target.value)}
             placeholder="0-100"
             step="0.1"
             type="number"
             value={scores.team}
           />
-          {errors.team && (
-            <p className="mt-1 text-sm text-red-600">{errors.team}</p>
-          )}
+          {errors.team && <p className="mt-1 text-sm text-red-600">{errors.team}</p>}
         </div>
 
         {/* Innovation Score */}
         <div>
-          <label
-            className="block text-sm font-medium text-gray-700"
-            htmlFor="innovation"
-          >
+          <label className="block text-sm font-medium text-gray-700" htmlFor="innovation">
             Innovation <span className="text-red-500">*</span>
           </label>
           <input
             className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
               errors.innovation
-                ? "border-red-300 text-red-900 placeholder-red-300"
-                : "border-gray-300"
+                ? 'border-red-300 text-red-900 placeholder-red-300'
+                : 'border-gray-300'
             }`}
             id="innovation"
             name="innovation"
             max="100"
             min="0"
-            onChange={(e) => handleScoreChange("innovation", e.target.value)}
+            onChange={(e) => handleScoreChange('innovation', e.target.value)}
             placeholder="0-100"
             step="0.1"
             type="number"
             value={scores.innovation}
           />
-          {errors.innovation && (
-            <p className="mt-1 text-sm text-red-600">{errors.innovation}</p>
-          )}
+          {errors.innovation && <p className="mt-1 text-sm text-red-600">{errors.innovation}</p>}
         </div>
       </div>
 
       {/* Recommendation */}
       <div>
-        <label
-          className="block text-sm font-medium text-gray-700"
-          htmlFor="recommendation"
-        >
+        <label className="block text-sm font-medium text-gray-700" htmlFor="recommendation">
           Recommendation <span className="text-red-500">*</span>
         </label>
         <select
           className={`mt-1 block w-full rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
-            errors.recommendation
-              ? "border-red-300 text-red-900"
-              : "border-gray-300"
+            errors.recommendation ? 'border-red-300 text-red-900' : 'border-gray-300'
           }`}
           id="recommendation"
           name="recommendation"
@@ -421,18 +372,15 @@ export default function ReviewSubmissionForm({
 
       {/* Suggested Budget */}
       <div>
-        <label
-          className="block text-sm font-medium text-gray-700"
-          htmlFor="suggestedBudget"
-        >
+        <label className="block text-sm font-medium text-gray-700" htmlFor="suggestedBudget">
           Suggested Budget <span className="text-red-500">*</span>
         </label>
         <div className="mt-1 flex rounded-md shadow-sm">
           <input
             className={`block w-full flex-1 rounded-none rounded-l-md focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm ${
               errors.suggestedBudget
-                ? "border-red-300 text-red-900 placeholder-red-300"
-                : "border-gray-300"
+                ? 'border-red-300 text-red-900 placeholder-red-300'
+                : 'border-gray-300'
             }`}
             id="suggestedBudget"
             name="suggestedBudget"
@@ -452,9 +400,7 @@ export default function ReviewSubmissionForm({
             className="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500"
             id="currency"
             name="currency"
-            onChange={(e) =>
-              setSuggestedBudget((prev) => ({ ...prev, currency: e.target.value }))
-            }
+            onChange={(e) => setSuggestedBudget((prev) => ({ ...prev, currency: e.target.value }))}
             value={suggestedBudget.currency}
           >
             <option value="USD">USD</option>
@@ -485,11 +431,7 @@ export default function ReviewSubmissionForm({
         >
           {isSubmitting ? (
             <span className="flex items-center">
-              <svg
-                className="mr-2 h-4 w-4 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
+              <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle
                   className="opacity-25"
                   cx="12"
@@ -507,7 +449,7 @@ export default function ReviewSubmissionForm({
               Submitting...
             </span>
           ) : (
-            "Submit Review"
+            'Submit Review'
           )}
         </button>
       </div>

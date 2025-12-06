@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
@@ -13,7 +13,7 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType>({
   theme: 'light',
   setTheme: () => {},
-  mounted: false
+  mounted: false,
 });
 
 interface ProvidersProps {
@@ -35,7 +35,8 @@ export function Providers({ children }: ProvidersProps) {
     // Get the initial theme from sessionStorage or default to light
     try {
       const savedTheme = sessionStorage.getItem('theme-mode') as Theme | null;
-      const initialTheme = (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) ? savedTheme : 'light';
+      const initialTheme =
+        savedTheme && (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : 'light';
       setThemeState(initialTheme);
       applyTheme(initialTheme);
     } catch (error) {
@@ -43,7 +44,7 @@ export function Providers({ children }: ProvidersProps) {
       setThemeState('light');
       applyTheme('light');
     }
-    
+
     setMounted(true);
   }, []);
 
@@ -61,14 +62,10 @@ export function Providers({ children }: ProvidersProps) {
   const contextValue: ThemeContextType = {
     theme,
     setTheme,
-    mounted
+    mounted,
   };
 
-  return (
-    <ThemeContext.Provider value={contextValue}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
 }
 
 export function useTheme(): ThemeContextType {

@@ -1,8 +1,8 @@
 /**
  * Public service for fetching publicly available data (no auth required)
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 
 export interface ProgramCycle {
   id: string;
@@ -64,17 +64,15 @@ export class PublicService {
   /**
    * Get all active program cycles (public endpoint)
    */
-  async getActiveProgramCycles(
-    filters?: {
-      page?: number;
-      numberOfResults?: number;
-    }
-  ): Promise<GetActiveCyclesResponse> {
+  async getActiveProgramCycles(filters?: {
+    page?: number;
+    numberOfResults?: number;
+  }): Promise<GetActiveCyclesResponse> {
     const params = new URLSearchParams();
-    
+
     // Required pagination parameters
-    params.append("page", String(filters?.page ?? 1));
-    params.append("numberOfResults", String(filters?.numberOfResults ?? 10));
+    params.append('page', String(filters?.page ?? 1));
+    params.append('numberOfResults', String(filters?.numberOfResults ?? 10));
 
     const url = `${API_CONFIG.ENDPOINTS.PUBLIC.GET_ACTIVE_CYCLES}?${params.toString()}`;
     return httpClient.get<GetActiveCyclesResponse>(url);

@@ -1,8 +1,8 @@
 /**
  * Admin service for handling admin-related API calls
  */
-import { API_CONFIG } from "../lib/config/api.config";
-import { httpClient } from "../lib/http/http-client";
+import { API_CONFIG } from '../lib/config/api.config';
+import { httpClient } from '../lib/http/http-client';
 import {
   AddOrganizationRequest,
   AddOrganizationResponse,
@@ -19,7 +19,7 @@ import {
   UpdateOrganizationRequest,
   UpdateOrganizationResponse,
   UpdateUserRoleRequest,
-} from "../types/admin.types";
+} from '../types/admin.types';
 
 export class AdminService {
   async getAllUsers(params: GetAllUsersRequest): Promise<GetAllUsersResponse> {
@@ -40,74 +40,49 @@ export class AdminService {
       }
     }
 
-    return httpClient.get<GetAllUsersResponse>(
-      API_CONFIG.ENDPOINTS.ADMIN.GET_USERS,
-      queryParams,
-    );
+    return httpClient.get<GetAllUsersResponse>(API_CONFIG.ENDPOINTS.ADMIN.GET_USERS, queryParams);
   }
 
   async addUser(data: AddUserRequest): Promise<AdminOperationResponse> {
-    return httpClient.post<AdminOperationResponse>(
-      API_CONFIG.ENDPOINTS.ADMIN.ADD_USER,
-      data,
-    );
+    return httpClient.post<AdminOperationResponse>(API_CONFIG.ENDPOINTS.ADMIN.ADD_USER, data);
   }
 
-  async updateUserRole(
-    data: UpdateUserRoleRequest,
-  ): Promise<AdminOperationResponse> {
-    return httpClient.patch<AdminOperationResponse>(
-      API_CONFIG.ENDPOINTS.ADMIN.UPDATE_ROLE,
-      data,
-    );
+  async updateUserRole(data: UpdateUserRoleRequest): Promise<AdminOperationResponse> {
+    return httpClient.patch<AdminOperationResponse>(API_CONFIG.ENDPOINTS.ADMIN.UPDATE_ROLE, data);
   }
 
   async deleteUser(data: DeleteUserRequest): Promise<AdminOperationResponse> {
-    return httpClient.delete<AdminOperationResponse>(
-      API_CONFIG.ENDPOINTS.ADMIN.DELETE_USER,
-      data,
-    );
+    return httpClient.delete<AdminOperationResponse>(API_CONFIG.ENDPOINTS.ADMIN.DELETE_USER, data);
   }
 
-  async getUserProfile(
-    params: GetUserProfileRequest,
-  ): Promise<GetUserProfileResponse> {
-    return httpClient.get<GetUserProfileResponse>(
-      API_CONFIG.ENDPOINTS.ADMIN.GET_USER_PROFILE,
-      { userSlug: params.userSlug },
-    );
+  async getUserProfile(params: GetUserProfileRequest): Promise<GetUserProfileResponse> {
+    return httpClient.get<GetUserProfileResponse>(API_CONFIG.ENDPOINTS.ADMIN.GET_USER_PROFILE, {
+      userSlug: params.userSlug,
+    });
   }
 
-  async addOrganization(
-    data: AddOrganizationRequest,
-  ): Promise<AddOrganizationResponse> {
+  async addOrganization(data: AddOrganizationRequest): Promise<AddOrganizationResponse> {
     return httpClient.post<AddOrganizationResponse>(
       API_CONFIG.ENDPOINTS.ADMIN.ADD_ORGANIZATION,
-      data,
+      data
     );
   }
 
   async getOrganizations(): Promise<GetOrganizationsResponse> {
-    return httpClient.get<GetOrganizationsResponse>(
-      API_CONFIG.ENDPOINTS.ADMIN.GET_ORGANIZATIONS,
-    );
+    return httpClient.get<GetOrganizationsResponse>(API_CONFIG.ENDPOINTS.ADMIN.GET_ORGANIZATIONS);
   }
 
-  async updateOrganization(
-    data: UpdateOrganizationRequest,
-  ): Promise<UpdateOrganizationResponse> {
+  async updateOrganization(data: UpdateOrganizationRequest): Promise<UpdateOrganizationResponse> {
     return httpClient.patch<UpdateOrganizationResponse>(
       API_CONFIG.ENDPOINTS.ADMIN.UPDATE_ORGANIZATION,
-      data,
+      data
     );
   }
 
-  async deleteOrganization(
-    data: DeleteOrganizationRequest,
-  ): Promise<DeleteOrganizationResponse> {
+  async deleteOrganization(data: DeleteOrganizationRequest): Promise<DeleteOrganizationResponse> {
     return httpClient.delete<DeleteOrganizationResponse>(
       API_CONFIG.ENDPOINTS.ADMIN.DELETE_ORGANIZATION,
-      data,
+      data
     );
   }
 }

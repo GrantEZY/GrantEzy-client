@@ -1,18 +1,14 @@
 /**
  * Co-applicant store using Zustand
  */
-import { create } from "zustand";
-import { coApplicantService } from "../services/co-applicant.service";
-import {
-  CoApplicantState,
-  CoApplicantActions,
-  ApplicationDetails,
-  InviteStatus,
-} from "../types/co-applicant.types";
+import { create } from 'zustand';
+
+import { coApplicantService } from '../services/co-applicant.service';
+import { CoApplicantActions, CoApplicantState, InviteStatus } from '../types/co-applicant.types';
 
 type CoApplicantStore = CoApplicantState & CoApplicantActions;
 
-export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
+export const useCoApplicantStore = create<CoApplicantStore>()((set, _get) => ({
   // Initial state
   applicationDetails: null,
   tokenDetails: null,
@@ -25,7 +21,7 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await coApplicantService.getApplicationDetails(applicationId);
-      
+
       if (response.status === 200) {
         set({
           applicationDetails: response.res.application,
@@ -33,12 +29,12 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
         });
       } else {
         set({
-          error: response.message || "Failed to fetch application details",
+          error: response.message || 'Failed to fetch application details',
           isLoading: false,
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       set({
         error: errorMessage,
         isLoading: false,
@@ -49,10 +45,13 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
   getTokenDetails: async (token: string, slug: string) => {
     set({ isLoading: true, error: null });
     try {
-      console.log('[CoApplicantStore] Fetching token details:', { token, slug });
+      console.log('[CoApplicantStore] Fetching token details:', {
+        token,
+        slug,
+      });
       const response = await coApplicantService.getTokenDetails(token, slug);
       console.log('[CoApplicantStore] Token details response:', response);
-      
+
       if (response.status === 200) {
         console.log('[CoApplicantStore] ✅ Token details loaded successfully:', response.res);
         set({
@@ -60,7 +59,7 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
           isLoading: false,
         });
       } else {
-        const errorMsg = response.message || "Failed to fetch token details";
+        const errorMsg = response.message || 'Failed to fetch token details';
         console.error('[CoApplicantStore] ❌ Token details failed:', errorMsg, response);
         set({
           error: errorMsg,
@@ -68,7 +67,7 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       console.error('[CoApplicantStore] ❌ Token details error:', errorMessage, error);
       set({
         error: errorMessage,
@@ -78,14 +77,14 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
   },
 
   updateInviteStatus: async (
-    token: string, 
-    slug: string, 
+    token: string,
+    slug: string,
     status: InviteStatus.ACCEPTED | InviteStatus.REJECTED
   ) => {
     set({ isLoading: true, error: null });
     try {
       const response = await coApplicantService.updateInviteStatus(token, slug, status);
-      
+
       if (response.status === 200) {
         set({
           isLoading: false,
@@ -94,12 +93,12 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
         // get().getTokenDetails(token, slug);
       } else {
         set({
-          error: response.message || "Failed to update invite status",
+          error: response.message || 'Failed to update invite status',
           isLoading: false,
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       set({
         error: errorMessage,
         isLoading: false,
@@ -111,7 +110,7 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
     set({ isLoading: true, error: null });
     try {
       const response = await coApplicantService.getUserLinkedProjects(page, numberOfResults);
-      
+
       if (response.status === 200 && response.res) {
         set({
           linkedProjects: response.res.applications || [],
@@ -119,13 +118,13 @@ export const useCoApplicantStore = create<CoApplicantStore>()((set, get) => ({
         });
       } else {
         set({
-          error: response.message || "Failed to fetch linked projects",
+          error: response.message || 'Failed to fetch linked projects',
           isLoading: false,
           linkedProjects: [],
         });
       }
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
       set({
         error: errorMessage,
         isLoading: false,

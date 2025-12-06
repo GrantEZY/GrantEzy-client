@@ -1,24 +1,19 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { AuthGuard } from "@/components/guards/AuthGuard";
-import ReviewerLayout from "@/components/layout/ReviewerLayout";
-import { useReviewer } from "@/hooks/useReviewer";
-import { Recommendation, ReviewStatus } from "@/types/reviewer.types";
+import { useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { AuthGuard } from '@/components/guards/AuthGuard';
+import ReviewerLayout from '@/components/layout/ReviewerLayout';
+import { useReviewer } from '@/hooks/useReviewer';
+import { Recommendation, ReviewStatus } from '@/types/reviewer.types';
 
 export default function ReviewDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params.slug as string;
 
-  const {
-    currentReview,
-    isLoadingReviews,
-    reviewsError,
-    getReviewDetails,
-    clearCurrentReview,
-  } = useReviewer();
+  const { currentReview, isLoadingReviews, reviewsError, getReviewDetails, clearCurrentReview } =
+    useReviewer();
 
   useEffect(() => {
     if (slug) {
@@ -33,26 +28,26 @@ export default function ReviewDetailsPage() {
   const getStatusBadgeClass = (status: ReviewStatus) => {
     switch (status) {
       case ReviewStatus.COMPLETED:
-        return "bg-green-100 text-green-800";
+        return 'bg-green-100 text-green-800';
       case ReviewStatus.IN_PROGRESS:
-        return "bg-orange-100 text-orange-800";
+        return 'bg-orange-100 text-orange-800';
       case ReviewStatus.UNASSIGNED:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getRecommendationBadgeClass = (recommendation: Recommendation) => {
     switch (recommendation) {
       case Recommendation.APPROVE:
-        return "bg-green-100 text-green-800";
+        return 'bg-green-100 text-green-800';
       case Recommendation.REJECT:
-        return "bg-red-100 text-red-800";
+        return 'bg-red-100 text-red-800';
       case Recommendation.REVISE:
-        return "bg-yellow-100 text-yellow-800";
+        return 'bg-yellow-100 text-yellow-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -64,12 +59,7 @@ export default function ReviewDetailsPage() {
             className="mb-4 flex items-center text-sm text-blue-600 hover:text-blue-700"
             onClick={() => router.back()}
           >
-            <svg
-              className="mr-2 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 strokeLinecap="round"
@@ -81,16 +71,12 @@ export default function ReviewDetailsPage() {
           </button>
 
           <h1 className="text-3xl font-bold text-gray-900">Review Details</h1>
-          <p className="mt-2 text-gray-600">
-            View detailed information about this review
-          </p>
+          <p className="mt-2 text-gray-600">View detailed information about this review</p>
         </div>
 
         {reviewsError ? (
           <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-            <h3 className="mt-2 text-sm font-medium text-red-900">
-              Error Loading Review
-            </h3>
+            <h3 className="mt-2 text-sm font-medium text-red-900">Error Loading Review</h3>
             <p className="mt-1 text-sm text-red-700">{reviewsError}</p>
           </div>
         ) : isLoadingReviews ? (
@@ -100,9 +86,7 @@ export default function ReviewDetailsPage() {
           </div>
         ) : !currentReview ? (
           <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
-              Review Not Found
-            </h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">Review Not Found</h3>
             <p className="mt-1 text-sm text-gray-500">
               The review you're looking for doesn't exist or you don't have permission to view it.
             </p>
@@ -123,7 +107,9 @@ export default function ReviewDetailsPage() {
                   </div>
                   <button
                     className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => router.push(`/reviewer/submit-review/${currentReview.applicationId}`)}
+                    onClick={() =>
+                      router.push(`/reviewer/submit-review/${currentReview.applicationId}`)
+                    }
                     type="button"
                   >
                     Submit Review
@@ -134,9 +120,7 @@ export default function ReviewDetailsPage() {
 
             {/* Review Status Card */}
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-xl font-semibold text-gray-900">
-                Review Status
-              </h2>
+              <h2 className="mb-4 text-xl font-semibold text-gray-900">Review Status</h2>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div>
                   <p className="text-sm font-medium text-gray-600">Status</p>
@@ -147,9 +131,7 @@ export default function ReviewDetailsPage() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Recommendation
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Recommendation</p>
                   {currentReview.recommendation ? (
                     <span
                       className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getRecommendationBadgeClass(currentReview.recommendation)}`}
@@ -171,17 +153,11 @@ export default function ReviewDetailsPage() {
 
             {/* Application Info */}
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-xl font-semibold text-gray-900">
-                Application Information
-              </h2>
+              <h2 className="mb-4 text-xl font-semibold text-gray-900">Application Information</h2>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    Application ID
-                  </p>
-                  <p className="mt-1 text-sm text-gray-900">
-                    {currentReview.applicationId}
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Application ID</p>
+                  <p className="mt-1 text-sm text-gray-900">{currentReview.applicationId}</p>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Review ID</p>
@@ -189,9 +165,7 @@ export default function ReviewDetailsPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-600">Slug</p>
-                  <p className="mt-1 text-sm text-gray-900">
-                    {currentReview.slug}
-                  </p>
+                  <p className="mt-1 text-sm text-gray-900">{currentReview.slug}</p>
                 </div>
               </div>
             </div>
@@ -199,9 +173,7 @@ export default function ReviewDetailsPage() {
             {/* Scores */}
             {currentReview.scores && (
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold text-gray-900">
-                  Evaluation Scores
-                </h2>
+                <h2 className="mb-4 text-xl font-semibold text-gray-900">Evaluation Scores</h2>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
                   <div>
                     <p className="text-sm font-medium text-gray-600">Technical</p>
@@ -246,12 +218,10 @@ export default function ReviewDetailsPage() {
             {/* Suggested Budget */}
             {currentReview.suggestedBudget && (
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold text-gray-900">
-                  Suggested Budget
-                </h2>
+                <h2 className="mb-4 text-xl font-semibold text-gray-900">Suggested Budget</h2>
                 <div className="flex items-baseline space-x-2">
                   <p className="text-3xl font-bold text-gray-900">
-                    {currentReview.suggestedBudget.currency}{" "}
+                    {currentReview.suggestedBudget.currency}{' '}
                     {currentReview.suggestedBudget.amount.toLocaleString()}
                   </p>
                 </div>
