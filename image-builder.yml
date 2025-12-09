@@ -1,0 +1,42 @@
+services:
+  web:
+    build:
+      context: .
+      target: dev
+    ports:
+      - '${PORT:-3000}:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.local
+    command: pnpm dev
+    profiles: ['dev']
+
+  web-staging:
+    build:
+      context: .
+      target: production
+    ports:
+      - '${STAGING_PORT:-3001}:3000'
+    env_file:
+      - .env.staging
+    environment:
+      NODE_ENV: production
+      APP_ENV: staging
+    command: node server.js
+    profiles: ['staging']
+
+  web-prod:
+    build:
+      context: .
+      target: production
+    ports:
+      - '${PORT:-3000}:3000'
+    env_file:
+      - .env.production
+    environment:
+      NODE_ENV: production
+      APP_ENV: production
+    command: node server.js
+    profiles: ['prod']
