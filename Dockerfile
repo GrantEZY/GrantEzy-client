@@ -2,16 +2,26 @@
 # Base Image
 # -----------------------------
 FROM node:25-alpine AS base
-RUN apk add --no-cache g++ make py3-pip libc6-compat
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# Copy lockfiles first for caching
-COPY package*.json pnpm-lock.yaml ./
-
+ENV CI=1
 # Install pnpm globally
 RUN npm install -g pnpm
 
 EXPOSE 3000
+
+
+# -----------------------------
+# Dependencies
+# -----------------------------
+FROM base AS deps
+WORKDIR /app
+
+# Copy lockfiles
+COPY package.json pnpm-lock.yaml ./
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
 
 # -----------------------------
@@ -20,37 +30,37 @@ EXPOSE 3000
 FROM base AS builder
 WORKDIR /app
 
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Install dependencies (including devDependencies)
-RUN pnpm install
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build the application
 RUN pnpm build
 
 
 # -----------------------------
-# Production Image
+# Production Image (Standalone)
 # -----------------------------
 FROM base AS production
 WORKDIR /app
 
 ENV NODE_ENV=production
-
-# Install only production dependencies
-RUN pnpm install --prod
+ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
   adduser -S nextjs -u 1001
+
+# Copy only the standalone output
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
 USER nextjs
 
-# Copy built assets
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
-
-CMD ["pnpm", "start"]
+CMD ["node", "server.js"]
 
 
 # -----------------------------
@@ -62,6 +72,7 @@ WORKDIR /app
 ENV NODE_ENV=development
 
 # Install ALL dependencies
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install
 
 COPY . .
