@@ -46,12 +46,136 @@ export interface User {
   role?: string;
 }
 
+// Import types from applicant for full application structure
+export interface BasicInfo {
+  title: string;
+  summary: string;
+  problem: string;
+  solution: string;
+  innovation: string;
+}
+
+export interface Money {
+  amount: number;
+  currency: string;
+}
+
+export interface BudgetItem {
+  BudgetReason: string;
+  Budget: Money;
+}
+
+export interface Budget {
+  ManPower: BudgetItem[];
+  Equipment: BudgetItem[];
+  OtherCosts: BudgetItem[];
+  Consumables: BudgetItem;
+  Travel: BudgetItem;
+  Contigency: BudgetItem;
+  Overhead: BudgetItem;
+}
+
+export interface TechnicalSpec {
+  description: string;
+  techStack: string[];
+  prototype: string;
+}
+
+export interface MarketInfo {
+  totalAddressableMarket: string;
+  serviceableMarket: string;
+  obtainableMarket: string;
+  competitorAnalysis: string;
+}
+
+export enum RevenueStreamType {
+  SUBSCRIPTION = 'SUBSCRIPTION',
+  LICENSE = 'LICENSE',
+  USAGE_BASED = 'USAGE_BASED',
+  DIRECT_SALES = 'DIRECT_SALES',
+  FREEMIUM = 'FREEMIUM',
+  MARKETPLACE = 'MARKETPLACE',
+  ADVERTISING = 'ADVERTISING',
+  CONSULTING = 'CONSULTING',
+}
+
+export interface RevenueStream {
+  type: RevenueStreamType;
+  description: string;
+  percentage: number;
+}
+
+export interface RevenueModel {
+  primaryStream: RevenueStream;
+  secondaryStreams: RevenueStream[];
+  pricing: string;
+  unitEconomics: string;
+}
+
+export enum RiskImpact {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL',
+}
+
+export interface Risk {
+  description: string;
+  impact: RiskImpact;
+  mitigation: string;
+}
+
+export interface Milestone {
+  title: string;
+  description: string;
+  deliverables: string[];
+  dueDate: string;
+}
+
+export interface Document {
+  title: string;
+  description: string;
+  fileName: string;
+  fileSize: string;
+  mimeType: string;
+  storageUrl: string;
+  metaData?: Record<string, any>;
+}
+
+export interface ApplicationDocuments {
+  endorsementLetter?: Document;
+  plagiarismUndertaking?: Document;
+  ageProof?: Document;
+  aadhar?: Document;
+  piCertificate?: Document;
+  coPiCertificate?: Document;
+  otherDocuments?: Document[];
+}
+
+export interface TeamMateInvite {
+  id: string;
+  email: string;
+  status: string;
+  invitedAt: string;
+}
+
 export interface Application {
   id: string;
-  slug: string;
-  title?: string;
-  description?: string;
+  slug?: string;
+  applicantId: string;
+  cycleId: string;
   status: string;
+  stepNumber?: number;
+  basicDetails?: BasicInfo;
+  budget?: Budget;
+  technicalSpec?: TechnicalSpec;
+  marketInfo?: MarketInfo;
+  revenueModel?: RevenueModel;
+  risks?: Risk[];
+  milestones?: Milestone[];
+  documents?: ApplicationDocuments;
+  teamMateInvites?: TeamMateInvite[];
+  isSubmitted?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -213,6 +337,7 @@ export interface ReviewerState {
   // Reviews
   reviews: Review[];
   currentReview: Review | null;
+  currentApplication: Application | null;
   reviewsPagination: PaginationMeta | null;
   isLoadingReviews: boolean;
   reviewsError: string | null;

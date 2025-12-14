@@ -8,6 +8,7 @@ export const useReviewer = () => {
   // State
   const reviews = useReviewerStore((state) => state.reviews);
   const currentReview = useReviewerStore((state) => state.currentReview);
+  const currentApplication = useReviewerStore((state) => state.currentApplication);
   const reviewsPagination = useReviewerStore((state) => state.reviewsPagination);
   const isLoadingReviews = useReviewerStore((state) => state.isLoadingReviews);
   const reviewsError = useReviewerStore((state) => state.reviewsError);
@@ -25,6 +26,7 @@ export const useReviewer = () => {
     // State
     reviews,
     currentReview,
+    currentApplication,
     reviewsPagination,
     isLoadingReviews,
     reviewsError,

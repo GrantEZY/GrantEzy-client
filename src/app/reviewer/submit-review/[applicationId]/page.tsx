@@ -1,33 +1,34 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import ReviewerLayout from '@/components/layout/ReviewerLayout';
-import ReviewSubmissionForm from '@/components/reviewer/ReviewSubmissionForm';
-import { useReviewer } from '@/hooks/useReviewer';
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import ReviewerLayout from "@/components/layout/ReviewerLayout";
+import ReviewSubmissionForm from "@/components/reviewer/ReviewSubmissionForm";
+import ApplicationDetailsDisplay from "@/components/reviewer/ApplicationDetailsDisplay";
+import { useReviewer } from "@/hooks/useReviewer";
 
 export default function SubmitReviewPage() {
   const params = useParams();
   const router = useRouter();
-  const { getUserReviews, reviews } = useReviewer();
+  const { getUserReviews, getReviewDetails, currentReview, currentApplication, reviews, isLoadingReviews, reviewsError } = useReviewer();
 
   const applicationId = params.applicationId as string;
-  const [applicationTitle, setApplicationTitle] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [reviewSlug, setReviewSlug] = useState<string>("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchReviewData = async () => {
-      setIsLoading(true);
-      setError('');
+      setError("");
 
       try {
-        // Fetch user reviews to get the application title
+        // Fetch user reviews to find the review slug for this application
         await getUserReviews({ page: 1, numberOfResults: 100 });
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load application details');
-      } finally {
-        setIsLoading(false);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "Failed to load application details"
+        );
       }
     };
 
@@ -37,20 +38,22 @@ export default function SubmitReviewPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicationId]); // Only depend on applicationId
 
-  // Separate effect to update title when reviews change
+  // Find the review for this application and fetch its details
   useEffect(() => {
     const review = reviews.find((r) => r.applicationId === applicationId);
-    if (review && review.application?.title) {
-      setApplicationTitle(review.application.title);
+    if (review && review.slug) {
+      setReviewSlug(review.slug);
+      // Fetch full review details including application data
+      getReviewDetails({ reviewSlug: review.slug });
     }
-  }, [reviews, applicationId]);
+  }, [reviews, applicationId, getReviewDetails]);
 
   const handleSuccess = () => {
-    router.push('/reviewer/reviews');
+    router.push("/reviewer/reviews");
   };
 
   const handleCancel = () => {
-    router.push('/reviewer/reviews');
+    router.push("/reviewer/reviews");
   };
 
   return (
@@ -60,10 +63,15 @@ export default function SubmitReviewPage() {
         <div className="mb-8">
           <button
             className="mb-4 flex items-center text-sm text-gray-600 hover:text-gray-900"
-            onClick={() => router.push('/reviewer/reviews')}
+            onClick={() => router.push("/reviewer/reviews")}
             type="button"
           >
-            <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className="mr-2 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               <path
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
                 strokeLinecap="round"
@@ -75,13 +83,12 @@ export default function SubmitReviewPage() {
           </button>
           <h1 className="text-3xl font-bold text-gray-900">Submit Review</h1>
           <p className="mt-2 text-sm text-gray-600">
-            Provide your evaluation scores, recommendation, and suggested budget for this
-            application.
+            Review the application details below and provide your evaluation.
           </p>
         </div>
 
         {/* Loading State */}
-        {isLoading && (
+        {isLoadingReviews && !currentApplication && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
               <svg
@@ -103,16 +110,22 @@ export default function SubmitReviewPage() {
                   fill="currentColor"
                 />
               </svg>
-              <p className="mt-2 text-sm text-gray-600">Loading application details...</p>
+              <p className="mt-2 text-sm text-gray-600">
+                Loading application details...
+              </p>
             </div>
           </div>
         )}
 
         {/* Error State */}
-        {error && !isLoading && (
+        {(error || reviewsError) && !isLoadingReviews && (
           <div className="rounded-md bg-red-50 p-4">
             <div className="flex">
-              <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="h-5 w-5 text-red-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   clipRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
@@ -120,11 +133,13 @@ export default function SubmitReviewPage() {
                 />
               </svg>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Error Loading Application</h3>
-                <p className="mt-2 text-sm text-red-700">{error}</p>
+                <h3 className="text-sm font-medium text-red-800">
+                  Error Loading Application
+                </h3>
+                <p className="mt-2 text-sm text-red-700">{error || reviewsError}</p>
                 <button
                   className="mt-4 rounded-md bg-red-100 px-3 py-2 text-sm font-medium text-red-800 hover:bg-red-200"
-                  onClick={() => router.push('/reviewer/reviews')}
+                  onClick={() => router.push("/reviewer/reviews")}
                   type="button"
                 >
                   Go Back to Reviews
@@ -134,23 +149,39 @@ export default function SubmitReviewPage() {
           </div>
         )}
 
-        {/* Review Submission Form */}
-        {!isLoading && !error && (
-          <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <ReviewSubmissionForm
-              applicationId={applicationId}
-              applicationTitle={applicationTitle || 'Application'}
-              onCancel={handleCancel}
-              onSuccess={handleSuccess}
-            />
+        {/* Application Details */}
+        {!isLoadingReviews && !error && !reviewsError && currentApplication && (
+          <div className="space-y-8">
+            {/* Application Details Section */}
+            <div>
+              <h2 className="mb-4 text-2xl font-semibold text-gray-900">Application Details</h2>
+              <ApplicationDetailsDisplay application={currentApplication} />
+            </div>
+
+            {/* Review Submission Form */}
+            <div>
+              <h2 className="mb-4 text-2xl font-semibold text-gray-900">Your Review</h2>
+              <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+                <ReviewSubmissionForm
+                  applicationId={applicationId}
+                  applicationTitle={currentApplication.basicDetails?.title || "Application"}
+                  onCancel={handleCancel}
+                  onSuccess={handleSuccess}
+                />
+              </div>
+            </div>
           </div>
         )}
 
         {/* Help Text */}
-        {!isLoading && !error && (
+        {!isLoadingReviews && !error && !reviewsError && currentApplication && (
           <div className="mt-6 rounded-md bg-blue-50 p-4">
             <div className="flex">
-              <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+              <svg
+                className="h-5 w-5 text-blue-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
                 <path
                   clipRule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z"
@@ -158,17 +189,38 @@ export default function SubmitReviewPage() {
                 />
               </svg>
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-blue-800">Review Guidelines</h3>
+                <h3 className="text-sm font-medium text-blue-800">
+                  Review Guidelines
+                </h3>
                 <div className="mt-2 text-sm text-blue-700">
                   <ul className="list-disc space-y-1 pl-5">
-                    <li>Rate each category from 0 to 100 based on the application's merit</li>
-                    <li>Technical: Feasibility and soundness of the technical approach</li>
-                    <li>Market: Market opportunity and potential for impact</li>
-                    <li>Financial: Budget reasonableness and financial planning</li>
-                    <li>Team: Team capability and relevant experience</li>
-                    <li>Innovation: Novelty and innovative aspects of the project</li>
-                    <li>Provide a clear recommendation (Approve, Reject, or Request Revisions)</li>
-                    <li>Suggest an appropriate budget considering the project scope</li>
+                    <li>
+                      Rate each category from 0 to 100 based on the application's
+                      merit
+                    </li>
+                    <li>
+                      Technical: Feasibility and soundness of the technical
+                      approach
+                    </li>
+                    <li>
+                      Market: Market opportunity and potential for impact
+                    </li>
+                    <li>
+                      Financial: Budget reasonableness and financial planning
+                    </li>
+                    <li>
+                      Team: Team capability and relevant experience
+                    </li>
+                    <li>
+                      Innovation: Novelty and innovative aspects of the project
+                    </li>
+                    <li>
+                      Provide a clear recommendation (Approve, Reject, or Request
+                      Revisions)
+                    </li>
+                    <li>
+                      Suggest an appropriate budget considering the project scope
+                    </li>
                   </ul>
                 </div>
               </div>

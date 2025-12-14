@@ -17,6 +17,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
   // ============= State =============
   reviews: [],
   currentReview: null,
+  currentApplication: null,
   reviewsPagination: null,
   isLoadingReviews: false,
   reviewsError: null,
@@ -64,6 +65,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
       if (response.status === 200 && response.res) {
         set({
           currentReview: response.res.review,
+          currentApplication: response.res.application,
           isLoadingReviews: false,
         });
       } else {
@@ -167,7 +169,7 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
    * Clear current review
    */
   clearCurrentReview: () => {
-    set({ currentReview: null });
+    set({ currentReview: null, currentApplication: null });
   },
 
   /**
