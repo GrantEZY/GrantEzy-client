@@ -17,26 +17,26 @@ export default function BudgetForm() {
     OtherCosts: currentApplication?.budget?.OtherCosts || [],
     Consumables: currentApplication?.budget?.Consumables || {
       BudgetReason: '',
-      Budget: { amount: 0, currency: 'INR' },
+      Budget: { amount: '' as any, currency: 'INR' },
     },
     Travel: currentApplication?.budget?.Travel || {
       BudgetReason: '',
-      Budget: { amount: 0, currency: 'INR' },
+      Budget: { amount: '' as any, currency: 'INR' },
     },
     Contigency: currentApplication?.budget?.Contigency || {
       BudgetReason: '',
-      Budget: { amount: 0, currency: 'INR' },
+      Budget: { amount: '' as any, currency: 'INR' },
     },
     Overhead: currentApplication?.budget?.Overhead || {
       BudgetReason: '',
-      Budget: { amount: 0, currency: 'INR' },
+      Budget: { amount: '' as any, currency: 'INR' },
     },
   });
 
   const addArrayItem = (field: 'ManPower' | 'Equipment' | 'OtherCosts') => {
     setFormData((prev) => ({
       ...prev,
-      [field]: [...prev[field], { BudgetReason: '', Budget: { amount: 0, currency: 'INR' } }],
+      [field]: [...prev[field], { BudgetReason: '', Budget: { amount: '' as any, currency: 'INR' } }],
     }));
   };
 
@@ -59,7 +59,7 @@ export default function BudgetForm() {
         i === index
           ? key === 'BudgetReason'
             ? { ...item, BudgetReason: value as string }
-            : { ...item, Budget: { ...item.Budget, amount: value as number } }
+            : { ...item, Budget: { ...item.Budget, amount: value === '' ? '' : value as number } }
           : item
       ),
     }));
@@ -77,20 +77,20 @@ export default function BudgetForm() {
           ? { ...prev[field], BudgetReason: value as string }
           : {
               ...prev[field],
-              Budget: { ...prev[field].Budget, amount: value as number },
+              Budget: { ...prev[field].Budget, amount: value === '' ? '' : value as number },
             },
     }));
   };
 
   const calculateTotal = (): number => {
     let total = 0;
-    formData.ManPower.forEach((item) => (total += item.Budget.amount));
-    formData.Equipment.forEach((item) => (total += item.Budget.amount));
-    formData.OtherCosts.forEach((item) => (total += item.Budget.amount));
-    total += formData.Consumables.Budget.amount;
-    total += formData.Travel.Budget.amount;
-    total += formData.Contigency.Budget.amount;
-    total += formData.Overhead.Budget.amount;
+    formData.ManPower.forEach((item) => (total += Number(item.Budget.amount) || 0));
+    formData.Equipment.forEach((item) => (total += Number(item.Budget.amount) || 0));
+    formData.OtherCosts.forEach((item) => (total += Number(item.Budget.amount) || 0));
+    total += Number(formData.Consumables.Budget.amount) || 0;
+    total += Number(formData.Travel.Budget.amount) || 0;
+    total += Number(formData.Contigency.Budget.amount) || 0;
+    total += Number(formData.Overhead.Budget.amount) || 0;
     return total;
   };
 
@@ -159,9 +159,9 @@ export default function BudgetForm() {
                 type="number"
                 min="0"
                 value={item.Budget.amount}
-                onChange={(e) => updateArrayItem(field, index, 'amount', Number(e.target.value))}
+                onChange={(e) => updateArrayItem(field, index, 'amount', e.target.value === '' ? '' : Number(e.target.value))}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="0"
+                placeholder="Enter amount"
               />
             </div>
           </div>
@@ -195,9 +195,9 @@ export default function BudgetForm() {
             type="number"
             min="0"
             value={item.Budget.amount}
-            onChange={(e) => updateSingleItem(field, 'amount', Number(e.target.value))}
+            onChange={(e) => updateSingleItem(field, 'amount', e.target.value === '' ? '' : Number(e.target.value))}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            placeholder="0"
+            placeholder="Enter amount"
           />
         </div>
       </div>
