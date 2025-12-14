@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { RevenueModel, RevenueStream, RevenueStreamType } from '@/types/applicant.types';
 
@@ -21,6 +21,22 @@ export default function RevenueModelForm() {
     pricing: currentApplication?.revenueModel?.pricing || '',
     unitEconomics: currentApplication?.revenueModel?.unitEconomics || '',
   });
+
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.revenueModel) {
+      setFormData({
+        primaryStream: currentApplication.revenueModel.primaryStream || {
+          type: RevenueStreamType.SUBSCRIPTION,
+          description: '',
+          percentage: 100,
+        },
+        secondaryStreams: currentApplication.revenueModel.secondaryStreams || [],
+        pricing: currentApplication.revenueModel.pricing || '',
+        unitEconomics: currentApplication.revenueModel.unitEconomics || '',
+      });
+    }
+  }, [currentApplication]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 

@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { Risk, Milestone, RiskImpact } from '@/types/applicant.types';
 
@@ -13,6 +13,15 @@ export default function RisksAndMilestonesForm() {
 
   const [risks, setRisks] = useState<Risk[]>(currentApplication?.risks || []);
   const [milestones, setMilestones] = useState<Milestone[]>(currentApplication?.milestones || []);
+
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.risks || currentApplication?.milestones) {
+      setRisks(currentApplication.risks || []);
+      setMilestones(currentApplication.milestones || []);
+    }
+  }, [currentApplication]);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Risk Management

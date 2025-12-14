@@ -25,11 +25,11 @@ export default function ApplicationDetailsView({
     //clearError, //  comment out as it's unused
   } = useCoApplicantApplication(applicationId);
 
+  // Fetch application details only once when component mounts or applicationId changes
   useEffect(() => {
-    if (applicationId) {
-      fetchApplication();
-    }
-  }, [applicationId, fetchApplication]);
+    fetchApplication();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [applicationId]);
 
   const renderTeamMate = (teammate: TeamMate) => (
     <div

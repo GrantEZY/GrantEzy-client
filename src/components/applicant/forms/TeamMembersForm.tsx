@@ -20,6 +20,13 @@ export default function TeamMembersForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.teamMateInvites) {
+      setEmails(currentApplication.teamMateInvites.map((invite) => invite.email) || []);
+    }
+  }, [currentApplication]);
+
   // Show celebration toast when application is successfully submitted
   useEffect(() => {
     if (successMessage && successMessage.includes('🎉') && hasSubmitted) {

@@ -1,10 +1,10 @@
 /**
  * Step 3: Technical Details Form
- * Collects: technicalSpec (description, techStack, prototype) + marketInfo (TAM, SAM, SOM, competitorAnalysis)
+ * Collects technical specifications and market information
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { TechnicalSpec, MarketInfo } from '@/types/applicant.types';
 

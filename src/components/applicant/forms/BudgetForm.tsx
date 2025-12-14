@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { Budget, BudgetItem } from '@/types/applicant.types';
 
@@ -32,6 +32,33 @@ export default function BudgetForm() {
       Budget: { amount: '' as any, currency: 'INR' },
     },
   });
+
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.budget) {
+      setFormData({
+        ManPower: currentApplication.budget.ManPower || [],
+        Equipment: currentApplication.budget.Equipment || [],
+        OtherCosts: currentApplication.budget.OtherCosts || [],
+        Consumables: currentApplication.budget.Consumables || {
+          BudgetReason: '',
+          Budget: { amount: '' as any, currency: 'INR' },
+        },
+        Travel: currentApplication.budget.Travel || {
+          BudgetReason: '',
+          Budget: { amount: '' as any, currency: 'INR' },
+        },
+        Contigency: currentApplication.budget.Contigency || {
+          BudgetReason: '',
+          Budget: { amount: '' as any, currency: 'INR' },
+        },
+        Overhead: currentApplication.budget.Overhead || {
+          BudgetReason: '',
+          Budget: { amount: '' as any, currency: 'INR' },
+        },
+      });
+    }
+  }, [currentApplication]);
 
   const addArrayItem = (field: 'ManPower' | 'Equipment' | 'OtherCosts') => {
     setFormData((prev) => ({
