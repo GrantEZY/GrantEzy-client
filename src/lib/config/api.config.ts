@@ -83,20 +83,32 @@ export const API_CONFIG = {
       GET_PROJECT_DETAILS: '/co-applicant/get-project-details',
     },
     REVIEWER: {
-      // Reviewer Management
+      // Application Review Management
       GET_TOKEN_DETAILS: '/reviewer/get-token-details',
       UPDATE_INVITE_STATUS: '/reviewer/update-invite-status',
       SUBMIT_REVIEW: '/reviewer/submit-application-review',
       GET_USER_REVIEWS: '/reviewer/get-user-reviews',
       GET_REVIEW_DETAILS: '/reviewer/get-review-details',
+      // Project Review Management
+      GET_USER_PROJECT_REVIEWS: '/reviewer/get-user-project-reviews',
+      GET_PROJECT_REVIEW_DETAILS: '/reviewer/get-project-review-details',
+      SUBMIT_PROJECT_REVIEW: '/reviewer/submit-project-assessment-review',
+      UPDATE_PROJECT_REVIEW_INVITE_STATUS: '/reviewer/submit-project-assessment-review-invite-status',
     },
     PROJECT_MANAGEMENT: {
-      // Project Management
+      // PM: Project Management
       CREATE_PROJECT: '/pt-management/create-project',
       GET_CYCLE_PROJECTS: '/pt-management/get-cycle-projects',
       GET_PROJECT_DETAILS: '/pt-management/get-project-details',
+      // PM: Cycle Criteria Management
       CREATE_CYCLE_CRITERIA: '/pt-management/create-cycle-criteria',
       GET_CYCLE_CRITERIAS: '/pt-management/get-cycle-criterias',
+      GET_CYCLE_CRITERIA_ASSESSMENTS: '/pt-management/get-cycle-criteria-assessments',
+      INVITE_REVIEWER_FOR_ASSESSMENT: '/pt-management/invite-reviewer-for-project-assessment',
+      // Applicant: Project Assessment
+      GET_APPLICANT_CYCLE_CRITERIAS: '/pt-management/get-applicant-project-cycle-review-criteria',
+      GET_APPLICANT_ASSESSMENT_SUBMISSION: '/pt-management/get-applicant-cycle-assessment-submission',
+      CREATE_ASSESSMENT_SUBMISSION: '/pt-management/create-applicant-project-assessment-submission',
     },
     PUBLIC: {
       // Public endpoints (no auth required)

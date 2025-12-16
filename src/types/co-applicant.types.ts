@@ -2,6 +2,8 @@
  * Co-applicant related types based on backend DTOs and Swagger API documentation
  */
 
+import { Application } from './project.types';
+
 // Invite status enum matching backend
 export enum InviteStatus {
   PENDING = 'PENDING',
@@ -133,7 +135,7 @@ export interface GetUserLinkedProjectsResponse {
   status: number;
   message: string;
   res: {
-    applications: LinkedApplication[];
+    applications: Application[];
   };
 }
 
@@ -143,7 +145,8 @@ export interface CoApplicantState {
     invitedAt: string;
     application: TokenDetailsApplication;
   } | null;
-  linkedProjects: LinkedApplication[];
+  linkedProjects: Application[];
+  currentProject: any | null; // Project from project.types
   isLoading: boolean;
   error: string | null;
 }
@@ -157,6 +160,7 @@ export interface CoApplicantActions {
     status: InviteStatus.ACCEPTED | InviteStatus.REJECTED
   ) => Promise<void>;
   getUserLinkedProjects: (page: number, numberOfResults: number) => Promise<void>;
+  getProjectDetails: (applicationSlug: string) => Promise<void>;
   clearError: () => void;
   clearState: () => void;
 }

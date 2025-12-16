@@ -334,7 +334,7 @@ export interface ReviewFormData {
 // ============= Store State Types =============
 
 export interface ReviewerState {
-  // Reviews
+  // Application Reviews
   reviews: Review[];
   currentReview: Review | null;
   currentApplication: Application | null;
@@ -342,7 +342,16 @@ export interface ReviewerState {
   isLoadingReviews: boolean;
   reviewsError: string | null;
 
-  // Actions
+  // Project Reviews (imported from project.types)
+  projectReviews: any[]; // ProjectReview[] - avoid circular dependency
+  currentProjectReview: any | null;
+  currentProjectReviewAssessment: any | null;
+  currentProjectReviewProject: any | null;
+  currentProjectReviewCriteria: any | null;
+  isLoadingProjectReviews: boolean;
+  projectReviewsError: string | null;
+
+  // Application Review Actions
   getUserReviews: (params: GetUserReviewsRequest) => Promise<void>;
   getReviewDetails: (params: GetReviewDetailsRequest) => Promise<void>;
   submitReview: (params: SubmitReviewRequest) => Promise<boolean>;
@@ -350,4 +359,12 @@ export interface ReviewerState {
   clearReviews: () => void;
   clearCurrentReview: () => void;
   clearError: () => void;
+
+  // Project Review Actions
+  getUserProjectReviews: (params: any) => Promise<void>; // GetUserProjectReviewsRequest
+  getProjectReviewDetails: (params: any) => Promise<void>; // GetProjectReviewDetailsRequest
+  submitProjectReview: (params: any) => Promise<boolean>; // SubmitProjectReviewRequest
+  updateProjectReviewInviteStatus: (params: any) => Promise<boolean>; // SubmitProjectReviewInviteStatusRequest
+  clearProjectReviews: () => void;
+  clearCurrentProjectReview: () => void;
 }

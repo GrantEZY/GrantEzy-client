@@ -40,10 +40,13 @@ export interface ProjectDuration {
 }
 
 export interface DocumentObject {
-  name: string;
-  size: number;
-  publicId: string;
-  url: string;
+  title: string;
+  description?: string | null;
+  fileName: string;
+  fileSize: string;
+  mimeType: string;
+  storageUrl: string;
+  metaData?: Record<string, string> | null;
 }
 
 export interface Application {
@@ -51,6 +54,8 @@ export interface Application {
   slug: string;
   title?: string;
   status: string;
+  projectId?: string | null;
+  project?: Project | null;
   basicInfo?: any;
   budget?: any;
   technicalDetails?: any;
@@ -91,8 +96,43 @@ export interface ProjectCriteria {
   id: string;
   cycleId: string;
   name: string;
-  briefReview: string;
-  templateFile?: DocumentObject;
+  reviewBrief: string;
+  templateFile?: DocumentObject | null;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CycleAssessment {
+  id: string;
+  criteriaId: string;
+  criteria: ProjectCriteria;
+  projectId: string;
+  project: Project;
+  reviewBrief: string | null;
+  reviewDocument: DocumentObject;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export enum ProjectReviewRecommendation {
+  PERFECT = 'PERFECT',
+  GOOD = 'GOOD',
+  NEEDS_IMPROVEMENT = 'NEEDS_IMPROVEMENT',
+  POOR = 'POOR',
+}
+
+export interface ProjectReview {
+  id: string;
+  status: string;
+  recommendation: ProjectReviewRecommendation | null;
+  reviewAnalysis: string;
+  reviewerId: string;
+  reviewer: any;
+  submissionId: string;
+  reviewSubmission: CycleAssessment;
+  slug: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -135,8 +175,7 @@ export interface GetCycleProjectsResponse {
   status: number;
   message: string;
   res: {
-    projects: Project[];
-    pagination: PaginationMeta;
+    applications: Application[];
   } | null;
 }
 
@@ -166,8 +205,7 @@ export interface CreateCycleCriteriaResponse {
   status: number;
   message: string;
   res: {
-    criteriaId: string;
-    cycleId: string;
+    criteriaName: string;
   } | null;
 }
 
@@ -194,8 +232,7 @@ export interface GetUserProjectsResponse {
   status: number;
   message: string;
   res: {
-    projects: Project[];
-    pagination: PaginationMeta;
+    applications: Application[];
   } | null;
 }
 
@@ -215,8 +252,8 @@ export interface GetProjectDetailsBySlugResponse {
 // ============= State Types =============
 
 export interface ProjectState {
-  // Projects list
-  projects: Project[];
+  // Projects list (returns applications with project relation)
+  projects: Application[];
   projectsPagination: PaginationMeta | null;
   isProjectsLoading: boolean;
   projectsError: string | null;
@@ -230,4 +267,152 @@ export interface ProjectState {
   criterias: ProjectCriteria[];
   isCriteriasLoading: boolean;
   criteriasError: string | null;
+
+  // Assessments
+  assessments: CycleAssessment[];
+  currentAssessment: CycleAssessment | null;
+  isAssessmentsLoading: boolean;
+  assessmentsError: string | null;
+
+  // Project Reviews
+  projectReviews: ProjectReview[];
+  currentProjectReview: ProjectReview | null;
+  currentProjectReviewAssessment: CycleAssessment | null;
+  currentProjectReviewProject: Project | null;
+  currentProjectReviewCriteria: ProjectCriteria | null;
+  isProjectReviewsLoading: boolean;
+  projectReviewsError: string | null;
+}
+
+// ============= Assessment Request/Response Types =============
+
+// Get Applicant Cycle Criterias (same as GetCycleCriteriasRequest)
+export type GetApplicantCycleCriteriasRequest = GetCycleCriteriasRequest;
+export type GetApplicantCycleCriteriasResponse = GetCycleCriteriasResponse;
+
+// Get Applicant Assessment Submission
+export interface GetApplicantAssessmentSubmissionRequest {
+  cycleSlug: string;
+  criteriaSlug: string;
+}
+
+export interface GetApplicantAssessmentSubmissionResponse {
+  status: number;
+  message: string;
+  res: {
+    criteria: ProjectCriteria;
+    cycleSubmission: CycleAssessment | null;
+  } | null;
+}
+
+// Create/Submit Assessment
+export interface CreateAssessmentSubmissionRequest {
+  criteriaId: string;
+  cycleSlug: string;
+  reviewStatement: string;
+  reviewSubmissionFile: DocumentObject;
+}
+
+export interface CreateAssessmentSubmissionResponse {
+  status: number;
+  message: string;
+  res: {
+    submission: CycleAssessment;
+  } | null;
+}
+
+// Get Cycle Criteria Assessments (PM view)
+export interface GetCycleCriteriaAssessmentsRequest {
+  cycleSlug: string;
+  criteriaSlug: string;
+  page: number;
+  numberOfResults: number;
+}
+
+export interface GetCycleCriteriaAssessmentsResponse {
+  status: number;
+  message: string;
+  res: {
+    submissions: CycleAssessment[];
+    criteria: ProjectCriteria;
+  } | null;
+}
+
+// Invite Reviewer for Assessment
+export interface InviteReviewerForAssessmentRequest {
+  assessmentId: string;
+  email: string;
+}
+
+export interface InviteReviewerForAssessmentResponse {
+  status: number;
+  message: string;
+  res: null;
+}
+
+// ============= Project Review Request/Response Types =============
+
+// Get User Project Reviews
+export interface GetUserProjectReviewsRequest {
+  page: number;
+  numberOfResults: number;
+}
+
+export interface GetUserProjectReviewsResponse {
+  status: number;
+  message: string;
+  res: {
+    reviews: ProjectReview[];
+  } | null;
+}
+
+// Get Project Review Details
+export interface GetProjectReviewDetailsRequest {
+  assessmentSlug: string;
+}
+
+export interface GetProjectReviewDetailsResponse {
+  status: number;
+  message: string;
+  res: {
+    review: ProjectReview;
+    assessment: CycleAssessment;
+    project: Project;
+    criteria: ProjectCriteria;
+  } | null;
+}
+
+// Submit Project Assessment Review
+export interface SubmitProjectReviewRequest {
+  assessmentId: string;
+  recommendation: ProjectReviewRecommendation;
+  reviewAnalysis: string;
+}
+
+export interface SubmitProjectReviewResponse {
+  status: number;
+  message: string;
+  res: {
+    submissionId: string;
+    reviewId: string;
+    status: string;
+  } | null;
+}
+
+// Submit Project Review Invite Status
+export interface SubmitProjectReviewInviteStatusRequest {
+  token: string;
+  slug: string;
+  assessmentId: string;
+  status: 'ACCEPTED' | 'REJECTED';
+}
+
+export interface SubmitProjectReviewInviteStatusResponse {
+  status: number;
+  message: string;
+  res: {
+    applicationId: string;
+    status: string;
+    reviewId: string | null;
+  } | null;
 }

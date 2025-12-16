@@ -5,7 +5,7 @@
 import { useReviewerStore } from '../store/reviewer.store';
 
 export const useReviewer = () => {
-  // State
+  // Application Review State
   const reviews = useReviewerStore((state) => state.reviews);
   const currentReview = useReviewerStore((state) => state.currentReview);
   const currentApplication = useReviewerStore((state) => state.currentApplication);
@@ -13,7 +13,16 @@ export const useReviewer = () => {
   const isLoadingReviews = useReviewerStore((state) => state.isLoadingReviews);
   const reviewsError = useReviewerStore((state) => state.reviewsError);
 
-  // Actions
+  // Project Review State
+  const projectReviews = useReviewerStore((state) => state.projectReviews);
+  const currentProjectReview = useReviewerStore((state) => state.currentProjectReview);
+  const currentProjectReviewAssessment = useReviewerStore((state) => state.currentProjectReviewAssessment);
+  const currentProjectReviewProject = useReviewerStore((state) => state.currentProjectReviewProject);
+  const currentProjectReviewCriteria = useReviewerStore((state) => state.currentProjectReviewCriteria);
+  const isLoadingProjectReviews = useReviewerStore((state) => state.isLoadingProjectReviews);
+  const projectReviewsError = useReviewerStore((state) => state.projectReviewsError);
+
+  // Application Review Actions
   const getUserReviews = useReviewerStore((state) => state.getUserReviews);
   const getReviewDetails = useReviewerStore((state) => state.getReviewDetails);
   const submitReview = useReviewerStore((state) => state.submitReview);
@@ -22,8 +31,16 @@ export const useReviewer = () => {
   const clearCurrentReview = useReviewerStore((state) => state.clearCurrentReview);
   const clearError = useReviewerStore((state) => state.clearError);
 
+  // Project Review Actions
+  const getUserProjectReviews = useReviewerStore((state) => state.getUserProjectReviews);
+  const getProjectReviewDetails = useReviewerStore((state) => state.getProjectReviewDetails);
+  const submitProjectReview = useReviewerStore((state) => state.submitProjectReview);
+  const updateProjectReviewInviteStatus = useReviewerStore((state) => state.updateProjectReviewInviteStatus);
+  const clearProjectReviews = useReviewerStore((state) => state.clearProjectReviews);
+  const clearCurrentProjectReview = useReviewerStore((state) => state.clearCurrentProjectReview);
+
   return {
-    // State
+    // Application Review State
     reviews,
     currentReview,
     currentApplication,
@@ -31,7 +48,16 @@ export const useReviewer = () => {
     isLoadingReviews,
     reviewsError,
 
-    // Actions
+    // Project Review State
+    projectReviews,
+    currentProjectReview,
+    currentProjectReviewAssessment,
+    currentProjectReviewProject,
+    currentProjectReviewCriteria,
+    isLoadingProjectReviews,
+    projectReviewsError,
+
+    // Application Review Actions
     getUserReviews,
     getReviewDetails,
     submitReview,
@@ -39,5 +65,13 @@ export const useReviewer = () => {
     clearReviews,
     clearCurrentReview,
     clearError,
+
+    // Project Review Actions
+    getUserProjectReviews,
+    getProjectReviewDetails,
+    submitProjectReview,
+    updateProjectReviewInviteStatus,
+    clearProjectReviews,
+    clearCurrentProjectReview,
   };
 };

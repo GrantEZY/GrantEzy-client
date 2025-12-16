@@ -14,7 +14,7 @@ import {
 } from '../types/reviewer.types';
 
 export const useReviewerStore = create<ReviewerState>((set, get) => ({
-  // ============= State =============
+  // ============= Application Reviews State =============
   reviews: [],
   currentReview: null,
   currentApplication: null,
@@ -22,7 +22,16 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
   isLoadingReviews: false,
   reviewsError: null,
 
-  // ============= Actions =============
+  // ============= Project Reviews State =============
+  projectReviews: [],
+  currentProjectReview: null,
+  currentProjectReviewAssessment: null,
+  currentProjectReviewProject: null,
+  currentProjectReviewCriteria: null,
+  isLoadingProjectReviews: false,
+  projectReviewsError: null,
+
+  // ============= Application Review Actions =============
 
   /**
    * Get all reviews submitted by the current reviewer
@@ -176,6 +185,161 @@ export const useReviewerStore = create<ReviewerState>((set, get) => ({
    * Clear error state
    */
   clearError: () => {
-    set({ reviewsError: null });
+    set({ reviewsError: null, projectReviewsError: null });
+  },
+
+  // ============= Project Review Actions =============
+
+  /**
+   * Get all project reviews assigned to the current reviewer
+   */
+  getUserProjectReviews: async (params: any) => {
+    try {
+      set({ isLoadingProjectReviews: true, projectReviewsError: null });
+
+      const response = await reviewerService.getUserProjectReviews(params);
+
+      if (response.status === 200 && response.res) {
+        set({
+          projectReviews: response.res.reviews || [],
+          isLoadingProjectReviews: false,
+        });
+      } else {
+        set({
+          projectReviewsError: response.message || 'Failed to fetch project reviews',
+          isLoadingProjectReviews: false,
+        });
+      }
+    } catch (error) {
+      set({
+        projectReviewsError:
+          error instanceof Error ? error.message : 'An error occurred while fetching project reviews',
+        isLoadingProjectReviews: false,
+      });
+    }
+  },
+
+  /**
+   * Get detailed information about a specific project review
+   */
+  getProjectReviewDetails: async (params: any) => {
+    try {
+      set({ isLoadingProjectReviews: true, projectReviewsError: null });
+
+      const response = await reviewerService.getProjectReviewDetails(params);
+
+      if (response.status === 200 && response.res) {
+        set({
+          currentProjectReview: response.res.review,
+          currentProjectReviewAssessment: response.res.assessment,
+          currentProjectReviewProject: response.res.project,
+          currentProjectReviewCriteria: response.res.criteria,
+          isLoadingProjectReviews: false,
+        });
+      } else {
+        set({
+          projectReviewsError: response.message || 'Failed to fetch project review details',
+          isLoadingProjectReviews: false,
+        });
+      }
+    } catch (error) {
+      set({
+        projectReviewsError:
+          error instanceof Error
+            ? error.message
+            : 'An error occurred while fetching project review details',
+        isLoadingProjectReviews: false,
+      });
+    }
+  },
+
+  /**
+   * Submit a review for a project assessment
+   */
+  submitProjectReview: async (params: any): Promise<boolean> => {
+    try {
+      set({ isLoadingProjectReviews: true, projectReviewsError: null });
+
+      const response = await reviewerService.submitProjectReview(params);
+
+      if (response.status === 200 || response.status === 201) {
+        set({ isLoadingProjectReviews: false });
+
+        // Optionally refresh the project reviews list
+        const currentParams = {
+          page: 1,
+          numberOfResults: 10,
+        };
+        get().getUserProjectReviews(currentParams);
+
+        return true;
+      } else {
+        set({
+          projectReviewsError: response.message || 'Failed to submit project review',
+          isLoadingProjectReviews: false,
+        });
+        return false;
+      }
+    } catch (error) {
+      set({
+        projectReviewsError:
+          error instanceof Error ? error.message : 'An error occurred while submitting project review',
+        isLoadingProjectReviews: false,
+      });
+      return false;
+    }
+  },
+
+  /**
+   * Update project review invite status (accept or reject)
+   */
+  updateProjectReviewInviteStatus: async (params: any): Promise<boolean> => {
+    try {
+      set({ isLoadingProjectReviews: true, projectReviewsError: null });
+
+      const response = await reviewerService.updateProjectReviewInviteStatus(params);
+
+      if (response.status === 200 || response.status === 201) {
+        set({ isLoadingProjectReviews: false });
+        return true;
+      } else {
+        const errorMsg = response.message || 'Failed to update project review invite status';
+        set({
+          projectReviewsError: errorMsg,
+          isLoadingProjectReviews: false,
+        });
+        throw new Error(errorMsg);
+      }
+    } catch (error) {
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : 'An error occurred while updating project review invite status';
+
+      set({
+        projectReviewsError: errorMsg,
+        isLoadingProjectReviews: false,
+      });
+      throw error;
+    }
+  },
+
+  /**
+   * Clear project reviews list
+   */
+  clearProjectReviews: () => {
+    set({ projectReviews: [] });
+  },
+
+  /**
+   * Clear current project review
+   */
+  clearCurrentProjectReview: () => {
+    set({
+      currentProjectReview: null,
+      currentProjectReviewAssessment: null,
+      currentProjectReviewProject: null,
+      currentProjectReviewCriteria: null,
+    });
   },
 }));

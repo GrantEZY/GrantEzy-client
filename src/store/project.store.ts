@@ -11,6 +11,11 @@ import {
   GetCycleProjectsRequest,
   GetProjectDetailsRequest,
   ProjectState,
+  GetApplicantCycleCriteriasRequest,
+  GetApplicantAssessmentSubmissionRequest,
+  CreateAssessmentSubmissionRequest,
+  GetCycleCriteriaAssessmentsRequest,
+  InviteReviewerForAssessmentRequest,
 } from '../types/project.types';
 
 interface ProjectActions {
@@ -25,6 +30,16 @@ interface ProjectActions {
   createCycleCriteria: (data: CreateCycleCriteriaRequest) => Promise<boolean>;
   getCycleCriterias: (params: GetCycleCriteriasRequest) => Promise<void>;
   clearCriterias: () => void;
+
+  // Assessment actions (PM)
+  getCycleCriteriaAssessments: (params: GetCycleCriteriaAssessmentsRequest) => Promise<void>;
+  inviteReviewerForAssessment: (data: InviteReviewerForAssessmentRequest) => Promise<boolean>;
+
+  // Assessment actions (Applicant)
+  getApplicantCycleCriterias: (params: GetApplicantCycleCriteriasRequest) => Promise<void>;
+  getApplicantAssessmentSubmission: (params: GetApplicantAssessmentSubmissionRequest) => Promise<void>;
+  createAssessmentSubmission: (data: CreateAssessmentSubmissionRequest) => Promise<boolean>;
+  clearAssessments: () => void;
 
   // Clear all
   clearAll: () => void;
@@ -46,6 +61,19 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   criterias: [],
   isCriteriasLoading: false,
   criteriasError: null,
+
+  assessments: [],
+  currentAssessment: null,
+  isAssessmentsLoading: false,
+  assessmentsError: null,
+
+  projectReviews: [],
+  currentProjectReview: null,
+  currentProjectReviewAssessment: null,
+  currentProjectReviewProject: null,
+  currentProjectReviewCriteria: null,
+  isProjectReviewsLoading: false,
+  projectReviewsError: null,
 
   // ============= Project Actions =============
 
@@ -89,8 +117,8 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
 
       if (response.status === 200 && response.res) {
         set({
-          projects: response.res.projects || [],
-          projectsPagination: response.res.pagination || null,
+          projects: response.res.applications || [],
+          projectsPagination: null,
           isProjectsLoading: false,
         });
       } else {
@@ -225,6 +253,173 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
     });
   },
 
+  // ============= Assessment Actions (PM) =============
+
+  /**
+   * Get all assessment submissions for a specific criteria (PM view)
+   */
+  getCycleCriteriaAssessments: async (params: GetCycleCriteriaAssessmentsRequest) => {
+    set({ isAssessmentsLoading: true, assessmentsError: null });
+    try {
+      const response = await projectManagementService.getCycleCriteriaAssessments(params);
+
+      if (response.status === 200 && response.res) {
+        set({
+          assessments: response.res.submissions || [],
+          criterias: [response.res.criteria],
+          isAssessmentsLoading: false,
+        });
+      } else {
+        set({
+          assessmentsError: response.message || 'Failed to fetch assessments',
+          isAssessmentsLoading: false,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An error occurred while fetching assessments';
+      set({
+        assessmentsError: errorMessage,
+        isAssessmentsLoading: false,
+      });
+      console.error('Get assessments error:', error);
+    }
+  },
+
+  /**
+   * Invite a reviewer to review a project assessment submission
+   */
+  inviteReviewerForAssessment: async (data: InviteReviewerForAssessmentRequest): Promise<boolean> => {
+    set({ isAssessmentsLoading: true, assessmentsError: null });
+    try {
+      const response = await projectManagementService.inviteReviewerForAssessment(data);
+
+      if (response.status === 200 || response.status === 201) {
+        set({ isAssessmentsLoading: false });
+        return true;
+      } else {
+        set({
+          assessmentsError: response.message || 'Failed to invite reviewer',
+          isAssessmentsLoading: false,
+        });
+        return false;
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An error occurred while inviting reviewer';
+      set({
+        assessmentsError: errorMessage,
+        isAssessmentsLoading: false,
+      });
+      console.error('Invite reviewer error:', error);
+      return false;
+    }
+  },
+
+  // ============= Assessment Actions (Applicant) =============
+
+  /**
+   * Get all assessment criteria available for the applicant's project
+   */
+  getApplicantCycleCriterias: async (params: GetApplicantCycleCriteriasRequest) => {
+    set({ isCriteriasLoading: true, criteriasError: null });
+    try {
+      const response = await projectManagementService.getApplicantCycleCriterias(params);
+
+      if (response.status === 200 && response.res) {
+        set({
+          criterias: response.res.criterias || [],
+          isCriteriasLoading: false,
+        });
+      } else {
+        set({
+          criteriasError: response.message || 'Failed to fetch criterias',
+          isCriteriasLoading: false,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An error occurred while fetching criterias';
+      set({
+        criteriasError: errorMessage,
+        isCriteriasLoading: false,
+      });
+      console.error('Get applicant criterias error:', error);
+    }
+  },
+
+  /**
+   * Get criteria details and user's submission if exists
+   */
+  getApplicantAssessmentSubmission: async (params: GetApplicantAssessmentSubmissionRequest) => {
+    set({ isAssessmentsLoading: true, assessmentsError: null });
+    try {
+      const response = await projectManagementService.getApplicantAssessmentSubmission(params);
+
+      if (response.status === 200 && response.res) {
+        set({
+          criterias: [response.res.criteria],
+          currentAssessment: response.res.cycleSubmission,
+          isAssessmentsLoading: false,
+        });
+      } else {
+        set({
+          assessmentsError: response.message || 'Failed to fetch submission',
+          isAssessmentsLoading: false,
+        });
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An error occurred while fetching submission';
+      set({
+        assessmentsError: errorMessage,
+        isAssessmentsLoading: false,
+      });
+      console.error('Get applicant submission error:', error);
+    }
+  },
+
+  /**
+   * Create or update assessment submission for a criteria
+   */
+  createAssessmentSubmission: async (data: CreateAssessmentSubmissionRequest): Promise<boolean> => {
+    set({ isAssessmentsLoading: true, assessmentsError: null });
+    try {
+      const response = await projectManagementService.createAssessmentSubmission(data);
+
+      if ((response.status === 200 || response.status === 201) && response.res) {
+        set({
+          currentAssessment: response.res.submission,
+          isAssessmentsLoading: false,
+        });
+        return true;
+      } else {
+        set({
+          assessmentsError: response.message || 'Failed to submit assessment',
+          isAssessmentsLoading: false,
+        });
+        return false;
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'An error occurred while submitting assessment';
+      set({
+        assessmentsError: errorMessage,
+        isAssessmentsLoading: false,
+      });
+      console.error('Submit assessment error:', error);
+      return false;
+    }
+  },
+
+  clearAssessments: () => {
+    set({
+      assessments: [],
+      currentAssessment: null,
+      assessmentsError: null,
+    });
+  },
+
   // Clear all
   clearAll: () => {
     set({
@@ -238,6 +433,17 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
       criterias: [],
       isCriteriasLoading: false,
       criteriasError: null,
+      assessments: [],
+      currentAssessment: null,
+      isAssessmentsLoading: false,
+      assessmentsError: null,
+      projectReviews: [],
+      currentProjectReview: null,
+      currentProjectReviewAssessment: null,
+      currentProjectReviewProject: null,
+      currentProjectReviewCriteria: null,
+      isProjectReviewsLoading: false,
+      projectReviewsError: null,
     });
   },
 }));
