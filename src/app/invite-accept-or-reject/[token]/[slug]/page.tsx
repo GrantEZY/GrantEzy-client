@@ -46,6 +46,10 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
   useEffect(() => {
     async function detectInviteType() {
       try {
+        // Check if there's an assessment query parameter (for project assessment reviews)
+        const urlParams = new URLSearchParams(window.location.search);
+        const assessmentId = urlParams.get('assessment');
+
         // Try co-applicant endpoint first
         const coApplicantResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/v1/co-applicant/get-token-details?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`,
@@ -68,11 +72,18 @@ function InvitePageContent({ params }: { params: { token: string; slug: string }
         );
 
         if (reviewerResponse.ok) {
-          // It's a reviewer invite
-          console.log('[InviteRouter] Detected REVIEWER invite, redirecting...');
-          router.replace(
-            `/reviewer/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`
-          );
+          // It's a reviewer invite - check if it's for project assessment
+          if (assessmentId) {
+            console.log('[InviteRouter] Detected PROJECT ASSESSMENT REVIEWER invite, redirecting...');
+            router.replace(
+              `/reviewer/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}&assessment=${encodeURIComponent(assessmentId)}`
+            );
+          } else {
+            console.log('[InviteRouter] Detected APPLICATION REVIEWER invite, redirecting...');
+            router.replace(
+              `/reviewer/invite?token=${encodeURIComponent(token)}&slug=${encodeURIComponent(slug)}`
+            );
+          }
           return;
         }
 

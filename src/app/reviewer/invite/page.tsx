@@ -9,22 +9,29 @@ import { InviteStatus } from '@/types/reviewer.types';
 function ReviewerInvitePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { updateInviteStatus, clearError } = useReviewer();
+  const { updateInviteStatus, updateProjectReviewInviteStatus, clearError } = useReviewer();
 
   const [token, setToken] = useState('');
   const [slug, setSlug] = useState('');
+  const [assessmentId, setAssessmentId] = useState('');
+  const [isProjectAssessmentReview, setIsProjectAssessmentReview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [inviteAccepted, setInviteAccepted] = useState(false);
 
   useEffect(() => {
-    // Get token and slug from URL query parameters
+    // Get token, slug, and assessment from URL query parameters
     const tokenParam = searchParams.get('token');
     const slugParam = searchParams.get('slug');
+    const assessmentParam = searchParams.get('assessment');
 
     if (tokenParam) setToken(tokenParam);
     if (slugParam) setSlug(slugParam);
+    if (assessmentParam) {
+      setAssessmentId(assessmentParam);
+      setIsProjectAssessmentReview(true);
+    }
 
     return () => {
       clearError();
@@ -42,11 +49,22 @@ function ReviewerInvitePage() {
     setSuccess(false);
 
     try {
-      await updateInviteStatus({
-        token,
-        slug,
-        status,
-      });
+      if (isProjectAssessmentReview && assessmentId) {
+        // Project assessment review invite
+        await updateProjectReviewInviteStatus({
+          token,
+          slug,
+          status,
+          assessmentId,
+        });
+      } else {
+        // Application review invite
+        await updateInviteStatus({
+          token,
+          slug,
+          status,
+        });
+      }
 
       // Success - clear URL and show success message
       setSuccess(true);

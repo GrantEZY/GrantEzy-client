@@ -118,6 +118,12 @@ export default function CoApplicantSidebar() {
       href: '/co-applicant/dashboard',
       active: pathname === '/co-applicant/dashboard' || pathname === '/co-applicant',
     },
+    {
+      icon: icons.projects,
+      label: 'My Projects',
+      href: '/co-applicant/my-projects',
+      active: pathname?.startsWith('/co-applicant/my-projects'),
+    },
   ];
 
   return (

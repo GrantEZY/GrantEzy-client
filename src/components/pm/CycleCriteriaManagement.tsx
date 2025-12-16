@@ -40,12 +40,14 @@ export default function CycleCriteriaManagement({
   }, [cycleSlug, getCycleCriterias, clearCriterias]);
 
   const handleOpenModal = () => {
+    console.log('🔵 Opening criteria modal...');
     setIsCreateModalOpen(true);
     setFormData({ name: '', briefReview: '' });
     setErrors({});
   };
 
   const handleCloseModal = () => {
+    console.log('🔴 Closing criteria modal...');
     setIsCreateModalOpen(false);
     setFormData({ name: '', briefReview: '' });
     setErrors({});
@@ -92,6 +94,7 @@ export default function CycleCriteriaManagement({
 
   return (
     <div className="space-y-4">
+      {console.log('🟢 Rendering CycleCriteriaManagement, modal open:', isCreateModalOpen)}
       {/* Header with Create Button */}
       <div className="flex items-center justify-between">
         <div>
@@ -192,8 +195,29 @@ export default function CycleCriteriaManagement({
                   <span className="truncate">{criteria.templateFile.name}</span>
                 </div>
               )}
-              <div className="mt-3 text-xs text-gray-500">
-                Created: {new Date(criteria.createdAt).toLocaleDateString()}
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-xs text-gray-500">
+                  Created: {new Date(criteria.createdAt).toLocaleDateString()}
+                </span>
+                <a
+                  href={`/pm/cycles/${cycleSlug}/assessments/${criteria.slug}`}
+                  className="inline-flex items-center rounded-md bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700"
+                >
+                  View Submissions
+                  <svg
+                    className="ml-1 h-3 w-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M9 5l7 7-7 7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
+                  </svg>
+                </a>
               </div>
             </div>
           ))}
@@ -203,7 +227,7 @@ export default function CycleCriteriaManagement({
       {/* Create Criteria Modal */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center">
             {/* Background overlay */}
             <div
               className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -211,7 +235,7 @@ export default function CycleCriteriaManagement({
             ></div>
 
             {/* Modal panel */}
-            <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+            <div className="relative z-10 inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
               {/* Header */}
               <div className="border-b border-gray-200 bg-white px-6 py-4">
                 <div className="flex items-center justify-between">

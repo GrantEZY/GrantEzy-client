@@ -84,8 +84,8 @@ export interface Project {
   applicationId: string;
   cycleId: string;
   status: ProjectStatus | string;
-  allocatedBudget: QuotedBudget;
-  plannedDuration: ProjectDuration;
+  allotedBudget: QuotedBudget;
+  duration: ProjectDuration;
   createdAt: string;
   updatedAt: string;
   application?: Application;
@@ -101,6 +101,8 @@ export interface ProjectCriteria {
   slug: string;
   createdAt: string;
   updatedAt: string;
+  hasSubmitted?: boolean;
+  submittedAt?: string | null;
 }
 
 export interface CycleAssessment {
@@ -251,35 +253,44 @@ export interface GetProjectDetailsBySlugResponse {
 
 // ============= State Types =============
 
+import type {
+  Project as PMProject,
+  CycleAssessmentCriteria,
+  CycleAssessment as PMCycleAssessment,
+  ProjectReview as PMProjectReview,
+} from './project-management.types';
+import type { GrantApplication } from './applicant.types';
+
 export interface ProjectState {
   // Projects list (returns applications with project relation)
-  projects: Application[];
+  projects: GrantApplication[];
   projectsPagination: PaginationMeta | null;
   isProjectsLoading: boolean;
   projectsError: string | null;
 
   // Current project
-  currentProject: Project | null;
+  currentProject: PMProject | null;
   isProjectLoading: boolean;
   projectError: string | null;
 
   // Criterias
-  criterias: ProjectCriteria[];
+  criterias: CycleAssessmentCriteria[];
+  currentCriteria: CycleAssessmentCriteria | null;
   isCriteriasLoading: boolean;
   criteriasError: string | null;
 
   // Assessments
-  assessments: CycleAssessment[];
-  currentAssessment: CycleAssessment | null;
+  assessments: PMCycleAssessment[];
+  currentAssessment: PMCycleAssessment | null;
   isAssessmentsLoading: boolean;
   assessmentsError: string | null;
 
   // Project Reviews
-  projectReviews: ProjectReview[];
-  currentProjectReview: ProjectReview | null;
-  currentProjectReviewAssessment: CycleAssessment | null;
-  currentProjectReviewProject: Project | null;
-  currentProjectReviewCriteria: ProjectCriteria | null;
+  projectReviews: PMProjectReview[];
+  currentProjectReview: PMProjectReview | null;
+  currentProjectReviewAssessment: PMCycleAssessment | null;
+  currentProjectReviewProject: PMProject | null;
+  currentProjectReviewCriteria: CycleAssessmentCriteria | null;
   isProjectReviewsLoading: boolean;
   projectReviewsError: string | null;
 }

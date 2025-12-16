@@ -112,7 +112,13 @@ export default function ReviewerSidebar() {
     },
     {
       icon: icons.clipboard,
-      label: 'My Reviews',
+      label: 'Project Reviews',
+      href: '/reviewer/project-reviews',
+      active: pathname.startsWith('/reviewer/project-reviews'),
+    },
+    {
+      icon: icons.documentText,
+      label: 'Application Reviews',
       href: '/reviewer/reviews',
       active: pathname.startsWith('/reviewer/reviews'),
     },

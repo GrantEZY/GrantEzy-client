@@ -502,7 +502,9 @@ export default function CycleDetailsPage() {
               }}
               cycleSlug={cycleSlug}
               approvedApplications={
-                currentCycleApplications?.filter((app) => app.status === 'APPROVED') || []
+                currentCycleApplications?.filter(
+                  (app) => app.status === 'SUBMITTED' || app.status === 'IN_REVIEW'
+                ) || []
               }
             />
           )}

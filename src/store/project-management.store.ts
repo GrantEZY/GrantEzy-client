@@ -105,9 +105,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.createProject(data);
       
-      if (response.status === 201 && response.res) {
+      if (response.status === 201 && response.data) {
         set({ isLoadingProjects: false });
-        return response.res;
+        return response.data;
       }
       
       set({ 
@@ -127,9 +127,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getCycleProjects(params);
       
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({ 
-          projects: response.res.applications,
+          projects: response.data.applications,
           isLoadingProjects: false 
         });
       } else {
@@ -149,9 +149,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getProjectDetails(params);
       
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({ 
-          currentProject: response.res.project,
+          currentProject: response.data.project,
           isLoadingProjects: false 
         });
       } else {
@@ -173,9 +173,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.createCycleCriteria(data);
       
-      if (response.status === 201 && response.res) {
+      if (response.status === 201 && response.data) {
         set({ isLoadingCriteria: false });
-        return response.res.criteriaName;
+        return response.data.criteriaName;
       }
       
       set({ 
@@ -195,9 +195,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getCycleCriterias(params);
       
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({ 
-          cycleCriterias: response.res.criterias,
+          cycleCriterias: response.data.criterias,
           isLoadingCriteria: false 
         });
       } else {
@@ -217,10 +217,10 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getCycleCriteriaAssessments(params);
       
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({ 
-          assessments: response.res.submissions,
-          currentCriteria: response.res.criteria,
+          assessments: response.data.submissions,
+          currentCriteria: response.data.criteria,
           isLoadingAssessments: false 
         });
       } else {
@@ -264,9 +264,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getApplicantCycleCriterias(params);
       
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({ 
-          cycleCriterias: response.res.criterias,
+          cycleCriterias: response.data.criterias,
           isLoadingCriteria: false 
         });
       } else {
@@ -286,10 +286,10 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getApplicantAssessmentSubmission(params);
       
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({ 
-          currentCriteria: response.res.criteria,
-          currentAssessment: response.res.cycleSubmission,
+          currentCriteria: response.data.criteria,
+          currentAssessment: response.data.cycleSubmission,
           isLoadingAssessments: false 
         });
       } else {
@@ -309,9 +309,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.createAssessmentSubmission(data);
       
-      if ((response.status === 200 || response.status === 201) && response.res) {
+      if ((response.status === 200 || response.status === 201) && response.data) {
         set({ 
-          currentAssessment: response.res.submission,
+          currentAssessment: response.data.submission,
           isLoadingAssessments: false 
         });
         return true;

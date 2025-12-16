@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 
 import { AuthProvider } from '@/components/providers/AuthProvider';
 import { Providers } from '@/components/providers/ThemeProvider';
+import { ToastProvider } from '@/components/ui/Toast';
 
 import './globals.css';
 
@@ -43,7 +44,9 @@ export default function RootLayout({
 
       <body className={`${inter.variable} font-inter antialiased`}>
         <AuthProvider>
-          <Providers>{children}</Providers>
+          <ToastProvider>
+            <Providers>{children}</Providers>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

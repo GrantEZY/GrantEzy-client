@@ -222,7 +222,7 @@ export interface CycleApplication {
   stepNumber: number;
   createdAt: string;
   updatedAt: string;
-  basicInfo?: {
+  basicDetails?: {
     title: string;
     summary: string;
     problem: string;
@@ -230,10 +230,15 @@ export interface CycleApplication {
     innovation: string;
   };
   applicant?: {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
+    personId: string;
+    person: {
+      firstName: string;
+      lastName: string;
+    };
+    contact: {
+      email: string;
+      phoneNumber?: string;
+    };
   };
 }
 

@@ -21,6 +21,10 @@ export const useApplicant = () => {
   const myApplications = useApplicantStore((state) => state.myApplications);
   const linkedApplications = useApplicantStore((state) => state.linkedApplications);
   const isLoadingApplications = useApplicantStore((state) => state.isLoadingApplications);
+  const projects = useApplicantStore((state) => state.projects);
+  const isProjectsLoading = useApplicantStore((state) => state.isProjectsLoading);
+  const projectsError = useApplicantStore((state) => state.projectsError);
+  const currentProject = useApplicantStore((state) => state.currentProject);
   const isLoading = useApplicantStore((state) => state.isLoading);
   const error = useApplicantStore((state) => state.error);
   const successMessage = useApplicantStore((state) => state.successMessage);
@@ -47,6 +51,8 @@ export const useApplicant = () => {
     (state) => state.fetchUserCreatedApplicationDetails
   );
   const deleteUserApplication = useApplicantStore((state) => state.deleteUserApplication);
+  const getUserProjects = useApplicantStore((state) => state.getUserProjects);
+  const getProjectDetails = useApplicantStore((state) => state.getProjectDetails);
   const setCurrentStep = useApplicantStore((state) => state.setCurrentStep);
   const goToNextStep = useApplicantStore((state) => state.goToNextStep);
   const goToPreviousStep = useApplicantStore((state) => state.goToPreviousStep);
@@ -166,6 +172,10 @@ export const useApplicant = () => {
     myApplications,
     linkedApplications,
     isLoadingApplications,
+    projects,
+    isProjectsLoading,
+    projectsError,
+    currentProject,
     isLoading,
     error,
     successMessage,
@@ -191,6 +201,10 @@ export const useApplicant = () => {
     fetchApplicationWithCycleDetails,
     fetchUserCreatedApplicationDetails,
     deleteUserApplication,
+
+    // User projects management
+    getUserProjects,
+    getProjectDetails,
 
     // Navigation
     setCurrentStep,

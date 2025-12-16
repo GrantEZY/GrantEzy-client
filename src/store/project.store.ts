@@ -3,42 +3,42 @@
  */
 import { create } from 'zustand';
 
-import { projectManagementService } from '../services/project.service';
+import { projectManagementService } from '../services/project-management.service';
 import {
-  CreateCycleCriteriaRequest,
-  CreateProjectRequest,
-  GetCycleCriteriasRequest,
-  GetCycleProjectsRequest,
-  GetProjectDetailsRequest,
-  ProjectState,
-  GetApplicantCycleCriteriasRequest,
-  GetApplicantAssessmentSubmissionRequest,
-  CreateAssessmentSubmissionRequest,
-  GetCycleCriteriaAssessmentsRequest,
-  InviteReviewerForAssessmentRequest,
-} from '../types/project.types';
+  CreateCycleCriteriaDTO,
+  CreateProjectDTO,
+  GetCycleCriteriasDTO,
+  GetCycleProjectsDTO,
+  GetProjectDetailsDTO,
+  GetCycleCriteriaDetailsWithSubmissionDTO,
+  SubmitAssessmentDTO,
+  GetCycleCriteriaDetailsWithAssessmentsDTO,
+  InviteReviewerForAssessmentDTO,
+} from '../types/project-management.types';
+import type { ProjectState } from '../types/project.types';
 
 interface ProjectActions {
   // Project actions
-  createProject: (data: CreateProjectRequest) => Promise<boolean>;
-  getCycleProjects: (params: GetCycleProjectsRequest) => Promise<void>;
-  getProjectDetails: (params: GetProjectDetailsRequest) => Promise<void>;
+  createProject: (data: CreateProjectDTO) => Promise<boolean>;
+  getCycleProjects: (params: GetCycleProjectsDTO) => Promise<void>;
+  getProjectDetails: (params: GetProjectDetailsDTO) => Promise<void>;
   clearProjects: () => void;
   clearProject: () => void;
 
   // Criteria actions
-  createCycleCriteria: (data: CreateCycleCriteriaRequest) => Promise<boolean>;
-  getCycleCriterias: (params: GetCycleCriteriasRequest) => Promise<void>;
+  createCycleCriteria: (data: CreateCycleCriteriaDTO) => Promise<boolean>;
+  getCycleCriterias: (params: GetCycleCriteriasDTO) => Promise<void>;
   clearCriterias: () => void;
+  clearCurrentCriteria: () => void;
 
   // Assessment actions (PM)
-  getCycleCriteriaAssessments: (params: GetCycleCriteriaAssessmentsRequest) => Promise<void>;
-  inviteReviewerForAssessment: (data: InviteReviewerForAssessmentRequest) => Promise<boolean>;
+  getCycleCriteriaAssessments: (params: GetCycleCriteriaDetailsWithAssessmentsDTO) => Promise<void>;
+  inviteReviewerForAssessment: (data: InviteReviewerForAssessmentDTO) => Promise<boolean>;
 
   // Assessment actions (Applicant)
-  getApplicantCycleCriterias: (params: GetApplicantCycleCriteriasRequest) => Promise<void>;
-  getApplicantAssessmentSubmission: (params: GetApplicantAssessmentSubmissionRequest) => Promise<void>;
-  createAssessmentSubmission: (data: CreateAssessmentSubmissionRequest) => Promise<boolean>;
+  getApplicantCycleCriterias: (params: GetCycleCriteriasDTO) => Promise<void>;
+  getApplicantAssessmentSubmission: (params: GetCycleCriteriaDetailsWithSubmissionDTO) => Promise<void>;
+  createAssessmentSubmission: (data: SubmitAssessmentDTO) => Promise<boolean>;
   clearAssessments: () => void;
 
   // Clear all
@@ -59,6 +59,7 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   projectError: null,
 
   criterias: [],
+  currentCriteria: null,
   isCriteriasLoading: false,
   criteriasError: null,
 
@@ -80,7 +81,7 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Create a new project from an approved application
    */
-  createProject: async (data: CreateProjectRequest): Promise<boolean> => {
+  createProject: async (data: CreateProjectDTO): Promise<boolean> => {
     set({ isProjectLoading: true, projectError: null });
     try {
       const response = await projectManagementService.createProject(data);
@@ -110,14 +111,14 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Get all projects in a cycle
    */
-  getCycleProjects: async (params: GetCycleProjectsRequest) => {
+  getCycleProjects: async (params: GetCycleProjectsDTO) => {
     set({ isProjectsLoading: true, projectsError: null });
     try {
       const response = await projectManagementService.getCycleProjects(params);
 
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({
-          projects: response.res.applications || [],
+          projects: response.data.applications || [],
           projectsPagination: null,
           isProjectsLoading: false,
         });
@@ -141,14 +142,14 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Get detailed information about a specific project
    */
-  getProjectDetails: async (params: GetProjectDetailsRequest) => {
+  getProjectDetails: async (params: GetProjectDetailsDTO) => {
     set({ isProjectLoading: true, projectError: null });
     try {
       const response = await projectManagementService.getProjectDetails(params);
 
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({
-          currentProject: response.res.project,
+          currentProject: response.data.project,
           isProjectLoading: false,
         });
       } else {
@@ -189,7 +190,7 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Create assessment criteria for a cycle
    */
-  createCycleCriteria: async (data: CreateCycleCriteriaRequest): Promise<boolean> => {
+  createCycleCriteria: async (data: CreateCycleCriteriaDTO): Promise<boolean> => {
     set({ isCriteriasLoading: true, criteriasError: null });
     try {
       const response = await projectManagementService.createCycleCriteria(data);
@@ -219,14 +220,14 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Get all assessment criteria for a cycle
    */
-  getCycleCriterias: async (params: GetCycleCriteriasRequest) => {
+  getCycleCriterias: async (params: GetCycleCriteriasDTO) => {
     set({ isCriteriasLoading: true, criteriasError: null });
     try {
       const response = await projectManagementService.getCycleCriterias(params);
 
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({
-          criterias: response.res.criterias || [],
+          criterias: response.data.criterias || [],
           isCriteriasLoading: false,
         });
       } else {
@@ -253,20 +254,27 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
     });
   },
 
+  clearCurrentCriteria: () => {
+    set({
+      currentCriteria: null,
+      criteriasError: null,
+    });
+  },
+
   // ============= Assessment Actions (PM) =============
 
   /**
    * Get all assessment submissions for a specific criteria (PM view)
    */
-  getCycleCriteriaAssessments: async (params: GetCycleCriteriaAssessmentsRequest) => {
+  getCycleCriteriaAssessments: async (params: GetCycleCriteriaDetailsWithAssessmentsDTO) => {
     set({ isAssessmentsLoading: true, assessmentsError: null });
     try {
       const response = await projectManagementService.getCycleCriteriaAssessments(params);
 
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({
-          assessments: response.res.submissions || [],
-          criterias: [response.res.criteria],
+          assessments: response.data.submissions || [],
+          criterias: [response.data.criteria],
           isAssessmentsLoading: false,
         });
       } else {
@@ -289,7 +297,7 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Invite a reviewer to review a project assessment submission
    */
-  inviteReviewerForAssessment: async (data: InviteReviewerForAssessmentRequest): Promise<boolean> => {
+  inviteReviewerForAssessment: async (data: InviteReviewerForAssessmentDTO): Promise<boolean> => {
     set({ isAssessmentsLoading: true, assessmentsError: null });
     try {
       const response = await projectManagementService.inviteReviewerForAssessment(data);
@@ -321,14 +329,14 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Get all assessment criteria available for the applicant's project
    */
-  getApplicantCycleCriterias: async (params: GetApplicantCycleCriteriasRequest) => {
+  getApplicantCycleCriterias: async (params: GetCycleCriteriasDTO) => {
     set({ isCriteriasLoading: true, criteriasError: null });
     try {
       const response = await projectManagementService.getApplicantCycleCriterias(params);
 
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({
-          criterias: response.res.criterias || [],
+          criterias: response.data.criterias || [],
           isCriteriasLoading: false,
         });
       } else {
@@ -351,15 +359,16 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Get criteria details and user's submission if exists
    */
-  getApplicantAssessmentSubmission: async (params: GetApplicantAssessmentSubmissionRequest) => {
+  getApplicantAssessmentSubmission: async (params: GetCycleCriteriaDetailsWithSubmissionDTO) => {
     set({ isAssessmentsLoading: true, assessmentsError: null });
     try {
       const response = await projectManagementService.getApplicantAssessmentSubmission(params);
 
-      if (response.status === 200 && response.res) {
+      if (response.status === 200 && response.data) {
         set({
-          criterias: [response.res.criteria],
-          currentAssessment: response.res.cycleSubmission,
+          criterias: [response.data.criteria],
+          currentCriteria: response.data.criteria,
+          currentAssessment: response.data.cycleSubmission,
           isAssessmentsLoading: false,
         });
       } else {
@@ -382,14 +391,14 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
   /**
    * Create or update assessment submission for a criteria
    */
-  createAssessmentSubmission: async (data: CreateAssessmentSubmissionRequest): Promise<boolean> => {
+  createAssessmentSubmission: async (data: SubmitAssessmentDTO): Promise<boolean> => {
     set({ isAssessmentsLoading: true, assessmentsError: null });
     try {
       const response = await projectManagementService.createAssessmentSubmission(data);
 
-      if ((response.status === 200 || response.status === 201) && response.res) {
+      if ((response.status === 200 || response.status === 201) && response.data) {
         set({
-          currentAssessment: response.res.submission,
+          currentAssessment: response.data.submission,
           isAssessmentsLoading: false,
         });
         return true;

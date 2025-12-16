@@ -3,6 +3,7 @@
  */
 import { API_CONFIG } from '../lib/config/api.config';
 import { httpClient } from '../lib/http/http-client';
+import type { ApiResponse } from '../types/api.types';
 import {
   CreateProjectRequest,
   CreateProjectResponse,
@@ -32,8 +33,8 @@ export class ProjectManagementService {
   /**
    * Create a new project from an approved application
    */
-  async createProject(data: CreateProjectRequest): Promise<CreateProjectResponse> {
-    return httpClient.post<CreateProjectResponse>(
+  async createProject(data: CreateProjectRequest): Promise<ApiResponse<CreateProjectResponse>> {
+    return httpClient.post<ApiResponse<CreateProjectResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.CREATE_PROJECT,
       data
     );
@@ -42,14 +43,14 @@ export class ProjectManagementService {
   /**
    * Get all projects in a cycle with pagination
    */
-  async getCycleProjects(params: GetCycleProjectsRequest): Promise<GetCycleProjectsResponse> {
+  async getCycleProjects(params: GetCycleProjectsRequest): Promise<ApiResponse<GetCycleProjectsResponse>> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       page: params.page.toString(),
       numberOfResults: params.numberOfResults.toString(),
     };
 
-    return httpClient.get<GetCycleProjectsResponse>(
+    return httpClient.get<ApiResponse<GetCycleProjectsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_PROJECTS,
       queryParams
     );
@@ -58,13 +59,13 @@ export class ProjectManagementService {
   /**
    * Get detailed information about a specific project
    */
-  async getProjectDetails(params: GetProjectDetailsRequest): Promise<GetProjectDetailsResponse> {
+  async getProjectDetails(params: GetProjectDetailsRequest): Promise<ApiResponse<GetProjectDetailsResponse>> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       applicationSlug: params.applicationSlug,
     };
 
-    return httpClient.get<GetProjectDetailsResponse>(
+    return httpClient.get<ApiResponse<GetProjectDetailsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_PROJECT_DETAILS,
       queryParams
     );
@@ -77,8 +78,8 @@ export class ProjectManagementService {
    */
   async createCycleCriteria(
     data: CreateCycleCriteriaRequest
-  ): Promise<CreateCycleCriteriaResponse> {
-    return httpClient.post<CreateCycleCriteriaResponse>(
+  ): Promise<ApiResponse<CreateCycleCriteriaResponse>> {
+    return httpClient.post<ApiResponse<CreateCycleCriteriaResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.CREATE_CYCLE_CRITERIA,
       data
     );
@@ -87,12 +88,12 @@ export class ProjectManagementService {
   /**
    * Get all assessment criteria for a cycle
    */
-  async getCycleCriterias(params: GetCycleCriteriasRequest): Promise<GetCycleCriteriasResponse> {
+  async getCycleCriterias(params: GetCycleCriteriasRequest): Promise<ApiResponse<GetCycleCriteriasResponse>> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
     };
 
-    return httpClient.get<GetCycleCriteriasResponse>(
+    return httpClient.get<ApiResponse<GetCycleCriteriasResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_CRITERIAS,
       queryParams
     );
@@ -103,7 +104,7 @@ export class ProjectManagementService {
    */
   async getCycleCriteriaAssessments(
     params: GetCycleCriteriaAssessmentsRequest
-  ): Promise<GetCycleCriteriaAssessmentsResponse> {
+  ): Promise<ApiResponse<GetCycleCriteriaAssessmentsResponse>> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       criteriaSlug: params.criteriaSlug,
@@ -111,7 +112,7 @@ export class ProjectManagementService {
       numberOfResults: params.numberOfResults.toString(),
     };
 
-    return httpClient.get<GetCycleCriteriaAssessmentsResponse>(
+    return httpClient.get<ApiResponse<GetCycleCriteriaAssessmentsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_CRITERIA_ASSESSMENTS,
       queryParams
     );
@@ -122,8 +123,8 @@ export class ProjectManagementService {
    */
   async inviteReviewerForAssessment(
     data: InviteReviewerForAssessmentRequest
-  ): Promise<InviteReviewerForAssessmentResponse> {
-    return httpClient.post<InviteReviewerForAssessmentResponse>(
+  ): Promise<ApiResponse<InviteReviewerForAssessmentResponse>> {
+    return httpClient.post<ApiResponse<InviteReviewerForAssessmentResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.INVITE_REVIEWER_FOR_ASSESSMENT,
       data
     );
@@ -136,12 +137,12 @@ export class ProjectManagementService {
    */
   async getApplicantCycleCriterias(
     params: GetApplicantCycleCriteriasRequest
-  ): Promise<GetApplicantCycleCriteriasResponse> {
+  ): Promise<ApiResponse<GetApplicantCycleCriteriasResponse>> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
     };
 
-    return httpClient.get<GetApplicantCycleCriteriasResponse>(
+    return httpClient.get<ApiResponse<GetApplicantCycleCriteriasResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_APPLICANT_CYCLE_CRITERIAS,
       queryParams
     );
@@ -152,13 +153,13 @@ export class ProjectManagementService {
    */
   async getApplicantAssessmentSubmission(
     params: GetApplicantAssessmentSubmissionRequest
-  ): Promise<GetApplicantAssessmentSubmissionResponse> {
+  ): Promise<ApiResponse<GetApplicantAssessmentSubmissionResponse>> {
     const queryParams: Record<string, string> = {
       cycleSlug: params.cycleSlug,
       criteriaSlug: params.criteriaSlug,
     };
 
-    return httpClient.get<GetApplicantAssessmentSubmissionResponse>(
+    return httpClient.get<ApiResponse<GetApplicantAssessmentSubmissionResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_APPLICANT_ASSESSMENT_SUBMISSION,
       queryParams
     );
@@ -169,8 +170,8 @@ export class ProjectManagementService {
    */
   async createAssessmentSubmission(
     data: CreateAssessmentSubmissionRequest
-  ): Promise<CreateAssessmentSubmissionResponse> {
-    return httpClient.post<CreateAssessmentSubmissionResponse>(
+  ): Promise<ApiResponse<CreateAssessmentSubmissionResponse>> {
+    return httpClient.post<ApiResponse<CreateAssessmentSubmissionResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.CREATE_ASSESSMENT_SUBMISSION,
       data
     );

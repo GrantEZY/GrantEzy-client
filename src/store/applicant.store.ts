@@ -17,6 +17,7 @@ import {
   CreateApplicationRequest,
   UserApplication,
 } from '../types/applicant.types';
+import { Application as ProjectApplication } from '../types/project.types';
 
 interface ApplicantState {
   // Current application state (for submission flow)
@@ -28,6 +29,12 @@ interface ApplicantState {
   myApplications: UserApplication[];
   linkedApplications: UserApplication[];
   isLoadingApplications: boolean;
+
+  // User projects list (applications converted to projects)
+  projects: ProjectApplication[];
+  isProjectsLoading: boolean;
+  projectsError: string | null;
+  currentProject: ProjectApplication | null;
 
   // Loading and error states
   isLoading: boolean;
@@ -71,6 +78,10 @@ interface ApplicantActions {
   ) => Promise<{ cycle: any; applicationDetails: Application | null } | null>;
   fetchUserCreatedApplicationDetails: (applicationId: string) => Promise<Application | null>;
   deleteUserApplication: (applicationId: string) => Promise<boolean>;
+
+  // User projects management
+  getUserProjects: (page: number, numberOfResults: number) => Promise<void>;
+  getProjectDetails: (applicationSlug: string) => Promise<any | null>;
 
   // Navigation helpers
   setCurrentStep: (step: ApplicationStep) => void;
@@ -148,6 +159,10 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
   myApplications: [],
   linkedApplications: [],
   isLoadingApplications: false,
+  projects: [],
+  isProjectsLoading: false,
+  projectsError: null,
+  currentProject: null,
   isLoading: false,
   error: null,
   successMessage: null,
@@ -668,6 +683,52 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       return null;
     } catch (error: any) {
       const errorMessage = error?.message || 'Failed to fetch application details';
+      set({ error: errorMessage, isLoading: false });
+      return null;
+    }
+  },
+
+  // Get user projects (approved applications converted to projects)
+  getUserProjects: async (page: number, numberOfResults: number) => {
+    set({ isProjectsLoading: true, projectsError: null });
+    try {
+      const response = await applicantService.getUserProjects(page, numberOfResults);
+
+      if (response.status === 200 && response.res) {
+        set({
+          projects: response.res.applications,
+          isProjectsLoading: false,
+        });
+      } else {
+        set({
+          projectsError: 'Failed to fetch projects',
+          isProjectsLoading: false,
+        });
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Failed to fetch projects';
+      set({ projectsError: errorMessage, isProjectsLoading: false });
+    }
+  },
+
+  // Get project details by application slug
+  getProjectDetails: async (applicationSlug: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const response = await applicantService.getProjectDetails(applicationSlug);
+
+      if (response.status === 200 && response.res) {
+        set({ currentProject: response.res.project, isLoading: false });
+        return response.res.project;
+      }
+
+      set({
+        error: 'Failed to fetch project details',
+        isLoading: false,
+      });
+      return null;
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Failed to fetch project details';
       set({ error: errorMessage, isLoading: false });
       return null;
     }

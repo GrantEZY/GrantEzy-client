@@ -45,7 +45,7 @@ export class ProjectManagementService {
   async getCycleProjects(params: GetCycleProjectsDTO): Promise<ApiResponse<GetCycleProjectsResponse>> {
     return httpClient.get<ApiResponse<GetCycleProjectsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_PROJECTS,
-      { params }
+      params as unknown as Record<string, string>
     );
   }
 
@@ -56,7 +56,7 @@ export class ProjectManagementService {
   async getProjectDetails(params: GetProjectDetailsDTO): Promise<ApiResponse<GetProjectDetailsResponse>> {
     return httpClient.get<ApiResponse<GetProjectDetailsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_PROJECT_DETAILS,
-      { params }
+      params as unknown as Record<string, string>
     );
   }
 
@@ -80,7 +80,7 @@ export class ProjectManagementService {
   async getCycleCriterias(params: GetCycleCriteriasDTO): Promise<ApiResponse<GetCycleCriteriasResponse>> {
     return httpClient.get<ApiResponse<GetCycleCriteriasResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_CRITERIAS,
-      { params }
+      params as unknown as Record<string, string>
     );
   }
 
@@ -93,7 +93,7 @@ export class ProjectManagementService {
   ): Promise<ApiResponse<GetCycleCriteriaAssessmentsResponse>> {
     return httpClient.get<ApiResponse<GetCycleCriteriaAssessmentsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_CYCLE_CRITERIA_ASSESSMENTS,
-      { params }
+      params as unknown as Record<string, string>
     );
   }
 
@@ -117,7 +117,7 @@ export class ProjectManagementService {
   async getApplicantCycleCriterias(params: GetCycleCriteriasDTO): Promise<ApiResponse<GetCycleCriteriasResponse>> {
     return httpClient.get<ApiResponse<GetCycleCriteriasResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_APPLICANT_CYCLE_CRITERIAS,
-      { params }
+      params as unknown as Record<string, string>
     );
   }
 
@@ -130,7 +130,7 @@ export class ProjectManagementService {
   ): Promise<ApiResponse<GetCycleAssessmentDetailsResponse>> {
     return httpClient.get<ApiResponse<GetCycleAssessmentDetailsResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.GET_APPLICANT_ASSESSMENT_SUBMISSION,
-      { params }
+      params as unknown as Record<string, string>
     );
   }
 

@@ -10,7 +10,7 @@ interface CreateProjectModalProps {
   onClose: () => void;
   onSuccess: () => void;
   cycleSlug: string;
-  approvedApplications: CycleApplication[];
+  approvedApplications: CycleApplication[]; // Applications eligible to become projects (SUBMITTED or IN_REVIEW)
 }
 
 // Form-friendly budget item structure
@@ -32,14 +32,14 @@ export default function CreateProjectModal({
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Debug: Log approved applications
+  // Debug: Log eligible applications
   useEffect(() => {
     if (isOpen) {
       console.log('🎯 CreateProjectModal opened with:', {
-        approvedApplicationsCount: approvedApplications.length,
+        eligibleApplicationsCount: approvedApplications.length,
         applications: approvedApplications.map((app) => ({
           id: app.id,
-          title: app.basicInfo?.title,
+          title: app.basicDetails?.title,
           status: app.status,
         })),
       });
@@ -268,7 +268,7 @@ export default function CreateProjectModal({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center">
         {/* Background overlay */}
         <div
           className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -276,7 +276,7 @@ export default function CreateProjectModal({
         ></div>
 
         {/* Modal panel */}
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:align-middle">
+        <div className="relative z-10 inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:align-middle">
           {/* Header */}
           <div className="border-b border-gray-200 bg-white px-6 py-4">
             <div className="flex items-center justify-between">
@@ -342,10 +342,10 @@ export default function CreateProjectModal({
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Select Approved Application *
+                    Select Application *
                   </label>
                   <p className="mt-1 text-sm text-gray-500">
-                    Choose an approved application to create a project
+                    Choose a submitted or reviewed application to create a project
                   </p>
                   {errors.application && (
                     <p className="mt-1 text-sm text-red-600">{errors.application}</p>
@@ -368,12 +368,12 @@ export default function CreateProjectModal({
                       </svg>
                       <div className="ml-3">
                         <h3 className="text-sm font-medium text-yellow-800">
-                          No approved applications
+                          No eligible applications
                         </h3>
                         <div className="mt-2 text-sm text-yellow-700">
                           <p>
-                            There are no approved applications in this cycle yet. You need to
-                            approve an application before creating a project.
+                            There are no submitted or reviewed applications in this cycle yet.
+                            Applications must be submitted before you can create a project.
                           </p>
                         </div>
                       </div>
@@ -394,16 +394,21 @@ export default function CreateProjectModal({
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h4 className="font-medium text-gray-900">
-                              {app.basicInfo?.title || 'Untitled Application'}
+                              {app.basicDetails?.title || 'Untitled Application'}
                             </h4>
-                            {app.basicInfo?.summary && (
+                            {app.basicDetails?.summary && (
                               <p className="mt-1 text-sm text-gray-500">
-                                {app.basicInfo.summary.substring(0, 150)}
-                                {app.basicInfo.summary.length > 150 && '...'}
+                                {app.basicDetails.summary.substring(0, 150)}
+                                {app.basicDetails.summary.length > 150 && '...'}
                               </p>
                             )}
                             <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                              <span>Applicant: {app.applicant?.email || 'N/A'}</span>
+                              <span>
+                                Applicant:{' '}
+                                {app.applicant?.person
+                                  ? `${app.applicant.person.firstName} ${app.applicant.person.lastName}`
+                                  : 'N/A'}
+                              </span>
                               <span>•</span>
                               <span>
                                 Submitted:{' '}
@@ -448,9 +453,9 @@ export default function CreateProjectModal({
                 {/* Selected Application Info */}
                 {selectedApplication && (
                   <div className="rounded-lg bg-blue-50 p-4">
-                    <h5 className="font-medium text-blue-900">
-                      {selectedApplication.basicInfo?.title || 'Untitled'}
-                    </h5>
+                    <h4 className="font-medium text-gray-900">
+                      {selectedApplication.basicDetails?.title || 'Untitled'}
+                    </h4>
                     <p className="mt-1 text-sm text-blue-700">
                       {selectedApplication.applicant?.email || 'N/A'}
                     </p>

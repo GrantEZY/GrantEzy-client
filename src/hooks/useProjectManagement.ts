@@ -18,6 +18,7 @@ export const useProjectManagement = () => {
 
   // Criterias
   const criterias = useProjectStore((state) => state.criterias);
+  const currentCriteria = useProjectStore((state) => state.currentCriteria);
   const isCriteriasLoading = useProjectStore((state) => state.isCriteriasLoading);
   const criteriasError = useProjectStore((state) => state.criteriasError);
 
@@ -47,6 +48,7 @@ export const useProjectManagement = () => {
   const createCycleCriteria = useProjectStore((state) => state.createCycleCriteria);
   const getCycleCriterias = useProjectStore((state) => state.getCycleCriterias);
   const clearCriterias = useProjectStore((state) => state.clearCriterias);
+  const clearCurrentCriteria = useProjectStore((state) => state.clearCurrentCriteria);
 
   // Assessment Actions (PM)
   const getCycleCriteriaAssessments = useProjectStore((state) => state.getCycleCriteriaAssessments);
@@ -80,11 +82,13 @@ export const useProjectManagement = () => {
 
     // Criterias
     criterias,
+    currentCriteria,
     isCriteriasLoading,
     criteriasError,
     createCycleCriteria,
     getCycleCriterias,
     clearCriterias,
+    clearCurrentCriteria,
 
     // Assessments
     assessments,
