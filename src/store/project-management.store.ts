@@ -131,9 +131,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
     try {
       const response = await projectManagementService.getCycleProjects(data);
       
-      if (response.data?.applications) {
+      if (response.data?.projects) {
         set({
-          projects: response.data.applications,
+          projects: response.data.projects,
           isLoadingProjects: false,
         });
       } else {
@@ -211,20 +211,29 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
   },
 
   getCycleCriteriaAssessments: async (data: GetCycleCriteriaAssessmentsRequest) => {
+    console.log('🔄 Store: Fetching criteria assessments with:', data);
     set({ isLoadingSubmissions: true, error: null });
     try {
       const response = await projectManagementService.getCycleCriteriaAssessments(data);
       
-      if (response.data) {
-        set({
-          criteriaSubmissions: response.data.submissions || [],
-          currentCriteria: response.data.criteria || null,
-          isLoadingSubmissions: false,
-        });
-      } else {
-        throw new Error(response.message || 'Failed to fetch submissions');
-      }
+      console.log('📦 Store: Assessments response:', {
+        status: response?.status,
+        hasData: !!response?.data,
+        hasRes: !!response?.res,
+        submissionsCount: response?.data?.submissions?.length || response?.res?.submissions?.length || 0,
+      });
+      
+      // Check both response.data and response.res
+      const submissions = response.data?.submissions || response.res?.submissions || [];
+      const criteria = response.data?.criteria || response.res?.criteria || null;
+      
+      set({
+        criteriaSubmissions: submissions,
+        currentCriteria: criteria,
+        isLoadingSubmissions: false,
+      });
     } catch (error: any) {
+      console.error('❌ Store: Error fetching assessments:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch submissions';
       set({ error: errorMessage, isLoadingSubmissions: false, criteriaSubmissions: [] });
     }
@@ -256,19 +265,46 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
   // ============================================================================
 
   getApplicantCycleCriterias: async (cycleSlug: string) => {
+    console.log('🔄 Store: Starting fetch for cycle:', cycleSlug);
     set({ isLoadingApplicantCriterias: true, error: null });
     try {
+      console.log('🔄 Store: Calling service...');
       const response = await projectManagementService.getApplicantCycleCriterias({ cycleSlug });
       
-      if (response.data?.criterias) {
+      console.log('📦 Store: Raw response received:', response);
+      console.log('📦 Store: Response structure:', {
+        hasResponse: !!response,
+        status: response?.status,
+        message: response?.message,
+        hasData: !!response?.data,
+        hasRes: !!response?.res,
+        data: response?.data,
+        res: response?.res,
+      });
+      
+      // Check both response.data and response.res for criterias
+      const criterias = response.data?.criterias || response.res?.criterias || [];
+      
+      console.log('📦 Store: Extracted criterias:', {
+        criteriasCount: criterias.length,
+        criterias: criterias,
+      });
+      
+      if (criterias && criterias.length > 0) {
+        console.log('✅ Store: Setting criterias in state:', criterias);
         set({
-          applicantCriterias: response.data.criterias,
+          applicantCriterias: criterias,
           isLoadingApplicantCriterias: false,
         });
       } else {
-        throw new Error(response.message || 'Failed to fetch criterias');
+        console.warn('⚠️ Store: No criterias found in response');
+        set({
+          applicantCriterias: [],
+          isLoadingApplicantCriterias: false,
+        });
       }
     } catch (error: any) {
+      console.error('❌ Store: Error fetching criterias:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch criterias';
       set({ error: errorMessage, isLoadingApplicantCriterias: false, applicantCriterias: [] });
     }
@@ -303,21 +339,38 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
   },
 
   createApplicantAssessmentSubmission: async (data: SubmitAssessmentRequest) => {
+    console.log('📝 Store: Submitting assessment:', data);
     set({ isLoading: true, error: null });
     try {
       const response = await projectManagementService.createApplicantAssessmentSubmission(data);
       
-      if (response.data) {
+      console.log('📦 Store: Submission response:', {
+        status: response?.status,
+        message: response?.message,
+        hasData: !!response?.data,
+        hasRes: !!response?.res,
+        data: response?.data,
+        res: response?.res,
+        fullResponse: response,
+      });
+      
+      // Check both response.data and response.res for submission
+      const submission = response.data?.submission || response.res?.submission;
+      
+      if (submission) {
+        console.log('✅ Store: Submission successful:', submission);
         set({
-          applicantCurrentSubmission: response.data.submission,
+          applicantCurrentSubmission: submission,
           successMessage: response.message || 'Assessment submitted successfully',
           isLoading: false,
         });
         return true;
       }
       
+      console.error('⚠️ Store: No submission in response');
       throw new Error(response.message || 'Failed to submit assessment');
     } catch (error: any) {
+      console.error('❌ Store: Submission error:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to submit assessment';
       set({ error: errorMessage, isLoading: false });
       return false;

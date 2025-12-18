@@ -60,6 +60,7 @@ export interface Application {
   teammates?: any;
   createdAt: string;
   updatedAt: string;
+  cycle?: Cycle;
 }
 
 export interface Cycle {
@@ -77,14 +78,16 @@ export interface Project {
   id: string;
   slug: string;
   applicationId: string;
-  cycleId: string;
   status: ProjectStatus | string;
-  allocatedBudget: QuotedBudget;
-  plannedDuration: ProjectDuration;
+  allotedBudget: QuotedBudget;
+  duration: ProjectDuration;
+  progress?: any;
+  metrics?: any;
+  mentorId?: string | null;
   createdAt: string;
   updatedAt: string;
   application?: Application;
-  cycle?: Cycle;
+  mentor?: any;
 }
 
 export interface ProjectCriteria {
@@ -194,8 +197,8 @@ export interface GetUserProjectsResponse {
   status: number;
   message: string;
   res: {
-    projects: Project[];
-    pagination: PaginationMeta;
+    applications: Project[];
+    pagination?: PaginationMeta;
   } | null;
 }
 

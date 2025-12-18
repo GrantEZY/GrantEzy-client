@@ -63,19 +63,32 @@ export interface InviteReviewerForAssessmentRequest {
 // Aggregate Types - From Backend
 // ============================================================================
 
-export interface ProjectMetrics {
+export interface Duration {
   startDate: Date;
-  endDate: Date;
+  endDate: Date | null;
+}
+
+export interface ProjectMetrics {
+  plannedBudget: any;
+  actualSpent: any;
+  plannedDuration: Duration;
+  actualDuration: Duration | null;
 }
 
 export interface Project {
   id: string;
+  slug: string;
   applicationId: string;
-  allocatedBudget: number;
-  plannedDuration: ProjectMetrics;
+  status: string;
+  allotedBudget: any; // QuotedBudget object
+  duration: Duration;
+  progress: any | null;
+  metrics: ProjectMetrics;
+  mentorId: string | null;
   createdAt: Date;
   updatedAt: Date;
   application?: any; // Reference to GrantApplication
+  mentor?: any;
 }
 
 export interface CycleAssessmentCriteria {
@@ -113,7 +126,12 @@ export interface CreateProjectResponse {
 }
 
 export interface GetCycleProjectsResponse {
-  applications: any[]; // GrantApplication[] - uses applicant.types
+  projects: Project[];
+  pagination?: {
+    totalResults: number;
+    page: number;
+    numberOfResults: number;
+  };
 }
 
 export interface GetProjectDetailsResponse {

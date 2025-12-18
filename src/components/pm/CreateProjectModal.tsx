@@ -267,16 +267,9 @@ export default function CreateProjectModal({
   const selectedApplication = approvedApplications.find((app) => app.id === selectedApplicationId);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Background overlay */}
-        <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-          onClick={onClose}
-        ></div>
-
-        {/* Modal panel */}
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:align-middle">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/10 p-4 backdrop-blur-md">
+      {/* Modal panel */}
+      <div className="relative w-full max-w-4xl transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
           {/* Header */}
           <div className="border-b border-gray-200 bg-white px-6 py-4">
             <div className="flex items-center justify-between">
@@ -885,7 +878,6 @@ export default function CreateProjectModal({
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

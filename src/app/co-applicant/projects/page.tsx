@@ -28,7 +28,7 @@ export default function CoApplicantProjectsPage() {
       const response = await coApplicantService.getUserLinkedProjects(currentPage, resultsPerPage);
 
       if (response && response.status === 200 && response.res) {
-        setProjects(response.res.projects);
+        setProjects(response.res.applications);
         setTotalPages(response.res.pagination?.totalPages || 1);
       } else {
         throw new Error((response as any)?.message || 'Failed to load linked projects');
@@ -62,34 +62,34 @@ export default function CoApplicantProjectsPage() {
 
     if (budget.ManPower && Array.isArray(budget.ManPower)) {
       total += budget.ManPower.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
         0
       );
     }
     if (budget.Equipment && Array.isArray(budget.Equipment)) {
       total += budget.Equipment.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
         0
       );
     }
     if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
       total += budget.OtherCosts.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
         0
       );
     }
 
     if (budget.Consumables && 'Budget' in budget.Consumables) {
-      total += (budget.Consumables as any).Budget?.totalAmount || 0;
+      total += (budget.Consumables as any).Budget?.amount || 0;
     }
     if (budget.Travel && 'Budget' in budget.Travel) {
-      total += (budget.Travel as any).Budget?.totalAmount || 0;
+      total += (budget.Travel as any).Budget?.amount || 0;
     }
     if (budget.Contigency && 'Budget' in budget.Contigency) {
-      total += (budget.Contigency as any).Budget?.totalAmount || 0;
+      total += (budget.Contigency as any).Budget?.amount || 0;
     }
     if (budget.Overhead && 'Budget' in budget.Overhead) {
-      total += (budget.Overhead as any).Budget?.totalAmount || 0;
+      total += (budget.Overhead as any).Budget?.amount || 0;
     }
 
     return total;
@@ -201,19 +201,22 @@ export default function CoApplicantProjectsPage() {
                             </td>
                             <td className="whitespace-nowrap px-6 py-4">
                               <span
-                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.status)}`}
+                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.project?.status || project.status)}`}
                               >
-                                {project.status}
+                                {project.project?.status || project.status}
                               </span>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                              INR {calculateBudgetTotal(project.allocatedBudget).toLocaleString()}
+                              {project.project?.allotedBudget 
+                                ? `INR ${calculateBudgetTotal(project.project.allotedBudget).toLocaleString()}`
+                                : project.basicInfo?.budget
+                                ? `INR ${calculateBudgetTotal(project.basicInfo.budget).toLocaleString()}`
+                                : 'Budget not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {project.plannedDuration?.startDate &&
-                              project.plannedDuration?.endDate
-                                ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
-                                : 'Not set'}
+                              {project.project?.duration?.startDate
+                                ? `${new Date(project.project.duration.startDate).toLocaleDateString()}${project.project.duration.endDate ? ` - ${new Date(project.project.duration.endDate).toLocaleDateString()}` : ' - Ongoing'}`
+                                : 'Duration not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                               <Link

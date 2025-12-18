@@ -41,7 +41,11 @@ export default function CycleDetailsPage() {
       console.log('🔍 Applications in cycle:', {
         total: currentCycleApplications.length,
         approved: currentCycleApplications.filter((app) => app.status === 'APPROVED').length,
-        statuses: currentCycleApplications.map((app) => ({ id: app.id, status: app.status })),
+        statuses: currentCycleApplications.map((app) => ({ 
+          id: app.id, 
+          status: app.status,
+          reviewsCount: (app as any).reviews?.length || 0,
+        })),
       });
     }
   }, [currentCycleApplications]);
@@ -62,6 +66,7 @@ export default function CycleDetailsPage() {
       case 'SUBMITTED':
         return 'bg-blue-100 text-blue-800';
       case 'UNDER_REVIEW':
+      case 'IN_REVIEW':
         return 'bg-yellow-100 text-yellow-800';
       case 'APPROVED':
         return 'bg-green-100 text-green-800';
@@ -179,7 +184,10 @@ export default function CycleDetailsPage() {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8" aria-label="Tabs">
               <button
-                onClick={() => setActiveTab('applications')}
+                onClick={() => {
+                  console.log('🔄 Switching to Applications tab');
+                  setActiveTab('applications');
+                }}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
                   activeTab === 'applications'
                     ? 'border-blue-600 text-blue-600'
@@ -195,7 +203,10 @@ export default function CycleDetailsPage() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab('projects')}
+                onClick={() => {
+                  console.log('🔄 Switching to Projects tab');
+                  setActiveTab('projects');
+                }}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
                   activeTab === 'projects'
                     ? 'border-blue-600 text-blue-600'
@@ -211,7 +222,10 @@ export default function CycleDetailsPage() {
                 )}
               </button>
               <button
-                onClick={() => setActiveTab('criteria')}
+                onClick={() => {
+                  console.log('🔄 Switching to Criteria tab');
+                  setActiveTab('criteria');
+                }}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
                   activeTab === 'criteria'
                     ? 'border-blue-600 text-blue-600'
@@ -339,7 +353,18 @@ export default function CycleDetailsPage() {
                   Projects {projectsPagination && `(${projectsPagination.totalResults})`}
                 </h2>
                 <button
-                  onClick={() => setIsCreateProjectModalOpen(true)}
+                  onClick={() => {
+                    console.log('🚀 Create Project button clicked', {
+                      approvedCount: currentCycleApplications?.filter((app) => app.status === 'APPROVED').length || 0,
+                      totalApps: currentCycleApplications?.length || 0,
+                      approvedApps: currentCycleApplications?.filter((app) => app.status === 'APPROVED').map(app => ({
+                        id: app.id,
+                        title: app.basicInfo?.title,
+                        status: app.status
+                      }))
+                    });
+                    setIsCreateProjectModalOpen(true);
+                  }}
                   className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
                   type="button"
                 >
@@ -454,17 +479,19 @@ export default function CycleDetailsPage() {
                             </span>
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                            INR {calculateProjectBudget(project.allocatedBudget).toLocaleString()}
+                            INR {calculateProjectBudget(project.allotedBudget).toLocaleString()}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {project.plannedDuration?.startDate && project.plannedDuration?.endDate
-                              ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
-                              : 'Not set'}
+                            {project.duration?.startDate && project.duration?.endDate
+                              ? `${new Date(project.duration.startDate).toLocaleDateString()} - ${new Date(project.duration.endDate).toLocaleDateString()}`
+                              : project.duration?.startDate
+                                ? `${new Date(project.duration.startDate).toLocaleDateString()} - Ongoing`
+                                : 'Not set'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <Link
                               className="text-blue-600 hover:text-blue-700"
-                              href={`/pm/cycles/${cycleSlug}/projects/${project.application?.slug || project.slug}`}
+                              href={`/pm/cycles/${cycleSlug}/projects/${project.application?.slug || project.applicationId}`}
                             >
                               View Details
                             </Link>
@@ -482,6 +509,11 @@ export default function CycleDetailsPage() {
           {activeTab === 'criteria' && currentCycle && (
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
               <CycleCriteriaManagement cycleSlug={cycleSlug} cycleId={currentCycle.id} />
+            </div>
+          )}
+          {activeTab === 'criteria' && !currentCycle && (
+            <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+              <p className="text-red-600">Error: Current cycle not loaded</p>
             </div>
           )}
 
