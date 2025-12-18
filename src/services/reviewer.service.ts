@@ -14,6 +14,14 @@ import {
   GetUserReviewsResponse,
   GetReviewDetailsRequest,
   GetReviewDetailsResponse,
+  SubmitProjectAssessmentReviewRequest,
+  SubmitProjectAssessmentReviewResponse,
+  GetUserProjectReviewsRequest,
+  GetUserProjectReviewsResponse,
+  GetProjectReviewDetailsRequest,
+  GetProjectReviewDetailsResponse,
+  SubmitProjectAssessmentReviewInviteStatusRequest,
+  SubmitProjectAssessmentReviewInviteStatusResponse,
 } from '../types/reviewer.types';
 
 export class ReviewerService {
@@ -82,6 +90,66 @@ export class ReviewerService {
     return httpClient.get<GetReviewDetailsResponse>(
       API_CONFIG.ENDPOINTS.REVIEWER.GET_REVIEW_DETAILS,
       queryParams
+    );
+  }
+
+  // ============= Project Assessment Review Management =============
+
+  /**
+   * Submit a review for a project assessment
+   */
+  async submitProjectAssessmentReview(
+    data: SubmitProjectAssessmentReviewRequest
+  ): Promise<SubmitProjectAssessmentReviewResponse> {
+    return httpClient.post<SubmitProjectAssessmentReviewResponse>(
+      API_CONFIG.ENDPOINTS.REVIEWER.SUBMIT_PROJECT_ASSESSMENT_REVIEW,
+      data
+    );
+  }
+
+  /**
+   * Get all project assessment reviews submitted by the current reviewer with pagination
+   */
+  async getUserProjectReviews(
+    params: GetUserProjectReviewsRequest
+  ): Promise<GetUserProjectReviewsResponse> {
+    const queryParams: Record<string, string> = {
+      page: params.page.toString(),
+      numberOfResults: params.numberOfResults.toString(),
+    };
+
+    return httpClient.get<GetUserProjectReviewsResponse>(
+      API_CONFIG.ENDPOINTS.REVIEWER.GET_USER_PROJECT_REVIEWS,
+      queryParams
+    );
+  }
+
+  /**
+   * Get detailed information about a specific project assessment review
+   */
+  async getProjectReviewDetails(
+    params: GetProjectReviewDetailsRequest
+  ): Promise<GetProjectReviewDetailsResponse> {
+    const queryParams: Record<string, string> = {
+      assessmentSlug: params.assessmentSlug,
+    };
+
+    return httpClient.get<GetProjectReviewDetailsResponse>(
+      API_CONFIG.ENDPOINTS.REVIEWER.GET_PROJECT_REVIEW_DETAILS,
+      queryParams
+    );
+  }
+
+  /**
+   * Accept or reject project assessment review invitation
+   * This is a public endpoint - no authentication required
+   */
+  async submitProjectAssessmentReviewInviteStatus(
+    data: SubmitProjectAssessmentReviewInviteStatusRequest
+  ): Promise<SubmitProjectAssessmentReviewInviteStatusResponse> {
+    return httpClient.post<SubmitProjectAssessmentReviewInviteStatusResponse>(
+      API_CONFIG.ENDPOINTS.REVIEWER.SUBMIT_PROJECT_ASSESSMENT_REVIEW_INVITE_STATUS,
+      data
     );
   }
 }
