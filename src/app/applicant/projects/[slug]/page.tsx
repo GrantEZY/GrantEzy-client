@@ -72,43 +72,43 @@ export default function ApplicantProjectDetailsPage() {
   };
 
   const calculateBudgetTotal = (project: Project): number => {
-    const budget = project.allocatedBudget;
+    const budget = project.allotedBudget;
     if (!budget) return 0;
 
     let total = 0;
 
     if (budget.ManPower) {
       total += budget.ManPower.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
         0
       );
     }
 
     if (budget.Equipment) {
       total += budget.Equipment.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
         0
       );
     }
 
     if (budget.OtherCosts) {
       total += budget.OtherCosts.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.totalAmount || 0),
+        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
         0
       );
     }
 
     if (budget.Consumables && 'Budget' in budget.Consumables) {
-      total += (budget.Consumables as any).Budget?.totalAmount || 0;
+      total += (budget.Consumables as any).Budget?.amount || 0;
     }
     if (budget.Travel && 'Budget' in budget.Travel) {
-      total += (budget.Travel as any).Budget?.totalAmount || 0;
+      total += (budget.Travel as any).Budget?.amount || 0;
     }
     if (budget.Contigency && 'Budget' in budget.Contigency) {
-      total += (budget.Contigency as any).Budget?.totalAmount || 0;
+      total += (budget.Contigency as any).Budget?.amount || 0;
     }
     if (budget.Overhead && 'Budget' in budget.Overhead) {
-      total += (budget.Overhead as any).Budget?.totalAmount || 0;
+      total += (budget.Overhead as any).Budget?.amount || 0;
     }
 
     return total;
@@ -167,8 +167,8 @@ export default function ApplicantProjectDetailsPage() {
 
   const totalBudget = calculateBudgetTotal(project);
   const duration = calculateDuration(
-    project.plannedDuration?.startDate,
-    project.plannedDuration?.endDate
+    project.duration?.startDate,
+    project.duration?.endDate
   );
 
   return (
@@ -197,11 +197,32 @@ export default function ApplicantProjectDetailsPage() {
                 <p className="text-gray-600">View your project information</p>
               </div>
             </div>
-            <span
-              className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getStatusColor(project.status)}`}
-            >
-              {project.status}
-            </span>
+            <div className="flex items-center gap-3">
+              <Link
+                href={`/applicant/projects/${slug}/assessments`}
+                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+              >
+                <svg
+                  className="mr-2 h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
+                Project Assessments
+              </Link>
+              <span
+                className={`inline-flex rounded-full px-3 py-1 text-sm font-semibold ${getStatusColor(project.status)}`}
+              >
+                {project.status}
+              </span>
+            </div>
           </div>
 
           {/* Key Metrics */}
@@ -270,7 +291,7 @@ export default function ApplicantProjectDetailsPage() {
           </div>
 
           {/* Timeline */}
-          {project.plannedDuration && (
+          {project.duration && (
             <div className="rounded-lg border border-gray-200 bg-white p-6">
               <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -287,13 +308,13 @@ export default function ApplicantProjectDetailsPage() {
                 <div>
                   <p className="text-sm text-gray-600">Start Date</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {formatDate(project.plannedDuration.startDate)}
+                    {formatDate(project.duration.startDate)}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">End Date</p>
                   <p className="text-lg font-semibold text-gray-900">
-                    {formatDate(project.plannedDuration.endDate)}
+                    {formatDate(project.duration.endDate)}
                   </p>
                 </div>
               </div>
@@ -301,7 +322,7 @@ export default function ApplicantProjectDetailsPage() {
           )}
 
           {/* Budget Breakdown */}
-          {project.allocatedBudget && (
+          {project.allotedBudget && (
             <div className="rounded-lg border border-gray-200 bg-white p-6">
               <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -316,8 +337,8 @@ export default function ApplicantProjectDetailsPage() {
               </h2>
               <div className="space-y-6">
                 {/* ManPower */}
-                {project.allocatedBudget.ManPower &&
-                  project.allocatedBudget.ManPower.length > 0 && (
+                {project.allotedBudget.ManPower &&
+                  project.allotedBudget.ManPower.length > 0 && (
                     <div>
                       <h3 className="mb-3 text-base font-semibold text-gray-900">ManPower</h3>
                       <div className="overflow-hidden rounded-md border border-gray-200">
@@ -328,30 +349,18 @@ export default function ApplicantProjectDetailsPage() {
                                 Reason
                               </th>
                               <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Quantity
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Rate
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Total
+                                Amount
                               </th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allocatedBudget.ManPower.map((item: any, index: number) => (
+                            {project.allotedBudget.ManPower.map((item: any, index: number) => (
                               <tr key={index}>
                                 <td className="px-4 py-2 text-sm text-gray-900">
                                   {item.BudgetReason}
                                 </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {item.Budget?.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {formatCurrency(item.Budget?.rate)}
-                                </td>
                                 <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.totalAmount)}
+                                  {formatCurrency(item.Budget?.amount)}
                                 </td>
                               </tr>
                             ))}
@@ -362,8 +371,8 @@ export default function ApplicantProjectDetailsPage() {
                   )}
 
                 {/* Equipment */}
-                {project.allocatedBudget.Equipment &&
-                  project.allocatedBudget.Equipment.length > 0 && (
+                {project.allotedBudget.Equipment &&
+                  project.allotedBudget.Equipment.length > 0 && (
                     <div>
                       <h3 className="mb-3 text-base font-semibold text-gray-900">Equipment</h3>
                       <div className="overflow-hidden rounded-md border border-gray-200">
@@ -374,30 +383,18 @@ export default function ApplicantProjectDetailsPage() {
                                 Reason
                               </th>
                               <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Quantity
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Rate
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Total
+                                Amount
                               </th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allocatedBudget.Equipment.map((item: any, index: number) => (
+                            {project.allotedBudget.Equipment.map((item: any, index: number) => (
                               <tr key={index}>
                                 <td className="px-4 py-2 text-sm text-gray-900">
                                   {item.BudgetReason}
                                 </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {item.Budget?.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {formatCurrency(item.Budget?.rate)}
-                                </td>
                                 <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.totalAmount)}
+                                  {formatCurrency(item.Budget?.amount)}
                                 </td>
                               </tr>
                             ))}
@@ -408,8 +405,8 @@ export default function ApplicantProjectDetailsPage() {
                   )}
 
                 {/* OtherCosts */}
-                {project.allocatedBudget.OtherCosts &&
-                  project.allocatedBudget.OtherCosts.length > 0 && (
+                {project.allotedBudget.OtherCosts &&
+                  project.allotedBudget.OtherCosts.length > 0 && (
                     <div>
                       <h3 className="mb-3 text-base font-semibold text-gray-900">Other Costs</h3>
                       <div className="overflow-hidden rounded-md border border-gray-200">
@@ -420,30 +417,18 @@ export default function ApplicantProjectDetailsPage() {
                                 Reason
                               </th>
                               <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Quantity
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Rate
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Total
+                                Amount
                               </th>
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allocatedBudget.OtherCosts.map((item: any, index: number) => (
+                            {project.allotedBudget.OtherCosts.map((item: any, index: number) => (
                               <tr key={index}>
                                 <td className="px-4 py-2 text-sm text-gray-900">
                                   {item.BudgetReason}
                                 </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {item.Budget?.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {formatCurrency(item.Budget?.rate)}
-                                </td>
                                 <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.totalAmount)}
+                                  {formatCurrency(item.Budget?.amount)}
                                 </td>
                               </tr>
                             ))}
@@ -457,42 +442,42 @@ export default function ApplicantProjectDetailsPage() {
                 <div>
                   <h3 className="mb-3 text-base font-semibold text-gray-900">Additional Costs</h3>
                   <div className="grid gap-3 md:grid-cols-2">
-                    {project.allocatedBudget.Consumables && (
+                    {project.allotedBudget.Consumables && (
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Consumables</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
                           {formatCurrency(
-                            (project.allocatedBudget.Consumables as any).Budget?.totalAmount
+                            (project.allotedBudget.Consumables as any).Budget?.amount
                           )}
                         </p>
                       </div>
                     )}
-                    {project.allocatedBudget.Travel && (
+                    {project.allotedBudget.Travel && (
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Travel</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
                           {formatCurrency(
-                            (project.allocatedBudget.Travel as any).Budget?.totalAmount
+                            (project.allotedBudget.Travel as any).Budget?.amount
                           )}
                         </p>
                       </div>
                     )}
-                    {project.allocatedBudget.Contigency && (
+                    {project.allotedBudget.Contigency && (
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Contingency</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
                           {formatCurrency(
-                            (project.allocatedBudget.Contigency as any).Budget?.totalAmount
+                            (project.allotedBudget.Contigency as any).Budget?.amount
                           )}
                         </p>
                       </div>
                     )}
-                    {project.allocatedBudget.Overhead && (
+                    {project.allotedBudget.Overhead && (
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Overhead</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
                           {formatCurrency(
-                            (project.allocatedBudget.Overhead as any).Budget?.totalAmount
+                            (project.allotedBudget.Overhead as any).Budget?.amount
                           )}
                         </p>
                       </div>

@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { BasicInfo } from '@/types/applicant.types';
 
@@ -22,6 +22,19 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
     solution: currentApplication?.basicInfo?.solution || '',
     innovation: currentApplication?.basicInfo?.innovation || '',
   });
+
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.basicInfo) {
+      setFormData({
+        title: currentApplication.basicInfo.title || '',
+        summary: currentApplication.basicInfo.summary || '',
+        problem: currentApplication.basicInfo.problem || '',
+        solution: currentApplication.basicInfo.solution || '',
+        innovation: currentApplication.basicInfo.innovation || '',
+      });
+    }
+  }, [currentApplication]);
 
   const [errors, setErrors] = useState<Partial<Record<keyof BasicInfo, string>>>({});
 

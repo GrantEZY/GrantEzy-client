@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { RevenueModel, RevenueStream, RevenueStreamType } from '@/types/applicant.types';
 
@@ -22,6 +22,22 @@ export default function RevenueModelForm() {
     unitEconomics: currentApplication?.revenueModel?.unitEconomics || '',
   });
 
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.revenueModel) {
+      setFormData({
+        primaryStream: currentApplication.revenueModel.primaryStream || {
+          type: RevenueStreamType.SUBSCRIPTION,
+          description: '',
+          percentage: 100,
+        },
+        secondaryStreams: currentApplication.revenueModel.secondaryStreams || [],
+        pricing: currentApplication.revenueModel.pricing || '',
+        unitEconomics: currentApplication.revenueModel.unitEconomics || '',
+      });
+    }
+  }, [currentApplication]);
+
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const addSecondaryStream = () => {
@@ -29,7 +45,7 @@ export default function RevenueModelForm() {
       ...prev,
       secondaryStreams: [
         ...prev.secondaryStreams,
-        { type: RevenueStreamType.SUBSCRIPTION, description: '', percentage: 0 },
+        { type: RevenueStreamType.SUBSCRIPTION, description: '', percentage: '' as any },
       ],
     }));
   };
@@ -56,8 +72,8 @@ export default function RevenueModelForm() {
 
   const calculateTotalPercentage = (): number => {
     return (
-      formData.primaryStream.percentage +
-      formData.secondaryStreams.reduce((sum: number, s: RevenueStream) => sum + s.percentage, 0)
+      (Number(formData.primaryStream.percentage) || 0) +
+      formData.secondaryStreams.reduce((sum: number, s: RevenueStream) => sum + (Number(s.percentage) || 0), 0)
     );
   };
 
@@ -162,7 +178,7 @@ export default function RevenueModelForm() {
               onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
-                  primaryStream: { ...prev.primaryStream, percentage: Number(e.target.value) },
+                  primaryStream: { ...prev.primaryStream, percentage: e.target.value === '' ? '' as any : Number(e.target.value) },
                 }));
                 setErrors((prev) => ({ ...prev, primaryPercentage: '', totalPercentage: '' }));
               }}
@@ -274,7 +290,7 @@ export default function RevenueModelForm() {
                     max="100"
                     value={stream.percentage}
                     onChange={(e) => {
-                      updateSecondaryStream(index, 'percentage', Number(e.target.value));
+                      updateSecondaryStream(index, 'percentage', e.target.value === '' ? '' : Number(e.target.value));
                       setErrors((prev) => ({
                         ...prev,
                         [`secondary_${index}_percentage`]: '',

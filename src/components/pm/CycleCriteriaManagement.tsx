@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useProjectManagement } from '@/hooks/useProjectManagement';
-import { CreateCycleCriteriaRequest } from '@/types/project.types';
+import { CreateCycleCriteriaRequest } from '@/types/project-management.types';
+import { CriteriaSubmissionsView } from './CriteriaSubmissionsView';
 
 interface CycleCriteriaManagementProps {
   cycleSlug: string;
@@ -23,6 +24,10 @@ export default function CycleCriteriaManagement({
   } = useProjectManagement();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [selectedCriteria, setSelectedCriteria] = useState<{
+    slug: string;
+    name: string;
+  } | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     briefReview: '',
@@ -192,8 +197,30 @@ export default function CycleCriteriaManagement({
                   <span className="truncate">{criteria.templateFile.name}</span>
                 </div>
               )}
-              <div className="mt-3 text-xs text-gray-500">
-                Created: {new Date(criteria.createdAt).toLocaleDateString()}
+              <div className="mt-3 flex items-center justify-between border-t border-gray-200 pt-3">
+                <div className="text-xs text-gray-500">
+                  Created: {new Date(criteria.createdAt).toLocaleDateString()}
+                </div>
+                <button
+                  onClick={() => setSelectedCriteria({ slug: criteria.slug, name: criteria.name })}
+                  className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
+                  type="button"
+                >
+                  View Submissions
+                  <svg
+                    className="ml-1 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M9 5l7 7-7 7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           ))}
@@ -202,16 +229,9 @@ export default function CycleCriteriaManagement({
 
       {/* Create Criteria Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-            {/* Background overlay */}
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              onClick={handleCloseModal}
-            ></div>
-
-            {/* Modal panel */}
-            <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 p-4 backdrop-blur-md">
+          {/* Modal panel */}
+          <div className="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
               {/* Header */}
               <div className="border-b border-gray-200 bg-white px-6 py-4">
                 <div className="flex items-center justify-between">
@@ -335,6 +355,53 @@ export default function CycleCriteriaManagement({
                     )}
                   </button>
                 </div>
+              </div>
+            </div>
+        </div>
+      )}
+
+      {/* Submissions View Modal */}
+      {selectedCriteria && (
+        <div className="fixed inset-0 z-50 overflow-y-auto backdrop-blur-sm">
+          <div className="flex min-h-screen items-center justify-center p-4">
+            {/* Background overlay */}
+            <div
+              className="fixed inset-0 bg-white/80 transition-opacity"
+              onClick={() => setSelectedCriteria(null)}
+            ></div>
+
+            {/* Modal panel */}
+            <div className="relative z-50 w-full max-w-6xl transform overflow-hidden rounded-lg bg-white text-left shadow-2xl ring-1 ring-black/5 transition-all">
+              {/* Header */}
+              <div className="border-b border-gray-200 bg-white px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium leading-6 text-gray-900">
+                    Assessment Submissions
+                  </h3>
+                  <button
+                    onClick={() => setSelectedCriteria(null)}
+                    className="rounded-md text-gray-400 hover:text-gray-500"
+                    type="button"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M6 18L18 6M6 6l12 12"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="bg-white px-6 py-6">
+                <CriteriaSubmissionsView
+                  cycleSlug={cycleSlug}
+                  criteriaSlug={selectedCriteria.slug}
+                  criteriaName={selectedCriteria.name}
+                />
               </div>
             </div>
           </div>

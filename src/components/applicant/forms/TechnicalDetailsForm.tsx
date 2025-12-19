@@ -1,6 +1,6 @@
 /**
  * Step 3: Technical Details Form
- * Collects: technicalSpec (description, techStack, prototype) + marketInfo (TAM, SAM, SOM, competitorAnalysis)
+ * Collects technical specifications and market information
  */
 'use client';
 

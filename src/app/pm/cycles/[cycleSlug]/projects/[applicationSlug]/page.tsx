@@ -158,7 +158,7 @@ export default function ProjectDetailsPage() {
                       </span>
                     </div>
                     {currentProject.application?.basicInfo?.summary && (
-                      <p className="mt-2 text-gray-600">
+                      <p className="text-sm text-gray-600">
                         {currentProject.application.basicInfo.summary}
                       </p>
                     )}
@@ -170,19 +170,19 @@ export default function ProjectDetailsPage() {
                   <div className="rounded-lg bg-blue-50 p-4">
                     <p className="text-sm font-medium text-blue-900">Total Budget</p>
                     <p className="mt-2 text-2xl font-bold text-blue-600">
-                      INR {calculateBudgetTotal(currentProject.allocatedBudget).toLocaleString()}
+                      INR {calculateBudgetTotal(currentProject.allotedBudget).toLocaleString()}
                     </p>
                   </div>
                   <div className="rounded-lg bg-green-50 p-4">
                     <p className="text-sm font-medium text-green-900">Duration</p>
                     <p className="mt-2 text-2xl font-bold text-green-600">
-                      {currentProject.plannedDuration?.startDate &&
-                      currentProject.plannedDuration?.endDate
+                      {currentProject.duration?.startDate &&
+                      currentProject.duration?.endDate
                         ? calculateDuration(
-                            currentProject.plannedDuration.startDate.toString(),
-                            currentProject.plannedDuration.endDate.toString()
+                            currentProject.duration.startDate.toString(),
+                            currentProject.duration.endDate.toString()
                           )
-                        : 'N/A'}{' '}
+                        : 'Not specified'}{' '}
                       days
                     </p>
                   </div>
@@ -196,15 +196,15 @@ export default function ProjectDetailsPage() {
               </div>
 
               {/* Timeline */}
-              {currentProject.plannedDuration && (
+              {currentProject.duration && (
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-gray-900">Project Timeline</h3>
                   <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
                       <p className="text-sm font-medium text-gray-600">Start Date</p>
                       <p className="mt-1 text-base text-gray-900">
-                        {currentProject.plannedDuration.startDate
-                          ? new Date(currentProject.plannedDuration.startDate).toLocaleDateString(
+                        {currentProject.duration.startDate
+                          ? new Date(currentProject.duration.startDate).toLocaleDateString(
                               'en-US',
                               {
                                 year: 'numeric',
@@ -218,8 +218,8 @@ export default function ProjectDetailsPage() {
                     <div>
                       <p className="text-sm font-medium text-gray-600">End Date</p>
                       <p className="mt-1 text-base text-gray-900">
-                        {currentProject.plannedDuration.endDate
-                          ? new Date(currentProject.plannedDuration.endDate).toLocaleDateString(
+                        {currentProject.duration.endDate
+                          ? new Date(currentProject.duration.endDate).toLocaleDateString(
                               'en-US',
                               {
                                 year: 'numeric',
@@ -235,15 +235,15 @@ export default function ProjectDetailsPage() {
               )}
 
               {/* Budget Breakdown */}
-              {currentProject.allocatedBudget && (
+              {currentProject.allotedBudget && (
                 <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                   <h3 className="text-lg font-semibold text-gray-900">Budget Breakdown</h3>
 
                   <div className="mt-4 space-y-6">
                     {/* ManPower */}
-                    {currentProject.allocatedBudget.ManPower &&
-                      Array.isArray(currentProject.allocatedBudget.ManPower) &&
-                      currentProject.allocatedBudget.ManPower.length > 0 && (
+                    {currentProject.allotedBudget.ManPower &&
+                      Array.isArray(currentProject.allotedBudget.ManPower) &&
+                      currentProject.allotedBudget.ManPower.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900">ManPower</h4>
                           <div className="mt-2 overflow-hidden rounded-lg border border-gray-200">
@@ -259,7 +259,7 @@ export default function ProjectDetailsPage() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.ManPower.map(
+                                {currentProject.allotedBudget.ManPower.map(
                                   (item: any, idx: number) => (
                                     <tr key={idx}>
                                       <td className="px-4 py-3 text-sm text-gray-900">
@@ -279,9 +279,9 @@ export default function ProjectDetailsPage() {
                       )}
 
                     {/* Equipment */}
-                    {currentProject.allocatedBudget.Equipment &&
-                      Array.isArray(currentProject.allocatedBudget.Equipment) &&
-                      currentProject.allocatedBudget.Equipment.length > 0 && (
+                    {currentProject.allotedBudget.Equipment &&
+                      Array.isArray(currentProject.allotedBudget.Equipment) &&
+                      currentProject.allotedBudget.Equipment.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900">Equipment</h4>
                           <div className="mt-2 overflow-hidden rounded-lg border border-gray-200">
@@ -297,7 +297,7 @@ export default function ProjectDetailsPage() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.Equipment.map(
+                                {currentProject.allotedBudget.Equipment.map(
                                   (item: any, idx: number) => (
                                     <tr key={idx}>
                                       <td className="px-4 py-3 text-sm text-gray-900">
@@ -317,9 +317,9 @@ export default function ProjectDetailsPage() {
                       )}
 
                     {/* Other Costs */}
-                    {currentProject.allocatedBudget.OtherCosts &&
-                      Array.isArray(currentProject.allocatedBudget.OtherCosts) &&
-                      currentProject.allocatedBudget.OtherCosts.length > 0 && (
+                    {currentProject.allotedBudget.OtherCosts &&
+                      Array.isArray(currentProject.allotedBudget.OtherCosts) &&
+                      currentProject.allotedBudget.OtherCosts.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900">Other Costs</h4>
                           <div className="mt-2 overflow-hidden rounded-lg border border-gray-200">
@@ -335,7 +335,7 @@ export default function ProjectDetailsPage() {
                                 </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200 bg-white">
-                                {currentProject.allocatedBudget.OtherCosts.map(
+                                {currentProject.allotedBudget.OtherCosts.map(
                                   (item: any, idx: number) => (
                                     <tr key={idx}>
                                       <td className="px-4 py-3 text-sm text-gray-900">
@@ -358,39 +358,39 @@ export default function ProjectDetailsPage() {
                     <div>
                       <h4 className="font-medium text-gray-900">Additional Costs</h4>
                       <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                        {currentProject.allocatedBudget.Consumables?.Budget?.amount > 0 && (
+                        {currentProject.allotedBudget.Consumables?.Budget?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Consumables</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Consumables.Budget.currency || 'INR'}{' '}
-                              {currentProject.allocatedBudget.Consumables.Budget.amount.toLocaleString()}
+                              {currentProject.allotedBudget.Consumables.Budget.currency || 'INR'}{' '}
+                              {currentProject.allotedBudget.Consumables.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
-                        {currentProject.allocatedBudget.Travel?.Budget?.amount > 0 && (
+                        {currentProject.allotedBudget.Travel?.Budget?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Travel</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Travel.Budget.currency || 'INR'}{' '}
-                              {currentProject.allocatedBudget.Travel.Budget.amount.toLocaleString()}
+                              {currentProject.allotedBudget.Travel.Budget.currency || 'INR'}{' '}
+                              {currentProject.allotedBudget.Travel.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
-                        {currentProject.allocatedBudget.Contigency?.Budget?.amount > 0 && (
+                        {currentProject.allotedBudget.Contigency?.Budget?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Contingency</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Contigency.Budget.currency || 'INR'}{' '}
-                              {currentProject.allocatedBudget.Contigency.Budget.amount.toLocaleString()}
+                              {currentProject.allotedBudget.Contigency.Budget.currency || 'INR'}{' '}
+                              {currentProject.allotedBudget.Contigency.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
-                        {currentProject.allocatedBudget.Overhead?.Budget?.amount > 0 && (
+                        {currentProject.allotedBudget.Overhead?.Budget?.amount > 0 && (
                           <div className="flex items-center justify-between rounded-lg border border-gray-200 p-3">
                             <span className="text-sm text-gray-600">Overhead</span>
                             <span className="font-medium text-gray-900">
-                              {currentProject.allocatedBudget.Overhead.Budget.currency || 'INR'}{' '}
-                              {currentProject.allocatedBudget.Overhead.Budget.amount.toLocaleString()}
+                              {currentProject.allotedBudget.Overhead.Budget.currency || 'INR'}{' '}
+                              {currentProject.allotedBudget.Overhead.Budget.amount.toLocaleString()}
                             </span>
                           </div>
                         )}
@@ -403,7 +403,7 @@ export default function ProjectDetailsPage() {
                         <span className="text-lg font-semibold text-gray-900">Total Budget</span>
                         <span className="text-2xl font-bold text-blue-600">
                           INR{' '}
-                          {calculateBudgetTotal(currentProject.allocatedBudget).toLocaleString()}
+                          {calculateBudgetTotal(currentProject.allotedBudget).toLocaleString()}
                         </span>
                       </div>
                     </div>

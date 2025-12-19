@@ -5,7 +5,7 @@
  */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { Document } from '@/types/applicant.types';
 import { FileUpload } from '@/components/ui/FileUpload';
@@ -66,6 +66,21 @@ export default function DocumentsForm() {
     coPiCertificate: currentApplication?.documents?.coPiCertificate || null,
     otherDocuments: currentApplication?.documents?.otherDocuments || [],
   });
+
+  // Update form data when currentApplication loads from draft
+  useEffect(() => {
+    if (currentApplication?.documents) {
+      setDocuments({
+        endorsementLetter: currentApplication.documents.endorsementLetter || null,
+        plagiarismUndertaking: currentApplication.documents.plagiarismUndertaking || null,
+        ageProof: currentApplication.documents.ageProof || null,
+        aadhar: currentApplication.documents.aadhar || null,
+        piCertificate: currentApplication.documents.piCertificate || null,
+        coPiCertificate: currentApplication.documents.coPiCertificate || null,
+        otherDocuments: currentApplication.documents.otherDocuments || [],
+      });
+    }
+  }, [currentApplication]);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);

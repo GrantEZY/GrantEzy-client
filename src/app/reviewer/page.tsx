@@ -135,6 +135,63 @@ export default function ReviewerDashboard() {
           </div>
         </div>
 
+        {/* Quick Links */}
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Link
+            href="/reviewer/reviews"
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-gray-900">Application Reviews</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Review grant applications
+                </p>
+              </div>
+              <svg
+                className="h-6 w-6 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 5l7 7-7 7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                />
+              </svg>
+            </div>
+          </Link>
+
+          <Link
+            href="/reviewer/project-reviews"
+            className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-gray-900">Project Assessment Reviews</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Review project assessments
+                </p>
+              </div>
+              <svg
+                className="h-6 w-6 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 5l7 7-7 7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                />
+              </svg>
+            </div>
+          </Link>
+        </div>
+
         {/* Recent Reviews Section */}
         <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <div className="mb-6 flex items-center justify-between">

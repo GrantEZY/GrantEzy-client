@@ -53,9 +53,7 @@ export default function PMDashboard() {
     }
   };
 
-  const handleCreateCycle = () => {
-    console.log('Opening create cycle modal. Current program:', program);
-    console.log('Program ID to pass to modal:', program?.id);
+  const handleOpenCreateCycle = () => {
     setIsCreateModalOpen(true);
   };
 
@@ -300,7 +298,7 @@ export default function PMDashboard() {
 
             <button
               className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-              onClick={handleCreateCycle}
+              onClick={handleOpenCreateCycle}
             >
               <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -355,7 +353,7 @@ export default function PMDashboard() {
               </p>
               <button
                 className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-                onClick={handleCreateCycle}
+                onClick={handleOpenCreateCycle}
               >
                 <svg className="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

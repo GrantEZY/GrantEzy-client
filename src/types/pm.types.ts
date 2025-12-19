@@ -276,6 +276,22 @@ export interface InviteReviewerResponse {
   };
 }
 
+// ============= Invite Assessment Reviewer =============
+
+export interface InviteAssessmentReviewerRequest {
+  assessmentId: string; // UUID of the assessment submission
+  email: string; // Email of the reviewer to invite
+}
+
+export interface InviteAssessmentReviewerResponse {
+  status: number;
+  message: string;
+  res: {
+    email: string;
+    assessmentId: string;
+  };
+}
+
 // ============= Get Application Reviews =============
 
 export interface GetApplicationReviewsRequest {

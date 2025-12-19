@@ -32,20 +32,6 @@ export default function CreateProjectModal({
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Debug: Log approved applications
-  useEffect(() => {
-    if (isOpen) {
-      console.log('🎯 CreateProjectModal opened with:', {
-        approvedApplicationsCount: approvedApplications.length,
-        applications: approvedApplications.map((app) => ({
-          id: app.id,
-          title: app.basicInfo?.title,
-          status: app.status,
-        })),
-      });
-    }
-  }, [isOpen, approvedApplications]);
-
   // Budget state - using form-friendly structure
   const [manPowerItems, setManPowerItems] = useState<FormBudgetItem[]>([
     { reason: '', qty: 1, rate: 0 },
@@ -267,16 +253,9 @@ export default function CreateProjectModal({
   const selectedApplication = approvedApplications.find((app) => app.id === selectedApplicationId);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        {/* Background overlay */}
-        <div
-          className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-          onClick={onClose}
-        ></div>
-
-        {/* Modal panel */}
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:align-middle">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/10 p-4 backdrop-blur-md">
+      {/* Modal panel */}
+      <div className="relative w-full max-w-4xl transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
           {/* Header */}
           <div className="border-b border-gray-200 bg-white px-6 py-4">
             <div className="flex items-center justify-between">
@@ -403,7 +382,7 @@ export default function CreateProjectModal({
                               </p>
                             )}
                             <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                              <span>Applicant: {app.applicant?.email || 'N/A'}</span>
+                              <span>Applicant: {app.applicant?.email || (app.applicant?.firstName && app.applicant?.lastName ? `${app.applicant.firstName} ${app.applicant.lastName}` : 'No applicant info')}</span>
                               <span>•</span>
                               <span>
                                 Submitted:{' '}
@@ -452,7 +431,10 @@ export default function CreateProjectModal({
                       {selectedApplication.basicInfo?.title || 'Untitled'}
                     </h5>
                     <p className="mt-1 text-sm text-blue-700">
-                      {selectedApplication.applicant?.email || 'N/A'}
+                      {selectedApplication.applicant?.email ||
+                       (selectedApplication.applicant?.firstName && selectedApplication.applicant?.lastName
+                         ? `${selectedApplication.applicant.firstName} ${selectedApplication.applicant.lastName}`
+                         : 'No applicant info')}
                     </p>
                   </div>
                 )}
@@ -885,7 +867,6 @@ export default function CreateProjectModal({
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }

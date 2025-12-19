@@ -28,7 +28,7 @@ export default function ApplicantProjectsPage() {
       const response = await applicantService.getUserProjects(currentPage, resultsPerPage);
 
       if (response.status === 200 && response.res) {
-        setProjects(response.res.projects);
+        setProjects(response.res.applications || []);
         setTotalPages(response.res.pagination?.totalPages || 1);
       } else {
         throw new Error(response.message || 'Failed to load projects');
@@ -210,13 +210,16 @@ export default function ApplicantProjectsPage() {
                               </span>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                              INR {calculateBudgetTotal(project.allocatedBudget).toLocaleString()}
+                              {project.allotedBudget 
+                                ? `INR ${calculateBudgetTotal(project.allotedBudget).toLocaleString()}`
+                                : project.application?.basicInfo?.budget
+                                ? `INR ${calculateBudgetTotal(project.application.basicInfo.budget).toLocaleString()}`
+                                : 'Budget not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {project.plannedDuration?.startDate &&
-                              project.plannedDuration?.endDate
-                                ? `${new Date(project.plannedDuration.startDate).toLocaleDateString()} - ${new Date(project.plannedDuration.endDate).toLocaleDateString()}`
-                                : 'Not set'}
+                              {project.duration?.startDate
+                                ? `${new Date(project.duration.startDate).toLocaleDateString()}${project.duration.endDate ? ` - ${new Date(project.duration.endDate).toLocaleDateString()}` : ' - Ongoing'}`
+                                : 'Duration not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                               <Link
