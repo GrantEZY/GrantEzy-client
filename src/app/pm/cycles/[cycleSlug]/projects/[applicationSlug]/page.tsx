@@ -158,7 +158,7 @@ export default function ProjectDetailsPage() {
                       </span>
                     </div>
                     {currentProject.application?.basicInfo?.summary && (
-                      <p className="mt-2 text-gray-600">
+                      <p className="text-sm text-gray-600">
                         {currentProject.application.basicInfo.summary}
                       </p>
                     )}
@@ -182,7 +182,7 @@ export default function ProjectDetailsPage() {
                             currentProject.duration.startDate.toString(),
                             currentProject.duration.endDate.toString()
                           )
-                        : 'N/A'}{' '}
+                        : 'Not specified'}{' '}
                       days
                     </p>
                   </div>

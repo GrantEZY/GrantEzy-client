@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useProjectAssessment } from '@/hooks/useProjectAssessment';
 import { useCloudinaryUpload } from '@/hooks/useCloudinaryUpload';
 import { CycleAssessmentCriteria } from '@/types/project-management.types';
@@ -37,6 +37,7 @@ export default function AssessmentSubmissionForm({
   const [uploadedFile, setUploadedFile] = useState<{
     name: string;
     size: number;
+    type: string;
     url: string;
     publicId: string;
   } | null>(
@@ -44,6 +45,7 @@ export default function AssessmentSubmissionForm({
       ? {
           name: existingSubmission.reviewSubmissionFile.name,
           size: 0, // Size not available from existing submission
+          type: 'application/octet-stream', // Default type for existing files
           url: existingSubmission.reviewSubmissionFile.url,
           publicId: existingSubmission.reviewSubmissionFile.publicId,
         }
@@ -68,6 +70,7 @@ export default function AssessmentSubmissionForm({
       setUploadedFile({
         name: file.name,
         size: file.size,
+        type: file.type, // Capture MIME type from the File object
         url: result.url,
         publicId: result.public_id,
       });
@@ -76,26 +79,6 @@ export default function AssessmentSubmissionForm({
       setUploadError('Failed to upload file');
       setErrors({ ...errors, file: 'Failed to upload file. Please try again.' });
     }
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
-  };
-
-  const getFileMimeType = (fileName: string): string => {
-    const ext = fileName.split('.').pop()?.toLowerCase();
-    const mimeTypes: Record<string, string> = {
-      pdf: 'application/pdf',
-      doc: 'application/msword',
-      docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      txt: 'text/plain',
-      jpg: 'image/jpeg',
-      jpeg: 'image/jpeg',
-      png: 'image/png',
-    };
-    return mimeTypes[ext || ''] || 'application/octet-stream';
   };
 
   const validateForm = () => {
@@ -119,12 +102,12 @@ export default function AssessmentSubmissionForm({
     setIsSubmitting(true);
 
     try {
-      // Transform the file data to match backend expectations
+      // Transform the file data to match backend expectations (DocumentObjectDTO)
       const reviewSubmissionFile = uploadedFile ? {
-        title: uploadedFile.name,
+        title: uploadedFile.name || 'Assessment Document',
         fileName: uploadedFile.name,
-        fileSize: formatFileSize(uploadedFile.size),
-        mimeType: getFileMimeType(uploadedFile.name),
+        fileSize: String(uploadedFile.size), // Convert to string
+        mimeType: uploadedFile.type || 'application/octet-stream',
         storageUrl: uploadedFile.url,
       } : undefined;
 
@@ -144,11 +127,9 @@ export default function AssessmentSubmissionForm({
         // Call success callback
         onSuccess?.();
       } else {
-        console.error('❌ Submission failed - no response');
         setErrors({ ...errors, submit: 'Failed to submit assessment. Please try again.' });
       }
     } catch (error: any) {
-      console.error('❌ Submission error:', error);
       setErrors({ ...errors, submit: error.message || 'Failed to submit assessment. Please try again.' });
     } finally {
       setIsSubmitting(false);

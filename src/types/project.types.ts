@@ -92,6 +92,7 @@ export interface Project {
 
 export interface ProjectCriteria {
   id: string;
+  slug: string;
   cycleId: string;
   name: string;
   briefReview: string;

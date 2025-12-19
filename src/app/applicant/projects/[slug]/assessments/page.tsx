@@ -16,20 +16,17 @@ export default function ProjectAssessmentPage() {
   const [selectedCriteria, setSelectedCriteria] = useState<string | null>(null);
   const [cycleSlug, setCycleSlug] = useState<string>('');
   const [isLoadingProject, setIsLoadingProject] = useState(true);
-  const [submittedCriterias, setSubmittedCriterias] = useState<Set<string>>(new Set());
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const fetchKeyRef = useRef(`criteria-fetch-${slug}`);
 
   // Track component mount/unmount and cleanup
   useEffect(() => {
-    console.log('✅ Component MOUNTED');
     // Clear the fetch flag on mount to ensure fresh fetch
     const fetchKey = `criteria-fetch-${slug}`;
     sessionStorage.removeItem(fetchKey);
-    console.log('🧹 Cleared fetch flag for fresh start');
     
     return () => {
-      console.log('❌ Component UNMOUNTED');
+      // Cleanup on unmount
     };
   }, [slug]);
 
@@ -43,8 +40,6 @@ export default function ProjectAssessmentPage() {
     getApplicantAssessmentSubmission,
   } = useProjectAssessment();
 
-  console.log('🔄 Component render - cycleSlug:', cycleSlug, 'applicantCriterias count:', applicantCriterias?.length);
-
   // Fetch project details to get cycle slug
   useEffect(() => {
     const fetchProjectDetails = async () => {
@@ -52,34 +47,24 @@ export default function ProjectAssessmentPage() {
       
       try {
         setIsLoadingProject(true);
-        console.log('🔍 Fetching project details for slug:', slug);
         const response = await applicantService.getProjectDetails(slug);
         
-        console.log('📦 Project details response:', response);
+        console.log('[DEBUG] Project details response:', response);
         
         if (response.status === 200 && response.res?.project) {
-          const project = response.res.project;
-          console.log('✅ Project loaded:', {
-            projectId: project.id,
-            hasApplication: !!project.application,
-            hasCycle: !!project.application?.cycle,
-            cycleSlug: project.application?.cycle?.slug,
-          });
+          const { project } = response.res;
+          
+          console.log('[DEBUG] Project data:', project);
+          console.log('[DEBUG] Cycle slug from project:', project.application?.cycle?.slug);
           
           // Get cycle slug from the project's application
           if (project.application?.cycle?.slug) {
-            const newCycleSlug = project.application.cycle.slug;
-            console.log('✅ Setting cycle slug:', newCycleSlug);
-            setCycleSlug(newCycleSlug);
-          } else {
-            console.error('❌ Cycle information not found in project details:', project);
+            setCycleSlug(project.application.cycle.slug);
           }
-        } else {
-          console.error('❌ Invalid response:', response);
         }
       } catch (err) {
-        console.error('❌ Failed to load project details:', err);
-      } finally{
+        console.log('[DEBUG] Error fetching project details:', err);
+      } finally {
         setIsLoadingProject(false);
       }
     };
@@ -93,14 +78,13 @@ export default function ProjectAssessmentPage() {
     const fetchKey = fetchKeyRef.current;
     const alreadyFetched = sessionStorage.getItem(fetchKey);
     
+    console.log('[DEBUG] Cycle slug changed:', cycleSlug);
+    console.log('[DEBUG] Already fetched?', alreadyFetched);
+    
     if (cycleSlug && !alreadyFetched) {
-      console.log('📋 Fetching criterias for cycle:', cycleSlug);
       sessionStorage.setItem(fetchKey, 'true');
-      getApplicantCycleCriterias(cycleSlug).then(() => {
-        console.log('✅ Criteria fetch completed');
-      });
-    } else if (cycleSlug && alreadyFetched) {
-      console.log('⏭️  Skipping criteria fetch - already fetched for this session');
+      console.log('[DEBUG] Calling getApplicantCycleCriterias with:', cycleSlug);
+      getApplicantCycleCriterias(cycleSlug);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cycleSlug]); // Only depend on cycleSlug, not the function
@@ -113,11 +97,6 @@ export default function ProjectAssessmentPage() {
   };
 
   const handleSubmissionSuccess = () => {
-    // Mark the criteria as submitted optimistically
-    if (selectedCriteria) {
-      setSubmittedCriterias(prev => new Set([...prev, selectedCriteria]));
-    }
-    
     // Show success message
     setShowSuccessMessage(true);
     setTimeout(() => setShowSuccessMessage(false), 5000);
@@ -125,33 +104,18 @@ export default function ProjectAssessmentPage() {
     // Close modal
     setSelectedCriteria(null);
     
-    // Refresh criteria list
+    // Refresh criteria list to get updated submission status from backend
     if (cycleSlug) {
-      console.log('🔄 Refreshing criterias after submission');
       sessionStorage.removeItem(fetchKeyRef.current);
       getApplicantCycleCriterias(cycleSlug);
     }
   };
 
-  // Debug logging for criteria state
-  useEffect(() => {
-    console.log('📊 Criteria state updated:', {
-      isLoadingApplicantCriterias,
-      criteriasCount: applicantCriterias?.length || 0,
-      criterias: applicantCriterias,
-    });
-  }, [applicantCriterias, isLoadingApplicantCriterias]);
-
   const getSubmissionStatus = (criteriaId: string) => {
-    // Check optimistic updates first
-    if (submittedCriterias.has(criteriaId)) {
-      return 'submitted';
-    }
-    
     const criteria = applicantCriterias.find((c: any) => c.id === criteriaId);
     if (!criteria) return 'not-started';
 
-    // Check if criteria has been submitted (from backend)
+    // Check submission status from backend
     if (criteria.hasSubmitted) {
       return 'submitted';
     }

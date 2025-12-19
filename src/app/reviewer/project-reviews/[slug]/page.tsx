@@ -176,7 +176,7 @@ export default function ProjectReviewDetailsPage() {
               <div>
                 <p className="text-sm font-medium text-gray-600">Project Title</p>
                 <p className="mt-1 text-sm text-gray-900">
-                  {currentAssessment.project?.application?.basicInfo?.title || 'Untitled Project'}
+                  {currentAssessment.project?.application?.basicDetails?.title || 'Untitled Project'}
                 </p>
               </div>
               <div>
@@ -207,7 +207,7 @@ export default function ProjectReviewDetailsPage() {
             <p className="mt-2 text-sm text-blue-800">{currentAssessment.criteria?.briefReview}</p>
             {currentAssessment.criteria?.templateFile && (
               <a
-                href={currentAssessment.criteria.templateFile.url}
+                href={currentAssessment.criteria.templateFile.storageUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
@@ -239,16 +239,16 @@ export default function ProjectReviewDetailsPage() {
                 <p className="text-sm font-medium text-gray-600">Assessment Statement</p>
                 <div className="mt-2 rounded-md bg-gray-50 p-4">
                   <p className="whitespace-pre-wrap text-sm text-gray-900">
-                    {currentAssessment.reviewStatement || 'No statement provided'}
+                    {currentAssessment.reviewBrief || 'No statement provided'}
                   </p>
                 </div>
               </div>
 
-              {currentAssessment.reviewSubmissionFile && (
+              {currentAssessment.reviewDocument && (
                 <div>
                   <p className="text-sm font-medium text-gray-600">Supporting Document</p>
                   <a
-                    href={currentAssessment.reviewSubmissionFile.url}
+                    href={currentAssessment.reviewDocument.storageUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -266,7 +266,7 @@ export default function ProjectReviewDetailsPage() {
                         strokeWidth={2}
                       />
                     </svg>
-                    {currentAssessment.reviewSubmissionFile.name}
+                    {currentAssessment.reviewDocument.fileName}
                   </a>
                 </div>
               )}

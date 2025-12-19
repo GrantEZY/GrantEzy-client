@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { AuthGuard } from '@/components/guards/AuthGuard';
 import CoApplicantLayout from '@/components/layout/CoApplicantLayout';
 import { coApplicantService } from '@/services/co-applicant.service';
-import { Project } from '@/types/project.types';
+import { LinkedApplication } from '@/types/co-applicant.types';
 
 export default function CoApplicantProjectsPage() {
   // const router = useRouter(); // Uncomment if navigation is needed
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<LinkedApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +29,7 @@ export default function CoApplicantProjectsPage() {
 
       if (response && response.status === 200 && response.res) {
         setProjects(response.res.applications);
-        setTotalPages(response.res.pagination?.totalPages || 1);
+        setTotalPages(1); // Pagination not available in this response
       } else {
         throw new Error((response as any)?.message || 'Failed to load linked projects');
       }
@@ -53,46 +53,6 @@ export default function CoApplicantProjectsPage() {
       default:
         return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const calculateBudgetTotal = (budget: any) => {
-    if (!budget) return 0;
-
-    let total = 0;
-
-    if (budget.ManPower && Array.isArray(budget.ManPower)) {
-      total += budget.ManPower.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
-      );
-    }
-    if (budget.Equipment && Array.isArray(budget.Equipment)) {
-      total += budget.Equipment.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
-      );
-    }
-    if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
-      total += budget.OtherCosts.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
-      );
-    }
-
-    if (budget.Consumables && 'Budget' in budget.Consumables) {
-      total += (budget.Consumables as any).Budget?.amount || 0;
-    }
-    if (budget.Travel && 'Budget' in budget.Travel) {
-      total += (budget.Travel as any).Budget?.amount || 0;
-    }
-    if (budget.Contigency && 'Budget' in budget.Contigency) {
-      total += (budget.Contigency as any).Budget?.amount || 0;
-    }
-    if (budget.Overhead && 'Budget' in budget.Overhead) {
-      total += (budget.Overhead as any).Budget?.amount || 0;
-    }
-
-    return total;
   };
 
   return (
@@ -191,9 +151,7 @@ export default function CoApplicantProjectsPage() {
                           <tr key={project.id} className="hover:bg-gray-50">
                             <td className="px-6 py-4">
                               <div className="text-sm font-medium text-gray-900">
-                                {project.application?.basicInfo?.title ||
-                                  project.application?.title ||
-                                  'Untitled Project'}
+                                {project.basicDetails?.title || 'Untitled Project'}
                               </div>
                               <div className="mt-1 text-sm text-gray-500">
                                 ID: {project.id.substring(0, 8)}...
@@ -201,27 +159,21 @@ export default function CoApplicantProjectsPage() {
                             </td>
                             <td className="whitespace-nowrap px-6 py-4">
                               <span
-                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.project?.status || project.status)}`}
+                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.status)}`}
                               >
-                                {project.project?.status || project.status}
+                                {project.status}
                               </span>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                              {project.project?.allotedBudget 
-                                ? `INR ${calculateBudgetTotal(project.project.allotedBudget).toLocaleString()}`
-                                : project.basicInfo?.budget
-                                ? `INR ${calculateBudgetTotal(project.basicInfo.budget).toLocaleString()}`
-                                : 'Budget not set'}
+                              Budget not available
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {project.project?.duration?.startDate
-                                ? `${new Date(project.project.duration.startDate).toLocaleDateString()}${project.project.duration.endDate ? ` - ${new Date(project.project.duration.endDate).toLocaleDateString()}` : ' - Ongoing'}`
-                                : 'Duration not set'}
+                              {new Date(project.updatedAt).toLocaleDateString()}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                               <Link
                                 className="text-blue-600 hover:text-blue-700"
-                                href={`/co-applicant/projects/${project.application?.slug || project.slug}`}
+                                href={`/co-applicant/projects/${project.id}`}
                               >
                                 View Details
                               </Link>

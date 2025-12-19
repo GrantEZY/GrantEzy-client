@@ -36,13 +36,10 @@ export default function CycleCriteriaManagement({
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    console.log('🎯 CycleCriteriaManagement mounted', { cycleSlug, cycleId });
     if (cycleSlug) {
-      console.log('📡 Fetching cycle criterias for:', cycleSlug);
       getCycleCriterias({ cycleSlug });
     }
     return () => {
-      console.log('🧹 CycleCriteriaManagement unmounting');
       clearCriterias();
     };
   }, [cycleSlug, getCycleCriterias, clearCriterias]);

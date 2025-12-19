@@ -375,12 +375,6 @@ export const usePMStore = create<PMStore>((set, get) => ({
         const { cycle } = response.res;
         const applications = (cycle as any).applications || [];
 
-        console.log('📦 Cycle Details Response:', {
-          cycle: cycle,
-          applicationsCount: applications.length,
-          applications: applications,
-        });
-
         set({
           currentCycle: cycle,
           currentCycleApplications: applications,

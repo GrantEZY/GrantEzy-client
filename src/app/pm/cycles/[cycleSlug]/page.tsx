@@ -38,15 +38,7 @@ export default function CycleDetailsPage() {
   // Debug: Log applications when they change
   useEffect(() => {
     if (currentCycleApplications) {
-      console.log('🔍 Applications in cycle:', {
-        total: currentCycleApplications.length,
-        approved: currentCycleApplications.filter((app) => app.status === 'APPROVED').length,
-        statuses: currentCycleApplications.map((app) => ({ 
-          id: app.id, 
-          status: app.status,
-          reviewsCount: (app as any).reviews?.length || 0,
-        })),
-      });
+      // Applications loaded
     }
   }, [currentCycleApplications]);
 
@@ -184,10 +176,7 @@ export default function CycleDetailsPage() {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8" aria-label="Tabs">
               <button
-                onClick={() => {
-                  console.log('🔄 Switching to Applications tab');
-                  setActiveTab('applications');
-                }}
+                onClick={() => setActiveTab('applications')}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
                   activeTab === 'applications'
                     ? 'border-blue-600 text-blue-600'
@@ -203,10 +192,7 @@ export default function CycleDetailsPage() {
                 )}
               </button>
               <button
-                onClick={() => {
-                  console.log('🔄 Switching to Projects tab');
-                  setActiveTab('projects');
-                }}
+                onClick={() => setActiveTab('projects')}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
                   activeTab === 'projects'
                     ? 'border-blue-600 text-blue-600'
@@ -222,10 +208,7 @@ export default function CycleDetailsPage() {
                 )}
               </button>
               <button
-                onClick={() => {
-                  console.log('🔄 Switching to Criteria tab');
-                  setActiveTab('criteria');
-                }}
+                onClick={() => setActiveTab('criteria')}
                 className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium ${
                   activeTab === 'criteria'
                     ? 'border-blue-600 text-blue-600'
@@ -314,7 +297,10 @@ export default function CycleDetailsPage() {
                             )}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {application.applicant?.email || 'N/A'}
+                            {application.applicant?.email || 
+                             (application.applicant?.firstName && application.applicant?.lastName
+                               ? `${application.applicant.firstName} ${application.applicant.lastName}`
+                               : 'No applicant info')}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
@@ -353,19 +339,8 @@ export default function CycleDetailsPage() {
                   Projects {projectsPagination && `(${projectsPagination.totalResults})`}
                 </h2>
                 <button
-                  onClick={() => {
-                    console.log('🚀 Create Project button clicked', {
-                      approvedCount: currentCycleApplications?.filter((app) => app.status === 'APPROVED').length || 0,
-                      totalApps: currentCycleApplications?.length || 0,
-                      approvedApps: currentCycleApplications?.filter((app) => app.status === 'APPROVED').map(app => ({
-                        id: app.id,
-                        title: app.basicInfo?.title,
-                        status: app.status
-                      }))
-                    });
-                    setIsCreateProjectModalOpen(true);
-                  }}
-                  className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  onClick={() => setIsCreateProjectModalOpen(true)}
+                  className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500"
                   type="button"
                 >
                   <svg

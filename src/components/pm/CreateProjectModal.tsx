@@ -32,20 +32,6 @@ export default function CreateProjectModal({
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Debug: Log approved applications
-  useEffect(() => {
-    if (isOpen) {
-      console.log('🎯 CreateProjectModal opened with:', {
-        approvedApplicationsCount: approvedApplications.length,
-        applications: approvedApplications.map((app) => ({
-          id: app.id,
-          title: app.basicInfo?.title,
-          status: app.status,
-        })),
-      });
-    }
-  }, [isOpen, approvedApplications]);
-
   // Budget state - using form-friendly structure
   const [manPowerItems, setManPowerItems] = useState<FormBudgetItem[]>([
     { reason: '', qty: 1, rate: 0 },
@@ -396,7 +382,7 @@ export default function CreateProjectModal({
                               </p>
                             )}
                             <div className="mt-2 flex items-center space-x-4 text-sm text-gray-500">
-                              <span>Applicant: {app.applicant?.email || 'N/A'}</span>
+                              <span>Applicant: {app.applicant?.email || (app.applicant?.firstName && app.applicant?.lastName ? `${app.applicant.firstName} ${app.applicant.lastName}` : 'No applicant info')}</span>
                               <span>•</span>
                               <span>
                                 Submitted:{' '}
@@ -445,7 +431,10 @@ export default function CreateProjectModal({
                       {selectedApplication.basicInfo?.title || 'Untitled'}
                     </h5>
                     <p className="mt-1 text-sm text-blue-700">
-                      {selectedApplication.applicant?.email || 'N/A'}
+                      {selectedApplication.applicant?.email ||
+                       (selectedApplication.applicant?.firstName && selectedApplication.applicant?.lastName
+                         ? `${selectedApplication.applicant.firstName} ${selectedApplication.applicant.lastName}`
+                         : 'No applicant info')}
                     </p>
                   </div>
                 )}

@@ -306,7 +306,7 @@ export interface ProjectAssessmentReview {
   status: ReviewStatus;
   createdAt: string;
   updatedAt: string;
-  assessment?: any; // CycleAssessment from project-management.types
+  reviewSubmission?: any; // CycleAssessment from project-management.types
   reviewer?: User;
 }
 

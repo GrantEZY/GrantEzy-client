@@ -2,7 +2,6 @@
  * Project Management store using Zustand for project assessment state management
  */
 import { create } from 'zustand';
-import type { ApiResponse } from '../types/api.types';
 import { projectManagementService } from '../services/project-management.service';
 import type {
   Project,
@@ -98,7 +97,7 @@ const initialState: ProjectManagementState = {
   successMessage: null,
 };
 
-export const useProjectManagementStore = create<ProjectManagementStore>((set, get) => ({
+export const useProjectManagementStore = create<ProjectManagementStore>((set) => ({
   ...initialState,
 
   // ============================================================================
@@ -211,21 +210,21 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
   },
 
   getCycleCriteriaAssessments: async (data: GetCycleCriteriaAssessmentsRequest) => {
-    console.log('🔄 Store: Fetching criteria assessments with:', data);
     set({ isLoadingSubmissions: true, error: null });
     try {
+      console.log('[DEBUG] Fetching criteria assessments:', data);
       const response = await projectManagementService.getCycleCriteriaAssessments(data);
       
-      console.log('📦 Store: Assessments response:', {
-        status: response?.status,
-        hasData: !!response?.data,
-        hasRes: !!response?.res,
-        submissionsCount: response?.data?.submissions?.length || response?.res?.submissions?.length || 0,
-      });
+      console.log('[DEBUG] Assessments response:', response);
+      console.log('[DEBUG] response.data:', response.data);
+      console.log('[DEBUG] response.res:', response.res);
       
-      // Check both response.data and response.res
-      const submissions = response.data?.submissions || response.res?.submissions || [];
-      const criteria = response.data?.criteria || response.res?.criteria || null;
+      // Backend returns { status, message, res: { submissions, criteria } }
+      const submissions = response.res?.submissions || response.data?.submissions || [];
+      const criteria = response.res?.criteria || response.data?.criteria || null;
+      
+      console.log('[DEBUG] Extracted submissions:', submissions);
+      console.log('[DEBUG] Extracted criteria:', criteria);
       
       set({
         criteriaSubmissions: submissions,
@@ -233,7 +232,7 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
         isLoadingSubmissions: false,
       });
     } catch (error: any) {
-      console.error('❌ Store: Error fetching assessments:', error);
+      console.log('[DEBUG] Error fetching assessments:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch submissions';
       set({ error: errorMessage, isLoadingSubmissions: false, criteriaSubmissions: [] });
     }
@@ -265,46 +264,33 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
   // ============================================================================
 
   getApplicantCycleCriterias: async (cycleSlug: string) => {
-    console.log('🔄 Store: Starting fetch for cycle:', cycleSlug);
     set({ isLoadingApplicantCriterias: true, error: null });
     try {
-      console.log('🔄 Store: Calling service...');
+      console.log('[DEBUG] Fetching criterias for cycleSlug:', cycleSlug);
       const response = await projectManagementService.getApplicantCycleCriterias({ cycleSlug });
       
-      console.log('📦 Store: Raw response received:', response);
-      console.log('📦 Store: Response structure:', {
-        hasResponse: !!response,
-        status: response?.status,
-        message: response?.message,
-        hasData: !!response?.data,
-        hasRes: !!response?.res,
-        data: response?.data,
-        res: response?.res,
-      });
+      console.log('[DEBUG] API Response:', response);
+      console.log('[DEBUG] response.data:', response.data);
+      console.log('[DEBUG] response.res:', response.res);
       
-      // Check both response.data and response.res for criterias
-      const criterias = response.data?.criterias || response.res?.criterias || [];
-      
-      console.log('📦 Store: Extracted criterias:', {
-        criteriasCount: criterias.length,
-        criterias: criterias,
-      });
+      // Backend returns { status, message, res: { criterias } }
+      const criterias = response.res?.criterias || response.data?.criterias || [];
+      console.log('[DEBUG] Extracted criterias:', criterias);
+      console.log('[DEBUG] Criterias with hasSubmitted:', criterias.map((c: any) => ({ id: c.id, name: c.name, hasSubmitted: c.hasSubmitted })));
       
       if (criterias && criterias.length > 0) {
-        console.log('✅ Store: Setting criterias in state:', criterias);
         set({
           applicantCriterias: criterias,
           isLoadingApplicantCriterias: false,
         });
       } else {
-        console.warn('⚠️ Store: No criterias found in response');
         set({
           applicantCriterias: [],
           isLoadingApplicantCriterias: false,
         });
       }
     } catch (error: any) {
-      console.error('❌ Store: Error fetching criterias:', error);
+      console.log('[DEBUG] Error fetching criterias:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch criterias';
       set({ error: errorMessage, isLoadingApplicantCriterias: false, applicantCriterias: [] });
     }
@@ -339,26 +325,20 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
   },
 
   createApplicantAssessmentSubmission: async (data: SubmitAssessmentRequest) => {
-    console.log('📝 Store: Submitting assessment:', data);
     set({ isLoading: true, error: null });
     try {
+      console.log('[DEBUG] Submitting assessment:', data);
       const response = await projectManagementService.createApplicantAssessmentSubmission(data);
       
-      console.log('📦 Store: Submission response:', {
-        status: response?.status,
-        message: response?.message,
-        hasData: !!response?.data,
-        hasRes: !!response?.res,
-        data: response?.data,
-        res: response?.res,
-        fullResponse: response,
-      });
+      console.log('[DEBUG] Submission response:', response);
+      console.log('[DEBUG] response.data:', response.data);
+      console.log('[DEBUG] response.res:', response.res);
       
-      // Check both response.data and response.res for submission
-      const submission = response.data?.submission || response.res?.submission;
+      // Backend returns { status, message, res: { submission } }
+      const submission = response.res?.submission || response.data?.submission;
+      console.log('[DEBUG] Extracted submission:', submission);
       
       if (submission) {
-        console.log('✅ Store: Submission successful:', submission);
         set({
           applicantCurrentSubmission: submission,
           successMessage: response.message || 'Assessment submitted successfully',
@@ -367,10 +347,9 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set, ge
         return true;
       }
       
-      console.error('⚠️ Store: No submission in response');
       throw new Error(response.message || 'Failed to submit assessment');
     } catch (error: any) {
-      console.error('❌ Store: Submission error:', error);
+      console.log('[DEBUG] Submission error:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to submit assessment';
       set({ error: errorMessage, isLoading: false });
       return false;

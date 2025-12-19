@@ -15,7 +15,6 @@ import {
   GetUserProjectReviewsRequest,
   GetProjectReviewDetailsRequest,
   SubmitProjectAssessmentReviewInviteStatusRequest,
-  ProjectAssessmentReview,
 } from '../types/reviewer.types';
 
 export const useReviewerStore = create<ReviewerState>((set, get) => ({

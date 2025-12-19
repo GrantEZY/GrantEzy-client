@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useApplicant } from '@/hooks/useApplicant';
 import { TechnicalSpec, MarketInfo } from '@/types/applicant.types';
 

@@ -11,21 +11,21 @@ interface ProjectReviewSubmissionFormProps {
       name: string;
       briefReview: string;
       templateFile?: {
-        name: string;
-        url: string;
+        fileName: string;
+        storageUrl: string;
       };
     };
     project?: {
       application?: {
-        basicInfo?: {
+        basicDetails?: {
           title: string;
         };
       };
     };
-    reviewStatement?: string;
-    reviewSubmissionFile?: {
-      name: string;
-      url: string;
+    reviewBrief?: string;
+    reviewDocument?: {
+      fileName: string;
+      storageUrl: string;
     };
   };
   onSuccess?: () => void;
@@ -120,7 +120,7 @@ export default function ProjectReviewSubmissionForm({
           <div>
             <span className="font-medium text-gray-700">Project:</span>{' '}
             <span className="text-gray-600">
-              {assessmentDetails.project?.application?.basicInfo?.title || 'Untitled'}
+              {assessmentDetails.project?.application?.basicDetails?.title || 'Untitled'}
             </span>
           </div>
           <div>
@@ -139,7 +139,7 @@ export default function ProjectReviewSubmissionForm({
         <h4 className="font-medium text-blue-900">Applicant's Submission</h4>
         {assessmentDetails.criteria?.templateFile && (
           <a
-            href={assessmentDetails.criteria.templateFile.url}
+            href={assessmentDetails.criteria.templateFile.storageUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
@@ -162,12 +162,12 @@ export default function ProjectReviewSubmissionForm({
         )}
         <div className="mt-3 rounded-md bg-white p-3">
           <p className="whitespace-pre-wrap text-sm text-gray-700">
-            {assessmentDetails.reviewStatement || 'No statement provided'}
+            {assessmentDetails.reviewBrief || 'No statement provided'}
           </p>
         </div>
-        {assessmentDetails.reviewSubmissionFile && (
+        {assessmentDetails.reviewDocument && (
           <a
-            href={assessmentDetails.reviewSubmissionFile.url}
+            href={assessmentDetails.reviewDocument.storageUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
@@ -185,7 +185,7 @@ export default function ProjectReviewSubmissionForm({
                 strokeWidth={2}
               />
             </svg>
-            {assessmentDetails.reviewSubmissionFile.name}
+            {assessmentDetails.reviewDocument.fileName}
           </a>
         )}
       </div>

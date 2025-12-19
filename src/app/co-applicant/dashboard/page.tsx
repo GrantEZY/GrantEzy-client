@@ -17,7 +17,6 @@ export default function CoApplicantDashboard() {
 
   useEffect(() => {
     // Fetch linked projects when component mounts
-    console.log('[CoApplicantDashboard] Fetching linked projects');
     getUserLinkedProjects(1, 50);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

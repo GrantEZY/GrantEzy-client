@@ -265,13 +265,13 @@ export default function ReviewerProjectReviewsPage() {
                       <tr key={review.id} className="hover:bg-gray-50">
                         <td className="px-6 py-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {review.assessment?.project?.application?.basicInfo?.title ||
+                            {review.reviewSubmission?.project?.application?.basicDetails?.title ||
                               'Untitled Project'}
                           </div>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">
-                            {review.assessment?.criteria?.name || 'N/A'}
+                            {review.reviewSubmission?.criteria?.name || 'N/A'}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -287,7 +287,7 @@ export default function ReviewerProjectReviewsPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                           <Link
-                            href={`/reviewer/project-reviews/${review.assessment?.slug}`}
+                            href={`/reviewer/project-reviews/${review.reviewSubmission?.slug}`}
                             className="inline-flex items-center text-blue-600 hover:text-blue-700"
                           >
                             {review.status === 'COMPLETED' ? 'View' : 'Review'}

@@ -10,7 +10,7 @@ import { useReviewer } from "@/hooks/useReviewer";
 export default function SubmitReviewPage() {
   const params = useParams();
   const router = useRouter();
-  const { getUserReviews, getReviewDetails, currentReview, currentApplication, reviews, isLoadingReviews, reviewsError } = useReviewer();
+  const { getUserReviews, getReviewDetails, currentApplication, reviews, isLoadingReviews, reviewsError } = useReviewer();
 
   const applicationId = params.applicationId as string;
   const [reviewSlug, setReviewSlug] = useState<string>("");

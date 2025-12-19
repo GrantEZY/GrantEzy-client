@@ -204,21 +204,21 @@ export default function ApplicantProjectsPage() {
                             </td>
                             <td className="whitespace-nowrap px-6 py-4">
                               <span
-                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.project?.status || project.status)}`}
+                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusColor(project.status)}`}
                               >
-                                {project.project?.status || project.status}
+                                {project.status}
                               </span>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                              {project.project?.allotedBudget 
-                                ? `INR ${calculateBudgetTotal(project.project.allotedBudget).toLocaleString()}`
-                                : project.basicInfo?.budget
-                                ? `INR ${calculateBudgetTotal(project.basicInfo.budget).toLocaleString()}`
+                              {project.allotedBudget 
+                                ? `INR ${calculateBudgetTotal(project.allotedBudget).toLocaleString()}`
+                                : project.application?.basicInfo?.budget
+                                ? `INR ${calculateBudgetTotal(project.application.basicInfo.budget).toLocaleString()}`
                                 : 'Budget not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                              {project.project?.duration?.startDate
-                                ? `${new Date(project.project.duration.startDate).toLocaleDateString()}${project.project.duration.endDate ? ` - ${new Date(project.project.duration.endDate).toLocaleDateString()}` : ' - Ongoing'}`
+                              {project.duration?.startDate
+                                ? `${new Date(project.duration.startDate).toLocaleDateString()}${project.duration.endDate ? ` - ${new Date(project.duration.endDate).toLocaleDateString()}` : ' - Ongoing'}`
                                 : 'Duration not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">

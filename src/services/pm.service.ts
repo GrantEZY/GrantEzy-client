@@ -17,6 +17,8 @@ import {
   GetProgramCyclesResponse,
   InviteReviewerRequest,
   InviteReviewerResponse,
+  InviteAssessmentReviewerRequest,
+  InviteAssessmentReviewerResponse,
   GetApplicationReviewsRequest,
   GetApplicationReviewsResponse,
   GetReviewDetailsRequest,
@@ -118,6 +120,18 @@ export class PMService {
    */
   async inviteReviewer(data: InviteReviewerRequest): Promise<InviteReviewerResponse> {
     return httpClient.post<InviteReviewerResponse>(API_CONFIG.ENDPOINTS.PM.INVITE_REVIEWER, data);
+  }
+
+  /**
+   * Invite a reviewer to evaluate a project assessment submission
+   */
+  async inviteAssessmentReviewer(
+    data: InviteAssessmentReviewerRequest
+  ): Promise<InviteAssessmentReviewerResponse> {
+    return httpClient.post<InviteAssessmentReviewerResponse>(
+      API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.INVITE_REVIEWER_FOR_ASSESSMENT,
+      data
+    );
   }
 
   // ============= Review Management =============
