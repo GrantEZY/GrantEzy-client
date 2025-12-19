@@ -49,13 +49,8 @@ export default function ProjectAssessmentPage() {
         setIsLoadingProject(true);
         const response = await applicantService.getProjectDetails(slug);
         
-        console.log('[DEBUG] Project details response:', response);
-        
         if (response.status === 200 && response.res?.project) {
           const { project } = response.res;
-          
-          console.log('[DEBUG] Project data:', project);
-          console.log('[DEBUG] Cycle slug from project:', project.application?.cycle?.slug);
           
           // Get cycle slug from the project's application
           if (project.application?.cycle?.slug) {
@@ -63,7 +58,7 @@ export default function ProjectAssessmentPage() {
           }
         }
       } catch (err) {
-        console.log('[DEBUG] Error fetching project details:', err);
+        // Error loading project details
       } finally {
         setIsLoadingProject(false);
       }
@@ -78,12 +73,8 @@ export default function ProjectAssessmentPage() {
     const fetchKey = fetchKeyRef.current;
     const alreadyFetched = sessionStorage.getItem(fetchKey);
     
-    console.log('[DEBUG] Cycle slug changed:', cycleSlug);
-    console.log('[DEBUG] Already fetched?', alreadyFetched);
-    
     if (cycleSlug && !alreadyFetched) {
       sessionStorage.setItem(fetchKey, 'true');
-      console.log('[DEBUG] Calling getApplicantCycleCriterias with:', cycleSlug);
       getApplicantCycleCriterias(cycleSlug);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

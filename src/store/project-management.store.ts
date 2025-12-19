@@ -212,19 +212,11 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
   getCycleCriteriaAssessments: async (data: GetCycleCriteriaAssessmentsRequest) => {
     set({ isLoadingSubmissions: true, error: null });
     try {
-      console.log('[DEBUG] Fetching criteria assessments:', data);
       const response = await projectManagementService.getCycleCriteriaAssessments(data);
-      
-      console.log('[DEBUG] Assessments response:', response);
-      console.log('[DEBUG] response.data:', response.data);
-      console.log('[DEBUG] response.res:', response.res);
       
       // Backend returns { status, message, res: { submissions, criteria } }
       const submissions = response.res?.submissions || response.data?.submissions || [];
       const criteria = response.res?.criteria || response.data?.criteria || null;
-      
-      console.log('[DEBUG] Extracted submissions:', submissions);
-      console.log('[DEBUG] Extracted criteria:', criteria);
       
       set({
         criteriaSubmissions: submissions,
@@ -232,7 +224,6 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
         isLoadingSubmissions: false,
       });
     } catch (error: any) {
-      console.log('[DEBUG] Error fetching assessments:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch submissions';
       set({ error: errorMessage, isLoadingSubmissions: false, criteriaSubmissions: [] });
     }
@@ -266,17 +257,10 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
   getApplicantCycleCriterias: async (cycleSlug: string) => {
     set({ isLoadingApplicantCriterias: true, error: null });
     try {
-      console.log('[DEBUG] Fetching criterias for cycleSlug:', cycleSlug);
       const response = await projectManagementService.getApplicantCycleCriterias({ cycleSlug });
-      
-      console.log('[DEBUG] API Response:', response);
-      console.log('[DEBUG] response.data:', response.data);
-      console.log('[DEBUG] response.res:', response.res);
       
       // Backend returns { status, message, res: { criterias } }
       const criterias = response.res?.criterias || response.data?.criterias || [];
-      console.log('[DEBUG] Extracted criterias:', criterias);
-      console.log('[DEBUG] Criterias with hasSubmitted:', criterias.map((c: any) => ({ id: c.id, name: c.name, hasSubmitted: c.hasSubmitted })));
       
       if (criterias && criterias.length > 0) {
         set({
@@ -290,7 +274,6 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
         });
       }
     } catch (error: any) {
-      console.log('[DEBUG] Error fetching criterias:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch criterias';
       set({ error: errorMessage, isLoadingApplicantCriterias: false, applicantCriterias: [] });
     }
@@ -327,16 +310,10 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
   createApplicantAssessmentSubmission: async (data: SubmitAssessmentRequest) => {
     set({ isLoading: true, error: null });
     try {
-      console.log('[DEBUG] Submitting assessment:', data);
       const response = await projectManagementService.createApplicantAssessmentSubmission(data);
-      
-      console.log('[DEBUG] Submission response:', response);
-      console.log('[DEBUG] response.data:', response.data);
-      console.log('[DEBUG] response.res:', response.res);
       
       // Backend returns { status, message, res: { submission } }
       const submission = response.res?.submission || response.data?.submission;
-      console.log('[DEBUG] Extracted submission:', submission);
       
       if (submission) {
         set({
@@ -349,7 +326,6 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
       
       throw new Error(response.message || 'Failed to submit assessment');
     } catch (error: any) {
-      console.log('[DEBUG] Submission error:', error);
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to submit assessment';
       set({ error: errorMessage, isLoading: false });
       return false;
