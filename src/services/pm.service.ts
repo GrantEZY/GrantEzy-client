@@ -170,6 +170,29 @@ export class PMService {
       queryParams
     );
   }
+
+  // ============= Cycle Status Management =============
+
+  /**
+   * Open a cycle for applications
+   */
+  async openCycleForApplication(cycleId: string): Promise<{ status: number; message: string }> {
+    return httpClient.patch(`/pm/open-cycle-for-application`, { cycleId });
+  }
+
+  /**
+   * Close a cycle for applications
+   */
+  async closeCycleForApplication(cycleId: string): Promise<{ status: number; message: string }> {
+    return httpClient.patch(`/pm/close-cycle-for-application`, { cycleId });
+  }
+
+  /**
+   * Archive a cycle
+   */
+  async archiveCycle(cycleId: string): Promise<{ status: number; message: string }> {
+    return httpClient.patch(`/pm/archive-cycle`, { cycleId });
+  }
 }
 
 // Export singleton instance

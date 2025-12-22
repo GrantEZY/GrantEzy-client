@@ -95,11 +95,7 @@ export default function ProjectAssessmentPage() {
     // Close modal
     setSelectedCriteria(null);
     
-    // Refresh criteria list to get updated submission status from backend
-    if (cycleSlug) {
-      sessionStorage.removeItem(fetchKeyRef.current);
-      getApplicantCycleCriterias(cycleSlug);
-    }
+    // No need to refetch - the store already updated the criteria with hasSubmitted status
   };
 
   const getSubmissionStatus = (criteriaId: string) => {

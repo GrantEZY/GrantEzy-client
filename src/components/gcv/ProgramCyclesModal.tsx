@@ -59,13 +59,13 @@ export function ProgramCyclesModal({ isOpen, onClose, program }: ProgramCyclesMo
 
   const getStatusColor = (status?: CycleStatus) => {
     switch (status) {
-      case CycleStatus.ACTIVE:
+      case CycleStatus.OPEN:
         return 'bg-green-100 text-green-800';
-      case CycleStatus.INACTIVE:
+      case CycleStatus.CREATED:
         return 'bg-gray-100 text-gray-800';
-      case CycleStatus.DRAFT:
+      case CycleStatus.CLOSED:
         return 'bg-yellow-100 text-yellow-800';
-      case CycleStatus.COMPLETED:
+      case CycleStatus.ARCHIVED:
         return 'bg-blue-100 text-blue-800';
       default:
         return 'bg-gray-100 text-gray-800';

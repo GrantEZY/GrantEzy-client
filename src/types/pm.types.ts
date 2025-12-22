@@ -18,10 +18,10 @@ export enum TRL {
 }
 
 export enum CycleStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  DRAFT = 'DRAFT',
-  COMPLETED = 'COMPLETED',
+  CREATED = 'CREATED',
+  OPEN = 'OPEN',
+  CLOSED = 'CLOSED',
+  ARCHIVED = 'ARCHIVED',
 }
 
 // ============= Basic Types =============

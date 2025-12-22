@@ -55,6 +55,9 @@ export const usePm = () => {
   const getCycleDetails = usePMStore((state) => state.getCycleDetails);
   const updateCycle = usePMStore((state) => state.updateCycle);
   const deleteCycle = usePMStore((state) => state.deleteCycle);
+  const openCycleForApplication = usePMStore((state) => state.openCycleForApplication);
+  const closeCycleForApplication = usePMStore((state) => state.closeCycleForApplication);
+  const archiveCycle = usePMStore((state) => state.archiveCycle);
   const clearCycles = usePMStore((state) => state.clearCycles);
   const setCyclesError = usePMStore((state) => state.setCyclesError);
 
@@ -92,6 +95,9 @@ export const usePm = () => {
     getCycleDetails,
     updateCycle,
     deleteCycle,
+    openCycleForApplication,
+    closeCycleForApplication,
+    archiveCycle,
     clearCycles,
     setCyclesError,
 

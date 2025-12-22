@@ -10,6 +10,7 @@ import {
   CreateCycleRequest,
   Cycle,
   CycleApplication,
+  CycleStatus,
   DeleteCycleRequest,
   GetApplicationReviewsRequest,
   GetCycleDetailsRequest,
@@ -76,6 +77,9 @@ interface PMActions {
   getCycleDetails: (params: GetCycleDetailsRequest) => Promise<void>;
   updateCycle: (data: UpdateCycleRequest) => Promise<boolean>;
   deleteCycle: (data: DeleteCycleRequest) => Promise<boolean>;
+  openCycleForApplication: (cycleSlug: string) => Promise<boolean>;
+  closeCycleForApplication: (cycleSlug: string) => Promise<boolean>;
+  archiveCycle: (cycleSlug: string) => Promise<boolean>;
   clearCycles: () => void;
   setCyclesError: (error: string | null) => void;
 
@@ -347,6 +351,102 @@ export const usePMStore = create<PMStore>((set, get) => ({
       });
 
       console.error('Delete cycle error:', error);
+      return false;
+    }
+  },
+
+  openCycleForApplication: async (cycleId: string) => {
+    set({ isCyclesLoading: true, cyclesError: null });
+    try {
+      const response = await pmService.openCycleForApplication(cycleId);
+
+      if (response.status === 200) {
+        // Update the cycle status in local state
+        const { cycles, currentCycle } = get();
+        const updatedCycles = cycles.map((cycle) =>
+          cycle.id === cycleId ? { ...cycle, status: CycleStatus.OPEN } : cycle
+        );
+
+        set({
+          cycles: updatedCycles,
+          currentCycle: currentCycle?.id === cycleId ? { ...currentCycle, status: CycleStatus.OPEN } : currentCycle,
+          isCyclesLoading: false,
+        });
+        return true;
+      } else {
+        throw new Error(response.message || 'Failed to open cycle');
+      }
+    } catch (error) {
+      let errorMessage = 'Failed to open cycle';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      set({ isCyclesLoading: false, cyclesError: errorMessage });
+      console.error('Open cycle error:', error);
+      return false;
+    }
+  },
+
+  closeCycleForApplication: async (cycleId: string) => {
+    set({ isCyclesLoading: true, cyclesError: null });
+    try {
+      const response = await pmService.closeCycleForApplication(cycleId);
+
+      if (response.status === 200) {
+        // Update the cycle status in local state
+        const { cycles, currentCycle } = get();
+        const updatedCycles = cycles.map((cycle) =>
+          cycle.id === cycleId ? { ...cycle, status: CycleStatus.CLOSED } : cycle
+        );
+
+        set({
+          cycles: updatedCycles,
+          currentCycle: currentCycle?.id === cycleId ? { ...currentCycle, status: CycleStatus.CLOSED } : currentCycle,
+          isCyclesLoading: false,
+        });
+        return true;
+      } else {
+        throw new Error(response.message || 'Failed to close cycle');
+      }
+    } catch (error) {
+      let errorMessage = 'Failed to close cycle';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      set({ isCyclesLoading: false, cyclesError: errorMessage });
+      console.error('Close cycle error:', error);
+      return false;
+    }
+  },
+
+  archiveCycle: async (cycleId: string) => {
+    set({ isCyclesLoading: true, cyclesError: null });
+    try {
+      const response = await pmService.archiveCycle(cycleId);
+
+      if (response.status === 200) {
+        // Update the cycle status in local state
+        const { cycles, currentCycle } = get();
+        const updatedCycles = cycles.map((cycle) =>
+          cycle.id === cycleId ? { ...cycle, status: CycleStatus.ARCHIVED } : cycle
+        );
+
+        set({
+          cycles: updatedCycles,
+          currentCycle: currentCycle?.id === cycleId ? { ...currentCycle, status: CycleStatus.ARCHIVED } : currentCycle,
+          isCyclesLoading: false,
+        });
+        return true;
+      } else {
+        throw new Error(response.message || 'Failed to archive cycle');
+      }
+    } catch (error) {
+      let errorMessage = 'Failed to archive cycle';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      set({ isCyclesLoading: false, cyclesError: errorMessage });
+      console.error('Archive cycle error:', error);
       return false;
     }
   },

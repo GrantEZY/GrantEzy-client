@@ -19,8 +19,9 @@ export default function CycleDetailsPage() {
     'applications'
   );
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
+  const [showStatusMenu, setShowStatusMenu] = useState(false);
 
-  const { currentCycle, currentCycleApplications, isCycleDetailsLoading, getCycleDetails } =
+  const { currentCycle, currentCycleApplications, isCycleDetailsLoading, getCycleDetails, openCycleForApplication, closeCycleForApplication, archiveCycle } =
     usePm();
 
   const { projects, projectsPagination, isProjectsLoading, getCycleProjects, clearProjects } =
@@ -105,6 +106,47 @@ export default function CycleDetailsPage() {
     return total;
   };
 
+  const handleStatusChange = async (action: 'open' | 'close' | 'archive') => {
+    if (!currentCycle) return;
+    
+    setShowStatusMenu(false);
+    
+    try {
+      let success = false;
+      if (action === 'open') {
+        success = await openCycleForApplication(currentCycle.id);
+      } else if (action === 'close') {
+        success = await closeCycleForApplication(currentCycle.id);
+      } else if (action === 'archive') {
+        success = await archiveCycle(currentCycle.id);
+      }
+      
+      if (success) {
+        // Refresh cycle details to get updated status
+        await getCycleDetails({ cycleSlug });
+      }
+    } catch (error) {
+      console.error('Failed to update cycle status:', error);
+    }
+  };
+
+  const getStatusBadge = () => {
+    if (!currentCycle || !currentCycle.status) return null;
+    
+    const statusClasses: Record<string, string> = {
+      CREATED: 'bg-gray-100 text-gray-800',
+      OPEN: 'bg-green-100 text-green-800',
+      CLOSED: 'bg-red-100 text-red-800',
+      ARCHIVED: 'bg-purple-100 text-purple-800',
+    };
+    
+    return (
+      <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${statusClasses[currentCycle.status] || 'bg-gray-100 text-gray-800'}`}>
+        {currentCycle.status}
+      </span>
+    );
+  };
+
   return (
     <AuthGuard>
       <PMLayout>
@@ -126,14 +168,72 @@ export default function CycleDetailsPage() {
               </svg>
               Back to Cycles
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {currentCycle
-                ? `${currentCycle.round.type} ${currentCycle.round.year}`
-                : 'Cycle Details'}
-            </h1>
-            <p className="mt-2 text-gray-600">
-              View and manage applications for this funding cycle
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {currentCycle
+                    ? `${currentCycle.round.type} ${currentCycle.round.year}`
+                    : 'Cycle Details'}
+                </h1>
+                <p className="mt-2 text-gray-600">
+                  View and manage applications for this funding cycle
+                </p>
+              </div>
+              
+              {/* Cycle Status Control */}
+              {currentCycle && (
+                <div className="relative">
+                  <button
+                    onClick={() => setShowStatusMenu(!showStatusMenu)}
+                    className="flex items-center space-x-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                    type="button"
+                  >
+                    {getStatusBadge()}
+                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {showStatusMenu && (
+                    <>
+                      <div 
+                        className="fixed inset-0 z-10" 
+                        onClick={() => setShowStatusMenu(false)}
+                      />
+                      <div className="absolute right-0 z-20 mt-2 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
+                        {currentCycle.status !== 'OPEN' && (
+                          <button
+                            onClick={() => handleStatusChange('open')}
+                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                            type="button"
+                          >
+                            Open for Applications
+                          </button>
+                        )}
+                        {currentCycle.status !== 'CLOSED' && currentCycle.status !== 'ARCHIVED' && (
+                          <button
+                            onClick={() => handleStatusChange('close')}
+                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                            type="button"
+                          >
+                            Close Applications
+                          </button>
+                        )}
+                        {currentCycle.status !== 'ARCHIVED' && (
+                          <button
+                            onClick={() => handleStatusChange('archive')}
+                            className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                            type="button"
+                          >
+                            Archive Cycle
+                          </button>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Cycle Info Card */}
@@ -428,45 +528,34 @@ export default function CycleDetailsPage() {
                         <tr key={project.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {project.application?.basicInfo?.title ||
-                                project.application?.title ||
-                                'Untitled Project'}
+                              {/* Backend returns Application objects as projects (when APPROVED) */}
+                              {project.basicInfo?.title || project.title || 'Untitled Project'}
                             </div>
-                            {project.application && (
-                              <div className="mt-1 text-sm text-gray-500">
-                                Application ID: {project.application.id.substring(0, 8)}...
-                              </div>
-                            )}
+                            <div className="mt-1 text-sm text-gray-500">
+                              Application ID: {project.id.substring(0, 8)}...
+                            </div>
                           </td>
                           <td className="whitespace-nowrap px-6 py-4">
                             <span
-                              className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-                                project.status === 'ACTIVE'
-                                  ? 'bg-green-100 text-green-800'
-                                  : project.status === 'COMPLETED'
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : project.status === 'ON_HOLD'
-                                      ? 'bg-yellow-100 text-yellow-800'
-                                      : 'bg-red-100 text-red-800'
-                              }`}
+                              className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeClass(project.status)}`}
                             >
                               {project.status}
                             </span>
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                            INR {calculateProjectBudget(project.allotedBudget).toLocaleString()}
+                            {project.budget?.Budget?.amount 
+                              ? `${project.budget.Budget.currency} ${project.budget.Budget.amount.toLocaleString()}`
+                              : 'Not set'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {project.duration?.startDate && project.duration?.endDate
-                              ? `${new Date(project.duration.startDate).toLocaleDateString()} - ${new Date(project.duration.endDate).toLocaleDateString()}`
-                              : project.duration?.startDate
-                                ? `${new Date(project.duration.startDate).toLocaleDateString()} - Ongoing`
-                                : 'Not set'}
+                            {project.basicInfo?.projectDuration
+                              ? `${new Date(project.basicInfo.projectDuration.startDate).toLocaleDateString()} - ${new Date(project.basicInfo.projectDuration.endDate).toLocaleDateString()}`
+                              : 'Not set'}
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
                             <Link
                               className="text-blue-600 hover:text-blue-700"
-                              href={`/pm/cycles/${cycleSlug}/projects/${project.application?.slug || project.applicationId}`}
+                              href={`/pm/cycles/${cycleSlug}/projects/${project.slug}`}
                             >
                               View Details
                             </Link>
@@ -508,9 +597,7 @@ export default function CycleDetailsPage() {
                 }
               }}
               cycleSlug={cycleSlug}
-              approvedApplications={
-                currentCycleApplications?.filter((app) => app.status === 'APPROVED') || []
-              }
+              applications={currentCycleApplications || []}
             />
           )}
 
