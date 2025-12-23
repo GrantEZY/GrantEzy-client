@@ -83,16 +83,16 @@ export default function Header() {
 
   // Get user initials
   const getUserInitials = () => {
-    if (user?.firstName && user?.lastName) {
-      return `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+    if (user?.person?.firstName && user?.person?.lastName) {
+      return `${user.person.firstName.charAt(0)}${user.person.lastName.charAt(0)}`.toUpperCase();
     }
     return 'U';
   };
 
   // Get user display name
   const getUserName = () => {
-    if (user?.firstName) {
-      return user.firstName;
+    if (user?.person?.firstName) {
+      return user.person.firstName;
     }
     return 'User';
   };

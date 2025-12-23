@@ -78,13 +78,27 @@ export interface AuthTokens {
   // Frontend never stores or accesses it directly
 }
 
-export interface User {
+export interface Person {
   id: string;
   firstName: string;
   lastName: string;
+}
+
+export interface Contact {
   email: string;
-  role: UserRoles;
+  phone: string | null;
+  address: string | null;
+}
+
+export interface User {
+  personId: string;
+  person: Person;
+  contact: Contact;
+  role: UserRoles[];
   commitment: UserCommitmentStatus;
+  status: string;
+  isGCVmember: boolean;
+  slug: string | null;
   createdAt: string;
   updatedAt: string;
 }

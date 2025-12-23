@@ -31,7 +31,7 @@ export default function ReviewerDashboard() {
       <ReviewerLayout>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, {user?.firstName || 'Reviewer'}
+            Welcome, {user?.person?.firstName || 'Reviewer'}
           </h1>
           <p className="mt-2 text-gray-600">
             Review grant applications and provide your expert assessment

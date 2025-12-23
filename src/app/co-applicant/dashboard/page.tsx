@@ -118,16 +118,16 @@ export default function CoApplicantDashboard() {
               <div>
                 <span className="text-sm font-medium text-gray-600">Name:</span>
                 <p className="text-gray-900">
-                  {user ? `${user.firstName} ${user.lastName}` : 'N/A'}
+                  {user ? `${user.person.firstName} ${user.person.lastName}` : 'N/A'}
                 </p>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-600">Email:</span>
-                <p className="text-gray-900">{user?.email || 'N/A'}</p>
+                <p className="text-gray-900">{user?.contact.email || 'N/A'}</p>
               </div>
               <div>
                 <span className="text-sm font-medium text-gray-600">Role:</span>
-                <p className="text-gray-900">{user?.role || 'N/A'}</p>
+                <p className="text-gray-900">{user?.role.join(', ') || 'N/A'}</p>
               </div>
             </div>
           </div>

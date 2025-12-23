@@ -55,23 +55,53 @@ export const useAuthStore = create<AuthStore>()(
             // Store accessToken in localStorage
             storageUtil.setTokens(tokens);
 
-            const user: User = {
-              id: userData.id,
-              firstName: userData.name?.split(' ')[0] || '',
-              lastName: userData.name?.split(' ').slice(1).join(' ') || '',
-              email: userData.email,
-              role: userData.role,
-              commitment: UserCommitmentStatus.FULL_TIME, // Default value
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            };
+            // Fetch full user profile after successful login
+            try {
+              const userService = await import('../services/user.service');
+              const profileResponse = await userService.userService.getUserProfile();
+              
+              if (profileResponse.status === 200 && profileResponse.res.user) {
+                set({
+                  user: profileResponse.res.user,
+                  tokens,
+                  isAuthenticated: true,
+                  isLoading: false,
+                });
+              } else {
+                throw new Error('Failed to fetch user profile');
+              }
+            } catch (profileError) {
+              console.error('Error fetching user profile:', profileError);
+              // Fallback: create minimal user object from login response
+              const [firstName = '', ...lastNameParts] = (userData.name || '').split(' ');
+              const user: User = {
+                personId: userData.id,
+                person: {
+                  id: userData.id,
+                  firstName,
+                  lastName: lastNameParts.join(' '),
+                },
+                contact: {
+                  email: userData.email,
+                  phone: null,
+                  address: null,
+                },
+                role: [userData.role],
+                commitment: UserCommitmentStatus.FULL_TIME,
+                status: 'ACTIVE',
+                isGCVmember: false,
+                slug: null,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+              };
 
-            set({
-              user,
-              tokens,
-              isAuthenticated: true,
-              isLoading: false,
-            });
+              set({
+                user,
+                tokens,
+                isAuthenticated: true,
+                isLoading: false,
+              });
+            }
           } else {
             // Handle non-200 status from backend
             set({ isLoading: false });

@@ -3,6 +3,8 @@
  * Types for user profile management
  */
 
+import { UserRoles } from './auth.types';
+
 /**
  * User Commitment Status Enum
  */
@@ -51,7 +53,7 @@ export interface UserProfile {
   contact: Contact;
   commitment: UserCommitmentStatus;
   experiences: Experience[] | null;
-  role: string[];
+  role: UserRoles[];
   status: string;
   isGCVmember: boolean;
   slug: string | null;

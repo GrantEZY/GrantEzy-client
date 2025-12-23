@@ -73,7 +73,9 @@ function LoginPage() {
 
         // Get redirect from query params or use role-based default
         const queryRedirect = searchParams.get('redirect');
-        const defaultRedirect = getRoleBasedRedirect(backendRole);
+        const defaultRedirect = getRoleBasedRedirect(
+          Array.isArray(backendRole) ? backendRole[0] : backendRole
+        );
         const redirect = queryRedirect || defaultRedirect;
 
         router.push(redirect);
