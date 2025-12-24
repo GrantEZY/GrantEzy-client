@@ -139,8 +139,7 @@ export interface GetCycleProjectsResponse {
   status: number;
   message: string;
   res: {
-    projects: Project[];
-    pagination: PaginationMeta;
+    applications: Application[];
   } | null;
 }
 
@@ -219,8 +218,8 @@ export interface GetProjectDetailsBySlugResponse {
 // ============= State Types =============
 
 export interface ProjectState {
-  // Projects list
-  projects: Project[];
+  // Projects list (backend returns approved applications as "projects")
+  projects: Application[];
   projectsPagination: PaginationMeta | null;
   isProjectsLoading: boolean;
   projectsError: string | null;

@@ -10,7 +10,7 @@ interface CreateProjectModalProps {
   onClose: () => void;
   onSuccess: () => void;
   cycleSlug: string;
-  approvedApplications: CycleApplication[];
+  applications: CycleApplication[];
 }
 
 // Form-friendly budget item structure
@@ -24,9 +24,12 @@ export default function CreateProjectModal({
   isOpen,
   onClose,
   onSuccess,
-  approvedApplications,
+  applications,
 }: CreateProjectModalProps) {
   const { createProject, isProjectLoading, projectError } = useProjectManagement();
+
+  // Filter out applications that are already converted to projects (APPROVED status)
+  const availableApplications = applications.filter((app) => app.status !== 'APPROVED');
 
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
@@ -250,7 +253,7 @@ export default function CreateProjectModal({
 
   if (!isOpen) return null;
 
-  const selectedApplication = approvedApplications.find((app) => app.id === selectedApplicationId);
+  const selectedApplication = availableApplications.find((app) => app.id === selectedApplicationId);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-white/10 p-4 backdrop-blur-md">
@@ -321,17 +324,17 @@ export default function CreateProjectModal({
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    Select Approved Application *
+                    Select Application *
                   </label>
                   <p className="mt-1 text-sm text-gray-500">
-                    Choose an approved application to create a project
+                    Choose an application to convert to a project
                   </p>
                   {errors.application && (
                     <p className="mt-1 text-sm text-red-600">{errors.application}</p>
                   )}
                 </div>
 
-                {approvedApplications.length === 0 ? (
+                {availableApplications.length === 0 ? (
                   <div className="rounded-md bg-yellow-50 p-4">
                     <div className="flex">
                       <svg
@@ -347,12 +350,11 @@ export default function CreateProjectModal({
                       </svg>
                       <div className="ml-3">
                         <h3 className="text-sm font-medium text-yellow-800">
-                          No approved applications
+                          No applications available
                         </h3>
                         <div className="mt-2 text-sm text-yellow-700">
                           <p>
-                            There are no approved applications in this cycle yet. You need to
-                            approve an application before creating a project.
+                            There are no submitted applications available to convert. Either no applications have been submitted yet, or all applications have already been converted to projects.
                           </p>
                         </div>
                       </div>
@@ -360,7 +362,7 @@ export default function CreateProjectModal({
                   </div>
                 ) : (
                   <div className="max-h-96 space-y-2 overflow-y-auto">
-                    {approvedApplications.map((app) => (
+                    {availableApplications.map((app) => (
                       <div
                         key={app.id}
                         onClick={() => setSelectedApplicationId(app.id)}

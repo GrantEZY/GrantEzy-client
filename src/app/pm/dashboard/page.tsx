@@ -36,19 +36,19 @@ export default function PMDashboardPage() {
   // Calculate metrics
   const metrics = useMemo(() => {
     const totalCycles = cycles.length;
-    const activeCycles = cycles.filter((cycle) => cycle.status === CycleStatus.ACTIVE).length;
-    const completedCycles = cycles.filter((cycle) => cycle.status === CycleStatus.COMPLETED).length;
-    const draftCycles = cycles.filter((cycle) => cycle.status === CycleStatus.DRAFT).length;
+    const activeCycles = cycles.filter((cycle) => cycle.status === CycleStatus.OPEN).length;
+    const completedCycles = cycles.filter((cycle) => cycle.status === CycleStatus.ARCHIVED).length;
+    const draftCycles = cycles.filter((cycle) => cycle.status === CycleStatus.CREATED).length;
 
     const totalBudget = cycles.reduce((sum, cycle) => sum + (cycle.budget?.amount || 0), 0);
     const activeBudget = cycles
-      .filter((cycle) => cycle.status === CycleStatus.ACTIVE)
+      .filter((cycle) => cycle.status === CycleStatus.OPEN)
       .reduce((sum, cycle) => sum + (cycle.budget?.amount || 0), 0);
 
     // Upcoming deadlines (cycles ending in next 30 days)
     const now = new Date();
     const upcomingDeadlines = cycles.filter((cycle) => {
-      if (!cycle.duration?.endDate || cycle.status === CycleStatus.COMPLETED) return false;
+      if (!cycle.duration?.endDate || cycle.status === CycleStatus.ARCHIVED) return false;
       const endDate = new Date(cycle.duration.endDate);
       const daysUntilEnd = Math.ceil((endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
       return daysUntilEnd <= 30 && daysUntilEnd > 0;
@@ -75,13 +75,13 @@ export default function PMDashboardPage() {
 
   const getStatusBadgeColor = (status?: CycleStatus) => {
     switch (status) {
-      case CycleStatus.ACTIVE:
+      case CycleStatus.OPEN:
         return 'bg-green-100 text-green-800';
-      case CycleStatus.COMPLETED:
+      case CycleStatus.ARCHIVED:
         return 'bg-blue-100 text-blue-800';
-      case CycleStatus.DRAFT:
+      case CycleStatus.CREATED:
         return 'bg-gray-100 text-gray-800';
-      case CycleStatus.INACTIVE:
+      case CycleStatus.CLOSED:
         return 'bg-red-100 text-red-800';
       default:
         return 'bg-gray-100 text-gray-800';

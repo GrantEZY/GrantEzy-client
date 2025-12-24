@@ -88,9 +88,10 @@ export const useProjectStore = create<ProjectStore>((set, _get) => ({
       const response = await projectManagementService.getCycleProjects(params);
 
       if (response.status === 200 && response.res) {
+        // Backend returns applications (approved applications are projects)
         set({
-          projects: response.res.projects || [],
-          projectsPagination: response.res.pagination || null,
+          projects: response.res.applications || [],
+          projectsPagination: null, // Backend doesn't return pagination for this endpoint
           isProjectsLoading: false,
         });
       } else {

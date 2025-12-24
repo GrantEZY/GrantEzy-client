@@ -260,22 +260,45 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
       const response = await projectManagementService.getApplicantCycleCriterias({ cycleSlug });
       
       // Backend returns { status, message, res: { criterias } }
-      const criterias = response.res?.criterias || response.data?.criterias || [];
+      // Access the actual response data
+      const responseData: any = response;
+      const criterias = responseData?.res?.criterias || responseData?.data?.criterias || responseData?.criterias || [];
       
-      if (criterias && criterias.length > 0) {
-        set({
-          applicantCriterias: criterias,
-          isLoadingApplicantCriterias: false,
-        });
-      } else {
-        set({
-          applicantCriterias: [],
-          isLoadingApplicantCriterias: false,
-        });
-      }
+      // Check submission status for each criteria
+      const criteriasWithStatus = await Promise.all(
+        criterias.map(async (criteria: any) => {
+          try {
+            // Try to fetch submission for this criteria
+            const submissionResponse = await projectManagementService.getApplicantAssessmentSubmission({
+              cycleSlug,
+              criteriaSlug: criteria.slug,
+            });
+            
+            // If we get a submission back, mark as submitted
+            const hasSubmission = !!(submissionResponse?.data?.cycleSubmission || submissionResponse?.res?.cycleSubmission);
+            
+            return {
+              ...criteria,
+              hasSubmitted: hasSubmission,
+            };
+          } catch (error) {
+            // If error (likely 403 or 404), no submission exists
+            return {
+              ...criteria,
+              hasSubmitted: false,
+            };
+          }
+        })
+      );
+      
+      set({
+        applicantCriterias: criteriasWithStatus,
+        isLoadingApplicantCriterias: false,
+      });
     } catch (error: any) {
       const errorMessage = error?.response?.data?.message || error.message || 'Failed to fetch criterias';
       set({ error: errorMessage, isLoadingApplicantCriterias: false, applicantCriterias: [] });
+      console.error('Error fetching applicant criterias:', error);
     }
   },
 
@@ -316,11 +339,17 @@ export const useProjectManagementStore = create<ProjectManagementStore>((set) =>
       const submission = response.res?.submission || response.data?.submission;
       
       if (submission) {
-        set({
+        // Update the criteria list to mark this one as submitted
+        set((state) => ({
           applicantCurrentSubmission: submission,
+          applicantCriterias: state.applicantCriterias.map((criteria) =>
+            criteria.id === data.criteriaId
+              ? { ...criteria, hasSubmitted: true }
+              : criteria
+          ),
           successMessage: response.message || 'Assessment submitted successfully',
           isLoading: false,
-        });
+        }));
         return true;
       }
       
