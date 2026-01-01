@@ -12,9 +12,9 @@ interface AssessmentSubmissionFormProps {
   existingSubmission?: {
     reviewStatement?: string;
     reviewSubmissionFile?: {
-      name: string;
-      url: string;
-      publicId: string;
+      title: string;
+      fileName: string;
+      storageUrl: string;
     };
   };
   onSuccess?: () => void;
@@ -43,11 +43,11 @@ export default function AssessmentSubmissionForm({
   } | null>(
     existingSubmission?.reviewSubmissionFile
       ? {
-          name: existingSubmission.reviewSubmissionFile.name,
+          name: existingSubmission.reviewSubmissionFile.fileName,
           size: 0, // Size not available from existing submission
           type: 'application/octet-stream', // Default type for existing files
-          url: existingSubmission.reviewSubmissionFile.url,
-          publicId: existingSubmission.reviewSubmissionFile.publicId,
+          url: existingSubmission.reviewSubmissionFile.storageUrl,
+          publicId: '', // Not stored in DocumentObject
         }
       : null
   );
@@ -104,11 +104,11 @@ export default function AssessmentSubmissionForm({
     try {
       // Transform the file data to match backend expectations (DocumentObjectDTO)
       const reviewSubmissionFile = uploadedFile ? {
-        name: uploadedFile.name,
-        size: uploadedFile.size,
-        publicId: uploadedFile.publicId,
-        url: uploadedFile.url,
+        title: uploadedFile.name,
+        fileName: uploadedFile.name,
+        fileSize: `${(uploadedFile.size / 1024).toFixed(2)}KB`,
         mimeType: uploadedFile.type || 'application/octet-stream',
+        storageUrl: uploadedFile.url,
       } : undefined;
 
       const response = await createApplicantAssessmentSubmission({
@@ -145,7 +145,7 @@ export default function AssessmentSubmissionForm({
           <p className="mt-2 text-sm text-blue-700">{criteria.reviewBrief}</p>
           {criteria.templateFile && (
             <a
-              href={criteria.templateFile.url}
+              href={criteria.templateFile.storageUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"

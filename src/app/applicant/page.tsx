@@ -7,6 +7,8 @@ import ApplicantLayout from '@/components/layout/ApplicantLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useApplicant } from '@/hooks/useApplicant';
 import { publicService, ProgramCycle } from '@/services/public.service';
+import DeleteApplicationModal from '@/components/applicant/DeleteApplicationModal';
+import { UserApplication } from '@/types/applicant.types';
 
 export default function ApplicantDashboard() {
   const { user } = useAuth();
@@ -25,6 +27,9 @@ export default function ApplicantDashboard() {
   const [selectedProgram, setSelectedProgram] = useState<any | null>(null);
   const [programCycles, setProgramCycles] = useState<ProgramCycle[]>([]);
   const [isLoadingCycles, setIsLoadingCycles] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<UserApplication | null>(null);
+  const [isDeletingApplication, setIsDeletingApplication] = useState(false);
 
   useEffect(() => {
     // Fetch user applications on component mount
@@ -341,21 +346,15 @@ export default function ApplicantDashboard() {
                       {!application.isSubmitted && (
                         <>
                           <Link
-                            href={`/applicant/new-application?cycle=${application.cycle?.slug}`}
+                            href={`/applicant/new-application?cycleSlug=${application.cycle?.slug}`}
                             className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 text-center"
                           >
                             Continue
                           </Link>
                           <button
-                            onClick={async () => {
-                              if (
-                                confirm('Are you sure you want to delete this draft application?')
-                              ) {
-                                const success = await deleteUserApplication(application.id);
-                                if (success) {
-                                  // Applications list will be updated automatically by the store
-                                }
-                              }
+                            onClick={() => {
+                              setSelectedApplication(application);
+                              setIsDeleteModalOpen(true);
                             }}
                             className="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
                           >
@@ -459,6 +458,32 @@ export default function ApplicantDashboard() {
           </div>
         )}
       </ApplicantLayout>
+
+      {/* Delete Application Modal */}
+      <DeleteApplicationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedApplication(null);
+        }}
+        onConfirm={async () => {
+          if (!selectedApplication) return;
+          setIsDeletingApplication(true);
+          try {
+            const success = await deleteUserApplication(selectedApplication.id);
+            if (success) {
+              setIsDeleteModalOpen(false);
+              setSelectedApplication(null);
+            }
+          } catch (error) {
+            console.error('Failed to delete application:', error);
+          } finally {
+            setIsDeletingApplication(false);
+          }
+        }}
+        isLoading={isDeletingApplication}
+        application={selectedApplication}
+      />
     </AuthGuard>
   );
 }

@@ -4,7 +4,7 @@
  */
 'use client';
 
-import { useEffect, Suspense } from 'react';
+import { useEffect, Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AuthGuard } from '@/components/guards/AuthGuard';
 import ApplicantLayout from '@/components/layout/ApplicantLayout';
@@ -35,14 +35,19 @@ function NewApplicationPage() {
     clearSuccessMessage,
     getProgressPercentage,
     loadSavedApplication,
+    isLoading,
   } = useApplicant();
+
+  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
 
   // Load saved application on mount (draft restoration)
   useEffect(() => {
-    if (cycleSlug) {
-      loadSavedApplication(cycleSlug);
+    if (cycleSlug && !isDraftLoaded) {
+      loadSavedApplication(cycleSlug).then(() => {
+        setIsDraftLoaded(true);
+      });
     }
-  }, [cycleSlug, loadSavedApplication]);
+  }, [cycleSlug, loadSavedApplication, isDraftLoaded]);
 
   useEffect(() => {
     if (!cycleSlug) {
@@ -65,6 +70,18 @@ function NewApplicationPage() {
   }
 
   const renderStepForm = () => {
+    // Don't render form until draft is loaded
+    if (!isDraftLoaded || isLoading) {
+      return (
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
+            <p className="mt-2 text-sm text-gray-600">Loading application...</p>
+          </div>
+        </div>
+      );
+    }
+
     switch (currentStep) {
       case ApplicationStep.BASIC_INFO:
         return <BasicInfoForm cycleSlug={cycleSlug} />;
@@ -169,18 +186,14 @@ function NewApplicationPage() {
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-            {/* Stepper Sidebar */}
-            <div className="lg:col-span-3">
-              <ApplicationStepper steps={applicationSteps} currentStep={currentStep} />
-            </div>
+          {/* Application Timeline */}
+          <div className="mb-8 rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+            <ApplicationStepper steps={applicationSteps} currentStep={currentStep} />
+          </div>
 
-            {/* Form Content */}
-            <div className="lg:col-span-9">
-              <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-                {renderStepForm()}
-              </div>
-            </div>
+          {/* Form Content */}
+          <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+            {renderStepForm()}
           </div>
 
           {/* Application Info */}

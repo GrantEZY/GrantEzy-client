@@ -383,11 +383,25 @@ export default function CycleDetailsPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200 bg-white">
-                      {currentCycleApplications.map((application) => (
+                      {currentCycleApplications.map((application) => {
+                        // Debug: log application data to check what's available
+                        if (!application.basicInfo?.title) {
+                          console.log('Application missing basicInfo:', {
+                            id: application.id,
+                            slug: application.slug,
+                            hasBasicInfo: !!application.basicInfo,
+                            basicInfo: application.basicInfo,
+                            allKeys: Object.keys(application as any),
+                          });
+                        }
+                        
+                        return (
                         <tr key={application.id} className="hover:bg-gray-50">
                           <td className="px-6 py-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {application.basicInfo?.title || 'Untitled Application'}
+                              {application.basicInfo?.title || 
+                               (application as any).title || 
+                               `Application ${application.slug.substring(0, 8)}`}
                             </div>
                             {application.basicInfo?.summary && (
                               <div className="mt-1 text-sm text-gray-500">
@@ -423,7 +437,8 @@ export default function CycleDetailsPage() {
                             </Link>
                           </td>
                         </tr>
-                      ))}
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>

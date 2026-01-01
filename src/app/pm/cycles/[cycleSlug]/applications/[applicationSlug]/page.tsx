@@ -235,6 +235,66 @@ export default function ApplicationDetailsPage() {
           {/* Application Content */}
           {!isApplicationLoading && currentApplication && (
             <>
+              {/* Cycle Information Card */}
+              {currentApplication.cycle && (
+                <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+                  <h2 className="mb-4 text-lg font-semibold text-gray-900">Cycle Information</h2>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {currentApplication.cycle.program && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">Program</p>
+                        <p className="mt-1 text-sm text-gray-900">
+                          {currentApplication.cycle.program.name}
+                        </p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Round</p>
+                      <p className="mt-1 text-sm text-gray-900">
+                        {currentApplication.cycle.round.year} - {currentApplication.cycle.round.type}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Cycle Status</p>
+                      <span
+                        className={`mt-1 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                          currentApplication.cycle.status === 'OPEN'
+                            ? 'bg-green-100 text-green-800'
+                            : currentApplication.cycle.status === 'CLOSED'
+                            ? 'bg-red-100 text-red-800'
+                            : currentApplication.cycle.status === 'ARCHIVED'
+                            ? 'bg-purple-100 text-purple-800'
+                            : 'bg-gray-100 text-gray-800'
+                        }`}
+                      >
+                        {currentApplication.cycle.status}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Start Date</p>
+                      <p className="mt-1 text-sm text-gray-900">
+                        {new Date(currentApplication.cycle.duration.startDate).toLocaleDateString()}
+                      </p>
+                    </div>
+                    {currentApplication.cycle.duration.endDate && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-600">End Date</p>
+                        <p className="mt-1 text-sm text-gray-900">
+                          {new Date(currentApplication.cycle.duration.endDate).toLocaleDateString()}
+                        </p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Budget</p>
+                      <p className="mt-1 text-sm text-gray-900">
+                        {currentApplication.cycle.budget.currency}{' '}
+                        {currentApplication.cycle.budget.amount.toLocaleString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Status Card */}
               <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">Application Status</h2>

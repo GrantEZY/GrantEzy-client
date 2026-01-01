@@ -45,10 +45,10 @@ export default function CreateProjectModal({
   const [otherCostItems, setOtherCostItems] = useState<FormBudgetItem[]>([
     { reason: '', qty: 1, rate: 0 },
   ]);
-  const [consumables, setConsumables] = useState(0);
-  const [travel, setTravel] = useState(0);
-  const [contingency, setContingency] = useState(0);
-  const [overhead, setOverhead] = useState(0);
+  const [consumables, setConsumables] = useState<number | ''>('');
+  const [travel, setTravel] = useState<number | ''>('');
+  const [contingency, setContingency] = useState<number | ''>('');
+  const [overhead, setOverhead] = useState<number | ''>('');
 
   // Duration state
   const [startDate, setStartDate] = useState('');
@@ -62,10 +62,10 @@ export default function CreateProjectModal({
       setManPowerItems([{ reason: '', qty: 1, rate: 0 }]);
       setEquipmentItems([{ reason: '', qty: 1, rate: 0 }]);
       setOtherCostItems([{ reason: '', qty: 1, rate: 0 }]);
-      setConsumables(0);
-      setTravel(0);
-      setContingency(0);
-      setOverhead(0);
+      setConsumables('');
+      setTravel('');
+      setContingency('');
+      setOverhead('');
       setStartDate('');
       setEndDate('');
       setErrors({});
@@ -110,10 +110,10 @@ export default function CreateProjectModal({
       manPowerTotal +
       equipmentTotal +
       otherCostTotal +
-      consumables +
-      travel +
-      contingency +
-      overhead
+      (consumables === '' ? 0 : consumables) +
+      (travel === '' ? 0 : travel) +
+      (contingency === '' ? 0 : contingency) +
+      (overhead === '' ? 0 : overhead)
     );
   };
 
@@ -135,10 +135,10 @@ export default function CreateProjectModal({
     const hasManPower = manPowerItems.some((item) => item.reason.trim() !== '' && item.rate > 0);
     const hasEquipment = equipmentItems.some((item) => item.reason.trim() !== '' && item.rate > 0);
     const hasOtherCost = otherCostItems.some((item) => item.reason.trim() !== '' && item.rate > 0);
-    const hasConsumables = consumables > 0;
-    const hasTravel = travel > 0;
-    const hasContingency = contingency > 0;
-    const hasOverhead = overhead > 0;
+    const hasConsumables = consumables !== '' && consumables > 0;
+    const hasTravel = travel !== '' && travel > 0;
+    const hasContingency = contingency !== '' && contingency > 0;
+    const hasOverhead = overhead !== '' && overhead > 0;
 
     if (
       !hasManPower &&
@@ -219,19 +219,19 @@ export default function CreateProjectModal({
         .map(convertToBudgetItem),
       Consumables: {
         BudgetReason: 'Consumables',
-        Budget: convertToMoney(consumables),
+        Budget: convertToMoney(consumables === '' ? 0 : consumables),
       },
       Travel: {
         BudgetReason: 'Travel',
-        Budget: convertToMoney(travel),
+        Budget: convertToMoney(travel === '' ? 0 : travel),
       },
       Contigency: {
         BudgetReason: 'Contingency',
-        Budget: convertToMoney(contingency),
+        Budget: convertToMoney(contingency === '' ? 0 : contingency),
       },
       Overhead: {
         BudgetReason: 'Overhead',
-        Budget: convertToMoney(overhead),
+        Budget: convertToMoney(overhead === '' ? 0 : overhead),
       },
     };
 
@@ -375,7 +375,9 @@ export default function CreateProjectModal({
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
                             <h4 className="font-medium text-gray-900">
-                              {app.basicInfo?.title || 'Untitled Application'}
+                              {app.basicInfo?.title || 
+                               (app as any).title || 
+                               `Application ${app.slug.substring(0, 8)}`}
                             </h4>
                             {app.basicInfo?.summary && (
                               <p className="mt-1 text-sm text-gray-500">
@@ -430,7 +432,9 @@ export default function CreateProjectModal({
                 {selectedApplication && (
                   <div className="rounded-lg bg-blue-50 p-4">
                     <h5 className="font-medium text-blue-900">
-                      {selectedApplication.basicInfo?.title || 'Untitled'}
+                      {selectedApplication.basicInfo?.title || 
+                       (selectedApplication as any).title || 
+                       `Application ${selectedApplication.slug.substring(0, 8)}`}
                     </h5>
                     <p className="mt-1 text-sm text-blue-700">
                       {selectedApplication.applicant?.email ||
@@ -688,9 +692,10 @@ export default function CreateProjectModal({
                     <input
                       type="number"
                       value={consumables}
-                      onChange={(e) => setConsumables(Number(e.target.value))}
+                      onChange={(e) => setConsumables(e.target.value === '' ? '' : Number(e.target.value))}
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
                       min="0"
+                      placeholder="0"
                     />
                   </div>
                   <div>
@@ -698,9 +703,10 @@ export default function CreateProjectModal({
                     <input
                       type="number"
                       value={travel}
-                      onChange={(e) => setTravel(Number(e.target.value))}
+                      onChange={(e) => setTravel(e.target.value === '' ? '' : Number(e.target.value))}
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
                       min="0"
+                      placeholder="0"
                     />
                   </div>
                   <div>
@@ -708,9 +714,10 @@ export default function CreateProjectModal({
                     <input
                       type="number"
                       value={contingency}
-                      onChange={(e) => setContingency(Number(e.target.value))}
+                      onChange={(e) => setContingency(e.target.value === '' ? '' : Number(e.target.value))}
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
                       min="0"
+                      placeholder="0"
                     />
                   </div>
                   <div>
@@ -718,9 +725,10 @@ export default function CreateProjectModal({
                     <input
                       type="number"
                       value={overhead}
-                      onChange={(e) => setOverhead(Number(e.target.value))}
+                      onChange={(e) => setOverhead(e.target.value === '' ? '' : Number(e.target.value))}
                       className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
                       min="0"
+                      placeholder="0"
                     />
                   </div>
                 </div>
@@ -751,7 +759,9 @@ export default function CreateProjectModal({
                 {selectedApplication && (
                   <div className="rounded-lg bg-blue-50 p-4">
                     <h5 className="font-medium text-blue-900">
-                      {selectedApplication.basicInfo?.title || 'Untitled'}
+                      {selectedApplication.basicInfo?.title || 
+                       (selectedApplication as any).title || 
+                       `Application ${selectedApplication.slug.substring(0, 8)}`}
                     </h5>
                     <p className="mt-1 text-sm text-blue-700">
                       Total Budget: INR {calculateTotal().toLocaleString()}

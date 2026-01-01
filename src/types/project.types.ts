@@ -40,10 +40,13 @@ export interface ProjectDuration {
 }
 
 export interface DocumentObject {
-  name: string;
-  size: number;
-  publicId: string;
-  url: string;
+  title: string;
+  description?: string;
+  fileName: string;
+  fileSize: string;
+  mimeType: string;
+  storageUrl: string;
+  metadata?: Record<string, any>;
 }
 
 export interface Application {

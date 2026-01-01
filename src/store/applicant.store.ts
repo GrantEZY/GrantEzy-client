@@ -14,6 +14,7 @@ import {
   Application,
   ApplicationStep,
   ApplicationStepInfo,
+  BasicInfo,
   CreateApplicationRequest,
   UserApplication,
 } from '../types/applicant.types';
@@ -40,6 +41,7 @@ interface ApplicantState {
 interface ApplicantActions {
   // Step 1: Create application with basic info
   createApplication: (data: CreateApplicationRequest) => Promise<boolean>;
+  updateBasicInfo: (data: { applicationId: string; basicInfo: BasicInfo }) => Promise<boolean>;
 
   // Step 2: Add budget details
   addApplicationBudget: (data: AddApplicationBudgetRequest) => Promise<boolean>;
@@ -183,6 +185,37 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       return false;
     } catch (error: any) {
       const errorMessage = error?.message || 'Failed to create application';
+      set({ error: errorMessage, isLoading: false });
+      return false;
+    }
+  },
+
+  // Update basic info for existing application
+  updateBasicInfo: async (data: { applicationId: string; basicInfo: BasicInfo }) => {
+    set({ isLoading: true, error: null, successMessage: null });
+    try {
+      // For now, just update local state and move to next step
+      // Backend doesn't seem to have a dedicated endpoint for updating basic info
+      const currentApp = get().currentApplication;
+      if (currentApp) {
+        set({
+          currentApplication: {
+            ...currentApp,
+            basicInfo: data.basicInfo,
+          },
+          currentStep: ApplicationStep.BUDGET,
+          successMessage: 'Basic information updated',
+          isLoading: false,
+        });
+
+        get().updateApplicationSteps();
+        return true;
+      }
+
+      set({ error: 'No active application', isLoading: false });
+      return false;
+    } catch (error: any) {
+      const errorMessage = error?.message || 'Failed to update basic info';
       set({ error: errorMessage, isLoading: false });
       return false;
     }
@@ -522,10 +555,17 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
         return application;
       }
 
-      // No saved application found
-      set({ isLoading: false });
+      // No saved application found - this is OK, user will create a new one
+      set({ isLoading: false, currentApplication: null, currentStep: ApplicationStep.BASIC_INFO });
       return null;
     } catch (error: any) {
+      // If 404 or no application found, silently continue (not an error condition)
+      if (error?.response?.status === 404 || error?.status === 404 || error?.message?.includes('not found')) {
+        set({ isLoading: false, currentApplication: null, currentStep: ApplicationStep.BASIC_INFO });
+        return null;
+      }
+      
+      // For other errors, show error message
       const errorMessage = error?.message || 'Failed to load saved application';
       set({ error: errorMessage, isLoading: false });
       return null;

@@ -13,7 +13,7 @@ interface BasicInfoFormProps {
 }
 
 export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
-  const { createApplication, isLoading, currentApplication } = useApplicant();
+  const { createApplication, updateBasicInfo, isLoading, currentApplication } = useApplicant();
 
   const [formData, setFormData] = useState<BasicInfo>({
     title: currentApplication?.basicInfo?.title || '',
@@ -23,7 +23,7 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
     innovation: currentApplication?.basicInfo?.innovation || '',
   });
 
-  // Update form data when currentApplication loads from draft
+  // Update form data when currentApplication changes (shouldn't be needed now but keep for safety)
   useEffect(() => {
     if (currentApplication?.basicInfo) {
       setFormData({
@@ -82,10 +82,20 @@ export default function BasicInfoForm({ cycleSlug }: BasicInfoFormProps) {
       return;
     }
 
-    await createApplication({
-      cycleSlug,
-      basicInfo: formData,
-    });
+    // Check if application already exists (draft mode)
+    if (currentApplication?.id) {
+      // Update existing application
+      await updateBasicInfo({
+        applicationId: currentApplication.id,
+        basicInfo: formData,
+      });
+    } else {
+      // Create new application
+      await createApplication({
+        cycleSlug,
+        basicInfo: formData,
+      });
+    }
   };
 
   const handleChange = (field: keyof BasicInfo, value: string) => {

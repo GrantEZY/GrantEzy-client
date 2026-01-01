@@ -27,6 +27,7 @@ export const useApplicant = () => {
 
   // Action selectors
   const createApplication = useApplicantStore((state) => state.createApplication);
+  const updateBasicInfo = useApplicantStore((state) => state.updateBasicInfo);
   const addApplicationBudget = useApplicantStore((state) => state.addApplicationBudget);
   const addApplicationTechnicalDetails = useApplicantStore(
     (state) => state.addApplicationTechnicalDetails
@@ -179,6 +180,7 @@ export const useApplicant = () => {
 
     // Actions
     createApplication: handleCreateApplication,
+    updateBasicInfo,
     addBudget: handleAddBudget,
     addTechnicalDetails: handleAddTechnicalDetails,
     addRevenueStream: handleAddRevenueStream,
