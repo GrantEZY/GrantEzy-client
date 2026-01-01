@@ -162,8 +162,8 @@ export default function GCVSidebar() {
   ];
 
   return (
-    <aside className="flex h-full w-[280px] flex-col flex-shrink-0 border-r border-[var(--color-border-light)] bg-[var(--color-white)]">
-      <div className="flex-1">
+    <aside className="flex h-[calc(100vh-98px)] w-[280px] flex-col flex-shrink-0 border-r border-[var(--color-border-light)] bg-[var(--color-white)]">
+      <div className="flex-1 overflow-y-auto">
         <nav className="p-4">
           <div className="mb-6 px-3">
             <h2 className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
@@ -182,7 +182,7 @@ export default function GCVSidebar() {
       </div>
 
       {/* User Actions */}
-      <div className="border-t border-[var(--color-gray-200)] p-4">
+      <div className="flex-shrink-0 border-t border-[var(--color-gray-200)] p-4">
         <div className="space-y-1">
           <a
             className="flex items-center space-x-3 rounded-lg px-3 py-3 text-sm font-medium text-[var(--color-gray-700)] transition-all duration-200 hover:bg-[var(--color-gray-50)] hover:text-[var(--color-gray-900)] focus:ring-2 focus:ring-[var(--color-blue-500)] focus:ring-offset-2 focus:outline-none"

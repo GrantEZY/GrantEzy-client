@@ -104,11 +104,11 @@ export default function AssessmentSubmissionForm({
     try {
       // Transform the file data to match backend expectations (DocumentObjectDTO)
       const reviewSubmissionFile = uploadedFile ? {
-        title: uploadedFile.name || 'Assessment Document',
-        fileName: uploadedFile.name,
-        fileSize: String(uploadedFile.size), // Convert to string
+        name: uploadedFile.name,
+        size: uploadedFile.size,
+        publicId: uploadedFile.publicId,
+        url: uploadedFile.url,
         mimeType: uploadedFile.type || 'application/octet-stream',
-        storageUrl: uploadedFile.url,
       } : undefined;
 
       const response = await createApplicantAssessmentSubmission({

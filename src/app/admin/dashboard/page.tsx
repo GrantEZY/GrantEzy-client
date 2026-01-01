@@ -373,51 +373,7 @@ export default function AdminDashboard() {
                 <span className="font-medium text-gray-900">Manage Organizations</span>
               </Link>
 
-              <Link
-                className="group flex items-center gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-purple-300 hover:bg-purple-50"
-                href="/admin/startups"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 group-hover:bg-purple-200">
-                  <svg
-                    className="h-5 w-5 text-purple-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                    />
-                  </svg>
-                </div>
-
-                <span className="font-medium text-gray-900">Manage Startups</span>
-              </Link>
-
-              <Link
-                className="group flex items-center gap-3 rounded-lg border border-gray-200 p-4 transition-colors hover:border-amber-300 hover:bg-amber-50"
-                href="/admin/eirs"
-              >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 group-hover:bg-amber-200">
-                  <svg
-                    className="h-5 w-5 text-amber-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                    />
-                  </svg>
-                </div>
-
-                <span className="font-medium text-gray-900">Manage EIRs</span>
-              </Link>
+            
             </div>
           </div>
         </div>

@@ -61,8 +61,14 @@ export const useAuthStore = create<AuthStore>()(
               const profileResponse = await userService.userService.getUserProfile();
               
               if (profileResponse.status === 200 && profileResponse.res.user) {
+                // Use profile data but override role with the selected login role
+                // This allows users to login with any role (for testing/development)
+                const profileUser = profileResponse.res.user;
                 set({
-                  user: profileResponse.res.user,
+                  user: {
+                    ...profileUser,
+                    role: [userData.role], // Use the role from login response, not database
+                  },
                   tokens,
                   isAuthenticated: true,
                   isLoading: false,
