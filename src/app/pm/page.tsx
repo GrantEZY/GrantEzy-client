@@ -7,6 +7,7 @@ import PMLayout from '@/components/layout/PMLayout';
 import { usePm } from '@/hooks/usePm';
 import { CycleStatus, Cycle } from '@/types/pm.types';
 import CreateCycleModal from '@/components/pm/CreateCycleModal';
+import EditCycleModal from '@/components/pm/EditCycleModal';
 import { DeleteCycleModal } from '@/components/pm/DeleteCycleModal';
 
 export default function PMDashboard() {
@@ -25,6 +26,7 @@ export default function PMDashboard() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCycle, setSelectedCycle] = useState<Cycle | null>(null);
 
@@ -63,6 +65,18 @@ export default function PMDashboard() {
   const handleCreateSuccess = () => {
     setIsCreateModalOpen(false);
     loadCycles(1);
+  };
+
+  const handleOpenEditModal = (cycle: Cycle) => {
+    setSelectedCycle(cycle);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSuccess = async () => {
+    setIsEditModalOpen(false);
+    setSelectedCycle(null);
+    // Force refetch to get updated data from server
+    await loadCycles(currentPage);
   };
 
   const handleOpenDeleteModal = (cycle: Cycle) => {
@@ -449,6 +463,15 @@ export default function PMDashboard() {
                               View Details
                             </Link>
                             <button
+                              className="text-indigo-600 hover:text-indigo-900"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenEditModal(cycle);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
                               className="text-red-600 hover:text-red-900"
                               onClick={(e) => {
                                 e.stopPropagation();
@@ -555,6 +578,19 @@ export default function PMDashboard() {
               onClose={() => setIsCreateModalOpen(false)}
               onSuccess={handleCreateSuccess}
               programId={program?.id} // Pass the assigned program ID
+            />
+          )}
+
+          {/* Edit Cycle Modal */}
+          {isEditModalOpen && selectedCycle && (
+            <EditCycleModal
+              isOpen={isEditModalOpen}
+              onClose={() => {
+                setIsEditModalOpen(false);
+                setSelectedCycle(null);
+              }}
+              onSuccess={handleEditSuccess}
+              cycle={selectedCycle}
             />
           )}
 
