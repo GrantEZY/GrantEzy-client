@@ -3,6 +3,8 @@
  * Types for user profile management
  */
 
+import { UserRoles } from './auth.types';
+
 /**
  * User Commitment Status Enum
  */
@@ -25,18 +27,36 @@ export interface Experience {
 }
 
 /**
- * User Profile Interface
+ * Person Entity (nested in User)
  */
-export interface UserProfile {
+export interface Person {
   id: string;
   firstName: string;
   lastName: string;
+}
+
+/**
+ * Contact Object (nested in User)
+ */
+export interface Contact {
   email: string;
-  phone?: string;
-  address?: string;
-  commitment?: UserCommitmentStatus;
-  experiences?: Experience[];
-  role: string;
+  phone: string | null;
+  address: string | null;
+}
+
+/**
+ * User Profile Interface (matches backend User aggregate structure)
+ */
+export interface UserProfile {
+  personId: string;
+  person: Person;
+  contact: Contact;
+  commitment: UserCommitmentStatus;
+  experiences: Experience[] | null;
+  role: UserRoles[];
+  status: string;
+  isGCVmember: boolean;
+  slug: string | null;
   createdAt: string;
   updatedAt: string;
 }

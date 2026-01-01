@@ -7,6 +7,8 @@ import PMLayout from '@/components/layout/PMLayout';
 import { usePm } from '@/hooks/usePm';
 import { CycleStatus, Cycle } from '@/types/pm.types';
 import CreateCycleModal from '@/components/pm/CreateCycleModal';
+import EditCycleModal from '@/components/pm/EditCycleModal';
+import { DeleteCycleModal } from '@/components/pm/DeleteCycleModal';
 
 export default function PMDashboard() {
   const {
@@ -24,6 +26,9 @@ export default function PMDashboard() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedCycle, setSelectedCycle] = useState<Cycle | null>(null);
 
   // Load program and cycles on mount
   useEffect(() => {
@@ -62,15 +67,33 @@ export default function PMDashboard() {
     loadCycles(1);
   };
 
-  const handleDeleteCycle = async (cycleId: string) => {
-    if (window.confirm('Are you sure you want to delete this cycle?')) {
-      try {
-        await deleteCycle({ cycleId });
-        loadCycles(currentPage);
-      } catch (error) {
-        console.error('Failed to delete cycle:', error);
-        alert('Failed to delete cycle. Please try again.');
-      }
+  const handleOpenEditModal = (cycle: Cycle) => {
+    setSelectedCycle(cycle);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditSuccess = async () => {
+    setIsEditModalOpen(false);
+    setSelectedCycle(null);
+    // Force refetch to get updated data from server
+    await loadCycles(currentPage);
+  };
+
+  const handleOpenDeleteModal = (cycle: Cycle) => {
+    setSelectedCycle(cycle);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteCycle = async () => {
+    if (!selectedCycle) return;
+    
+    try {
+      await deleteCycle({ cycleId: selectedCycle.id });
+      setIsDeleteModalOpen(false);
+      setSelectedCycle(null);
+      loadCycles(currentPage);
+    } catch (error) {
+      console.error('Failed to delete cycle:', error);
     }
   };
 
@@ -440,10 +463,19 @@ export default function PMDashboard() {
                               View Details
                             </Link>
                             <button
+                              className="text-indigo-600 hover:text-indigo-900"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleOpenEditModal(cycle);
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
                               className="text-red-600 hover:text-red-900"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleDeleteCycle(cycle.id);
+                                handleOpenDeleteModal(cycle);
                               }}
                             >
                               Delete
@@ -548,6 +580,31 @@ export default function PMDashboard() {
               programId={program?.id} // Pass the assigned program ID
             />
           )}
+
+          {/* Edit Cycle Modal */}
+          {isEditModalOpen && selectedCycle && (
+            <EditCycleModal
+              isOpen={isEditModalOpen}
+              onClose={() => {
+                setIsEditModalOpen(false);
+                setSelectedCycle(null);
+              }}
+              onSuccess={handleEditSuccess}
+              cycle={selectedCycle}
+            />
+          )}
+
+          {/* Delete Cycle Modal */}
+          <DeleteCycleModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setSelectedCycle(null);
+            }}
+            onConfirm={handleDeleteCycle}
+            isLoading={isCyclesLoading}
+            cycle={selectedCycle}
+          />
         </div>
       </PMLayout>
     </AuthGuard>

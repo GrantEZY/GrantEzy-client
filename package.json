@@ -29,6 +29,7 @@
     "@radix-ui/react-popover": "^1.1.15",
     "@tabler/icons-react": "^3.35.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^12.23.12",
     "motion": "^12.23.22",
     "next": "15.5.2",

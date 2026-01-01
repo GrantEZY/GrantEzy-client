@@ -194,7 +194,7 @@ export default function CycleCriteriaManagement({
                       strokeWidth={2}
                     />
                   </svg>
-                  <span className="truncate">{criteria.templateFile.name}</span>
+                  <span className="truncate">{criteria.templateFile.fileName}</span>
                 </div>
               )}
               <div className="mt-3 flex items-center justify-between border-t border-gray-200 pt-3">

@@ -288,7 +288,7 @@ export default function ProjectAssessmentPage() {
                         <p className="mt-2 text-sm text-gray-600">{criteria.briefReview}</p>
                         {criteria.templateFile && (
                           <a
-                            href={criteria.templateFile.url}
+                            href={criteria.templateFile.storageUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
@@ -343,15 +343,14 @@ export default function ProjectAssessmentPage() {
 
           {/* Submission Form Modal */}
           {selectedCriteria && (
-            <div className="fixed inset-0 z-50 overflow-y-auto">
-              <div className="flex min-h-screen items-center justify-center p-4">
-                <div
-                  className="fixed inset-0 bg-black bg-opacity-30 transition-opacity"
-                  onClick={() => setSelectedCriteria(null)}
-                ></div>
-                <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 shadow-xl">
-                  <div className="mb-4 flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-900">Submit Assessment</h2>
+            <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-900/50 backdrop-blur-md p-4">
+              <div
+                className="fixed inset-0"
+                onClick={() => setSelectedCriteria(null)}
+              ></div>
+              <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 shadow-xl">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-semibold text-gray-900">Submit Assessment</h2>
                     <button
                       onClick={() => setSelectedCriteria(null)}
                       className="text-gray-400 hover:text-gray-600"
@@ -392,7 +391,6 @@ export default function ProjectAssessmentPage() {
                     />
                   )}
                 </div>
-              </div>
             </div>
           )}
         </div>

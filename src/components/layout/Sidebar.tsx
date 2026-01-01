@@ -229,13 +229,6 @@ export default function Sidebar() {
 
   const subItems: MenuItem[] = [
     {
-      icon: icons.startups,
-      label: 'Startups',
-      active: pathname === '/admin/startups',
-      isSubItem: true,
-      href: '/admin/startups',
-    },
-    {
       icon: icons.mentors,
       label: 'All Users',
       active: pathname === '/admin/users',
@@ -248,13 +241,6 @@ export default function Sidebar() {
       active: pathname === '/admin/organizations',
       isSubItem: true,
       href: '/admin/organizations',
-    },
-    {
-      icon: icons.eirs,
-      label: 'EIRs',
-      active: pathname === '/admin/eirs',
-      isSubItem: true,
-      href: '/admin/eirs',
     },
   ];
 

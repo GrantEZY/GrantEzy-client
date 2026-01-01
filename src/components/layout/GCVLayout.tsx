@@ -13,13 +13,13 @@ interface GCVLayoutProps {
 
 export default function GCVLayout({ children }: GCVLayoutProps) {
   return (
-    <div className="min-h-screen bg-[var(--color-background)]">
+    <div className="flex h-screen flex-col bg-[var(--color-background)]">
       <Header />
 
-      <div className="flex">
+      <div className="flex flex-1 overflow-hidden">
         <GCVSidebar />
 
-        <main className="flex-1 p-8">
+        <main className="flex-1 overflow-y-auto p-8">
           <div className="mx-auto max-w-7xl">{children}</div>
         </main>
       </div>

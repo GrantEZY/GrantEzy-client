@@ -289,13 +289,31 @@ export const usePMStore = create<PMStore>((set, get) => ({
       if (response.status === 200) {
         set({ isCyclesLoading: false, cyclesError: null });
 
-        // Update the cycle in the local state
-        const { cycles } = get();
-        const updatedCycles = cycles.map((cycle) =>
-          cycle.id === data.id ? { ...cycle, ...data, updatedAt: new Date().toISOString() } : cycle
-        );
+        // Update the cycle in the local state by merging only provided fields
+        const { cycles, currentCycle } = get();
+        const updatedCycles = cycles.map((cycle) => {
+          if (cycle.id === data.id) {
+            // Merge only the fields that were provided in the update
+            const updated: Cycle = { ...cycle, updatedAt: new Date().toISOString() };
+            if (data.round) updated.round = data.round;
+            if (data.duration) updated.duration = data.duration;
+            if (data.trlCriteria) updated.trlCriteria = data.trlCriteria;
+            return updated;
+          }
+          return cycle;
+        });
 
         set({ cycles: updatedCycles });
+
+        // Also update currentCycle if it matches
+        if (currentCycle && currentCycle.id === data.id) {
+          const updated: Cycle = { ...currentCycle, updatedAt: new Date().toISOString() };
+          if (data.round) updated.round = data.round;
+          if (data.duration) updated.duration = data.duration;
+          if (data.trlCriteria) updated.trlCriteria = data.trlCriteria;
+          set({ currentCycle: updated });
+        }
+
         return true;
       } else {
         throw new Error(response.message || 'Failed to update cycle');

@@ -235,6 +235,19 @@ export interface CycleApplication {
     firstName: string;
     lastName: string;
   };
+  cycle?: {
+    id: string;
+    slug: string;
+    round: ProgramRound;
+    budget: Money;
+    duration: Duration;
+    status: CycleStatus;
+    program?: {
+      id: string;
+      name: string;
+      description?: string;
+    };
+  };
 }
 
 export interface GetCycleDetailsResponse {
