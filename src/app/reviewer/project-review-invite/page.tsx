@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthGuard } from '@/components/guards/AuthGuard';
 import ReviewerLayout from '@/components/layout/ReviewerLayout';
 import { useReviewer } from '@/hooks/useReviewer';
 import { InviteStatus } from '@/types/reviewer.types';
 
-export default function ProjectReviewInvitePage() {
+export function ProjectReviewInvitePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { submitProjectAssessmentReviewInviteStatus, isLoadingProjectReviews } = useReviewer();
@@ -232,5 +232,15 @@ export default function ProjectReviewInvitePage() {
         </div>
       </ReviewerLayout>
     </AuthGuard>
+  );
+}
+
+export default function ProjectReviewPage() {
+  return (
+    <Suspense
+      fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}
+    >
+      <ProjectReviewInvitePage />
+    </Suspense>
   );
 }
