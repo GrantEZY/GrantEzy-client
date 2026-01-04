@@ -73,7 +73,10 @@ export default function RevenueModelForm() {
   const calculateTotalPercentage = (): number => {
     return (
       (Number(formData.primaryStream.percentage) || 0) +
-      formData.secondaryStreams.reduce((sum: number, s: RevenueStream) => sum + (Number(s.percentage) || 0), 0)
+      formData.secondaryStreams.reduce(
+        (sum: number, s: RevenueStream) => sum + (Number(s.percentage) || 0),
+        0
+      )
     );
   };
 
@@ -178,7 +181,10 @@ export default function RevenueModelForm() {
               onChange={(e) => {
                 setFormData((prev) => ({
                   ...prev,
-                  primaryStream: { ...prev.primaryStream, percentage: e.target.value === '' ? '' as any : Number(e.target.value) },
+                  primaryStream: {
+                    ...prev.primaryStream,
+                    percentage: e.target.value === '' ? ('' as any) : Number(e.target.value),
+                  },
                 }));
                 setErrors((prev) => ({ ...prev, primaryPercentage: '', totalPercentage: '' }));
               }}
@@ -290,7 +296,11 @@ export default function RevenueModelForm() {
                     max="100"
                     value={stream.percentage}
                     onChange={(e) => {
-                      updateSecondaryStream(index, 'percentage', e.target.value === '' ? '' : Number(e.target.value));
+                      updateSecondaryStream(
+                        index,
+                        'percentage',
+                        e.target.value === '' ? '' : Number(e.target.value)
+                      );
                       setErrors((prev) => ({
                         ...prev,
                         [`secondary_${index}_percentage`]: '',

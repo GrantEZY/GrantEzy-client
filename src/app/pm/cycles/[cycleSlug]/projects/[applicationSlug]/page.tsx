@@ -176,8 +176,7 @@ export default function ProjectDetailsPage() {
                   <div className="rounded-lg bg-green-50 p-4">
                     <p className="text-sm font-medium text-green-900">Duration</p>
                     <p className="mt-2 text-2xl font-bold text-green-600">
-                      {currentProject.duration?.startDate &&
-                      currentProject.duration?.endDate
+                      {currentProject.duration?.startDate && currentProject.duration?.endDate
                         ? calculateDuration(
                             currentProject.duration.startDate.toString(),
                             currentProject.duration.endDate.toString()
@@ -219,14 +218,11 @@ export default function ProjectDetailsPage() {
                       <p className="text-sm font-medium text-gray-600">End Date</p>
                       <p className="mt-1 text-base text-gray-900">
                         {currentProject.duration.endDate
-                          ? new Date(currentProject.duration.endDate).toLocaleDateString(
-                              'en-US',
-                              {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                              }
-                            )
+                          ? new Date(currentProject.duration.endDate).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })
                           : 'Not set'}
                       </p>
                     </div>
@@ -402,8 +398,7 @@ export default function ProjectDetailsPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-semibold text-gray-900">Total Budget</span>
                         <span className="text-2xl font-bold text-blue-600">
-                          INR{' '}
-                          {calculateBudgetTotal(currentProject.allotedBudget).toLocaleString()}
+                          INR {calculateBudgetTotal(currentProject.allotedBudget).toLocaleString()}
                         </span>
                       </div>
                     </div>

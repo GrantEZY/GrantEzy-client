@@ -210,11 +210,11 @@ export default function ApplicantProjectsPage() {
                               </span>
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                              {project.allotedBudget 
+                              {project.allotedBudget
                                 ? `INR ${calculateBudgetTotal(project.allotedBudget).toLocaleString()}`
                                 : project.application?.basicInfo?.budget
-                                ? `INR ${calculateBudgetTotal(project.application.basicInfo.budget).toLocaleString()}`
-                                : 'Budget not set'}
+                                  ? `INR ${calculateBudgetTotal(project.application.basicInfo.budget).toLocaleString()}`
+                                  : 'Budget not set'}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
                               {project.duration?.startDate

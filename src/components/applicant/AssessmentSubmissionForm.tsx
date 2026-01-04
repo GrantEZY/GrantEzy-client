@@ -31,9 +31,7 @@ export default function AssessmentSubmissionForm({
   const { uploadFile, uploading } = useCloudinaryUpload();
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  const [reviewStatement, setReviewStatement] = useState(
-    existingSubmission?.reviewStatement || ''
-  );
+  const [reviewStatement, setReviewStatement] = useState(existingSubmission?.reviewStatement || '');
   const [uploadedFile, setUploadedFile] = useState<{
     name: string;
     size: number;
@@ -103,13 +101,15 @@ export default function AssessmentSubmissionForm({
 
     try {
       // Transform the file data to match backend expectations (DocumentObjectDTO)
-      const reviewSubmissionFile = uploadedFile ? {
-        title: uploadedFile.name,
-        fileName: uploadedFile.name,
-        fileSize: `${(uploadedFile.size / 1024).toFixed(2)}KB`,
-        mimeType: uploadedFile.type || 'application/octet-stream',
-        storageUrl: uploadedFile.url,
-      } : undefined;
+      const reviewSubmissionFile = uploadedFile
+        ? {
+            title: uploadedFile.name,
+            fileName: uploadedFile.name,
+            fileSize: `${(uploadedFile.size / 1024).toFixed(2)}KB`,
+            mimeType: uploadedFile.type || 'application/octet-stream',
+            storageUrl: uploadedFile.url,
+          }
+        : undefined;
 
       const response = await createApplicantAssessmentSubmission({
         criteriaId,
@@ -123,14 +123,17 @@ export default function AssessmentSubmissionForm({
         setReviewStatement('');
         setUploadedFile(null);
         setErrors({});
-        
+
         // Call success callback
         onSuccess?.();
       } else {
         setErrors({ ...errors, submit: 'Failed to submit assessment. Please try again.' });
       }
     } catch (error: any) {
-      setErrors({ ...errors, submit: error.message || 'Failed to submit assessment. Please try again.' });
+      setErrors({
+        ...errors,
+        submit: error.message || 'Failed to submit assessment. Please try again.',
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -150,12 +153,7 @@ export default function AssessmentSubmissionForm({
               rel="noopener noreferrer"
               className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
             >
-              <svg
-                className="mr-1 h-4 w-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                   strokeLinecap="round"
@@ -279,7 +277,9 @@ export default function AssessmentSubmissionForm({
         )}
 
         {/* Submit Button */}
-        <div className="flex justify-end space-x-3 border-t border-gray-200 pt-4">\n          <button
+        <div className="flex justify-end space-x-3 border-t border-gray-200 pt-4">
+          \n{' '}
+          <button
             type="submit"
             disabled={isSubmitting || isLoading || uploading}
             className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
@@ -291,12 +291,7 @@ export default function AssessmentSubmissionForm({
               </>
             ) : (
               <>
-                <svg
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M5 13l4 4L19 7"
                     strokeLinecap="round"

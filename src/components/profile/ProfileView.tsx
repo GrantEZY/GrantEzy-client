@@ -51,7 +51,9 @@ export default function ProfileView({ profile, onEdit }: ProfileViewProps) {
           </div>
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700">Address</label>
-            <p className="mt-1 text-sm text-gray-900">{profile.contact.address || 'Not provided'}</p>
+            <p className="mt-1 text-sm text-gray-900">
+              {profile.contact.address || 'Not provided'}
+            </p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Commitment Status</label>

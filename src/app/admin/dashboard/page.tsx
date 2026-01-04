@@ -372,8 +372,6 @@ export default function AdminDashboard() {
 
                 <span className="font-medium text-gray-900">Manage Organizations</span>
               </Link>
-
-            
             </div>
           </div>
         </div>

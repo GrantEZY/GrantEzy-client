@@ -1,4 +1,4 @@
-import type { DocumentObject } from "./project.types";
+import type { DocumentObject } from './project.types';
 
 // ============================================================================
 // Request Types - Matching Backend DTOs

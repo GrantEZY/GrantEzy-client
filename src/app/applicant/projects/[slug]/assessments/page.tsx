@@ -24,7 +24,7 @@ export default function ProjectAssessmentPage() {
     // Clear the fetch flag on mount to ensure fresh fetch
     const fetchKey = `criteria-fetch-${slug}`;
     sessionStorage.removeItem(fetchKey);
-    
+
     return () => {
       // Cleanup on unmount
     };
@@ -44,14 +44,14 @@ export default function ProjectAssessmentPage() {
   useEffect(() => {
     const fetchProjectDetails = async () => {
       if (!slug) return;
-      
+
       try {
         setIsLoadingProject(true);
         const response = await applicantService.getProjectDetails(slug);
-        
+
         if (response.status === 200 && response.res?.project) {
           const { project } = response.res;
-          
+
           // Get cycle slug from the project's application
           if (project.application?.cycle?.slug) {
             setCycleSlug(project.application.cycle.slug);
@@ -72,7 +72,7 @@ export default function ProjectAssessmentPage() {
   useEffect(() => {
     const fetchKey = fetchKeyRef.current;
     const alreadyFetched = sessionStorage.getItem(fetchKey);
-    
+
     if (cycleSlug && !alreadyFetched) {
       sessionStorage.setItem(fetchKey, 'true');
       getApplicantCycleCriterias(cycleSlug);
@@ -91,10 +91,10 @@ export default function ProjectAssessmentPage() {
     // Show success message
     setShowSuccessMessage(true);
     setTimeout(() => setShowSuccessMessage(false), 5000);
-    
+
     // Close modal
     setSelectedCriteria(null);
-    
+
     // No need to refetch - the store already updated the criteria with hasSubmitted status
   };
 
@@ -155,7 +155,11 @@ export default function ProjectAssessmentPage() {
             <div className="rounded-lg border border-green-200 bg-green-50 p-4">
               <div className="flex items-center">
                 <svg className="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
                 </svg>
                 <p className="ml-3 text-sm font-medium text-green-800">
                   Assessment submitted successfully! Your submission has been recorded.
@@ -165,7 +169,11 @@ export default function ProjectAssessmentPage() {
                   className="ml-auto text-green-600 hover:text-green-800"
                 >
                   <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
@@ -229,7 +237,9 @@ export default function ProjectAssessmentPage() {
               <div className="text-center">
                 <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
                 <p className="mt-2 text-sm text-gray-600">
-                  {isLoadingProject ? 'Loading project details...' : 'Loading assessment criteria...'}
+                  {isLoadingProject
+                    ? 'Loading project details...'
+                    : 'Loading assessment criteria...'}
                 </p>
               </div>
             </div>
@@ -243,36 +253,41 @@ export default function ProjectAssessmentPage() {
           )}
 
           {/* No Criteria State */}
-          {!isLoadingProject && !isLoadingApplicantCriterias && (!applicantCriterias || applicantCriterias.length === 0) && (
-            <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
-              <svg
-                className="mx-auto h-12 w-12 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                />
-              </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No Assessment Criteria</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                The program manager hasn't created any assessment criteria for this cycle yet.
-              </p>
-              <p className="mt-2 text-xs text-gray-400">
-                Debug: isLoadingProject={isLoadingProject.toString()}, isLoadingApplicantCriterias={isLoadingApplicantCriterias.toString()}, 
-                criterias={applicantCriterias?.length || 0}
-              </p>
-            </div>
-          )}
+          {!isLoadingProject &&
+            !isLoadingApplicantCriterias &&
+            (!applicantCriterias || applicantCriterias.length === 0) && (
+              <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+                <svg
+                  className="mx-auto h-12 w-12 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                  />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No Assessment Criteria</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  The program manager hasn't created any assessment criteria for this cycle yet.
+                </p>
+                <p className="mt-2 text-xs text-gray-400">
+                  Debug: isLoadingProject={isLoadingProject.toString()},
+                  isLoadingApplicantCriterias={isLoadingApplicantCriterias.toString()}, criterias=
+                  {applicantCriterias?.length || 0}
+                </p>
+              </div>
+            )}
 
           {/* Criteria List */}
           {!isLoadingApplicantCriterias && applicantCriterias && applicantCriterias.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold text-gray-900">Assessment Criteria ({applicantCriterias.length})</h2>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Assessment Criteria ({applicantCriterias.length})
+              </h2>
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                 {applicantCriterias.map((criteria: any) => (
                   <div
@@ -344,53 +359,50 @@ export default function ProjectAssessmentPage() {
           {/* Submission Form Modal */}
           {selectedCriteria && (
             <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-gray-900/50 backdrop-blur-md p-4">
-              <div
-                className="fixed inset-0"
-                onClick={() => setSelectedCriteria(null)}
-              ></div>
+              <div className="fixed inset-0" onClick={() => setSelectedCriteria(null)}></div>
               <div className="relative w-full max-w-3xl rounded-lg bg-white p-6 shadow-xl">
                 <div className="mb-4 flex items-center justify-between">
                   <h2 className="text-xl font-semibold text-gray-900">Submit Assessment</h2>
-                    <button
-                      onClick={() => setSelectedCriteria(null)}
-                      className="text-gray-400 hover:text-gray-600"
-                      type="button"
-                    >
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          d="M6 18L18 6M6 6l12 12"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                        />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {isLoading ? (
-                    <div className="flex h-32 items-center justify-center">
-                      <div className="text-center">
-                        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-                        <p className="mt-2 text-sm text-gray-600">Loading...</p>
-                      </div>
-                    </div>
-                  ) : (
-                    <AssessmentSubmissionForm
-                      cycleSlug={cycleSlug}
-                      criteriaId={selectedCriteria}
-                      criteria={applicantCriterias.find((c: any) => c.id === selectedCriteria)!}
-                      existingSubmission={
-                        applicantCurrentSubmission
-                          ? {
-                              reviewStatement: applicantCurrentSubmission.reviewBrief,
-                              reviewSubmissionFile: applicantCurrentSubmission.reviewFile,
-                            }
-                          : undefined
-                      }
-                      onSuccess={handleSubmissionSuccess}
-                    />
-                  )}
+                  <button
+                    onClick={() => setSelectedCriteria(null)}
+                    className="text-gray-400 hover:text-gray-600"
+                    type="button"
+                  >
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        d="M6 18L18 6M6 6l12 12"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                      />
+                    </svg>
+                  </button>
                 </div>
+
+                {isLoading ? (
+                  <div className="flex h-32 items-center justify-center">
+                    <div className="text-center">
+                      <div className="mx-auto h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                      <p className="mt-2 text-sm text-gray-600">Loading...</p>
+                    </div>
+                  </div>
+                ) : (
+                  <AssessmentSubmissionForm
+                    cycleSlug={cycleSlug}
+                    criteriaId={selectedCriteria}
+                    criteria={applicantCriterias.find((c: any) => c.id === selectedCriteria)!}
+                    existingSubmission={
+                      applicantCurrentSubmission
+                        ? {
+                            reviewStatement: applicantCurrentSubmission.reviewBrief,
+                            reviewSubmissionFile: applicantCurrentSubmission.reviewFile,
+                          }
+                        : undefined
+                    }
+                    onSuccess={handleSubmissionSuccess}
+                  />
+                )}
+              </div>
             </div>
           )}
         </div>

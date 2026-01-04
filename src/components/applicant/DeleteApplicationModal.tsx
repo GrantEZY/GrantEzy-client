@@ -74,7 +74,8 @@ export default function DeleteApplicationModal({
             <div className="flex justify-between text-sm">
               <span className="font-medium text-gray-700">Cycle:</span>
               <span className="text-gray-900">
-                {application.cycle?.round?.year || 'N/A'} - {application.cycle?.round?.type || 'N/A'}
+                {application.cycle?.round?.year || 'N/A'} -{' '}
+                {application.cycle?.round?.type || 'N/A'}
               </span>
             </div>
             <div className="flex justify-between text-sm">

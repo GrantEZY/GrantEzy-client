@@ -86,7 +86,7 @@ export default function PMDashboard() {
 
   const handleDeleteCycle = async () => {
     if (!selectedCycle) return;
-    
+
     try {
       await deleteCycle({ cycleId: selectedCycle.id });
       setIsDeleteModalOpen(false);

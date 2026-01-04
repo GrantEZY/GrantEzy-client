@@ -63,9 +63,7 @@ export default function InviteAssessmentReviewerModal({
       }
     } catch (err: any) {
       setError(
-        err?.message || 
-        err?.res?.message || 
-        'An unexpected error occurred. Please try again.'
+        err?.message || err?.res?.message || 'An unexpected error occurred. Please try again.'
       );
     } finally {
       setIsSubmitting(false);

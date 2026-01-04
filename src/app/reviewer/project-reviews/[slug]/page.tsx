@@ -176,7 +176,8 @@ export default function ProjectReviewDetailsPage() {
               <div>
                 <p className="text-sm font-medium text-gray-600">Project Title</p>
                 <p className="mt-1 text-sm text-gray-900">
-                  {currentAssessment.project?.application?.basicDetails?.title || 'Untitled Project'}
+                  {currentAssessment.project?.application?.basicDetails?.title ||
+                    'Untitled Project'}
                 </p>
               </div>
               <div>
@@ -212,12 +213,7 @@ export default function ProjectReviewDetailsPage() {
                 rel="noopener noreferrer"
                 className="mt-3 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
               >
-                <svg
-                  className="mr-1 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                     strokeLinecap="round"

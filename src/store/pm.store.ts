@@ -387,7 +387,10 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
         set({
           cycles: updatedCycles,
-          currentCycle: currentCycle?.id === cycleId ? { ...currentCycle, status: CycleStatus.OPEN } : currentCycle,
+          currentCycle:
+            currentCycle?.id === cycleId
+              ? { ...currentCycle, status: CycleStatus.OPEN }
+              : currentCycle,
           isCyclesLoading: false,
         });
         return true;
@@ -419,7 +422,10 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
         set({
           cycles: updatedCycles,
-          currentCycle: currentCycle?.id === cycleId ? { ...currentCycle, status: CycleStatus.CLOSED } : currentCycle,
+          currentCycle:
+            currentCycle?.id === cycleId
+              ? { ...currentCycle, status: CycleStatus.CLOSED }
+              : currentCycle,
           isCyclesLoading: false,
         });
         return true;
@@ -451,7 +457,10 @@ export const usePMStore = create<PMStore>((set, get) => ({
 
         set({
           cycles: updatedCycles,
-          currentCycle: currentCycle?.id === cycleId ? { ...currentCycle, status: CycleStatus.ARCHIVED } : currentCycle,
+          currentCycle:
+            currentCycle?.id === cycleId
+              ? { ...currentCycle, status: CycleStatus.ARCHIVED }
+              : currentCycle,
           isCyclesLoading: false,
         });
         return true;

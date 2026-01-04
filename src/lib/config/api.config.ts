@@ -93,7 +93,8 @@ export const API_CONFIG = {
       SUBMIT_PROJECT_ASSESSMENT_REVIEW: '/reviewer/submit-project-assessment-review',
       GET_USER_PROJECT_REVIEWS: '/reviewer/get-user-project-reviews',
       GET_PROJECT_REVIEW_DETAILS: '/reviewer/get-project-review-details',
-      SUBMIT_PROJECT_ASSESSMENT_REVIEW_INVITE_STATUS: '/reviewer/submit-project-assessment-review-invite-status',
+      SUBMIT_PROJECT_ASSESSMENT_REVIEW_INVITE_STATUS:
+        '/reviewer/submit-project-assessment-review-invite-status',
     },
     PROJECT_MANAGEMENT: {
       // PM: Project Management
@@ -107,8 +108,10 @@ export const API_CONFIG = {
       INVITE_REVIEWER_FOR_ASSESSMENT: '/pt-management/invite-reviewer-for-project-assessment',
       // Applicant: Assessment Submission
       GET_APPLICANT_CYCLE_CRITERIAS: '/pt-management/get-applicant-project-cycle-review-criteria',
-      GET_APPLICANT_ASSESSMENT_SUBMISSION: '/pt-management/get-applicant-cycle-assessment-submission',
-      CREATE_APPLICANT_ASSESSMENT_SUBMISSION: '/pt-management/create-applicant-project-assessment-submission',
+      GET_APPLICANT_ASSESSMENT_SUBMISSION:
+        '/pt-management/get-applicant-cycle-assessment-submission',
+      CREATE_APPLICANT_ASSESSMENT_SUBMISSION:
+        '/pt-management/create-applicant-project-assessment-submission',
     },
     PUBLIC: {
       // Public endpoints (no auth required)

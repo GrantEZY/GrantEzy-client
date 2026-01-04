@@ -10,7 +10,12 @@ interface ProfileEditFormProps {
   isLoading: boolean;
 }
 
-export default function ProfileEditForm({ initialData, onSubmit, onCancel, isLoading }: ProfileEditFormProps) {
+export default function ProfileEditForm({
+  initialData,
+  onSubmit,
+  onCancel,
+  isLoading,
+}: ProfileEditFormProps) {
   const [formData, setFormData] = useState<UpdateProfileRequest>(initialData);
   const [experiences, setExperiences] = useState<Experience[]>(initialData.experiences || []);
 
@@ -131,7 +136,9 @@ export default function ProfileEditForm({ initialData, onSubmit, onCancel, isLoa
             <select
               id="commitment"
               value={formData.commitment || ''}
-              onChange={(e) => setFormData({ ...formData, commitment: e.target.value as UserCommitmentStatus })}
+              onChange={(e) =>
+                setFormData({ ...formData, commitment: e.target.value as UserCommitmentStatus })
+              }
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
             >
               <option value="">Select commitment</option>
@@ -201,7 +208,9 @@ export default function ProfileEditForm({ initialData, onSubmit, onCancel, isLoa
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">End Date (Optional)</label>
+                  <label className="block text-sm font-medium text-gray-700">
+                    End Date (Optional)
+                  </label>
                   <input
                     type="date"
                     value={exp.endDate || ''}

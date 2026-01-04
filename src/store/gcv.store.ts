@@ -362,7 +362,7 @@ export const useGCVStore = create<GCVStore>((set) => ({
         set({ isProgramsLoading: false });
         return true;
       }
-      
+
       set({ isProgramsLoading: false });
       return false;
     } catch (error: unknown) {

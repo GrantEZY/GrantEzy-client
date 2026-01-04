@@ -166,10 +166,7 @@ export default function CoApplicantProjectDetailsPage() {
   }
 
   const totalBudget = calculateBudgetTotal(project);
-  const duration = calculateDuration(
-    project.duration?.startDate,
-    project.duration?.endDate
-  );
+  const duration = calculateDuration(project.duration?.startDate, project.duration?.endDate);
 
   return (
     <AuthGuard>
@@ -316,96 +313,94 @@ export default function CoApplicantProjectDetailsPage() {
               </h2>
               <div className="space-y-6">
                 {/* ManPower */}
-                {project.allotedBudget.ManPower &&
-                  project.allotedBudget.ManPower.length > 0 && (
-                    <div>
-                      <h3 className="mb-3 text-base font-semibold text-gray-900">ManPower</h3>
-                      <div className="overflow-hidden rounded-md border border-gray-200">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                Reason
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Quantity
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Rate
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Total
-                              </th>
+                {project.allotedBudget.ManPower && project.allotedBudget.ManPower.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">ManPower</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
+                              Reason
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Quantity
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Rate
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Total
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allotedBudget.ManPower.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">
+                                {item.BudgetReason}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">
+                                {item.Budget?.quantity}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">
+                                {formatCurrency(item.Budget?.rate)}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.amount)}
+                              </td>
                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allotedBudget.ManPower.map((item: any, index: number) => (
-                              <tr key={index}>
-                                <td className="px-4 py-2 text-sm text-gray-900">
-                                  {item.BudgetReason}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {item.Budget?.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {formatCurrency(item.Budget?.rate)}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.amount)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* Equipment */}
-                {project.allotedBudget.Equipment &&
-                  project.allotedBudget.Equipment.length > 0 && (
-                    <div>
-                      <h3 className="mb-3 text-base font-semibold text-gray-900">Equipment</h3>
-                      <div className="overflow-hidden rounded-md border border-gray-200">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                Reason
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Quantity
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Rate
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Total
-                              </th>
+                {project.allotedBudget.Equipment && project.allotedBudget.Equipment.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">Equipment</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
+                              Reason
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Quantity
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Rate
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Total
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allotedBudget.Equipment.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">
+                                {item.BudgetReason}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">
+                                {item.Budget?.quantity}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm text-gray-900">
+                                {formatCurrency(item.Budget?.rate)}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.amount)}
+                              </td>
                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allotedBudget.Equipment.map((item: any, index: number) => (
-                              <tr key={index}>
-                                <td className="px-4 py-2 text-sm text-gray-900">
-                                  {item.BudgetReason}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {item.Budget?.quantity}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm text-gray-900">
-                                  {formatCurrency(item.Budget?.rate)}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.amount)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* OtherCosts */}
                 {project.allotedBudget.OtherCosts &&
@@ -471,9 +466,7 @@ export default function CoApplicantProjectDetailsPage() {
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Travel</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
-                          {formatCurrency(
-                            (project.allotedBudget.Travel as any).Budget?.amount
-                          )}
+                          {formatCurrency((project.allotedBudget.Travel as any).Budget?.amount)}
                         </p>
                       </div>
                     )}
@@ -481,9 +474,7 @@ export default function CoApplicantProjectDetailsPage() {
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Contingency</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
-                          {formatCurrency(
-                            (project.allotedBudget.Contigency as any).Budget?.amount
-                          )}
+                          {formatCurrency((project.allotedBudget.Contigency as any).Budget?.amount)}
                         </p>
                       </div>
                     )}
@@ -491,9 +482,7 @@ export default function CoApplicantProjectDetailsPage() {
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Overhead</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
-                          {formatCurrency(
-                            (project.allotedBudget.Overhead as any).Budget?.amount
-                          )}
+                          {formatCurrency((project.allotedBudget.Overhead as any).Budget?.amount)}
                         </p>
                       </div>
                     )}
