@@ -144,9 +144,7 @@ export default function ReviewerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-gray-900">Application Reviews</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Review grant applications
-                </p>
+                <p className="mt-1 text-sm text-gray-500">Review grant applications</p>
               </div>
               <svg
                 className="h-6 w-6 text-gray-400"
@@ -171,9 +169,7 @@ export default function ReviewerDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="font-medium text-gray-900">Project Assessment Reviews</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Review project assessments
-                </p>
+                <p className="mt-1 text-sm text-gray-500">Review project assessments</p>
               </div>
               <svg
                 className="h-6 w-6 text-gray-400"

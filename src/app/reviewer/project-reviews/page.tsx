@@ -1,20 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AuthGuard } from '@/components/guards/AuthGuard';
 import ReviewerLayout from '@/components/layout/ReviewerLayout';
 import { useReviewer } from '@/hooks/useReviewer';
 
-export default function ReviewerProjectReviewsPage() {
+export function ReviewerProjectReviewsPage() {
   const searchParams = useSearchParams();
-  const { 
-    projectReviews, 
+  const {
+    projectReviews,
     projectReviewsPagination,
-    isLoadingProjectReviews, 
-    projectReviewsError, 
-    getUserProjectReviews 
+    isLoadingProjectReviews,
+    projectReviewsError,
+    getUserProjectReviews,
   } = useReviewer();
 
   useEffect(() => {
@@ -278,9 +278,11 @@ export default function ReviewerProjectReviewsPage() {
                           {getStatusBadge(review.status)}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {review.recommendation
-                            ? getRecommendationBadge(review.recommendation)
-                            : <span className="text-sm text-gray-400">Not reviewed</span>}
+                          {review.recommendation ? (
+                            getRecommendationBadge(review.recommendation)
+                          ) : (
+                            <span className="text-sm text-gray-400">Not reviewed</span>
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {formatDate(review.createdAt)}
@@ -346,5 +348,15 @@ export default function ReviewerProjectReviewsPage() {
         </div>
       </ReviewerLayout>
     </AuthGuard>
+  );
+}
+
+export default function ProjectReviewPage() {
+  return (
+    <Suspense
+      fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}
+    >
+      <ReviewerProjectReviewsPage />
+    </Suspense>
   );
 }

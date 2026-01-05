@@ -166,10 +166,7 @@ export default function ApplicantProjectDetailsPage() {
   }
 
   const totalBudget = calculateBudgetTotal(project);
-  const duration = calculateDuration(
-    project.duration?.startDate,
-    project.duration?.endDate
-  );
+  const duration = calculateDuration(project.duration?.startDate, project.duration?.endDate);
 
   return (
     <AuthGuard>
@@ -202,12 +199,7 @@ export default function ApplicantProjectDetailsPage() {
                 href={`/applicant/projects/${slug}/assessments`}
                 className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
               >
-                <svg
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     strokeLinecap="round"
@@ -337,72 +329,70 @@ export default function ApplicantProjectDetailsPage() {
               </h2>
               <div className="space-y-6">
                 {/* ManPower */}
-                {project.allotedBudget.ManPower &&
-                  project.allotedBudget.ManPower.length > 0 && (
-                    <div>
-                      <h3 className="mb-3 text-base font-semibold text-gray-900">ManPower</h3>
-                      <div className="overflow-hidden rounded-md border border-gray-200">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                Reason
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Amount
-                              </th>
+                {project.allotedBudget.ManPower && project.allotedBudget.ManPower.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">ManPower</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
+                              Reason
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Amount
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allotedBudget.ManPower.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">
+                                {item.BudgetReason}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.amount)}
+                              </td>
                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allotedBudget.ManPower.map((item: any, index: number) => (
-                              <tr key={index}>
-                                <td className="px-4 py-2 text-sm text-gray-900">
-                                  {item.BudgetReason}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.amount)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* Equipment */}
-                {project.allotedBudget.Equipment &&
-                  project.allotedBudget.Equipment.length > 0 && (
-                    <div>
-                      <h3 className="mb-3 text-base font-semibold text-gray-900">Equipment</h3>
-                      <div className="overflow-hidden rounded-md border border-gray-200">
-                        <table className="min-w-full divide-y divide-gray-200">
-                          <thead className="bg-gray-50">
-                            <tr>
-                              <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                Reason
-                              </th>
-                              <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
-                                Amount
-                              </th>
+                {project.allotedBudget.Equipment && project.allotedBudget.Equipment.length > 0 && (
+                  <div>
+                    <h3 className="mb-3 text-base font-semibold text-gray-900">Equipment</h3>
+                    <div className="overflow-hidden rounded-md border border-gray-200">
+                      <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                          <tr>
+                            <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
+                              Reason
+                            </th>
+                            <th className="px-4 py-2 text-right text-xs font-medium uppercase text-gray-500">
+                              Amount
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {project.allotedBudget.Equipment.map((item: any, index: number) => (
+                            <tr key={index}>
+                              <td className="px-4 py-2 text-sm text-gray-900">
+                                {item.BudgetReason}
+                              </td>
+                              <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
+                                {formatCurrency(item.Budget?.amount)}
+                              </td>
                             </tr>
-                          </thead>
-                          <tbody className="divide-y divide-gray-200 bg-white">
-                            {project.allotedBudget.Equipment.map((item: any, index: number) => (
-                              <tr key={index}>
-                                <td className="px-4 py-2 text-sm text-gray-900">
-                                  {item.BudgetReason}
-                                </td>
-                                <td className="px-4 py-2 text-right text-sm font-medium text-gray-900">
-                                  {formatCurrency(item.Budget?.amount)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                          ))}
+                        </tbody>
+                      </table>
                     </div>
-                  )}
+                  </div>
+                )}
 
                 {/* OtherCosts */}
                 {project.allotedBudget.OtherCosts &&
@@ -456,9 +446,7 @@ export default function ApplicantProjectDetailsPage() {
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Travel</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
-                          {formatCurrency(
-                            (project.allotedBudget.Travel as any).Budget?.amount
-                          )}
+                          {formatCurrency((project.allotedBudget.Travel as any).Budget?.amount)}
                         </p>
                       </div>
                     )}
@@ -466,9 +454,7 @@ export default function ApplicantProjectDetailsPage() {
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Contingency</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
-                          {formatCurrency(
-                            (project.allotedBudget.Contigency as any).Budget?.amount
-                          )}
+                          {formatCurrency((project.allotedBudget.Contigency as any).Budget?.amount)}
                         </p>
                       </div>
                     )}
@@ -476,9 +462,7 @@ export default function ApplicantProjectDetailsPage() {
                       <div className="rounded-lg border border-gray-200 p-4">
                         <p className="text-sm text-gray-600">Overhead</p>
                         <p className="mt-1 text-xl font-bold text-gray-900">
-                          {formatCurrency(
-                            (project.allotedBudget.Overhead as any).Budget?.amount
-                          )}
+                          {formatCurrency((project.allotedBudget.Overhead as any).Budget?.amount)}
                         </p>
                       </div>
                     )}

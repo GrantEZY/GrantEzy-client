@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { usePm } from '@/hooks/usePm';
-import { UpdateCycleRequest, TRL, Cycle, ProgramRound, Duration, TRLCriteria } from '@/types/pm.types';
+import {
+  UpdateCycleRequest,
+  TRL,
+  Cycle,
+  ProgramRound,
+  Duration,
+  TRLCriteria,
+} from '@/types/pm.types';
 
 interface EditCycleModalProps {
   isOpen: boolean;
@@ -11,12 +18,7 @@ interface EditCycleModalProps {
   cycle: Cycle | null;
 }
 
-export default function EditCycleModal({
-  isOpen,
-  onClose,
-  onSuccess,
-  cycle,
-}: EditCycleModalProps) {
+export default function EditCycleModal({ isOpen, onClose, onSuccess, cycle }: EditCycleModalProps) {
   const { updateCycle, isCyclesLoading } = usePm();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -95,10 +97,11 @@ export default function EditCycleModal({
         id: cycle.id,
         round: cycle.round,
         duration: {
-          startDate: typeof cycle.duration.startDate === 'string' 
-            ? cycle.duration.startDate 
-            : new Date(cycle.duration.startDate).toISOString().split('T')[0],
-          endDate: cycle.duration.endDate 
+          startDate:
+            typeof cycle.duration.startDate === 'string'
+              ? cycle.duration.startDate
+              : new Date(cycle.duration.startDate).toISOString().split('T')[0],
+          endDate: cycle.duration.endDate
             ? typeof cycle.duration.endDate === 'string'
               ? cycle.duration.endDate
               : new Date(cycle.duration.endDate).toISOString().split('T')[0]
@@ -171,25 +174,32 @@ export default function EditCycleModal({
       };
 
       // Only include round if it changed
-      if (originalCycle && formData.round &&
-          (formData.round.year !== originalCycle.round.year || 
-           formData.round.type !== originalCycle.round.type)) {
+      if (
+        originalCycle &&
+        formData.round &&
+        (formData.round.year !== originalCycle.round.year ||
+          formData.round.type !== originalCycle.round.type)
+      ) {
         updateRequest.round = formData.round;
       }
 
       // Only include duration if it changed
-      const originalStartDate = typeof originalCycle?.duration.startDate === 'string'
-        ? originalCycle.duration.startDate
-        : new Date(originalCycle?.duration.startDate || '').toISOString().split('T')[0];
+      const originalStartDate =
+        typeof originalCycle?.duration.startDate === 'string'
+          ? originalCycle.duration.startDate
+          : new Date(originalCycle?.duration.startDate || '').toISOString().split('T')[0];
       const originalEndDate = originalCycle?.duration.endDate
         ? typeof originalCycle.duration.endDate === 'string'
           ? originalCycle.duration.endDate
           : new Date(originalCycle.duration.endDate).toISOString().split('T')[0]
         : '';
 
-      if (originalCycle && formData.duration &&
-          (formData.duration.startDate !== originalStartDate || 
-           formData.duration.endDate !== originalEndDate)) {
+      if (
+        originalCycle &&
+        formData.duration &&
+        (formData.duration.startDate !== originalStartDate ||
+          formData.duration.endDate !== originalEndDate)
+      ) {
         updateRequest.duration = formData.duration;
       }
 
@@ -230,8 +240,7 @@ export default function EditCycleModal({
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Edit Cycle</h2>
               <p className="mt-1 text-sm text-gray-600">
-                Step {currentStep} of 2:{' '}
-                {currentStep === 1 ? 'Basic Information' : 'TRL Criteria'}
+                Step {currentStep} of 2: {currentStep === 1 ? 'Basic Information' : 'TRL Criteria'}
               </p>
             </div>
 
@@ -366,7 +375,8 @@ export default function EditCycleModal({
               {/* Read-only info about budget and scoring */}
               <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
                 <p className="text-sm text-amber-800">
-                  <strong>Note:</strong> Budget and Scoring Scheme cannot be edited after cycle creation.
+                  <strong>Note:</strong> Budget and Scoring Scheme cannot be edited after cycle
+                  creation.
                 </p>
               </div>
             </div>

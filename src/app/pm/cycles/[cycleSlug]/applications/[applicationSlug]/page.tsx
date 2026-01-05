@@ -251,7 +251,8 @@ export default function ApplicationDetailsPage() {
                     <div>
                       <p className="text-sm font-medium text-gray-600">Round</p>
                       <p className="mt-1 text-sm text-gray-900">
-                        {currentApplication.cycle.round.year} - {currentApplication.cycle.round.type}
+                        {currentApplication.cycle.round.year} -{' '}
+                        {currentApplication.cycle.round.type}
                       </p>
                     </div>
                     <div>
@@ -261,10 +262,10 @@ export default function ApplicationDetailsPage() {
                           currentApplication.cycle.status === 'OPEN'
                             ? 'bg-green-100 text-green-800'
                             : currentApplication.cycle.status === 'CLOSED'
-                            ? 'bg-red-100 text-red-800'
-                            : currentApplication.cycle.status === 'ARCHIVED'
-                            ? 'bg-purple-100 text-purple-800'
-                            : 'bg-gray-100 text-gray-800'
+                              ? 'bg-red-100 text-red-800'
+                              : currentApplication.cycle.status === 'ARCHIVED'
+                                ? 'bg-purple-100 text-purple-800'
+                                : 'bg-gray-100 text-gray-800'
                         }`}
                       >
                         {currentApplication.cycle.status}

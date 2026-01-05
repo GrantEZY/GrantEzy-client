@@ -144,12 +144,7 @@ export default function ProjectReviewSubmissionForm({
             rel="noopener noreferrer"
             className="mt-2 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
           >
-            <svg
-              className="mr-1 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                 strokeLinecap="round"
@@ -172,12 +167,7 @@ export default function ProjectReviewSubmissionForm({
             rel="noopener noreferrer"
             className="mt-2 inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-700"
           >
-            <svg
-              className="mr-1 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
                 strokeLinecap="round"
@@ -212,13 +202,15 @@ export default function ProjectReviewSubmissionForm({
                 <div className="flex items-start">
                   <div
                     className={`mr-3 mt-0.5 h-5 w-5 flex-shrink-0 rounded-full border-2 ${
-                      recommendation === rec.value
-                        ? 'border-current bg-current'
-                        : 'border-gray-300'
+                      recommendation === rec.value ? 'border-current bg-current' : 'border-gray-300'
                     }`}
                   >
                     {recommendation === rec.value && (
-                      <svg className="h-full w-full text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="h-full w-full text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -290,12 +282,7 @@ export default function ProjectReviewSubmissionForm({
               </>
             ) : (
               <>
-                <svg
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     d="M5 13l4 4L19 7"
                     strokeLinecap="round"

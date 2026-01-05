@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { AuthGuard } from '@/components/guards/AuthGuard';
 import ReviewerLayout from '@/components/layout/ReviewerLayout';
 import { useReviewer } from '@/hooks/useReviewer';
 import { InviteStatus } from '@/types/reviewer.types';
 
-export default function ProjectReviewInvitePage() {
+export function ProjectReviewInvitePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { submitProjectAssessmentReviewInviteStatus, isLoadingProjectReviews } = useReviewer();
@@ -28,9 +28,7 @@ export default function ProjectReviewInvitePage() {
     }
   }, [token, slug, assessmentId]);
 
-  const handleResponse = async (
-    status: InviteStatus.ACCEPTED | InviteStatus.REJECTED
-  ) => {
+  const handleResponse = async (status: InviteStatus.ACCEPTED | InviteStatus.REJECTED) => {
     if (!token || !slug || !assessmentId) {
       setError('Invalid invitation parameters');
       return;
@@ -92,11 +90,7 @@ export default function ProjectReviewInvitePage() {
             {success && (
               <div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4">
                 <div className="flex">
-                  <svg
-                    className="h-5 w-5 text-green-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
+                  <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
                     <path
                       fillRule="evenodd"
                       d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -141,13 +135,17 @@ export default function ProjectReviewInvitePage() {
                     {projectTitle && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Project:</span>
-                        <span className="font-medium text-gray-900">{decodeURIComponent(projectTitle)}</span>
+                        <span className="font-medium text-gray-900">
+                          {decodeURIComponent(projectTitle)}
+                        </span>
                       </div>
                     )}
                     {criteriaName && (
                       <div className="flex justify-between">
                         <span className="text-gray-600">Criteria:</span>
-                        <span className="font-medium text-gray-900">{decodeURIComponent(criteriaName)}</span>
+                        <span className="font-medium text-gray-900">
+                          {decodeURIComponent(criteriaName)}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -182,7 +180,8 @@ export default function ProjectReviewInvitePage() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      Provide a recommendation (Perfect, Can Speed Up, No Improvement, Need Serious Action)
+                      Provide a recommendation (Perfect, Can Speed Up, No Improvement, Need Serious
+                      Action)
                     </li>
                     <li className="flex items-start">
                       <svg
@@ -233,5 +232,15 @@ export default function ProjectReviewInvitePage() {
         </div>
       </ReviewerLayout>
     </AuthGuard>
+  );
+}
+
+export default function ProjectReviewPage() {
+  return (
+    <Suspense
+      fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}
+    >
+      <ProjectReviewInvitePage />
+    </Suspense>
   );
 }

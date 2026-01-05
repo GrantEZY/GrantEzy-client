@@ -93,7 +93,8 @@ export const useProjectAssessment = () => {
       totalCriteria,
       submittedCount,
       pendingCount,
-      completionPercentage: totalCriteria > 0 ? Math.round((submittedCount / totalCriteria) * 100) : 0,
+      completionPercentage:
+        totalCriteria > 0 ? Math.round((submittedCount / totalCriteria) * 100) : 0,
     };
   };
 

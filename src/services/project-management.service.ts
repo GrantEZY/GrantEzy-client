@@ -33,9 +33,7 @@ export class ProjectManagementService {
   /**
    * Convert an approved application to a project
    */
-  async createProject(
-    data: CreateProjectRequest
-  ): Promise<ApiResponse<CreateProjectResponse>> {
+  async createProject(data: CreateProjectRequest): Promise<ApiResponse<CreateProjectResponse>> {
     return httpClient.post<ApiResponse<CreateProjectResponse>>(
       API_CONFIG.ENDPOINTS.PROJECT_MANAGEMENT.CREATE_PROJECT,
       data

@@ -560,11 +560,19 @@ export const useApplicantStore = create<ApplicantStore>((set, get) => ({
       return null;
     } catch (error: any) {
       // If 404 or no application found, silently continue (not an error condition)
-      if (error?.response?.status === 404 || error?.status === 404 || error?.message?.includes('not found')) {
-        set({ isLoading: false, currentApplication: null, currentStep: ApplicationStep.BASIC_INFO });
+      if (
+        error?.response?.status === 404 ||
+        error?.status === 404 ||
+        error?.message?.includes('not found')
+      ) {
+        set({
+          isLoading: false,
+          currentApplication: null,
+          currentStep: ApplicationStep.BASIC_INFO,
+        });
         return null;
       }
-      
+
       // For other errors, show error message
       const errorMessage = error?.message || 'Failed to load saved application';
       set({ error: errorMessage, isLoading: false });

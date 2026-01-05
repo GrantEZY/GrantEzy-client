@@ -232,131 +232,123 @@ export default function CycleCriteriaManagement({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 p-4 backdrop-blur-md">
           {/* Modal panel */}
           <div className="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
-              {/* Header */}
-              <div className="border-b border-gray-200 bg-white px-6 py-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900">
-                    Create Assessment Criteria
-                  </h3>
-                  <button
-                    onClick={handleCloseModal}
-                    className="rounded-md text-gray-400 hover:text-gray-500"
-                    type="button"
-                  >
-                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Header */}
+            <div className="border-b border-gray-200 bg-white px-6 py-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                  Create Assessment Criteria
+                </h3>
+                <button
+                  onClick={handleCloseModal}
+                  className="rounded-md text-gray-400 hover:text-gray-500"
+                  type="button"
+                >
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M6 18L18 6M6 6l12 12"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="bg-white px-6 py-6">
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Criteria Name *</label>
+                  <input
+                    type="text"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="e.g., Technical Feasibility"
+                  />
+                  {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Brief Review *</label>
+                  <textarea
+                    value={formData.briefReview}
+                    onChange={(e) => setFormData({ ...formData, briefReview: e.target.value })}
+                    rows={4}
+                    className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="Describe what this criteria evaluates..."
+                  />
+                  {errors.briefReview && (
+                    <p className="mt-1 text-sm text-red-600">{errors.briefReview}</p>
+                  )}
+                </div>
+
+                <div className="rounded-md bg-blue-50 p-4">
+                  <div className="flex">
+                    <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                       <path
-                        d="M6 18L18 6M6 6l12 12"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
                       />
                     </svg>
-                  </button>
-                </div>
-              </div>
-
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="bg-white px-6 py-6">
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Criteria Name *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      placeholder="e.g., Technical Feasibility"
-                    />
-                    {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">
-                      Brief Review *
-                    </label>
-                    <textarea
-                      value={formData.briefReview}
-                      onChange={(e) => setFormData({ ...formData, briefReview: e.target.value })}
-                      rows={4}
-                      className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      placeholder="Describe what this criteria evaluates..."
-                    />
-                    {errors.briefReview && (
-                      <p className="mt-1 text-sm text-red-600">{errors.briefReview}</p>
-                    )}
-                  </div>
-
-                  <div className="rounded-md bg-blue-50 p-4">
-                    <div className="flex">
-                      <svg
-                        className="h-5 w-5 text-blue-400"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <div className="ml-3">
-                        <h3 className="text-sm font-medium text-blue-800">Note</h3>
-                        <div className="mt-2 text-sm text-blue-700">
-                          <p>
-                            File upload for evaluation templates will be added in the next
-                            iteration. For now, you can create criteria with names and descriptions.
-                          </p>
-                        </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-blue-800">Note</h3>
+                      <div className="mt-2 text-sm text-blue-700">
+                        <p>
+                          File upload for evaluation templates will be added in the next iteration.
+                          For now, you can create criteria with names and descriptions.
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
-              </form>
+              </div>
+            </form>
 
-              {/* Footer */}
-              <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
-                <div className="flex items-center justify-end space-x-3">
-                  <button
-                    onClick={handleCloseModal}
-                    className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                    type="button"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-                    type="button"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Creating...
-                      </>
-                    ) : (
-                      'Create Criteria'
-                    )}
-                  </button>
-                </div>
+            {/* Footer */}
+            <div className="border-t border-gray-200 bg-gray-50 px-6 py-4">
+              <div className="flex items-center justify-end space-x-3">
+                <button
+                  onClick={handleCloseModal}
+                  className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  type="button"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                  type="button"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <svg className="mr-2 h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Creating...
+                    </>
+                  ) : (
+                    'Create Criteria'
+                  )}
+                </button>
               </div>
             </div>
+          </div>
         </div>
       )}
 

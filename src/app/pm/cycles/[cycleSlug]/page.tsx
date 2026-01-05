@@ -21,8 +21,15 @@ export default function CycleDetailsPage() {
   const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
   const [showStatusMenu, setShowStatusMenu] = useState(false);
 
-  const { currentCycle, currentCycleApplications, isCycleDetailsLoading, getCycleDetails, openCycleForApplication, closeCycleForApplication, archiveCycle } =
-    usePm();
+  const {
+    currentCycle,
+    currentCycleApplications,
+    isCycleDetailsLoading,
+    getCycleDetails,
+    openCycleForApplication,
+    closeCycleForApplication,
+    archiveCycle,
+  } = usePm();
 
   const { projects, projectsPagination, isProjectsLoading, getCycleProjects, clearProjects } =
     useProjectManagement();
@@ -72,45 +79,46 @@ export default function CycleDetailsPage() {
     }
   };
 
-  const calculateProjectBudget = (budget: any) => {
-    if (!budget) return 0;
+  // TODO  commented as it was not used anywhere
+  // const calculateProjectBudget = (budget: any) => {
+  //   if (!budget) return 0;
 
-    let total = 0;
+  //   let total = 0;
 
-    // Sum array items (ManPower, Equipment, OtherCosts)
-    if (budget.ManPower && Array.isArray(budget.ManPower)) {
-      total += budget.ManPower.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
-      );
-    }
-    if (budget.Equipment && Array.isArray(budget.Equipment)) {
-      total += budget.Equipment.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
-      );
-    }
-    if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
-      total += budget.OtherCosts.reduce(
-        (sum: number, item: any) => sum + (item.Budget?.amount || 0),
-        0
-      );
-    }
+  //   // Sum array items (ManPower, Equipment, OtherCosts)
+  //   if (budget.ManPower && Array.isArray(budget.ManPower)) {
+  //     total += budget.ManPower.reduce(
+  //       (sum: number, item: any) => sum + (item.Budget?.amount || 0),
+  //       0
+  //     );
+  //   }
+  //   if (budget.Equipment && Array.isArray(budget.Equipment)) {
+  //     total += budget.Equipment.reduce(
+  //       (sum: number, item: any) => sum + (item.Budget?.amount || 0),
+  //       0
+  //     );
+  //   }
+  //   if (budget.OtherCosts && Array.isArray(budget.OtherCosts)) {
+  //     total += budget.OtherCosts.reduce(
+  //       (sum: number, item: any) => sum + (item.Budget?.amount || 0),
+  //       0
+  //     );
+  //   }
 
-    // Add single budget items
-    total += budget.Consumables?.Budget?.amount || 0;
-    total += budget.Travel?.Budget?.amount || 0;
-    total += budget.Contigency?.Budget?.amount || 0;
-    total += budget.Overhead?.Budget?.amount || 0;
+  //   // Add single budget items
+  //   total += budget.Consumables?.Budget?.amount || 0;
+  //   total += budget.Travel?.Budget?.amount || 0;
+  //   total += budget.Contigency?.Budget?.amount || 0;
+  //   total += budget.Overhead?.Budget?.amount || 0;
 
-    return total;
-  };
+  //   return total;
+  // };
 
   const handleStatusChange = async (action: 'open' | 'close' | 'archive') => {
     if (!currentCycle) return;
-    
+
     setShowStatusMenu(false);
-    
+
     try {
       let success = false;
       if (action === 'open') {
@@ -120,7 +128,7 @@ export default function CycleDetailsPage() {
       } else if (action === 'archive') {
         success = await archiveCycle(currentCycle.id);
       }
-      
+
       if (success) {
         // Refresh cycle details to get updated status
         await getCycleDetails({ cycleSlug });
@@ -132,16 +140,18 @@ export default function CycleDetailsPage() {
 
   const getStatusBadge = () => {
     if (!currentCycle || !currentCycle.status) return null;
-    
+
     const statusClasses: Record<string, string> = {
       CREATED: 'bg-gray-100 text-gray-800',
       OPEN: 'bg-green-100 text-green-800',
       CLOSED: 'bg-red-100 text-red-800',
       ARCHIVED: 'bg-purple-100 text-purple-800',
     };
-    
+
     return (
-      <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${statusClasses[currentCycle.status] || 'bg-gray-100 text-gray-800'}`}>
+      <span
+        className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${statusClasses[currentCycle.status] || 'bg-gray-100 text-gray-800'}`}
+      >
         {currentCycle.status}
       </span>
     );
@@ -179,7 +189,7 @@ export default function CycleDetailsPage() {
                   View and manage applications for this funding cycle
                 </p>
               </div>
-              
+
               {/* Cycle Status Control */}
               {currentCycle && (
                 <div className="relative">
@@ -190,14 +200,19 @@ export default function CycleDetailsPage() {
                   >
                     {getStatusBadge()}
                     <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
                     </svg>
                   </button>
-                  
+
                   {showStatusMenu && (
                     <>
-                      <div 
-                        className="fixed inset-0 z-10" 
+                      <div
+                        className="fixed inset-0 z-10"
                         onClick={() => setShowStatusMenu(false)}
                       />
                       <div className="absolute right-0 z-20 mt-2 w-48 rounded-md border border-gray-200 bg-white py-1 shadow-lg">
@@ -394,49 +409,49 @@ export default function CycleDetailsPage() {
                             allKeys: Object.keys(application as any),
                           });
                         }
-                        
+
                         return (
-                        <tr key={application.id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4">
-                            <div className="text-sm font-medium text-gray-900">
-                              {application.basicInfo?.title || 
-                               (application as any).title || 
-                               `Application ${application.slug.substring(0, 8)}`}
-                            </div>
-                            {application.basicInfo?.summary && (
-                              <div className="mt-1 text-sm text-gray-500">
-                                {application.basicInfo.summary.substring(0, 100)}
-                                {application.basicInfo.summary.length > 100 && '...'}
+                          <tr key={application.id} className="hover:bg-gray-50">
+                            <td className="px-6 py-4">
+                              <div className="text-sm font-medium text-gray-900">
+                                {application.basicInfo?.title ||
+                                  (application as any).title ||
+                                  `Application ${application.slug.substring(0, 8)}`}
                               </div>
-                            )}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {application.applicant?.email || 
-                             (application.applicant?.firstName && application.applicant?.lastName
-                               ? `${application.applicant.firstName} ${application.applicant.lastName}`
-                               : 'No applicant info')}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4">
-                            <span
-                              className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeClass(application.status)}`}
-                            >
-                              {application.status}
-                            </span>
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-                            {application.createdAt
-                              ? new Date(application.createdAt).toLocaleDateString()
-                              : 'N/A'}
-                          </td>
-                          <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                            <Link
-                              className="text-blue-600 hover:text-blue-700"
-                              href={`/pm/cycles/${cycleSlug}/applications/${application.slug}`}
-                            >
-                              View Details
-                            </Link>
-                          </td>
-                        </tr>
+                              {application.basicInfo?.summary && (
+                                <div className="mt-1 text-sm text-gray-500">
+                                  {application.basicInfo.summary.substring(0, 100)}
+                                  {application.basicInfo.summary.length > 100 && '...'}
+                                </div>
+                              )}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                              {application.applicant?.email ||
+                                (application.applicant?.firstName && application.applicant?.lastName
+                                  ? `${application.applicant.firstName} ${application.applicant.lastName}`
+                                  : 'No applicant info')}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              <span
+                                className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${getStatusBadgeClass(application.status)}`}
+                              >
+                                {application.status}
+                              </span>
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                              {application.createdAt
+                                ? new Date(application.createdAt).toLocaleDateString()
+                                : 'N/A'}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                              <Link
+                                className="text-blue-600 hover:text-blue-700"
+                                href={`/pm/cycles/${cycleSlug}/applications/${application.slug}`}
+                              >
+                                View Details
+                              </Link>
+                            </td>
+                          </tr>
                         );
                       })}
                     </tbody>
@@ -558,7 +573,7 @@ export default function CycleDetailsPage() {
                             </span>
                           </td>
                           <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                            {project.budget?.Budget?.amount 
+                            {project.budget?.Budget?.amount
                               ? `${project.budget.Budget.currency} ${project.budget.Budget.amount.toLocaleString()}`
                               : 'Not set'}
                           </td>
