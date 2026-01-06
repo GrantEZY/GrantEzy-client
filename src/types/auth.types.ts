@@ -74,6 +74,32 @@ export interface RefreshResponse {
   };
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  status: number;
+  message: string;
+  res: {
+    status: boolean;
+  };
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  slug: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordResponse {
+  status: number;
+  message: string;
+  res: {
+    status: boolean;
+  };
+}
+
 export interface AuthTokens {
   accessToken: string;
   // Note: refreshToken is managed by backend as httpOnly cookie named "jwtToken"

@@ -11,6 +11,8 @@ export const API_CONFIG = {
       LOGIN: '/auth/local/login',
       LOGOUT: '/auth/local/logout',
       REFRESH: '/auth/local/refresh',
+      FORGOT_PASSWORD: '/auth/forgot-password',
+      RESET_PASSWORD: '/auth/update-password',
     },
     ADMIN: {
       GET_USERS: '/admin/get-users',
