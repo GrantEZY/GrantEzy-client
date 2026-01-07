@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { FaGooglePlusG, FaFacebookF, FaGithub, FaLinkedinIn } from 'react-icons/fa';
+import React, { useState, useEffect, Suspense } from "react";
+import { FaGooglePlusG, FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { UserRoles, UserCommitmentStatus } from '@/types/auth.types';
+import ForgotPasswordModal from '@/components/auth/ForgotPasswordModal';
 
 // Role-based redirect mapping
 const getRoleBasedRedirect = (role: string): string => {
@@ -38,6 +39,7 @@ function AuthForm() {
   const [role, setRole] = useState(UserRoles.ADMIN);
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
 
   // Sign Up State
   const [firstName, setFirstName] = useState('');
@@ -182,31 +184,29 @@ function AuthForm() {
       </div>
 
       <div className="relative overflow-hidden w-[1000px] max-w-full min-h-[650px] bg-white rounded-[30px] shadow-[0_5px_15px_rgba(0,0,0,0.35)]">
+        
         {/* --- SIGN UP FORM --- */}
         <div
           className={`absolute top-0 h-full transition-all duration-600 ease-in-out left-0 w-1/2 
-          ${isSignUp ? 'translate-x-full opacity-100 z-[5]' : 'opacity-0 z-[1]'}`}
+          ${isSignUp ? "translate-x-full opacity-100 z-[5]" : "opacity-0 z-[1]"}`}
         >
-          <form
-            onSubmit={handleSignUp}
-            className="bg-white flex flex-col items-center justify-center h-full px-10 py-8"
-          >
+          <form onSubmit={handleSignUp} className="bg-white flex flex-col items-center justify-center h-full px-10 py-8">
             <h1 className="text-3xl font-bold mb-2">Create Account</h1>
             <SocialIcons />
             <span className="text-xs mb-3 mt-2">or use your email for registration</span>
-
+            
             {signupSuccess && (
               <div className="w-full mb-2 p-2 bg-green-50 border border-green-200 rounded text-xs text-green-700 text-center">
                 Registration successful! Switching to sign in...
               </div>
             )}
-
+            
             {signupError && (
               <div className="w-full mb-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700 text-center">
                 {signupError}
               </div>
             )}
-
+            
             <div className="grid grid-cols-2 gap-2 w-full">
               <Input
                 type="text"
@@ -267,22 +267,19 @@ function AuthForm() {
         {/* --- SIGN IN FORM --- */}
         <div
           className={`absolute top-0 h-full transition-all duration-600 ease-in-out left-0 w-1/2 z-[2]
-          ${isSignUp ? 'translate-x-full' : ''}`}
+          ${isSignUp ? "translate-x-full" : ""}`}
         >
-          <form
-            onSubmit={handleSignIn}
-            className="bg-white flex flex-col items-center justify-center h-full px-10"
-          >
+          <form onSubmit={handleSignIn} className="bg-white flex flex-col items-center justify-center h-full px-10">
             <h1 className="text-3xl font-bold mb-3">Sign In</h1>
             <SocialIcons />
             <span className="text-xs mb-3 mt-2">or use your email password</span>
-
+            
             {loginError && (
               <div className="w-full mb-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700 text-center">
                 {loginError}
               </div>
             )}
-
+            
             <Input
               type="email"
               placeholder="Email"
@@ -310,10 +307,16 @@ function AuthForm() {
                 </option>
               ))}
             </select>
-            <a href="#" className="text-xs text-[#333] my-3 hover:underline">
+            <button 
+              type="button"
+              onClick={() => setIsForgotPasswordOpen(true)}
+              className="text-xs text-[#333] my-3 hover:underline"
+            >
               Forget Your Password?
-            </a>
-            <Button disabled={loginLoading}>{loginLoading ? 'Signing in...' : 'Sign In'}</Button>
+            </button>
+            <Button disabled={loginLoading}>
+              {loginLoading ? 'Signing in...' : 'Sign In'}
+            </Button>
             <p className="text-[10px] text-gray-500 mt-3">Test: admin@test.com / password123</p>
           </form>
         </div>
@@ -321,18 +324,19 @@ function AuthForm() {
         {/* --- TOGGLE CONTAINER (Overlay) --- */}
         <div
           className={`absolute top-0 left-1/2 w-1/2 h-full overflow-hidden transition-all duration-600 ease-in-out z-[1000]
-          ${
-            isSignUp ? '-translate-x-full rounded-[0_150px_100px_0]' : 'rounded-[150px_0_0_100px]'
+          ${isSignUp 
+            ? "-translate-x-full rounded-[0_150px_100px_0]" 
+            : "rounded-[150px_0_0_100px]"
           }`}
         >
           <div
             className={`bg-gradient-to-r from-blue-600 to-blue-800 text-white relative -left-full h-full w-[200%] transform transition-transform duration-600 ease-in-out
-            ${isSignUp ? 'translate-x-1/2' : 'translate-x-0'}`}
+            ${isSignUp ? "translate-x-1/2" : "translate-x-0"}`}
           >
             {/* Left Panel (For Sign In Prompt) */}
             <div
               className={`absolute w-1/2 h-full flex flex-col items-center justify-center px-8 text-center top-0 transform transition-transform duration-600 ease-in-out
-              ${isSignUp ? 'translate-x-0' : '-translate-x-[200%]'}`}
+              ${isSignUp ? "translate-x-0" : "-translate-x-[200%]"}`}
             >
               <h1 className="text-3xl font-bold mb-4">Welcome Back!</h1>
               <p className="text-sm leading-5 tracking-[0.3px] mb-8">
@@ -350,7 +354,7 @@ function AuthForm() {
             {/* Right Panel (For Sign Up Prompt) */}
             <div
               className={`absolute w-1/2 h-full flex flex-col items-center justify-center px-8 text-center top-0 right-0 transform transition-transform duration-600 ease-in-out
-              ${isSignUp ? 'translate-x-[200%]' : 'translate-x-0'}`}
+              ${isSignUp ? "translate-x-[200%]" : "translate-x-0"}`}
             >
               <h1 className="text-3xl font-bold mb-4">Hello, Friend!</h1>
               <p className="text-sm leading-5 tracking-[0.3px] mb-8">
@@ -367,7 +371,10 @@ function AuthForm() {
           </div>
         </div>
       </div>
-    </div>
+      <ForgotPasswordModal 
+        isOpen={isForgotPasswordOpen} 
+        onClose={() => setIsForgotPasswordOpen(false)} 
+      />    </div>
   );
 }
 
@@ -376,28 +383,16 @@ function AuthForm() {
 function SocialIcons() {
   return (
     <div className="flex space-x-2 my-2">
-      <a
-        href="#"
-        className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors"
-      >
+      <a href="#" className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors">
         <FaGooglePlusG className="text-lg" />
       </a>
-      <a
-        href="#"
-        className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors"
-      >
+      <a href="#" className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors">
         <FaFacebookF className="text-lg" />
       </a>
-      <a
-        href="#"
-        className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors"
-      >
+      <a href="#" className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors">
         <FaGithub className="text-lg" />
       </a>
-      <a
-        href="#"
-        className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors"
-      >
+      <a href="#" className="border border-[#ccc] rounded-[20%] w-10 h-10 flex items-center justify-center text-[#333] hover:bg-gray-100 transition-colors">
         <FaLinkedinIn className="text-lg" />
       </a>
     </div>
@@ -434,14 +429,7 @@ interface PasswordInputProps {
   required?: boolean;
 }
 
-function PasswordInput({
-  placeholder,
-  value,
-  onChange,
-  showPassword,
-  onTogglePassword,
-  required,
-}: PasswordInputProps) {
+function PasswordInput({ placeholder, value, onChange, showPassword, onTogglePassword, required }: PasswordInputProps) {
   return (
     <div className="relative w-full my-2">
       <input
@@ -506,9 +494,7 @@ function Button({ children, disabled }: ButtonProps) {
 
 export default function AuthPage() {
   return (
-    <Suspense
-      fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}
-    >
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
       <AuthForm />
     </Suspense>
   );

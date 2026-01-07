@@ -139,6 +139,11 @@ export class HttpClient {
       }
     }
 
+    // Handle 204 No Content - it has no response body
+    if (response.status === 204) {
+      return { status: 204, message: 'Success', res: null } as T;
+    }
+
     // Parse JSON response
     const data = await response.json();
 

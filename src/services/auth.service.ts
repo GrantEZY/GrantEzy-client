@@ -5,10 +5,14 @@ import { API_CONFIG } from '../lib/config/api.config';
 import { httpClient } from '../lib/http/http-client';
 import {
   AuthResponse,
+  ForgotPasswordRequest,
+  ForgotPasswordResponse,
   LoginRequest,
   LoginResponse,
   RefreshResponse,
   RegisterRequest,
+  ResetPasswordRequest,
+  ResetPasswordResponse,
 } from '../types/auth.types';
 
 export class AuthService {
@@ -28,6 +32,14 @@ export class AuthService {
     // Backend reads refreshToken from httpOnly "jwtToken" cookie automatically
     // Returns: { status, message, res: { userData, accessToken } }
     return httpClient.get<RefreshResponse>(API_CONFIG.ENDPOINTS.AUTH.REFRESH);
+  }
+
+  async forgotPassword(data: ForgotPasswordRequest): Promise<ForgotPasswordResponse> {
+    return httpClient.post<ForgotPasswordResponse>(API_CONFIG.ENDPOINTS.AUTH.FORGOT_PASSWORD, data);
+  }
+
+  async resetPassword(data: ResetPasswordRequest): Promise<ResetPasswordResponse> {
+    return httpClient.post<ResetPasswordResponse>(API_CONFIG.ENDPOINTS.AUTH.RESET_PASSWORD, data);
   }
 
   async checkHealth(): Promise<{ status: string }> {
