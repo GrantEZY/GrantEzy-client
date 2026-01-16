@@ -39,7 +39,7 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
       await authService.forgotPassword({ email });
       setSuccess(true);
       setEmail('');
-      
+
       // Auto close after 3 seconds
       setTimeout(() => {
         handleClose();
@@ -47,8 +47,8 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
     } catch (err: any) {
       setError(
         err?.response?.data?.message ||
-        err?.message ||
-        'Failed to send reset email. Please try again.'
+          err?.message ||
+          'Failed to send reset email. Please try again.'
       );
     } finally {
       setIsSubmitting(false);
@@ -134,9 +134,7 @@ export default function ForgotPasswordModal({ isOpen, onClose }: ForgotPasswordM
               </div>
 
               {error && (
-                <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                  {error}
-                </div>
+                <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
               )}
 
               <div className="flex justify-end space-x-3">

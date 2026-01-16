@@ -45,7 +45,11 @@ function ResetPasswordForm() {
     }
 
     try {
-      console.log('Reset password request:', { token, slug, newPasswordLength: newPassword.length });
+      console.log('Reset password request:', {
+        token,
+        slug,
+        newPasswordLength: newPassword.length,
+      });
       const response = await authService.resetPassword({
         token,
         slug,
@@ -65,8 +69,8 @@ function ResetPasswordForm() {
       console.error('Reset password error:', err);
       setError(
         err?.response?.data?.message ||
-        err?.message ||
-        'An unexpected error occurred. The reset link may have expired.'
+          err?.message ||
+          'An unexpected error occurred. The reset link may have expired.'
       );
     } finally {
       setIsSubmitting(false);
@@ -102,16 +106,19 @@ function ResetPasswordForm() {
                     />
                   </svg>
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-gray-900">Password Reset Successful!</h3>
-                <p className="text-sm text-gray-600">
-                  Redirecting you to the login page...
-                </p>
+                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                  Password Reset Successful!
+                </h3>
+                <p className="text-sm text-gray-600">Redirecting you to the login page...</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* New Password */}
                 <div>
-                  <label htmlFor="newPassword" className="mb-2 block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="newPassword"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
                     New Password
                   </label>
                   <div className="relative">
@@ -133,7 +140,12 @@ function ResetPasswordForm() {
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                     >
                       {showPassword ? (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -142,7 +154,12 @@ function ResetPasswordForm() {
                           />
                         </svg>
                       ) : (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -164,7 +181,10 @@ function ResetPasswordForm() {
 
                 {/* Confirm Password */}
                 <div>
-                  <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="confirmPassword"
+                    className="mb-2 block text-sm font-medium text-gray-700"
+                  >
                     Confirm Password
                   </label>
                   <div className="relative">
@@ -184,7 +204,12 @@ function ResetPasswordForm() {
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                     >
                       {showConfirmPassword ? (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -193,7 +218,12 @@ function ResetPasswordForm() {
                           />
                         </svg>
                       ) : (
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -213,9 +243,7 @@ function ResetPasswordForm() {
                 </div>
 
                 {error && (
-                  <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                    {error}
-                  </div>
+                  <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</div>
                 )}
 
                 <button
